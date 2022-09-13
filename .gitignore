@@ -2,7 +2,8 @@
 !.gitignore
 !src/
 !src/**
-!LICENCE
+src/main/resources/application-dev.properties
+!LICENSE
 !README.md
 !NOTICE
 !pom.xml
