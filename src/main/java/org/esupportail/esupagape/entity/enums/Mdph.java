@@ -1,0 +1,19 @@
+package org.esupportail.esupagape.entity.enums;
+
+public enum Mdph {
+    AAH,
+    AEEH,
+    CARTE_INVALIDITE,
+    CARTE_INVALIDITE_PRIORITE,
+    CARTE_PRIORITE,
+    EN_COURS_DE_CONSTITUTION_HANDISUP,
+    ENVOYE_HANDISUP,
+    NE_SAIS_PAS,
+    NON,
+    OUI,
+    OUI_HANDISUP,
+    PCH_AIDE_HUMAINE,
+    PCH_AIDE_TECHNIQUE,
+    RQTH,
+    TRANSPORT_INDIVIDUEL_ADAPTE;
+}
