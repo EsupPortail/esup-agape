@@ -3,15 +3,20 @@ package org.esupportail.esupagape.entity;
 import com.sun.istack.NotNull;
 import org.esupportail.esupagape.entity.enums.Status;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "AideHumaine", uniqueConstraints = {
@@ -49,6 +54,8 @@ public class AideHumaine {
 
     private String function;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<FeuilleHeures> feuilleHeures = new ArrayList<>();
 
     public AideHumaine() {
 

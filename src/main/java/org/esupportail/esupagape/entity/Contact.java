@@ -7,7 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Contact
@@ -25,6 +27,8 @@ public class Contact
 
     private String compteRendu;
 
+    @ManyToMany(mappedBy = "contacts")
+    private List<Dossier> dossiers;
     public Contact() {
 
     }

@@ -1,11 +1,15 @@
 package org.esupportail.esupagape.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -27,6 +31,9 @@ public class FeuilleHeures {
     private Date semestre;
 
     private Double cost;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "AideHumaine_id")
+    private AideHumaine aideHumaine;
 
     public FeuilleHeures() {
 
