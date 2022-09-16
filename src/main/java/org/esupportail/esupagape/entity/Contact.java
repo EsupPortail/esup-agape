@@ -1,44 +1,26 @@
 package org.esupportail.esupagape.entity;
 
-import com.sun.istack.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import java.time.LocalDate;
-import java.util.List;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 public class Contact
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate date;
+    private LocalDateTime date;
 
     private String interlocuteur;
 
+    @Column(columnDefinition = "TEXT")
     private String compteRendu;
-
-    @ManyToMany(mappedBy = "contacts")
-    private List<Dossier> dossiers;
-    public Contact() {
-
-    }
-
-    public Contact(Long id, LocalDate date, String interlocuteur, String compteRendu) {
-        this.id = id;
-        this.date = date;
-        this.interlocuteur = interlocuteur;
-        this.compteRendu = compteRendu;
-    }
 
     public Long getId() {
         return id;
@@ -48,11 +30,11 @@ public class Contact
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

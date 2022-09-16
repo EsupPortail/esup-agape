@@ -1,49 +1,31 @@
 package org.esupportail.esupagape.entity;
 
-import org.esupportail.esupagape.entity.enums.Status;
-import org.esupportail.esupagape.entity.enums.Type;
+import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class AideMaterielle {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @Enumerated
-    private Type type;
+    private TypeAideMaterielle type;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private double cost;
 
+    @Column(columnDefinition = "TEXT")
     private String commentaire;
-
-    public AideMaterielle() {
-
-    }
-
-    public AideMaterielle(Long id, Type type, LocalDate startDate, LocalDate endDate, double cost, String commentaire) {
-        this.id = id;
-        this.type = type;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.cost = cost;
-        this.commentaire = commentaire;
-    }
 
     public Long getId() {
         return id;
@@ -53,27 +35,27 @@ public class AideMaterielle {
         this.id = id;
     }
 
-    public Type getType() {
+    public TypeAideMaterielle getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(TypeAideMaterielle type) {
         this.type = type;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

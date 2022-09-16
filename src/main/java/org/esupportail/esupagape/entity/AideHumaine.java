@@ -1,38 +1,26 @@
 package org.esupportail.esupagape.entity;
 
-import com.sun.istack.NotNull;
-import org.esupportail.esupagape.entity.enums.Status;
+import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "AideHumaine", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_aidehumaine_numetuaide", columnNames = {"numEtuAide"})
-})
 public class AideHumaine {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Enumerated
-    private Status status;
+    @Enumerated(EnumType.STRING)
+    private StatusAideHumaine statusAideHumaine;
 
-    @Column(unique = true, nullable = false)
-    private int numEtuAide;
+    @Column(unique = true)
+    private String numEtuAide;
 
     @NotNull
     private String name;
@@ -40,39 +28,20 @@ public class AideHumaine {
     @NotNull
     private String firstName;
 
-
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirth;
+    private LocalDateTime dateOfBirth;
 
     private String email;
 
-    private int phone;
-
+    private String phone;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     private String function;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<FeuilleHeures> feuilleHeures = new ArrayList<>();
-
-    public AideHumaine() {
-
-    }
-
-    public AideHumaine(Long id, Status status, int numEtuAide, String name, String firstName, LocalDate dateOfBirth, String email, int phone, LocalDate startDate, String function) {
-        this.id = id;
-        this.status = status;
-        this.numEtuAide = numEtuAide;
-        this.name = name;
-        this.firstName = firstName;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.phone = phone;
-        this.startDate = startDate;
-        this.function = function;
-    }
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<FeuilleHeure> feuilleHeures = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -82,19 +51,19 @@ public class AideHumaine {
         this.id = id;
     }
 
-    public Status getStatus() {
-        return status;
+    public StatusAideHumaine getStatusAideHumaine() {
+        return statusAideHumaine;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatusAideHumaine(StatusAideHumaine statusAideHumaine) {
+        this.statusAideHumaine = statusAideHumaine;
     }
 
-    public int getNumEtuAide() {
+    public String getNumEtuAide() {
         return numEtuAide;
     }
 
-    public void setNumEtuAide(int numEtuAide) {
+    public void setNumEtuAide(String numEtuAide) {
         this.numEtuAide = numEtuAide;
     }
 
@@ -114,11 +83,11 @@ public class AideHumaine {
         this.firstName = firstName;
     }
 
-    public LocalDate getDateOfBirth() {
+    public LocalDateTime getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -130,19 +99,19 @@ public class AideHumaine {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -152,5 +121,13 @@ public class AideHumaine {
 
     public void setFunction(String function) {
         this.function = function;
+    }
+
+    public List<FeuilleHeure> getFeuilleHeures() {
+        return feuilleHeures;
+    }
+
+    public void setFeuilleHeures(List<FeuilleHeure> feuilleHeures) {
+        this.feuilleHeures = feuilleHeures;
     }
 }

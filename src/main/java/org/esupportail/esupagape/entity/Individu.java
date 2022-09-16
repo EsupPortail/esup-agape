@@ -2,39 +2,31 @@ package org.esupportail.esupagape.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Individu", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_individu_numetu", columnNames = {"numEtu"})
-})
 public class Individu {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(unique = true)
-    private int numEtu;
+    private String numEtu;
+
     private String name;
+
     private String firstName;
+
     private String sex;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
-    private Long eppn;
+    private String eppn;
 
     private String emailEtu;
 
@@ -42,62 +34,24 @@ public class Individu {
 
     private String currentAddress;
 
-    private int currentCP;
+    private String currentCP;
 
     private String currentCity;
 
     private String fixAdress;
 
-    private int fixCP;
+    private String fixCP;
 
     private String fixCity;
 
-    private int mobilPhone;
+    private String mobilPhone;
 
-    private int fixPhone;
+    private String fixPhone;
 
-    private int contactPhone;
+    private String contactPhone;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Dossier> dossiers = new ArrayList<>();
-
-    public Individu(List<Dossier> dossiers) {
-        this.dossiers = dossiers;
-    }
-
-    public List<Dossier> getDossiers() {
-        return dossiers;
-    }
-
-    public void setDossiers(List<Dossier> dossiers) {
-        this.dossiers = dossiers;
-    }
-
-    public Individu() {
-
-    }
-
-    public Individu(Long id, int numEtu, String name, String firstName, String sex, LocalDate dateOfBirth, Long eppn, String emailEtu, String emailPerso, String currentAddress, int currentCP, String currentCity, String fixAdress, int fixCP, String fixCity, int mobilPhone, int fixPhone, int contactPhone) {
-        this.id = id;
-        this.numEtu = numEtu;
-        this.name = name;
-        this.firstName = firstName;
-        this.sex = sex;
-        this.dateOfBirth = dateOfBirth;
-        this.eppn = eppn;
-        this.emailEtu = emailEtu;
-        this.emailPerso = emailPerso;
-        this.currentAddress = currentAddress;
-        this.currentCP = currentCP;
-        this.currentCity = currentCity;
-        this.fixAdress = fixAdress;
-        this.fixCP = fixCP;
-        this.fixCity = fixCity;
-        this.mobilPhone = mobilPhone;
-        this.fixPhone = fixPhone;
-        this.contactPhone = contactPhone;
-    }
-
 
     public Long getId() {
         return id;
@@ -107,11 +61,11 @@ public class Individu {
         this.id = id;
     }
 
-    public int getNumEtu() {
+    public String getNumEtu() {
         return numEtu;
     }
 
-    public void setNumEtu(int numEtu) {
+    public void setNumEtu(String numEtu) {
         this.numEtu = numEtu;
     }
 
@@ -147,11 +101,11 @@ public class Individu {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Long getEppn() {
+    public String getEppn() {
         return eppn;
     }
 
-    public void setEppn(Long eppn) {
+    public void setEppn(String eppn) {
         this.eppn = eppn;
     }
 
@@ -179,11 +133,11 @@ public class Individu {
         this.currentAddress = currentAddress;
     }
 
-    public int getCurrentCP() {
+    public String getCurrentCP() {
         return currentCP;
     }
 
-    public void setCurrentCP(int currentCP) {
+    public void setCurrentCP(String currentCP) {
         this.currentCP = currentCP;
     }
 
@@ -203,11 +157,11 @@ public class Individu {
         this.fixAdress = fixAdress;
     }
 
-    public int getFixCP() {
+    public String getFixCP() {
         return fixCP;
     }
 
-    public void setFixCP(int fixCP) {
+    public void setFixCP(String fixCP) {
         this.fixCP = fixCP;
     }
 
@@ -219,27 +173,35 @@ public class Individu {
         this.fixCity = fixCity;
     }
 
-    public int getMobilPhone() {
+    public String getMobilPhone() {
         return mobilPhone;
     }
 
-    public void setMobilPhone(int mobilPhone) {
+    public void setMobilPhone(String mobilPhone) {
         this.mobilPhone = mobilPhone;
     }
 
-    public int getFixPhone() {
+    public String getFixPhone() {
         return fixPhone;
     }
 
-    public void setFixPhone(int fixPhone) {
+    public void setFixPhone(String fixPhone) {
         this.fixPhone = fixPhone;
     }
 
-    public int getContactPhone() {
+    public String getContactPhone() {
         return contactPhone;
     }
 
-    public void setContactPhone(int contactPhone) {
+    public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
+    }
+
+    public List<Dossier> getDossiers() {
+        return dossiers;
+    }
+
+    public void setDossiers(List<Dossier> dossiers) {
+        this.dossiers = dossiers;
     }
 }
