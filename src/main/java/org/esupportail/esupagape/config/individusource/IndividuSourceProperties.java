@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.config.individuSource;
+package org.esupportail.esupagape.config.individusource;
 
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;

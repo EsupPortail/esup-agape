@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
 
-import org.esupportail.esupagape.service.dataSource.IndividuDataSourceService;
+import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;

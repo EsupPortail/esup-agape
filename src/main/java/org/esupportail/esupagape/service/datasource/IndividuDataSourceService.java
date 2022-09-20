@@ -1,6 +1,6 @@
-package org.esupportail.esupagape.service.dataSource;
+package org.esupportail.esupagape.service.datasource;
 
-import org.esupportail.esupagape.config.individuSource.IndividuSourceProperties;
+import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
 import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
