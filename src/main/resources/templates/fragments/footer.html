@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <footer th:fragment="black" class="footer mt-auto py-3 bg-dark hidden-print text-center">
-    <span class="text-white">Université de Rouen Normandie - 2022</span>
+    <span class="text-white" th:text="#{application.footer}"></span>
 </footer>
 <footer th:fragment="white" class="footer mt-auto py-3 bg-light hidden-print text-center">
-    <span class="text-black">Université de Rouen Normandie - 2022</span>
+    <span class="text-black" th:text="#{application.footer}"></span>
 </footer>
 </html>

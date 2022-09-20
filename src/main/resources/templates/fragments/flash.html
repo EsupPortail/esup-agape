@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="versionApp" type="java.lang.String"*/-->
+<div th:fragment="flash">
+    <div  th:if="${message != null}" class="toast-container d-flex justify-content-center p-3 w-100" style="top: 25%;" >
+        <div id="toast" class="toast align-items-center border-0 fade" th:classappend="'text-bg-' + ${message.type}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex">
+                <div class="toast-body p-5">
+                    <h5 th:text="${message.text}"></h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const toastLiveExample = document.getElementById('toast');
+            const toast = new bootstrap.Toast(toastLiveExample);
+            toast.show();
+        });
+    </script>
+</div>
+</html>

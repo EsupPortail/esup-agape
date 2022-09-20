@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
 
+import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,26 +41,31 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public List<String> getAllIndividuNums() {
-        List<String> numEtus = new ArrayList<>();
-        String sqlRequest = "\n" +
-                "SELECT\n" +
-                "    individu.cod_etu\n" +
-                "FROM\n" +
-                "         individu\n" +
-                "    INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind\n" +
-                "    INNER JOIN annee_uni ON ins_adm_etp.cod_anu = annee_uni.cod_anu\n" +
-                "WHERE\n" +
-                "        annee_uni.eta_anu_iae = 'O'\n" +
-                "    AND individu.cod_thp IS NOT NULL\n" +
-                "    AND ins_adm_etp.eta_iae = 'E'\n" +
-                "    AND ins_adm_etp.eta_pmt_iae = 'P'\n" +
+    public List<Individu> getAllIndividuNums() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<Individu> numEtus = new ArrayList<>();
+        String sqlRequest = 
+                "SELECT " +
+                        "individu.cod_etu, " +
+                        "individu.lib_nom_pat_ind, " +
+                        "individu.lib_pr1_ind, " +
+                        "individu.cod_sex_etu, " +
+                        "individu.date_nai_ind " +
+                "FROM " +
+                "         individu " +
+                "    INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
+                "    INNER JOIN annee_uni ON ins_adm_etp.cod_anu = annee_uni.cod_anu " +
+                "WHERE " +
+                "        annee_uni.eta_anu_iae = 'O' " +
+                "    AND individu.cod_thp IS NOT NULL " +
+                "    AND ins_adm_etp.eta_iae = 'E' " +
+                "    AND ins_adm_etp.eta_pmt_iae = 'P' " +
                 "    AND ins_adm_etp.tem_iae_prm = 'O'" +
                 "    AND ins_adm_etp.cod_cge not in ('NM1')";
         new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
-            numEtus.add(rs.getString("cod_etu"));
+            numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDateTime.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
             while (rs.next()) {
-                numEtus.add(rs.getString("cod_etu"));
+                numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDateTime.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
             }
         });
         return numEtus;

@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
 
+import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,7 +37,7 @@ public class PegaseIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public List<String> getAllIndividuNums() {
+    public List<Individu> getAllIndividuNums() {
         return null;
     }
 }
