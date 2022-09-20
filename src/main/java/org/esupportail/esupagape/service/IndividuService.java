@@ -47,6 +47,7 @@ public class IndividuService {
         for (Individu individu : individus) {
             syncIndividu(individu.getId());
         }
+        logger.info("Sync individus done");
     }
 
     @Transactional
@@ -60,7 +61,7 @@ public class IndividuService {
                 }
             }
         }
-
+        logger.info("Import individus done");
     }
 
     public Individu findById(Long id) throws AgapeException {
