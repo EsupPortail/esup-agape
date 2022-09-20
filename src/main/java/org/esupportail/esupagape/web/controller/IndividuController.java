@@ -19,7 +19,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping("/individus")
 public class IndividuController {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Resource
     private IndividuService individuService;
 
@@ -41,7 +41,7 @@ public class IndividuController {
             return "students/create";
         }
        individuService.save(individu);
-        LOGGER.info("Nouvel étudiant" +  individu.getId());
+        logger.info("Nouvel étudiant" +  individu.getId());
         return "redirect:/individus";
     }
 
