@@ -8,9 +8,11 @@ import java.util.Map;
 
 public interface IndividuSourceService {
 
-    public Map<String, String> getSourcesPropertiesMapping();
-    public Map<String, String> getIndividuProperties(String numEtu);
-    public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth);
-    public List<Individu> getAllIndividuNums();
+    Map<String, String> getSourcesPropertiesMapping();
+    Map<String, Object> getIndividuProperties(String numEtu);
+    Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth);
+    void updateIndividu(Individu individu);
+    void updateDossier(Individu individu, int year);
+    List<Individu> getAllIndividuNums();
 
 }

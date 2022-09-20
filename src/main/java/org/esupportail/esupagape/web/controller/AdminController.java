@@ -28,5 +28,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/sync-individus")
+    public String syncIndividus(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro est terminée"));
+        individuService.syncAllIndividus();
+        return "redirect:/admin";
+    }
 
 }

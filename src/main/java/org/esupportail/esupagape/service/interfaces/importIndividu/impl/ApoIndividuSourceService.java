@@ -3,6 +3,8 @@ package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -12,12 +14,15 @@ import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @ConditionalOnProperty(value = "individu-source.data-sources.APO.name")
 public class ApoIndividuSourceService implements IndividuSourceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ApoIndividuSourceService.class);
 
     DataSource dataSource;
 
@@ -31,13 +36,23 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Map<String, String> getIndividuProperties(String numEtu) {
-        return null;
+    public Map<String, Object> getIndividuProperties(String numEtu) {
+        return new HashMap<>();
     }
 
     @Override
     public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth) {
         return null;
+    }
+
+    @Override
+    public void updateIndividu(Individu individu) {
+
+    }
+
+    @Override
+    public void updateDossier(Individu individu, int year) {
+
     }
 
     @Override
