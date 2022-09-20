@@ -2,10 +2,12 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
 <!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
-
-<head th:replace="fragments/head :: head"></head>
-<body>
-  <header th:replace="fragments/header"></header>
-  <footer th:replace="fragments/footer"></footer>
-</body>
+    <head th:replace="fragments/head :: head"></head>
+    <body class="d-flex flex-column h-100">
+        <header th:replace="fragments/header :: header"></header>
+        <main class="flex-shrink-0">
+            COUCOU
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+    </body>
 </html>

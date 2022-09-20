@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="versionApp" type="java.lang.String"*/-->
-	<head th:fragment="head">
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="googlebot" content="noindex" />
-		<meta name="robots" content="noindex" />
-		<base href="/">
-		<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-		<link rel="stylesheet" th:href="'/css/agape.css'" />
+<head th:fragment="head">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="googlebot" content="noindex" />
+	<meta name="robots" content="noindex" />
+	<base href="/">
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="'/css/agape.css'" />
 
-		<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
 
-		<link rel="icon" type="image/png" th:href="@{/images/favicon.ico}" />
+	<link rel="icon" type="image/png" th:href="@{/images/favicon.ico}" />
 
-		<title th:text="#{application.title}"></title>
-
-	</head>
+	<title th:text="#{application.title}"></title>
+</head>
 </html>

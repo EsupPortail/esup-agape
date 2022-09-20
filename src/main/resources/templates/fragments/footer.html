@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr"
-		xmlns:th="http://www.thymeleaf.org">
-	<body>
-		<div th:fragment="footer" class="hidden-print" style="text-align: center; margin-top:950px; color: white;background-color: black;">Université de Rouen Normandie - 2022</div>
-	</body>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="black" class="footer mt-auto py-3 bg-dark hidden-print text-center">
+    <span class="text-white">Université de Rouen Normandie - 2022</span>
+</footer>
+<footer th:fragment="white" class="footer mt-auto py-3 bg-light hidden-print text-center">
+    <span class="text-black">Université de Rouen Normandie - 2022</span>
+</footer>
 </html>
