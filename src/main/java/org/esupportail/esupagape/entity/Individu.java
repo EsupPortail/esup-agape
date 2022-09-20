@@ -38,11 +38,13 @@ public class Individu {
 
     private String currentCity;
 
-    private String fixAdress;
+    private String fixAddress;
 
     private String fixCP;
 
     private String fixCity;
+
+    private String fixCountry;
 
     private String mobilPhone;
 
@@ -161,12 +163,12 @@ public class Individu {
         this.currentCity = currentCity;
     }
 
-    public String getFixAdress() {
-        return fixAdress;
+    public String getFixAddress() {
+        return fixAddress;
     }
 
-    public void setFixAdress(String fixAdress) {
-        this.fixAdress = fixAdress;
+    public void setFixAddress(String fixAdress) {
+        this.fixAddress = fixAdress;
     }
 
     public String getFixCP() {
@@ -183,6 +185,14 @@ public class Individu {
 
     public void setFixCity(String fixCity) {
         this.fixCity = fixCity;
+    }
+
+    public String getFixCountry() {
+        return fixCountry;
+    }
+
+    public void setFixCountry(String fixCountry) {
+        this.fixCountry = fixCountry;
     }
 
     public String getMobilPhone() {

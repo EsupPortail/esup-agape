@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+  <!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
+  <!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
+  <head th:replace="fragments/head :: head"></head>
+  <body class="d-flex flex-column h-100">
+    <header th:replace="fragments/header :: header"></header>
+    <h1 class="title-create text-center mt-5">Ajout d'un individu</h1>
+    <form class="container" th:method="post" action="#" th:action="@{/individus/create}" th:object="${individu}">
+      <div class="row mb3">
+        <label th:for="numEtu" class="col-md-2 col-form-label mb-1">Numéro étudiant</label>
+        <div class="col-sm-10">
+          <input th:field="*{numEtu}" type="text" class="form-control">
+          <p th:if="${#fields.hasErrors('numEtu')}" th:errorclass="error" th:errors="*{numEtu}" />
+        </div>
+        <label th:for="name" class="col-md-2 col-form-label mb-1">Nom</label>
+        <div class="col-sm-10">
+          <input th:field="*{name}" type="text" class="form-control">
+          <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}" />
+        </div>
+        <label th:for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
+        <div class="col-sm-10">
+          <input th:field="*{firstName}" type="text" class="form-control" />
+          <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}" />
+        </div>
+        <label th:for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
+        <div class="col-sm-10">
+          <input th:field="*{dateOfBirth}" type="date" class="form-control mb-1" />
+          <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error" th:errors="*{dateOfBirth}" />
+        </div>
+        <label th:for="sex" class="col-md-2 col-form-label mb-1">Sexe</label>
+        <div class="col-sm-10">
+          <div class="col-sm-10">
+            <input th:field="*{sex}" type="text" class="form-control">
+            <p th:if="${#fields.hasErrors('sex')}" th:errorclass="error" th:errors="*{sex}" />
+          </div>
+          <div>
+            <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <footer th:replace="fragments/footer :: black"></footer>
+  </body>
+</html>

@@ -29,6 +29,10 @@ public class LdapPersonService {
         return personLdapRepository.findByDisplayNameStartingWithIgnoreCaseOrCnStartingWithIgnoreCaseOrUidStartingWithOrMailStartingWith(searchString, searchString, searchString, searchString);
     }
 
+    public List<PersonLdap> searchBySupannEtuId(String numEtu) {
+        return personLdapRepository.findBySupannEtuId(numEtu);
+    }
+
     public PersonLdapRepository getPersonLdapRepository() {
 		return personLdapRepository;
 	}

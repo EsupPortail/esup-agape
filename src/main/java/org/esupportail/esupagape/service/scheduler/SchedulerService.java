@@ -17,6 +17,7 @@ public class SchedulerService {
     @Scheduled(initialDelay = 5000, fixedRate = 86400000)
     public void importIndividus() {
         individuService.importIndividus();
+        individuService.syncAllIndividus();
     }
 
 }
