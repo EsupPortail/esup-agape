@@ -5,10 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+
 public interface IndividuRepository extends JpaRepository<Individu, Long> {
 
     Individu findByNumEtu(String numEtu);
-
+    Individu findByNameAndFirstNameAndDateOfBirthAndSex(String name, String firstName, LocalDate dateOfBirth, String sex);
     Page<Individu> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
 
 }

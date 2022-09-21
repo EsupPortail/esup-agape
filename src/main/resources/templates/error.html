@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head"></head>
 <body>
-<header th:replace="fragments/header :: header"></header>
-    <main role="main" style="padding-bottom: 65px !important;">
+    <header th:replace="fragments/header :: header"></header>
+    <main>
     <div class="card col-lg-10 mx-auto mt-3">
         <div class="card-body">
             <h1>Une erreur s’est produite<span th:text=" ' : ' + ${status} + ' ' + ${error}"></span></h1>

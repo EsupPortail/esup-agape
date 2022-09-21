@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,14 @@ public class IndividuService {
         this.individuSourceServices = individuSourceServices;
     }
 
+    public Individu getIndividu(String numEtu) {
+        return individuRepository.findByNumEtu(numEtu);
+    }
+
+    public Individu getIndividu(String name, String firstName, LocalDate dateOfBirth, String sex) {
+        return individuRepository.findByNameAndFirstNameAndDateOfBirthAndSex(name, firstName, dateOfBirth, sex);
+    }
+
     public List<Individu> getAllIndividus(){
         List<Individu> individus = new ArrayList<>();
         individuRepository.findAll().forEach(individus::add);
@@ -37,7 +46,7 @@ public class IndividuService {
     }
     @Transactional
     public void syncIndividu(Long id) {
-        Individu individu = individuRepository.findById(id).get();
+        Individu individu = individuRepository.findById(id).orElseThrow();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuSourceService.updateIndividu(individu);
         }
@@ -85,5 +94,58 @@ public class IndividuService {
 
     public Page<Individu> searchByName(String name, Pageable pageable) {
         return individuRepository.findAllByNameContainsIgnoreCase(name, pageable);
+    }
+
+    public Individu create(Individu individu) {
+        Individu individuTestIsExist = null;
+        if(!individu.getNumEtu().isEmpty()) {
+             individuTestIsExist = getIndividu(individu.getNumEtu());
+             if(individuTestIsExist == null) {
+                 return createFromSources(individu.getNumEtu());
+             }
+        } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
+            individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getSex());
+            if(individuTestIsExist == null) {
+                return createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getSex());
+            }
+        }
+        if(individuTestIsExist != null) {
+            return individuTestIsExist;
+        } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
+            save(individu);
+        }
+        return individu;
+    }
+
+    public Individu createFromSources(String numEtu) {
+        Individu individuFromSources = null;
+        for (IndividuSourceService individuSourceService : individuSourceServices) {
+            individuFromSources = individuSourceService.getIndividuByNumEtu(numEtu);
+            if(individuFromSources != null) {
+                break;
+            }
+        }
+        if (individuFromSources != null) {
+            save(individuFromSources);
+        }
+        return individuFromSources;
+    }
+
+    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth, String sex) {
+        Individu individuFromSources = null;
+        for (IndividuSourceService individuSourceService : individuSourceServices) {
+            individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth, sex);
+            if(individuFromSources != null) {
+                break;
+            }
+        }
+        if (individuFromSources != null) {
+            save(individuFromSources);
+        }
+        return individuFromSources;
+    }
+
+    public Individu getById(Long id) {
+        return individuRepository.findById(id).orElseThrow();
     }
 }

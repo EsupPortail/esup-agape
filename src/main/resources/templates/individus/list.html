@@ -1,69 +1,64 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-  <!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
-  <!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
-  <head th:replace="fragments/head :: head"></head>
-  <body class="d-flex flex-column h-100">
-    <script type="text/javascript">
-        function clearSearch() {
-            window.location = "[[@{/individus/}]]";
-        }
-    </script>
-    <header th:replace="fragments/header :: header"></header>
-    <main class="flex-shrink-0">
-      <section class="text-center">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main>
+    <section class="text-center">
         <h1 class="mt-5">Liste des Individus</h1>
         <a class="btn btn-primary m-3" th:href="@{/individus/create}" type="button">Ajouter</a>
         <div class="container">
-          <div class="container">
-            <form th:action="@{/individus/search}" method="get">
-              <label class="label-list">Rechercher:</label>
-              <input class="mt-4 mb-4" type="text" name="name" id="name" size="50" th:value="${name}" /> &nbsp;
-              <input class="btn btn-success ms-2 mb-1" type="submit" value="Valider" /> &nbsp;
-              <input class="btn btn-secondary ms-2 mb-1" type="button" value="Effacer" id="btnClear" onclick="clearSearch()" />
-            </form>
-          <table class="table table-striped">
-            <thead class="text-center mt-5 mb-4">
-              <tr>
-                <th scope="col">
-                  <a class="sorted" sd:pagination-sort="numEtu">NUMERO ETUDIANT</a>
-                </th>
-                <th scope="col">
-                  <a class="sorted" sd:pagination-sort="name">NOM</a>
-                </th>
-                <th scope="col">
-                  <a class="sorted" sd:pagination-sort="firstName">PRENOM</a>
-                </th>
-                <th scope="col">
-                  <a class="sorted" sd:pagination-sort="dateOfBirth">DATE DE NAISSANCE</a>
-                </th>
-                <th scope="col">
-                  <a class="sorted" sd:pagination-sort="sex">SEXE</a>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-center mt-5 mb-4">
-              <tr th:each="individu : ${individus}">
-                <td th:utext="${individu.numEtu}"></td>
-                <td th:utext="${individu.name}"></td>
-                <td th:utext="${individu.firstName}"></td>
-                <td th:utext="${individu.dateOfBirth}"></td>
-                <td th:utext="${individu.sex}"></td>
-                <td class="container">
-                  <a class="btn btn-info" th:href="@{/show/{id}(id=${individu.id})}" role="button">Voir</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <nav th:fragment="pagination" id="pagination" aria-label="pagination">
-            <div class="col-lg-12 text-center">
-              <div sd:pagination-summary="">info</div>
+            <div class="container">
+                <form th:action="@{/individus/search}" method="get">
+                    <label class="label-list">Rechercher:</label>
+                    <input class="mt-4 mb-4" type="text" name="name" id="name" size="50" th:value="${name}" /> &nbsp;
+                    <input class="btn btn-success ms-2 mb-1" type="submit" value="Valider" /> &nbsp;
+                    <a role="button" class="btn btn-secondary ms-2 mb-1" type="button" id="btnClear" th:href="@{/individus/}">Effacer</a>
+                </form>
+                <table class="table table-striped">
+                    <thead class="text-center mt-5 mb-4">
+                    <tr>
+                        <th scope="col">
+                            <a class="sorted" sd:pagination-sort="numEtu">NUMERO ETUDIANT</a>
+                        </th>
+                        <th scope="col">
+                            <a class="sorted" sd:pagination-sort="name">NOM</a>
+                        </th>
+                        <th scope="col">
+                            <a class="sorted" sd:pagination-sort="firstName">PRENOM</a>
+                        </th>
+                        <th scope="col">
+                            <a class="sorted" sd:pagination-sort="dateOfBirth">DATE DE NAISSANCE</a>
+                        </th>
+                        <th scope="col">
+                            <a class="sorted" sd:pagination-sort="sex">SEXE</a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-center mt-5 mb-4">
+                    <tr th:each="individu : ${individus}">
+                        <td th:utext="${individu.numEtu}"></td>
+                        <td th:utext="${individu.name}"></td>
+                        <td th:utext="${individu.firstName}"></td>
+                        <td th:utext="${individu.dateOfBirth}"></td>
+                        <td th:utext="${individu.sex}"></td>
+                        <td class="container">
+                            <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <nav th:fragment="pagination" id="pagination" aria-label="pagination">
+                    <div class="col-lg-12 text-center">
+                        <div sd:pagination-summary="">info</div>
+                    </div>
+                    <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
+                </nav>
             </div>
-            <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
-          </nav>
         </div>
-      </section>
-    </main>
-    <footer th:replace="fragments/footer :: black"></footer>
-  </body>
+    </section>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+</body>
 </html>

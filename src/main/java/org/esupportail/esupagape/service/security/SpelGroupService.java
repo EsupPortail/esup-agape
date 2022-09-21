@@ -20,11 +20,6 @@ public class SpelGroupService implements GroupService {
 	}
 
 	@Override
-	public List<Map.Entry<String, String>> getAllGroups(String search) {
-		return null;
-	}
-
-	@Override
 	public List<String> getGroups(String eppn) {
 
 		List<String> groups = new ArrayList<>();
@@ -43,11 +38,6 @@ public class SpelGroupService implements GroupService {
 		}		
 		return groups.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 		
-	}
-
-	@Override
-	public List<String> getMembers(String groupName) {
-		return null;
 	}
 
 }

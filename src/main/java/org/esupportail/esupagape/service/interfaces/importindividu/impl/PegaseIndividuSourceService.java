@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,16 @@ public class PegaseIndividuSourceService implements IndividuSourceService {
     @Override
     public Map<String, Object> getIndividuProperties(String numEtu) {
         return new HashMap<>();
+    }
+
+    @Override
+    public Individu getIndividuByNumEtu(String numEtu) {
+        return null;
+    }
+
+    @Override
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+        return null;
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,6 +39,16 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     @Override
     public Map<String, Object> getIndividuProperties(String numEtu) {
         return new HashMap<>();
+    }
+
+    @Override
+    public Individu getIndividuByNumEtu(String numEtu) {
+        return null;
+    }
+
+    @Override
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+        return null;
     }
 
     @Override
@@ -78,9 +89,9 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                 "    AND ins_adm_etp.tem_iae_prm = 'O'" +
                 "    AND ins_adm_etp.cod_cge not in ('NM1')";
         new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
-            numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDateTime.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
+            numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
             while (rs.next()) {
-                numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDateTime.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
+                numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
             }
         });
         return numEtus;

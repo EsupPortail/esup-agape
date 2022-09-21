@@ -3,7 +3,7 @@ package org.esupportail.esupagape.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class Individu {
 
     private String sex;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDateTime dateOfBirth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
     private String eppn;
 
@@ -59,7 +59,7 @@ public class Individu {
 
     }
 
-    public Individu(String numEtu, String name, String firstName, String sex, LocalDateTime dateOfBirth) {
+    public Individu(String numEtu, String name, String firstName, String sex, LocalDate dateOfBirth) {
         this.numEtu = numEtu;
         this.name = name;
         this.firstName = firstName;
@@ -107,11 +107,11 @@ public class Individu {
         this.sex = sex;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

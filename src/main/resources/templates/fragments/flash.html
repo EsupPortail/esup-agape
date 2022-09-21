@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="versionApp" type="java.lang.String"*/-->
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="message" type="org.esupportail.esupagape.web.viewentity.Message"*/-->
 <div th:fragment="flash">
     <div  th:if="${message != null}" class="toast-container d-flex justify-content-center p-3 w-100" style="top: 25%;" >
         <div id="toast" class="toast align-items-center border-0 fade" th:classappend="'text-bg-' + ${message.type}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">

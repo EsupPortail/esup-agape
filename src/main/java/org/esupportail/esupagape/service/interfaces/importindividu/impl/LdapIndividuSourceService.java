@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,32 @@ public class LdapIndividuSourceService implements IndividuSourceService {
         ObjectMapper mapper = new ObjectMapper();
         properties = mapper.convertValue(personLdaps.get(0), new TypeReference<>() {});
         return properties;
+    }
+
+    @Override
+    public Individu getIndividuByNumEtu(String numEtu) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(numEtu);
+        return getIndividuFromPersonLdap(personLdaps);
+    }
+
+    @Override
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(name, firstName, dateOfBirth);
+        return getIndividuFromPersonLdap(personLdaps);
+    }
+
+    private Individu getIndividuFromPersonLdap(List<PersonLdap> personLdaps) {
+        if (!personLdaps.isEmpty()) {
+            Individu individu = new Individu();
+            individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
+            individu.setName(personLdaps.get(0).getSn());
+            individu.setFirstName(personLdaps.get(0).getGivenName());
+            if (personLdaps.get(0).getSchacDateOfBirth() != null) {
+                individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth()));
+            }
+            return individu;
+        }
+        return null;
     }
 
     @Override

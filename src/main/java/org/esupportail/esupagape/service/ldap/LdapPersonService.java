@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -42,4 +43,7 @@ public class LdapPersonService {
         return ldapTemplate.search(ldapProperties.getSearchBase(), formattedFilter, new PersonLdapAttributesMapper());
     }
 
+    public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {
+        return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirth);
+    }
 }

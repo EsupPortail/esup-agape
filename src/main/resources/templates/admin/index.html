@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
-<!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head th:replace="fragments/head :: head"></head>
-    <body class="d-flex flex-column h-100">
+    <body>
         <header th:replace="fragments/header :: header"></header>
-        <main class="flex-shrink-0">
+        <main>
             <h1>Admin !!!</h1>
             <hr>
             <a role="button" href="/admin/force-sync" class="btn btn-dark">Forcer la synchro</a>
             <a role="button" href="/admin/sync-individus" class="btn btn-dark">Synchro des individus</a>
-
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>

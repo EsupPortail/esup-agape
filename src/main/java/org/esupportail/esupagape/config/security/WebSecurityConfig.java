@@ -75,11 +75,9 @@ public class WebSecurityConfig {
         LdapUserSearch ldapUserSearch = new FilterBasedLdapUserSearch(ldapProperties.getSearchBase(), ldapProperties.getUserIdSearchFilter(), ldapContextSource);
         CasLdapAuthoritiesPopulator casLdapAuthoritiesPopulator = new CasLdapAuthoritiesPopulator(ldapContextSource, ldapProperties.getGroupSearchBase());
         casLdapAuthoritiesPopulator.setRolePrefix("");
-        casLdapAuthoritiesPopulator.setGroupPrefixRoleName(webSecurityProperties.getGroupToRoleFilterPattern());
         casLdapAuthoritiesPopulator.setMappingGroupesRoles(webSecurityProperties.getMappingGroupsRoles());
         casLdapAuthoritiesPopulator.setLdapGroupService(ldapGroupService());
         Group2UserRoleService group2UserRoleService = new Group2UserRoleService();
-        group2UserRoleService.setGroupPrefixRoleName(webSecurityProperties.getGroupToRoleFilterPattern());
         group2UserRoleService.setMappingGroupesRoles(webSecurityProperties.getMappingGroupsRoles());
         group2UserRoleService.setGroupService(spelGroupService);
         casLdapAuthoritiesPopulator.setGroup2UserRoleService(group2UserRoleService);
@@ -173,10 +171,6 @@ public class WebSecurityConfig {
         ldapGroupService.setLdapTemplate(ldapTemplate);
         ldapGroupService.setGroupSearchBase(ldapProperties.getGroupSearchBase());
         ldapGroupService.setGroupSearchFilter(ldapProperties.getGroupSearchFilter());
-        if(ldapProperties.getAllGroupsSearchFilter() != null) {
-            ldapGroupService.setAllGroupsSearchFilter(ldapProperties.getAllGroupsSearchFilter());
-        }
-        ldapGroupService.setMemberSearchBase(ldapProperties.getSearchBase());
         ldapGroupService.setMemberSearchFilter(ldapProperties.getMemberSearchFilter());
         return ldapGroupService;
     }

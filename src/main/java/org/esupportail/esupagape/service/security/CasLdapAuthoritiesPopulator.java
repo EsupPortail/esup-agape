@@ -17,8 +17,6 @@ public class CasLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator
 
     private LdapGroupService ldapGroupService;
 
-    private String groupPrefixRoleName;
-
     protected Map<String, String> mappingGroupesRoles;
 
     private Group2UserRoleService group2UserRoleService;
@@ -29,10 +27,6 @@ public class CasLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator
 
     public void setMappingGroupesRoles(Map<String, String> mappingGroupesRoles) {
         this.mappingGroupesRoles = mappingGroupesRoles;
-    }
-
-    public void setGroupPrefixRoleName(String groupPrefixRoleName) {
-        this.groupPrefixRoleName = groupPrefixRoleName;
     }
 
     public void setGroup2UserRoleService(Group2UserRoleService group2UserRoleService) {
@@ -53,7 +47,7 @@ public class CasLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator
             grantedAuthorities.add(simpleGrantedAuthority);
             logger.debug("loading authorities : " + simpleGrantedAuthority.getAuthority());
         }
-        ldapGroupService.addLdapRoles(grantedAuthorities, ldapGroups, groupPrefixRoleName, mappingGroupesRoles);
+        ldapGroupService.addLdapRoles(grantedAuthorities, ldapGroups, mappingGroupesRoles);
         return grantedAuthorities;
     }
 
