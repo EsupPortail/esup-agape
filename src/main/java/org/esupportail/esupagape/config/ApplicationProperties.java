@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.config.security;
+package org.esupportail.esupagape.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

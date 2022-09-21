@@ -4,15 +4,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
 
-@ConfigurationProperties(prefix="security.web")
+@ConfigurationProperties(prefix="security")
 public class WebSecurityProperties {
 
     private String[] wsAccessAuthorizeIps;
     private String groupToRoleFilterPattern;
     private Map<String, String> mappingGroupsRoles;
     private Map<String, String> groupMappingSpel;
-    private String franceConnectAcr = "eidas1";
-    private String franceConnectLogoutEndpoint;
 
     public String[] getWsAccessAuthorizeIps() {
         return wsAccessAuthorizeIps;
@@ -44,19 +42,4 @@ public class WebSecurityProperties {
         this.groupMappingSpel = groupMappingSpel;
     }
 
-    public String getFranceConnectAcr() {
-        return franceConnectAcr;
-    }
-
-    public void setFranceConnectAcr(String franceConnectAcr) {
-        this.franceConnectAcr = franceConnectAcr;
-    }
-
-    public String getFranceConnectLogoutEndpoint() {
-        return franceConnectLogoutEndpoint;
-    }
-
-    public void setFranceConnectLogoutEndpoint(String franceConnectLogoutEndpoint) {
-        this.franceConnectLogoutEndpoint = franceConnectLogoutEndpoint;
-    }
 }

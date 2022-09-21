@@ -43,7 +43,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                         <a class="nav-link active text-light" aria-current="page" th:href="@{/admin/}">Admin</a>
                     </li>
                 </ul>
