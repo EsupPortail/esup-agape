@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head :: head"></head>
-<body>
-<header th:replace="fragments/header :: header"></header>
-<main>
-    <h1 class="title-create text-center mt-5">Ajout d’un individu</h1>
-    <h2 th:text="${individu.name}"></h2>
-</main>
-<footer th:replace="fragments/footer :: black"></footer>
-<div th:replace="fragments/flash :: flash"></div>
-</body>
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main>
+            <h1 class="title-create text-center mt-5">Ajout d’un individu</h1>
+            <h2 th:text="${individu.name}"></h2>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
 </html>
