@@ -4,7 +4,9 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.IndividuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,11 +41,20 @@ public class IndividuController {
     @PostMapping("/create")
     public String create(@Valid Individu individu, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
-            return "students/create";
+            return "individus/create";
         }
        individuService.save(individu);
         logger.info("Nouvel étudiant" +  individu.getId());
         return "redirect:/individus";
     }
 
+    @RequestMapping("/search")
+    public String searchIndividu(Model model,
+                                 @Param("name") String name,
+                                 Pageable pageable) {
+        Page<Individu> individus = individuService.searchByName(name, pageable);
+        model.addAttribute("individus", individus);
+        model.addAttribute("name", name);
+        return "individus/list";
+    }
 }

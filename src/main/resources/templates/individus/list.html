@@ -4,12 +4,24 @@
   <!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
   <head th:replace="fragments/head :: head"></head>
   <body class="d-flex flex-column h-100">
+    <script type="text/javascript">
+        function clearSearch() {
+            window.location = "[[@{/students/}]]";
+        }
+    </script>
     <header th:replace="fragments/header :: header"></header>
     <main class="flex-shrink-0">
       <section class="text-center">
         <h1 class="mt-5">Liste des Individus</h1>
         <a class="btn btn-primary m-3" th:href="@{/individus/create}" type="button">Ajouter</a>
         <div class="container">
+          <div class="container">
+            <form th:action="@{/individus/search}" method="get">
+              <label class="label-list">Rechercher:</label>
+              <input class="mt-4 mb-4" type="text" name="name" id="name" size="50" th:value="${name}" /> &nbsp;
+              <input class="btn btn-success ms-2 mb-1" type="submit" value="Valider" /> &nbsp;
+              <input class="btn btn-secondary ms-2 mb-1" type="button" value="Effacer" id="btnClear" onclick="clearSearch()" />
+            </form>
           <table class="table table-striped">
             <thead class="text-center mt-5 mb-4">
               <tr>
