@@ -1,7 +1,7 @@
 package org.esupportail.esupagape.service.datasource;
 
 import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
-import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

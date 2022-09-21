@@ -1,9 +1,9 @@
-package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
+package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.slf4j.Logger;

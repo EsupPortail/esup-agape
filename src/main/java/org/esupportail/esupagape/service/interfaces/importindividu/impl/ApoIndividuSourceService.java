@@ -1,8 +1,8 @@
-package org.esupportail.esupagape.service.interfaces.importIndividu.impl;
+package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
-import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

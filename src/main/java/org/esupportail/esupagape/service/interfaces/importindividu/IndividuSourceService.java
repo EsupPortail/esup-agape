@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.service.interfaces.importIndividu;
+package org.esupportail.esupagape.service.interfaces.importindividu;
 
 import org.esupportail.esupagape.entity.Individu;
 

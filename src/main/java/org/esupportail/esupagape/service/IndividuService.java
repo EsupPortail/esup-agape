@@ -3,7 +3,7 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.repository.IndividuRepository;
-import org.esupportail.esupagape.service.interfaces.importIndividu.IndividuSourceService;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
