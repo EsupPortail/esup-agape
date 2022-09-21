@@ -1,56 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
-<!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
-    <head th:replace="fragments/head :: head"></head>
-    <body class="d-flex flex-column h-100">
-        <header th:replace="fragments/header :: header"></header>
-        <main class="flex-shrink-0">
-            Individus
-            <section class="text-center">
-                <h1 class="mt-5">Liste des Individus</h1>
-                <a class="btn btn-primary m-3" th:href="@{/individus/create}" type="button">Ajouter</a>
-                <div class="container">
-                    <table class="table table-striped">
-                        <thead class="text-center mt-5 mb-4">
-                            <tr>
-                                <th scope="col">
-                                    <a>ID</a>
-                                </th>
-                                <th scope="col">
-                                   NUMERO ETUDIANT
-                                </th>
-                                <th scope="col">
-                                   NOM
-                                </th>
-                                <th scope="col">
-                                  PRENOM
-                                </th>
-                                <th scope="col">
-                                   DATE DE NAISSANCE
-                                </th>
-                                <th scope="col">
-                                   SEXE
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center mt-5 mb-4">
-                            <tr th:each="individu : ${individus}">
-                                <td th:utext="${individu.id}"></td>
-                                <td th:utext="${individu.numEtu}"></td>
-                                <td th:utext="${individu.name}"></td>
-                                <td th:utext="${individu.firstName}"></td>
-                                <td th:utext="${individu.dateOfBirth}"></td>
-                                <td th:utext="${individu.sex}"></td>
-                                <td class="container">
-                                    <a class="btn btn-info" th:href="@{/show/{id}(id=${individu.id})}" role="button">Voir</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-    </body>
+  <!--/*@thymesVar id="signBook" type="org.esupportail.esupsignature.entity.SignBook"*/-->
+  <!--/*@thymesVar id="signRequest" type="org.esupportail.esupsignature.entity.SignRequest"*/-->
+  <head th:replace="fragments/head :: head"></head>
+  <body class="d-flex flex-column h-100">
+    <header th:replace="fragments/header :: header"></header>
+    <main class="flex-shrink-0">
+      <section class="text-center">
+        <h1 class="mt-5">Liste des Individus</h1>
+        <a class="btn btn-primary m-3" th:href="@{/individus/create}" type="button">Ajouter</a>
+        <div class="container">
+          <table class="table table-striped">
+            <thead class="text-center mt-5 mb-4">
+              <tr>
+                <th scope="col">
+                  NUMERO ETUDIANT
+                </th>
+                <th scope="col">
+                  NOM
+                </th>
+                <th scope="col">
+                  PRENOM
+                </th>
+                <th scope="col">
+                  DATE DE NAISSANCE
+                </th>
+                <th scope="col">
+                  SEXE
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-center mt-5 mb-4">
+              <tr th:each="individu : ${individus}">
+                <td th:utext="${individu.numEtu}"></td>
+                <td th:utext="${individu.name}"></td>
+                <td th:utext="${individu.firstName}"></td>
+                <td th:utext="${individu.dateOfBirth}"></td>
+                <td th:utext="${individu.sex}"></td>
+                <td class="container">
+                  <a class="btn btn-info" th:href="@{/show/{id}(id=${individu.id})}" role="button">Voir</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer th:replace="fragments/footer :: black"></footer>
+  </body>
 </html>
