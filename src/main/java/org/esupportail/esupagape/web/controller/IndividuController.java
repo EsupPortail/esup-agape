@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.IndividuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +25,8 @@ public class IndividuController {
     private IndividuService individuService;
 
     @GetMapping()
-    public String list(Model model) {
-        model.addAttribute("individus", individuService.getAllIndividus());
+    public String list(Model model, Pageable pageable) {
+        model.addAttribute("individus", individuService.getAllIndividus(pageable));
         return "individus/list";
     }
 

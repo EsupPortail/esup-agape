@@ -14,19 +14,19 @@
             <thead class="text-center mt-5 mb-4">
               <tr>
                 <th scope="col">
-                  NUMERO ETUDIANT
+                  <a class="sorted" sd:pagination-sort="numEtu">NUMERO ETUDIANT</a>
                 </th>
                 <th scope="col">
-                  NOM
+                  <a class="sorted" sd:pagination-sort="name">NOM</a>
                 </th>
                 <th scope="col">
-                  PRENOM
+                  <a class="sorted" sd:pagination-sort="firstName">PRENOM</a>
                 </th>
                 <th scope="col">
-                  DATE DE NAISSANCE
+                  <a class="sorted" sd:pagination-sort="dateOfBirth">DATE DE NAISSANCE</a>
                 </th>
                 <th scope="col">
-                  SEXE
+                  <a class="sorted" sd:pagination-sort="sex">SEXE</a>
                 </th>
               </tr>
             </thead>
@@ -43,6 +43,12 @@
               </tr>
             </tbody>
           </table>
+          <nav th:fragment="pagination" id="pagination" aria-label="pagination">
+            <div class="col-lg-12 text-center">
+              <div sd:pagination-summary="">info</div>
+            </div>
+            <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
+          </nav>
         </div>
       </section>
     </main>

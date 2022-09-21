@@ -6,6 +6,8 @@ import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,5 +77,9 @@ public class IndividuService {
 
     public void save(Individu individu) {
         individuRepository.save(individu);
+    }
+
+    public Page<Individu> getAllIndividus(Pageable pageable) {
+        return individuRepository.findAll(pageable);
     }
 }
