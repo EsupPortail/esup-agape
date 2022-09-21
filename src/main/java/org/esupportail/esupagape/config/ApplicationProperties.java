@@ -8,7 +8,7 @@ public class ApplicationProperties {
     /**
      * Adresse email du contact technique de l’application
      */
-    private String applicationEmail = "esup.signature@univ-ville.fr";
+    private String applicationEmail = "esup.agape@univ-ville.fr";
 
     public String getApplicationEmail() {
         return applicationEmail;
