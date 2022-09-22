@@ -45,7 +45,7 @@
                                     <td class="container">
                                         <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
                                         </a>
-                                        <a data-bs-toggle="modal" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${individu.id}" class="btn btn-danger"><i class="bi bi-x"></i></a>
+                                        <a data-bs-toggle="modal" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${individu.id}" class="btn btn-danger" sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-x"></i></a>
                                         <div class="modal modal-warning fade in" th:id="modal-warning+${individu.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
