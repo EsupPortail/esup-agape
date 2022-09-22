@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +34,14 @@ public class IndividuService {
         return individuRepository.findByNumEtu(numEtu);
     }
 
-    public Individu getIndividu(String name, String firstName, LocalDate dateOfBirth, String sex) {
-        return individuRepository.findByNameAndFirstNameAndDateOfBirthAndSex(name, firstName, dateOfBirth, sex);
+    public Individu getIndividu(String name, String firstName, LocalDate dateOfBirth) {
+        return individuRepository.findByNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(name, firstName, dateOfBirth);
     }
 
     public List<Individu> getAllIndividus(){
-        List<Individu> individus = new ArrayList<>();
-        individuRepository.findAll().forEach(individus::add);
-        return individus;
+        return individuRepository.findAll();
     }
+
     @Transactional
     public void syncIndividu(Long id) {
         Individu individu = individuRepository.findById(id).orElseThrow();
@@ -104,9 +102,9 @@ public class IndividuService {
                  return createFromSources(individu.getNumEtu());
              }
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
-            individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getSex());
+            individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if(individuTestIsExist == null) {
-                return createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getSex());
+                return createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             }
         }
         if(individuTestIsExist != null) {
@@ -131,10 +129,10 @@ public class IndividuService {
         return individuFromSources;
     }
 
-    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth, String sex) {
+    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth) {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth, sex);
+            individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);
             if(individuFromSources != null) {
                 break;
             }

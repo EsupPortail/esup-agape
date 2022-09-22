@@ -47,7 +47,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
         return null;
     }
 
@@ -71,18 +71,11 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<Individu> numEtus = new ArrayList<>();
         String sqlRequest = 
-                "SELECT " +
-                        "individu.cod_etu, " +
-                        "individu.lib_nom_pat_ind, " +
-                        "individu.lib_pr1_ind, " +
-                        "individu.cod_sex_etu, " +
-                        "individu.date_nai_ind " +
-                "FROM " +
-                "         individu " +
+                "SELECT individu.cod_etu, individu.lib_nom_pat_ind, individu.lib_pr1_ind, individu.cod_sex_etu, individu.date_nai_ind " +
+                "FROM individu " +
                 "    INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
                 "    INNER JOIN annee_uni ON ins_adm_etp.cod_anu = annee_uni.cod_anu " +
-                "WHERE " +
-                "        annee_uni.eta_anu_iae = 'O' " +
+                "WHERE annee_uni.eta_anu_iae = 'O' " +
                 "    AND individu.cod_thp IS NOT NULL " +
                 "    AND ins_adm_etp.eta_iae = 'E' " +
                 "    AND ins_adm_etp.eta_pmt_iae = 'P' " +

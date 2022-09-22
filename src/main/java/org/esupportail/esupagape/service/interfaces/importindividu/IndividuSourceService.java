@@ -12,7 +12,7 @@ public interface IndividuSourceService {
     Map<String, String> getSourcesPropertiesMapping();
     Map<String, Object> getIndividuProperties(String numEtu);
     Individu getIndividuByNumEtu(String numEtu);
-    Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex);
+    Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth);
     Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth);
     void updateIndividu(Individu individu);
     void updateDossier(Individu individu, int year);

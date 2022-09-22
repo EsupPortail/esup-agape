@@ -43,7 +43,7 @@ public class PegaseIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
         return null;
     }
 

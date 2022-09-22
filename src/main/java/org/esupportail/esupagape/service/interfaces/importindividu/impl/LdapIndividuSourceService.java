@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth, String sex) {
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
         List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(name, firstName, dateOfBirth);
         return getIndividuFromPersonLdap(personLdaps);
     }
@@ -68,9 +69,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
-            if (personLdaps.get(0).getSchacDateOfBirth() != null) {
-                individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth()));
-            }
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;
         }
         return null;
