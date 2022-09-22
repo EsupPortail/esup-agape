@@ -4,7 +4,9 @@ import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,6 +37,12 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro est terminée"));
         individuService.syncAllIndividus();
         return "redirect:/admin";
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public String deleteIndividu(@PathVariable("id") long id) {
+        individuService.deleteIndividu(id);
+        return "redirect:/individus/";
     }
 
 }

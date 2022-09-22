@@ -148,4 +148,9 @@ public class IndividuService {
     public Individu getById(Long id) {
         return individuRepository.findById(id).orElseThrow();
     }
+
+    @Transactional
+    public void deleteIndividu(long id){
+        this.individuRepository.deleteById(id);
+    }
 }
