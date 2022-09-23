@@ -76,15 +76,14 @@ public class IndividuService {
         logger.info("Import individus done");
     }
 
-    public Individu save(Individu individu) {
+    public void save(Individu individu) {
         if(excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
-            return null;
+            return;
         }
         Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
         if(individu1 == null) {
             individuRepository.save(individu);
         }
-        return individu;
     }
 
     public Individu findById(Long id) throws AgapeException {
