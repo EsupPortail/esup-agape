@@ -28,6 +28,10 @@ public class Individu {
 
     private String eppn;
 
+    //TODO Refacto ?
+    @Transient
+    private String force;
+
     private String emailEtu;
 
     private String emailPerso;
@@ -225,5 +229,13 @@ public class Individu {
 
     public void setDossiers(List<Dossier> dossiers) {
         this.dossiers = dossiers;
+    }
+
+    public String getForce() {
+        return force;
+    }
+
+    public void setForce(String force) {
+        this.force = force;
     }
 }

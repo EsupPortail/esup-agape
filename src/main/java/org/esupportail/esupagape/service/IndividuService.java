@@ -72,7 +72,7 @@ public class IndividuService {
             List<Individu> individus = individuSourceService.getAllIndividuNums();
             for (Individu individu : individus) {
                 try {
-                    save(individu);
+                    save(individu, null);
                 } catch (AgapeJpaException e) {
                     logger.debug("Individu non inséré");
                 }
@@ -81,12 +81,16 @@ public class IndividuService {
         logger.info("Import individus done");
     }
 
-    public void save(Individu individu) throws AgapeJpaException {
-        if(excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
+    public void save(Individu individu, String force) throws AgapeJpaException {
+        if(force == null && excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
             throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
         }
         Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
         if(individu1 == null) {
+            ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+            if(excludeIndividu != null) {
+                excludeIndividuRepository.delete(excludeIndividu);
+            }
             individuRepository.save(individu);
         }
     }
@@ -113,16 +117,16 @@ public class IndividuService {
         if(!individu.getNumEtu().isEmpty()) {
              individuTestIsExist = getIndividu(individu.getNumEtu());
              if(individuTestIsExist == null) {
-                 return createFromSources(individu.getNumEtu());
+                 return createFromSources(individu.getNumEtu(), individu.getForce());
              }
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if(individuTestIsExist == null) {
-                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
+                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getForce());
                 if(newIndividu != null) {
                     return newIndividu;
                 } else {
-                    save(individu);
+                    save(individu, individu.getForce());
                     return individu;
                 }
             }
@@ -130,12 +134,12 @@ public class IndividuService {
         if(individuTestIsExist != null) {
             return individuTestIsExist;
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
-            save(individu);
+            save(individu, individu.getForce());
         }
         return individu;
     }
 
-    public Individu createFromSources(String numEtu) throws AgapeJpaException {
+    public Individu createFromSources(String numEtu, String force) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByNumEtu(numEtu);
@@ -144,12 +148,12 @@ public class IndividuService {
             }
         }
         if (individuFromSources != null) {
-            save(individuFromSources);
+            save(individuFromSources, force);
         }
         return individuFromSources;
     }
 
-    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth) throws AgapeJpaException {
+    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth, String force) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);
@@ -158,7 +162,7 @@ public class IndividuService {
             }
         }
         if (individuFromSources != null) {
-            save(individuFromSources);
+            save(individuFromSources, force);
         }
         return individuFromSources;
     }
