@@ -118,7 +118,13 @@ public class IndividuService {
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if(individuTestIsExist == null) {
-                return createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
+                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
+                if(newIndividu != null) {
+                    return newIndividu;
+                } else {
+                    save(individu);
+                    return individu;
+                }
             }
         }
         if(individuTestIsExist != null) {

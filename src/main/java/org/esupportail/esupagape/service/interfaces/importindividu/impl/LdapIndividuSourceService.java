@@ -26,6 +26,11 @@ public class LdapIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
+    Map<String, String> sexMap  = new HashMap<>() {{
+        put("MME", "F");
+        put("M.", "M");
+    }};
+
     @Resource
     private LdapPersonService ldapPersonService;
 
@@ -69,6 +74,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
+            individu.setSex(sexMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;
@@ -91,6 +97,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
                 }
                 individu.setFixCountry(address.split("\\$")[address.split("\\$").length - 1].trim());
             }
+            individu.setSex(sexMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             individu.setEmailEtu(personLdap.getMail());
             individu.setEmailPerso(personLdap.getSupannMailPerso());
             individu.setFixPhone(personLdap.getTelephoneNumber());
