@@ -4,6 +4,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
@@ -70,15 +71,19 @@ public class IndividuService {
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individus = individuSourceService.getAllIndividuNums();
             for (Individu individu : individus) {
-                save(individu);
+                try {
+                    save(individu);
+                } catch (AgapeJpaException e) {
+                    logger.debug("Individu non inséré");
+                }
             }
         }
         logger.info("Import individus done");
     }
 
-    public void save(Individu individu) {
+    public void save(Individu individu) throws AgapeJpaException {
         if(excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
-            return;
+            throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
         }
         Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
         if(individu1 == null) {
@@ -103,7 +108,7 @@ public class IndividuService {
         return individuRepository.findAllByNameContainsIgnoreCase(name, pageable);
     }
 
-    public Individu create(Individu individu) {
+    public Individu create(Individu individu) throws AgapeJpaException {
         Individu individuTestIsExist = null;
         if(!individu.getNumEtu().isEmpty()) {
              individuTestIsExist = getIndividu(individu.getNumEtu());
@@ -124,7 +129,7 @@ public class IndividuService {
         return individu;
     }
 
-    public Individu createFromSources(String numEtu) {
+    public Individu createFromSources(String numEtu) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByNumEtu(numEtu);
@@ -138,7 +143,7 @@ public class IndividuService {
         return individuFromSources;
     }
 
-    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth) {
+    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);

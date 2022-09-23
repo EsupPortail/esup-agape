@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
@@ -12,7 +13,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -50,12 +54,12 @@ public class IndividuController {
         if(bindingResult.hasErrors()){
             return "individus/create";
         }
-        Individu individuOk = individuService.create(individu);
-        if(individuOk != null && individuOk.getId() != null) {
+        try {
+            Individu individuOk = individuService.create(individu);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId();
-        } else {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", "Aucun individu ajouté..."));
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }
     }
