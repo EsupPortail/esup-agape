@@ -47,12 +47,12 @@ public class IndividuController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid Individu individu, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String create(@Valid Individu individu, @RequestParam(required = false) String force, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()){
             return "individus/create";
         }
         try {
-            Individu individuOk = individuService.create(individu);
+            Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId();
         } catch (AgapeException e) {

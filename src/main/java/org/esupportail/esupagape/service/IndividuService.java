@@ -112,21 +112,21 @@ public class IndividuService {
         return individuRepository.findAllByNameContainsIgnoreCase(name, pageable);
     }
 
-    public Individu create(Individu individu) throws AgapeJpaException {
+    public Individu create(Individu individu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
         if(!individu.getNumEtu().isEmpty()) {
              individuTestIsExist = getIndividu(individu.getNumEtu());
              if(individuTestIsExist == null) {
-                 return createFromSources(individu.getNumEtu(), individu.getForce());
+                 return createFromSources(individu.getNumEtu(), force);
              }
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if(individuTestIsExist == null) {
-                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), individu.getForce());
+                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
                 if(newIndividu != null) {
                     return newIndividu;
                 } else {
-                    save(individu, individu.getForce());
+                    save(individu, force);
                     return individu;
                 }
             }
@@ -134,7 +134,7 @@ public class IndividuService {
         if(individuTestIsExist != null) {
             return individuTestIsExist;
         } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
-            save(individu, individu.getForce());
+            save(individu, force);
         }
         return individu;
     }
