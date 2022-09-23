@@ -45,7 +45,12 @@
                                     <td class="container">
                                         <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
                                         </a>
-                                        <a data-bs-toggle="modal" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${individu.id}" class="btn btn-danger" sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-x"></i></a>
+                                        <a data-bs-toggle="modal"
+                                                href="#"
+                                                data-bs-target="#modal-warning"
+                                                th:attr="data-bs-target='#modal-warning'+${individu.id}"
+                                                class="btn btn-danger"
+                                                sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-x"></i></a>
                                         <div class="modal modal-warning fade in" th:id="modal-warning+${individu.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -55,7 +60,9 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet individu : <br /> <span th:text="'Numéro étudiant:' + ' ' + ${individu.id} + ' ' + '(' + 'nom = ' + ${individu.name} + ')'" class="font-weight-bold"></span> ?
+                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet individu : <br />
+                                                                <span th:text="'Numéro étudiant:' + ' ' + ${individu.id} + ' ' + '(' + 'nom = ' + ${individu.name} + ')'"
+                                                                        class="font-weight-bold"></span> ?
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
