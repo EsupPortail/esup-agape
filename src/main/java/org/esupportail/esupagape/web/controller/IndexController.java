@@ -13,4 +13,9 @@ public class IndexController {
         return "redirect:/individus";
     }
 
+    @GetMapping("/logged-out")
+    public String loggedOut() {
+        return "logged-out";
+    }
+
 }

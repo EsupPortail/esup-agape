@@ -1,7 +1,10 @@
 package org.esupportail.esupagape.service;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
@@ -25,6 +28,9 @@ public class IndividuService {
 
     @Resource
     private IndividuRepository individuRepository;
+
+    @Resource
+    private ExcludeIndividuRepository excludeIndividuRepository;
 
     public IndividuService(List<IndividuSourceService> individuSourceServices) {
         this.individuSourceServices = individuSourceServices;
@@ -64,13 +70,21 @@ public class IndividuService {
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individus = individuSourceService.getAllIndividuNums();
             for (Individu individu : individus) {
-                Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
-                if(individu1 == null) {
-                    individuRepository.save(individu);
-                }
+                save(individu);
             }
         }
         logger.info("Import individus done");
+    }
+
+    public Individu save(Individu individu) {
+        if(excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
+            return null;
+        }
+        Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
+        if(individu1 == null) {
+            individuRepository.save(individu);
+        }
+        return individu;
     }
 
     public Individu findById(Long id) throws AgapeException {
@@ -80,10 +94,6 @@ public class IndividuService {
         } else {
             throw new AgapeException("Je n'ai pas trouvé cet individu");
         }
-    }
-
-    public void save(Individu individu) {
-        individuRepository.save(individu);
     }
 
     public Page<Individu> getAllIndividus(Pageable pageable) {
@@ -148,7 +158,14 @@ public class IndividuService {
     }
 
     @Transactional
-    public void deleteIndividu(long id){
-        this.individuRepository.deleteById(id);
+    public void deleteIndividu(long id) {
+        Individu individu = getById(id);
+        if(individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
+            ExcludeIndividu excludeIndividu = new ExcludeIndividu();
+            excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+            excludeIndividuRepository.save(excludeIndividu);
+        }
+        this.individuRepository.delete(individu);
     }
+
 }

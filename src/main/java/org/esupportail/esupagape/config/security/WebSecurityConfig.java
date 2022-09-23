@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
@@ -22,6 +23,8 @@ import org.springframework.security.cas.authentication.CasAuthenticationProvider
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 import org.springframework.security.ldap.search.LdapUserSearch;
@@ -30,13 +33,16 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
+@EnableWebSecurity
 @EnableConfigurationProperties({LdapProperties.class, CasProperties.class, WebSecurityProperties.class})
 public class WebSecurityConfig {
 
@@ -65,9 +71,22 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").authenticated()
-                .and().exceptionHandling()
-                .authenticationEntryPoint(getAuthenticationEntryPoint());
+        http.sessionManagement().sessionAuthenticationStrategy(sessionAuthenticationStrategy()).maximumSessions(5).sessionRegistry(sessionRegistry());
+        http.exceptionHandling().authenticationEntryPoint(getAuthenticationEntryPoint());
+
+        http.addFilterBefore(requestSingleLogoutFilter(), LogoutFilter.class);
+        http.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
+        http.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class);
+        http.logout().invalidateHttpSession(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .addLogoutHandler(securityContextLogoutHandler());
+        http.authorizeRequests()
+                .antMatchers("/logged-out").permitAll()
+                .antMatchers("/webjars", "/webjars/**").permitAll()
+                .antMatchers("/css", "/css/**").permitAll()
+                .antMatchers("/images", "/images/**").permitAll()
+                .antMatchers("/js", "/js/**").permitAll()
+                .antMatchers("/", "/**").authenticated();
         return http.build();
     }
 
@@ -115,11 +134,18 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CasAuthenticationFilter casAuthenticationFilter (AuthenticationManager authenticationManager, ServiceProperties serviceProperties) {
+    public CasAuthenticationFilter casAuthenticationFilter() {
         CasAuthenticationFilter filter = new CasAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager);
-        filter.setServiceProperties(serviceProperties);
+        filter.setAuthenticationManager(casAuthenticationManager());
+        filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy());
+        filter.setServiceProperties(serviceProperties());
         return filter;
+    }
+
+    public AuthenticationManager casAuthenticationManager() {
+        List<AuthenticationProvider> authenticatedAuthenticationProviders = new ArrayList<>();
+        authenticatedAuthenticationProviders.add(casAuthenticationProvider());
+        return new ProviderManager(authenticatedAuthenticationProviders);
     }
 
     @Bean
@@ -140,24 +166,18 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityContextLogoutHandler securityContextLogoutHandler() {
-        return new SecurityContextLogoutHandler();
+    public SessionRegistryImpl sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
-    public LogoutFilter logoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter(casProperties.getUrl() + "/logout",
-                securityContextLogoutHandler());
-        logoutFilter.setFilterProcessesUrl("/logout/cas");
-        return logoutFilter;
+    public ConcurrentSessionFilter concurrencyFilter() {
+        return new ConcurrentSessionFilter(sessionRegistry());
     }
 
     @Bean
-    public SingleSignOutFilter singleSignOutFilter() {
-        SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-                singleSignOutFilter.setLogoutCallbackPath("/");
-        singleSignOutFilter.setIgnoreInitConfiguration(true);
-        return singleSignOutFilter;
+    public RegisterSessionAuthenticationStrategy sessionAuthenticationStrategy() {
+        return new RegisterSessionAuthenticationStrategy(sessionRegistry());
     }
 
     @Bean
@@ -173,6 +193,27 @@ public class WebSecurityConfig {
         ldapGroupService.setGroupSearchFilter(ldapProperties.getGroupSearchFilter());
         ldapGroupService.setMemberSearchFilter(ldapProperties.getMemberSearchFilter());
         return ldapGroupService;
+    }
+
+    @Bean
+    public SecurityContextLogoutHandler securityContextLogoutHandler() {
+        return new SecurityContextLogoutHandler();
+    }
+
+    @Bean
+    public SingleSignOutFilter singleSignOutFilter() {
+        SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
+        singleSignOutFilter.setIgnoreInitConfiguration(true);
+        singleSignOutFilter.setLogoutCallbackPath("/logged-out");
+        return singleSignOutFilter;
+    }
+
+    @Bean
+    public LogoutFilter requestSingleLogoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter(casProperties.getUrl() + "/logout",
+                new SecurityContextLogoutHandler());
+        logoutFilter.setFilterProcessesUrl("/logout");
+        return logoutFilter;
     }
 
 }
