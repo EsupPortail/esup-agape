@@ -85,11 +85,18 @@ public class IndividuService {
         if(force == null && excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
             throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
         }
-        Individu individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
+        Individu individu1 = null;
+        if(!individu.getNumEtu().isEmpty()) {
+            individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
+        } else {
+            individu.setNumEtu(null);
+        }
         if(individu1 == null) {
-            ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
-            if(excludeIndividu != null) {
-                excludeIndividuRepository.delete(excludeIndividu);
+            if(individu.getNumEtu() != null) {
+                ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+                if (excludeIndividu != null) {
+                    excludeIndividuRepository.delete(excludeIndividu);
+                }
             }
             individuRepository.save(individu);
         }
