@@ -99,7 +99,7 @@
                                     <td th:utext="${individu.firstName}"></td>
                                     <td th:utext="${individu.dateOfBirth}"></td>
                                     <td th:utext="${individu.sex}"></td>
-                                    <td class="container">
+                                    <td class="container col-2">
                                     <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
                                     </a>
                                     <a data-bs-toggle="modal"
@@ -142,6 +142,8 @@
                             </div>
                             <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
                         </nav>
+                        <div class="alert alert-warning" th:if="${individus.isEmpty()}">Aucun individu ne correspond à votre recherche</div>
+                        <a th:href="@{/individus}">Retour à la liste des individus</a>
                     </div>
                 </div>
             </section>

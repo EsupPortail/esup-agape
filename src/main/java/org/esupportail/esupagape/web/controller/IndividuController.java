@@ -60,11 +60,13 @@ public class IndividuController {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }
+        
     }
 
     @RequestMapping("/search")
     public String searchIndividu(Model model,
                                  @Param("name") String name,
+                                 @PageableDefault(size = 10)
                                  Pageable pageable) {
         Page<Individu> individus = individuService.searchByName(name, pageable);
         model.addAttribute("individus", individus);
