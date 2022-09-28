@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -87,6 +89,12 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                 numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
             }
         });
+        try {
+            Connection connection = dataSource.getConnection();
+            connection.close();
+        } catch (SQLException e) {
+            logger.warn("unable to close APO connection");
+        }
         return numEtus;
     }
 }
