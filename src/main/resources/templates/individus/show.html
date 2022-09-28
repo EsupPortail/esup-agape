@@ -4,9 +4,94 @@
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main>
-            <h1 class="title-create text-center mt-5">Ajout d’un individu</h1>
-            <h2 th:text="${individu.name}"></h2>
+            <h1 class="title-create text-center mt-5">Informations d’un individu</h1>
+            <h2 class="title-create text-center mt-5" th:text="${individu.name}"></h2>
+            <p class="text-center">
+                <button class="btn btn-primary title-create text-center mt-5"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseWidthExample"
+                        aria-expanded="false"
+                        aria-controls="collapseWidthExample">
+                    Cliquez pour afficher les informations
+                </button>
+            </p>
+            <div style="min-height: 120px;" >
+                <div class="collapse collapse-multiple ms-5 col-sm-6 text-center row" id="collapseWidthExample">
+                   <div class="card card-body col-sm-6" style="width: 300px;">
+                         <div class="card text-dark bg-info mb-3 text-center">
+                             <div class="card-header">
+                                 Fiche
+                             </div>
+                         </div>
+                       <div class="card">
+                           <div class="card-body">
+                               <dl>
+                                   <dt>Sexe</dt>
+                                   <dd th:text="${individu.sex}"></dd>
+                                   <dt>N° Etudiant</dt>
+                                   <dd th:text="${individu.numEtu}"></dd>
+                                   <dt>Nom</dt>
+                                   <dd th:text="${individu.name}"></dd>
+                                   <dt>Prénom</dt>
+                                   <dd th:text="${individu.firstName}"></dd>
+                                   <dt>Login</dt>
+                                   <dd></dd>
+                                   <dt>Date de naissance</dt>
+                                   <dd th:text="${individu.dateOfBirth}"></dd>
+                                   <dt>Type d'individu</dt>
+                                   <dd></dd>
+                                   <dt>Statut du dossier</dt>
+                                   <dd></dd>
+                                   <dt>Age</dt>
+                                   <dd></dd>
+                               </dl>
+                           </div>
+                       </div>
+                   </div><br/><br/>
+                        <div class="card card-body col-sm-6" style="width: 300px;">
+                            <div class="card text-dark bg-info mb-3 text-center">
+                                <div class="card-header">
+                                    Informations administratives
+                                </div>
+                            </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <dl>
+                                    <h2>Mails</h2>
+                                    <dt>Email universitaire</dt>
+                                    <dd th:text="${individu.emailEtu}"></dd>
+                                    <dt>Email personnel</dt>
+                                    <dd th:text="${individu.emailPerso}"></dd>
+                                    <h2>Téléphones</h2>
+                                    <dt>Téléphone portable</dt>
+                                    <dd th:text="${individu.mobilPhone}"></dd>
+                                    <dt>Téléphone fixe</dt>
+                                    <dd th:text="${individu.fixPhone}"></dd>
+                                    <dt>Téléphone du responsable</dt>
+                                    <dd></dd>
+                                    <h2>Adresse annuelle</h2>
+                                    <dt>Adresse</dt>
+                                    <dd th:text="${individu.currentAddress}"></dd>
+                                    <dt>Code Postal</dt>
+                                    <dd th:text="${individu.currentCP}"></dd>
+                                    <dt>Ville</dt>
+                                    <dd th:text="${individu.currentCity}"></dd>
+                                    <h2>Adresse fixe</h2>
+                                    <dt>Adresse</dt>
+                                    <dd th:text="${individu.fixAddress}"></dd>
+                                    <dt>Code postal</dt>
+                                    <dd th:text="${individu.fixCP}"></dd>
+                                    <dt>ville</dt>
+                                    <dd th:text="${individu.fixCity}"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
+        <a th:href="@{/individus}" class="text-center">Retour à la liste des individus</a>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
     </body>
