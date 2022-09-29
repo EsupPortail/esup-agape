@@ -52,7 +52,7 @@ public class Individu {
 
     private String contactPhone;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "individu", cascade = CascadeType.REMOVE)
     private List<Dossier> dossiers = new ArrayList<>();
 
     public Individu() {

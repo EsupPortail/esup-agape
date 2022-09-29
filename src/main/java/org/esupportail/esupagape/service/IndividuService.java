@@ -45,7 +45,7 @@ public class IndividuService {
         return individuRepository.findByNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(name, firstName, dateOfBirth);
     }
 
-    public List<Individu> getAllIndividus(){
+    public List<Individu> getAllIndividus() {
         return individuRepository.findAll();
     }
 
@@ -82,17 +82,17 @@ public class IndividuService {
     }
 
     public void save(Individu individu, String force) throws AgapeJpaException {
-        if(force == null && excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
+        if (force == null && excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
             throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
         }
         Individu individu1 = null;
-        if(!individu.getNumEtu().isEmpty()) {
+        if (!individu.getNumEtu().isEmpty()) {
             individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
         } else {
             individu.setNumEtu(null);
         }
-        if(individu1 == null) {
-            if(individu.getNumEtu() != null) {
+        if (individu1 == null) {
+            if (individu.getNumEtu() != null) {
                 ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
                 if (excludeIndividu != null) {
                     excludeIndividuRepository.delete(excludeIndividu);
@@ -104,7 +104,7 @@ public class IndividuService {
 
     public Individu findById(Long id) throws AgapeException {
         Optional<Individu> optionalIndividu = individuRepository.findById(id);
-        if(optionalIndividu.isPresent()) {
+        if (optionalIndividu.isPresent()) {
             return optionalIndividu.get();
         } else {
             throw new AgapeException("Je n'ai pas trouvé cet individu");
@@ -121,16 +121,16 @@ public class IndividuService {
 
     public Individu create(Individu individu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
-        if(!individu.getNumEtu().isEmpty()) {
-             individuTestIsExist = getIndividu(individu.getNumEtu());
-             if(individuTestIsExist == null) {
-                 return createFromSources(individu.getNumEtu(), force);
-             }
-        } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
+        if (!individu.getNumEtu().isEmpty()) {
+            individuTestIsExist = getIndividu(individu.getNumEtu());
+            if (individuTestIsExist == null) {
+                return createFromSources(individu.getNumEtu(), force);
+            }
+        } else if (!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
-            if(individuTestIsExist == null) {
+            if (individuTestIsExist == null) {
                 Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
-                if(newIndividu != null) {
+                if (newIndividu != null) {
                     return newIndividu;
                 } else {
                     save(individu, force);
@@ -138,9 +138,9 @@ public class IndividuService {
                 }
             }
         }
-        if(individuTestIsExist != null) {
+        if (individuTestIsExist != null) {
             return individuTestIsExist;
-        } else if(!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
+        } else if (!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
             save(individu, force);
         }
         return individu;
@@ -150,7 +150,7 @@ public class IndividuService {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByNumEtu(numEtu);
-            if(individuFromSources != null) {
+            if (individuFromSources != null) {
                 break;
             }
         }
@@ -164,7 +164,7 @@ public class IndividuService {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);
-            if(individuFromSources != null) {
+            if (individuFromSources != null) {
                 break;
             }
         }
@@ -181,12 +181,11 @@ public class IndividuService {
     @Transactional
     public void deleteIndividu(long id) {
         Individu individu = getById(id);
-        if(individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
+        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
             ExcludeIndividu excludeIndividu = new ExcludeIndividu();
             excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
             excludeIndividuRepository.save(excludeIndividu);
         }
         this.individuRepository.delete(individu);
     }
-
 }

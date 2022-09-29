@@ -90,6 +90,9 @@
                                     <th scope="col">
                                         <a class="sorted" sd:pagination-sort="sex">SEXE</a>
                                     </th>
+                                    <th scope="col">
+                                        <a class="sorted" sd:pagination-sort="status">STATUT DU DOSSIER</a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -99,6 +102,9 @@
                                     <td th:utext="${individu.firstName}"></td>
                                     <td th:utext="${individu.dateOfBirth}"></td>
                                     <td th:utext="${individu.sex}"></td>
+                                    <td>
+                                    <!--  <p th:each="dossier : ${individu.dossiers}"><span th:text="${dossier.statusDossier}"></span></p>-->
+                                    </td>
                                     <td class="container col-2">
                                     <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
                                     </a>

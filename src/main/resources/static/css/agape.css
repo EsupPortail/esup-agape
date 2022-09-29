@@ -9,3 +9,6 @@ body {
     flex-direction: column;
     height: 100% !important;
 }
+.d-flex {
+    max-width: 600px;
+}
