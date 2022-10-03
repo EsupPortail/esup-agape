@@ -12,3 +12,7 @@ body {
 .d-flex {
     max-width: 600px;
 }
+
+.error{
+    color:orange;
+}

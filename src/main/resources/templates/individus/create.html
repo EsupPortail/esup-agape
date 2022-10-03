@@ -5,7 +5,7 @@
         <header th:replace="fragments/header :: header"></header>
         <main>
             <h1 class="title-create text-center mt-5">Ajout d'un individu</h1>
-            <form class="container" th:method="post" action="#" th:action="@{/individus/create}" th:object="${individu}">
+            <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
                 <div class="row mb3">
                     <label th:for="numEtu" class="col-md-2 col-form-label mb-1">Numéro étudiant</label>
                     <div class="col-sm-10">

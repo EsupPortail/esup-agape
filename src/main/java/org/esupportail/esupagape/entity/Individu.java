@@ -39,7 +39,7 @@ public class Individu {
     private String sex;
 
     @NotNull(message = "La date de naissance doit être renseignée")
-    @Past
+    @Past(message = "La date de naissance doit être dans le passé.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
