@@ -34,7 +34,7 @@ public class IndividuController {
 
     @GetMapping()
     public String list(Model model, @PageableDefault(size = 10) Pageable pageable) {
-        model.addAttribute("individu", new Individu());
+        //model.addAttribute("individu", new Individu());
         model.addAttribute("individus", individuService.getAllIndividus(pageable));
         return "individus/list";
     }
@@ -45,11 +45,11 @@ public class IndividuController {
         return "individus/show";
     }
 
-   /* @GetMapping("/create")
+    @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("individu", new Individu());
         return "individus/create";
-    }*/
+    }
 
     @PostMapping("/create")
     public String create(@Valid Individu individu, @RequestParam(required = false) String force, BindingResult bindingResult, RedirectAttributes redirectAttributes) {

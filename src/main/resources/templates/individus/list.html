@@ -6,64 +6,7 @@
         <main>
             <section class="text-center">
                 <h1 class="mt-3">Liste des Individus</h1>
-                <!--<a class="btn btn-primary" th:href="@{/individus/create}" type="button">Ajouter</a>-->
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                   Ajouter
-                </button>
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Ajout d'un individu</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
-                                    <div class="row mb3">
-                                        <label th:for="numEtu" class="col-md-2 col-form-label mb-1">Numéro étudiant</label>
-                                        <div class="col-sm-10">
-                                            <input th:field="*{numEtu}" type="text" class="form-control">
-                                            <p th:if="${#fields.hasErrors('numEtu')}" th:errorclass="error" th:errors="*{numEtu}"></p>
-                                        </div>
-                                        <label th:for="force" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
-                                        <div class="col-sm-10">
-                                            <input name="force" type="checkbox" class="form-check-input">
-                                        </div>
-                                        <label th:for="name" class="col-md-2 col-form-label mb-1">Nom</label>
-                                        <div class="col-sm-10">
-                                            <input th:field="*{name}" type="text" class="form-control">
-                                            <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
-                                        </div>
-                                        <label th:for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
-                                        <div class="col-sm-10">
-                                            <input th:field="*{firstName}" type="text" class="form-control" />
-                                            <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"></p>
-                                        </div>
-                                        <label th:for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
-                                        <div class="col-sm-10">
-                                            <input th:field="*{dateOfBirth}" type="date" class="form-control mb-1" />
-                                            <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error" th:errors="*{dateOfBirth}"></p>
-                                        </div>
-                                        <label th:for="sex" class="col-md-2 col-form-label mb-1">Sexe</label>
-                                        <div class="col-sm-10">
-                                            <div class="col-sm-10">
-                                                <input th:field="*{sex}" type="text" class="form-control">
-                                                <p th:if="${#fields.hasErrors('sex')}" th:errorclass="error" th:errors="*{sex}"></p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button class="btn btn-primary" type="submit">Enregistrer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+               <a class="btn btn-primary" th:href="@{/individus/create}" type="button">Ajouter</a>
                 <div class="container">
                     <div class="container">
                         <form th:action="@{/individus/search}" method="get">
