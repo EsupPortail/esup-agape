@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.service.DossierService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,13 +20,14 @@ public class DossierController {
     private DossierService dossierService;
 
     @GetMapping()
-    public String list(@RequestParam(required = false) String fullTextSearch, @PageableDefault Pageable pageable, Model model) {
+    public String list(@RequestParam(required = false) String fullTextSearch, @RequestParam(required = false) TypeIndividu typeIndividu, @PageableDefault Pageable pageable, Model model) {
         //model.addAttribute("individu", new Individu());
         if(fullTextSearch == null || fullTextSearch.isEmpty()) {
             model.addAttribute("dossiers", dossierService.getAllCurrent(pageable));
         } else {
             model.addAttribute("fullTextSearch", fullTextSearch);
-            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, pageable));
+            model.addAttribute("typeIndividu", typeIndividu);
+            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, pageable));
         }
         return "dossiers/list";
     }
