@@ -10,11 +10,11 @@
                <a class="btn btn-primary" th:href="@{/individus/create}" type="button">Ajouter</a>
                 <div class="container">
                     <div class="container">
-                        <form th:action="@{/individus/search}" method="get">
+                        <form th:action="@{/dossiers}" method="get">
                             <label class="label-list">Rechercher:</label>
-                            <input class="mt-2 mb-4" type="text" name="name" id="name" size="50" th:value="${name}" /> &nbsp;
+                            <input class="mt-2 mb-4" type="text" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}" /> &nbsp;
                             <input class="btn btn-success ms-2 mb-1" type="submit" value="Valider" /> &nbsp;
-                            <a role="button" class="btn btn-secondary ms-2 mb-1" type="button" id="btnClear" th:href="@{/individus/}">Effacer</a>
+                            <a role="button" class="btn btn-secondary ms-2 mb-1" type="button" id="btnClear" th:href="@{/dossiers}">Effacer</a>
                         </form>
                         <table class="table table-striped">
                             <thead class="text-center mt-2 mb-2">
@@ -51,7 +51,7 @@
                                     <td th:utext="${dossier.individu.dateOfBirth}"></td>
                                     <td th:utext="${dossier.individu.sex}"></td>
                                     <td th:utext="${dossier.type}"></td>
-                                    <td th:utext="${dossier.statusDossier}"></td>
+                                    <td th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
                                     <td class="container col-2">
                                     <a class="btn btn-info" th:href="@{/individus/{id}(id=${dossier.individu.id})}" role="button"><i class="bi bi-eye"></i>
                                     </a>

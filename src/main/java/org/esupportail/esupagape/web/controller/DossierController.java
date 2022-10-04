@@ -19,9 +19,14 @@ public class DossierController {
     private DossierService dossierService;
 
     @GetMapping()
-    public String list(Model model, @PageableDefault(size = 10) Pageable pageable) {
+    public String list(@RequestParam(required = false) String fullTextSearch, @PageableDefault Pageable pageable, Model model) {
         //model.addAttribute("individu", new Individu());
-        model.addAttribute("dossiers", dossierService.getAllCurrent(pageable));
+        if(fullTextSearch == null || fullTextSearch.isEmpty()) {
+            model.addAttribute("dossiers", dossierService.getAllCurrent(pageable));
+        } else {
+            model.addAttribute("fullTextSearch", fullTextSearch);
+            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, pageable));
+        }
         return "dossiers/list";
     }
 
