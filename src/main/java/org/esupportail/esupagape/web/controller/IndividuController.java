@@ -13,12 +13,18 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Controller
 @RequestMapping("/individus")
@@ -30,28 +36,38 @@ public class IndividuController {
 
     @GetMapping()
     public String list(Model model, @PageableDefault(size = 10) Pageable pageable) {
-        model.addAttribute("individu", new Individu());
+        //model.addAttribute("individu", new Individu());
         model.addAttribute("individus", individuService.getAllIndividus(pageable));
         return "individus/list";
     }
 
     @GetMapping("{id}")
     public String show(@PathVariable Long id, Model model) {
-        model.addAttribute("individu", individuService.getById(id));
+        Individu individu = individuService.getById(id);
+        model.addAttribute("individu", individu);
+        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
+        int age = agePeriod.getYears();
+        logger.info(String.format("Age : %s", age));
+        model.addAttribute("age", age);
+
         return "individus/show";
     }
 
-   /* @GetMapping("/create")
+    @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("individu", new Individu());
         return "individus/create";
-    }*/
+    }
 
     @PostMapping("/create")
-    public String create(@Valid Individu individu, @RequestParam(required = false) String force, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()){
+    public String create(@RequestParam(required = false) String force,
+                         @Valid Individu individu,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             return "individus/create";
         }
+
         try {
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
@@ -60,7 +76,6 @@ public class IndividuController {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }
-        
     }
 
     @RequestMapping("/search")
@@ -74,4 +89,5 @@ public class IndividuController {
         model.addAttribute("individu", new Individu());
         return "individus/list";
     }
+
 }

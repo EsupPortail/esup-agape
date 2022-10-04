@@ -2,7 +2,17 @@ package org.esupportail.esupagape.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +27,19 @@ public class Individu {
     @Column(unique = true)
     private String numEtu;
 
+    @NotEmpty(message = "Le nom doit être renseigné")
+    @Size(min=2, max=30)
     private String name;
 
+    @NotEmpty(message = "Le prénom doit être renseigné")
+    @Size(min=2, max=30)
     private String firstName;
+
 
     private String sex;
 
+    @NotNull(message = "La date de naissance doit être renseignée")
+    @Past(message = "La date de naissance doit être dans le passé.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
@@ -52,7 +69,7 @@ public class Individu {
 
     private String contactPhone;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "individu", cascade = CascadeType.REMOVE)
     private List<Dossier> dossiers = new ArrayList<>();
 
     public Individu() {

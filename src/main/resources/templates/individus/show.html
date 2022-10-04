@@ -4,90 +4,78 @@
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main>
-            <h1 class="title-create text-center mt-5">Informations d’un individu</h1>
-            <h2 class="title-create text-center mt-5" th:text="${individu.name}"></h2>
-            <p class="text-center">
-                <button class="btn btn-primary title-create text-center mt-5"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseWidthExample"
-                        aria-expanded="false"
-                        aria-controls="collapseWidthExample">
-                    Cliquez pour afficher les informations
-                </button>
-            </p>
-            <div style="min-height: 120px;" >
-                <div class="collapse collapse-multiple ms-5 col-sm-6 text-center row" id="collapseWidthExample">
-                   <div class="card card-body col-sm-6" style="width: 300px;">
-                         <div class="card text-dark bg-info mb-3 text-center">
-                             <div class="card-header">
-                                 Fiche
-                             </div>
-                         </div>
-                       <div class="card">
-                           <div class="card-body">
-                               <dl>
-                                   <dt>Sexe</dt>
-                                   <dd th:text="${individu.sex}"></dd>
-                                   <dt>N° Etudiant</dt>
-                                   <dd th:text="${individu.numEtu}"></dd>
-                                   <dt>Nom</dt>
-                                   <dd th:text="${individu.name}"></dd>
-                                   <dt>Prénom</dt>
-                                   <dd th:text="${individu.firstName}"></dd>
-                                   <dt>Login</dt>
-                                   <dd></dd>
-                                   <dt>Date de naissance</dt>
-                                   <dd th:text="${individu.dateOfBirth}"></dd>
-                                   <dt>Type d'individu</dt>
-                                   <dd></dd>
-                                   <dt>Statut du dossier</dt>
-                                   <dd></dd>
-                                   <dt>Age</dt>
-                                   <dd></dd>
-                               </dl>
-                           </div>
-                       </div>
-                   </div><br/><br/>
-                        <div class="card card-body col-sm-6" style="width: 300px;">
-                            <div class="card text-dark bg-info mb-3 text-center">
-                                <div class="card-header">
-                                    Informations administratives
-                                </div>
-                            </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <dl>
-                                    <h2>Mails</h2>
-                                    <dt>Email universitaire</dt>
-                                    <dd th:text="${individu.emailEtu}"></dd>
-                                    <dt>Email personnel</dt>
-                                    <dd th:text="${individu.emailPerso}"></dd>
-                                    <h2>Téléphones</h2>
-                                    <dt>Téléphone portable</dt>
-                                    <dd th:text="${individu.mobilPhone}"></dd>
-                                    <dt>Téléphone fixe</dt>
-                                    <dd th:text="${individu.fixPhone}"></dd>
-                                    <dt>Téléphone du responsable</dt>
-                                    <dd></dd>
-                                    <h2>Adresse annuelle</h2>
-                                    <dt>Adresse</dt>
-                                    <dd th:text="${individu.currentAddress}"></dd>
-                                    <dt>Code Postal</dt>
-                                    <dd th:text="${individu.currentCP}"></dd>
-                                    <dt>Ville</dt>
-                                    <dd th:text="${individu.currentCity}"></dd>
-                                    <h2>Adresse fixe</h2>
-                                    <dt>Adresse</dt>
-                                    <dd th:text="${individu.fixAddress}"></dd>
-                                    <dt>Code postal</dt>
-                                    <dd th:text="${individu.fixCP}"></dd>
-                                    <dt>ville</dt>
-                                    <dd th:text="${individu.fixCity}"></dd>
-                                </dl>
+            <h1 class="title-create text-center mt-2" th:text="'Informations sur' + ' ' + ${individu.name} + ' ' + ${individu.firstName}">Informations d’un individu</h1>
+            <div class="d-flex flex-column  p-3 bg-light">
+                <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche</span></span>
+                <hr>
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none">
+                    <img src="https://github.com/mdo.png" alt="" class="me-4" width="90" height="100">
+                </a>
+                <dl class="nav nav-pills flex-column mb-auto">
+                    <dt>Sexe</dt>
+                    <dd th:utext="${individu.sex}"></dd>
+                    <dt>N° Étudiant</dt>
+                    <dd th:utext="${individu.numEtu}"></dd>
+                    <dt>Nom</dt>
+                    <dd th:utext="${individu.name}"></dd>
+                    <dt>Prénom</dt>
+                    <dd th:utext="${individu.firstName}"></dd>
+                    <dt>Login</dt>
+                    <dd th:utext="${individu.eppn}"></dd>
+                    <dt>Date de naissance</dt>
+                    <dd th:utext="${individu.dateOfBirth}"></dd>
+                    <dt>Type d'individu</dt>
+                    <!--<dd th:utext="${dossier.type}"></dd>-->
+                    <dt>Statut du dossier</dt>
+                    <!--<dd th:utext="${dossier.statusDossier}"></dd>-->
+                    <dt>Age</dt>
+                    <dd th:utext="|${age} ans|"></dd>
+                </dl>
+                <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
+                <hr>
+                <dl class="nav nav-pills flex-column mb-auto">
+                    <dt>Email universitaire</dt>
+                    <dd th:utext="${individu.emailEtu}"></dd>
+                    <dt>Email personnel</dt>
+                    <dd th:utext="${individu.emailPerso}"></dd>
+                    <dt>Téléphone portable</dt>
+                    <dd th:utext="${individu.mobilPhone}"></dd>
+                    <dt>Téléphone fixe</dt>
+                    <dd th:utext="${individu.fixPhone}"></dd>
+                    <dt>Téléphone du responsable</dt>
+                    <dd th:utext="${individu.eppn}"></dd>
+                    <dt>Date de naissance</dt>
+                    <dd th:utext="${individu.dateOfBirth}"></dd>
+                </dl>
+                <span class="fs-6 card text-bg-primary"><span class="ms-3">Adresses</span></span>
+                <hr>
+                <div class="accordion" id="accordionExample">
+                    <dl class="accordion-item">
+                        <dt class="accordion-header" id="headingOne">
+                            <span class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                               Adresse annuelle
+                            </span>
+                        </dt>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <dd th:text="${individu.currentAddress}"></dd>
+                                <dd th:text="${individu.currentCP}"></dd>
+                                <dd th:text="${individu.currentCity}"></dd>
                             </div>
                         </div>
-                    </div>
+                        <dt class="accordion-header" id="headingtwo">
+                            <span class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Adresse fixe
+                            </span>
+                        </dt>
+                        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <dd th:text="${individu.fixAddress}"></dd>
+                                <dd th:text="${individu.fixCP}"></dd>
+                                <dd th:text="${individu.fixCity}"></dd>
+                            </div>
+                        </div>
+                    </dl>
                 </div>
             </div>
         </main>

@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.datasource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class IndividuDataSourceService {
 
     public DataSource getDataSourceByName(String name) {
         logger.info("initialize db " + name + " with type " + individuSourceProperties.getDataSources().get(name).getType());
-        return individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().build();
+        return individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
     public JdbcTemplate getJdbcTemplateByName(String name) {
