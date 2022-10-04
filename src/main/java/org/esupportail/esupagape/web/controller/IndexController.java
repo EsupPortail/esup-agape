@@ -10,7 +10,7 @@ public class IndexController {
 
     @GetMapping
     public String index() {
-        return "redirect:/individus";
+        return "redirect:/dossiers";
     }
 
     @GetMapping("/logged-out")

@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -8,6 +9,7 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +34,13 @@ public class IndividuService {
     private IndividuRepository individuRepository;
 
     @Resource
+    private UtilsService utilsService;
+
+    @Resource
     private ExcludeIndividuRepository excludeIndividuRepository;
+
+    @Resource
+    private DossierService dossierService;
 
     public IndividuService(List<IndividuSourceService> individuSourceServices) {
         this.individuSourceServices = individuSourceServices;
@@ -68,37 +77,51 @@ public class IndividuService {
 
     @Transactional
     public void importIndividus() {
+        List<Individu> individus = individuRepository.findAll();
+        List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            List<Individu> individus = individuSourceService.getAllIndividuNums();
-            for (Individu individu : individus) {
-                try {
-                    save(individu, null);
-                } catch (AgapeJpaException e) {
-                    logger.debug("Individu non inséré");
-                }
+            List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
+            List<Individu> individusToCreate = individusFromSource.stream().filter(
+                    individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
+                    &&
+                    excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))
+            ).toList();
+            individuRepository.saveAll(individusToCreate);
+            List<Individu> individusWithoutDossier = new ArrayList<>();
+            individusWithoutDossier.addAll(individusToCreate);
+            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
+            List<Dossier> dossiers = new ArrayList<>();
+            for(Individu individu : individusWithoutDossier) {
+                Dossier dossier = dossierService.create(individu);
+                dossiers.add(dossier);
+                individu.getDossiers().add(dossier);
             }
+            dossierService.saveAll(dossiers);
         }
         logger.info("Import individus done");
     }
 
-    public void save(Individu individu, String force) throws AgapeJpaException {
-        if (force == null && excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu())) != null) {
+    public void save(Individu individuToAdd, String force) throws AgapeJpaException {
+        ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
+        if (force == null && excludeIndividu != null) {
             throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
         }
-        Individu individu1 = null;
-        if (!individu.getNumEtu().isEmpty()) {
-            individu1 = individuRepository.findByNumEtu(individu.getNumEtu());
+        Individu foundIndividu = null;
+        if (!individuToAdd.getNumEtu().isEmpty()) {
+            foundIndividu = individuRepository.findByNumEtu(individuToAdd.getNumEtu());
         } else {
-            individu.setNumEtu(null);
+            //numEtu à null pour éviter la contrainte d'unicité
+            individuToAdd.setNumEtu(null);
         }
-        if (individu1 == null) {
-            if (individu.getNumEtu() != null) {
-                ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
-                if (excludeIndividu != null) {
-                    excludeIndividuRepository.delete(excludeIndividu);
-                }
+        if (foundIndividu != null) {
+            dossierService.create(foundIndividu);
+        } else {
+            if (excludeIndividu != null) {
+                // suppression de l'exclusion si l'insertion est forcée
+                excludeIndividuRepository.delete(excludeIndividu);
             }
-            individuRepository.save(individu);
+            individuRepository.save(individuToAdd);
+            dossierService.create(individuToAdd);
         }
     }
 

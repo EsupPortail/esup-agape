@@ -8,11 +8,11 @@ import java.util.Calendar;
 public class UtilsService {
 
     public int getCurrentYear() {
-        int annee = Calendar.getInstance().get(Calendar.YEAR);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
         if(Calendar.getInstance().get(Calendar.MONTH)<Calendar.AUGUST){
-            annee--;
+            year--;
         }
-        return annee;
+        return year;
     }
 
 }

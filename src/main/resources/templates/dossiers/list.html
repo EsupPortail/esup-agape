@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:sd="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="dossiers" type="java.util.List<org.esupportail.esupagape.entity.Dossier>"*/-->
     <head th:replace="fragments/head :: head"></head>
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main>
             <section class="text-center">
-                <h1 class="mt-3">Liste des Individus</h1>
+                <h1 class="mt-3" th:text="'Liste des dossiers ' + ${currentYear}"></h1>
                <a class="btn btn-primary" th:href="@{/individus/create}" type="button">Ajouter</a>
                 <div class="container">
                     <div class="container">
@@ -34,40 +35,43 @@
                                         <a class="sorted" sd:pagination-sort="sex">SEXE</a>
                                     </th>
                                     <th scope="col">
+                                        <a class="sorted" sd:pagination-sort="type">TYPE INDIVIDU</a>
+                                    </th>
+                                    <th scope="col">
                                         <a class="sorted" sd:pagination-sort="status">STATUT DU DOSSIER</a>
                                     </th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr th:each="individu : ${individus}">
-                                    <td th:utext="${individu.numEtu}"></td>
-                                    <td th:utext="${individu.name}"></td>
-                                    <td th:utext="${individu.firstName}"></td>
-                                    <td th:utext="${individu.dateOfBirth}"></td>
-                                    <td th:utext="${individu.sex}"></td>
-                                    <td>
-                                    <!--  <p th:each="dossier : ${individu.dossiers}"><span th:text="${dossier.statusDossier}"></span></p>-->
-                                    </td>
+                                <tr th:each="dossier : ${dossiers}">
+                                    <td th:utext="${dossier.individu.numEtu}"></td>
+                                    <td th:utext="${dossier.individu.name}"></td>
+                                    <td th:utext="${dossier.individu.firstName}"></td>
+                                    <td th:utext="${dossier.individu.dateOfBirth}"></td>
+                                    <td th:utext="${dossier.individu.sex}"></td>
+                                    <td th:utext="${dossier.type}"></td>
+                                    <td th:utext="${dossier.statusDossier}"></td>
                                     <td class="container col-2">
-                                    <a class="btn btn-info" th:href="@{/individus/{id}(id=${individu.id})}" role="button"><i class="bi bi-eye"></i>
+                                    <a class="btn btn-info" th:href="@{/individus/{id}(id=${dossier.individu.id})}" role="button"><i class="bi bi-eye"></i>
                                     </a>
                                     <a data-bs-toggle="modal"
                                             href="#"
                                             data-bs-target="#modal-warning"
-                                            th:attr="data-bs-target='#modal-warning'+${individu.id}"
+                                            th:attr="data-bs-target='#modal-warning'+${dossier.individu.id}"
                                             class="btn btn-danger"
                                             sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-x"></i></a>
-                                    <div class="modal modal-warning fade in" th:id="modal-warning+${individu.id}">
+                                    <div class="modal modal-warning fade in" th:id="modal-warning+${dossier.individu.id}">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form th:action="@{/admin/delete/{id}(id=${individu.id})}" th:method="delete">
+                                                <form th:action="@{/admin/delete/{id}(id=${dossier.individu.id})}" th:method="delete">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Suppression d'un individu</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet individu : <br />
-                                                            <span th:text="'Numéro étudiant:' + ' ' + ${individu.id} + ' ' + '(' + 'nom = ' + ${individu.name} + ')'" class="font-weight-bold"></span> ?
+                                                            <span th:text="'Numéro étudiant:' + ' ' + ${dossier.individu.id} + ' ' + '(' + 'nom = ' + ${dossier.individu.name} + ')'" class="font-weight-bold"></span> ?
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -91,8 +95,8 @@
                             </div>
                             <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
                         </nav>
-                        <div class="alert alert-warning" th:if="${individus.isEmpty()}">Aucun individu ne correspond à votre recherche</div>
-                        <a th:href="@{/individus}">Retour à la liste des individus</a>
+                        <div class="alert alert-warning" th:if="${dossiers.isEmpty()}">Aucun individu ne correspond à votre recherche</div>
+                        <a th:href="@{/dossiers}">Retour à la liste des individus</a>
                     </div>
                 </div>
             </section>

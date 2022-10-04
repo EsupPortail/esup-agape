@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
     <head th:replace="fragments/head :: head"></head>
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main>
-            <h1 class="title-create text-center mt-2" th:text="'Informations sur' + ' ' + ${individu.name} + ' ' + ${individu.firstName}">Informations d’un individu</h1>
+            <h1 class="title-create text-center mt-2" th:text="'Informations sur' + ' ' + ${individu.name} + ' ' + ${individu.firstName} + ' dossier ' + ${currentDossier.year}"></h1>
+            <div class="row">
             <div class="d-flex flex-column  p-3 bg-light">
                 <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche</span></span>
                 <hr>
@@ -77,6 +79,13 @@
                         </div>
                     </dl>
                 </div>
+            </div>
+            <div class="d-flex flex-column  p-3">
+                <p th:each="dossier : ${dossiers}">
+                    <span th:text="${dossier.year}"></span>
+                </p>
+                <h1 th:text="${currentDossier.statusDossier}"></h1>
+            </div>
             </div>
         </main>
         <a th:href="@{/individus}" class="text-center">Retour à la liste des individus</a>

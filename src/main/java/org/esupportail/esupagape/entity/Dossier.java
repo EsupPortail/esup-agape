@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"individu_id", "year"})
+})
 public class Dossier {
 
     @Id
