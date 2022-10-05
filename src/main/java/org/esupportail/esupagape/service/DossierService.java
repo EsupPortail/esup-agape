@@ -64,7 +64,7 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<Dossier> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, Pageable pageable) {
-        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, pageable);
+    public Page<Dossier> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Pageable pageable) {
+        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,pageable);
     }
 }
