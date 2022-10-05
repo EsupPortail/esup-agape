@@ -6,6 +6,7 @@ import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Order(3)
 @ConditionalOnProperty(value = "individu-source.data-sources.APO.name")
 public class ApoIndividuSourceService implements IndividuSourceService {
 
@@ -31,11 +33,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APO");
-    }
-
-    @Override
-    public Map<String, String> getSourcesPropertiesMapping() {
-        return null;
     }
 
     @Override
@@ -56,16 +53,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     @Override
     public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth) {
         return null;
-    }
-
-    @Override
-    public void updateIndividu(Individu individu) {
-
-    }
-
-    @Override
-    public void updateDossier(Individu individu, int year) {
-
     }
 
     @Override

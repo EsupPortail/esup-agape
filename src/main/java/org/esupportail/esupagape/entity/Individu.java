@@ -35,7 +35,6 @@ public class Individu {
     @Size(min=2, max=30)
     private String firstName;
 
-
     private String sex;
 
     @NotNull(message = "La date de naissance doit être renseignée")
@@ -44,6 +43,8 @@ public class Individu {
     private LocalDate dateOfBirth;
 
     private String eppn;
+
+    private String photoId;
 
     private String emailEtu;
 
@@ -138,6 +139,14 @@ public class Individu {
 
     public void setEppn(String eppn) {
         this.eppn = eppn;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 
     public String getEmailEtu() {

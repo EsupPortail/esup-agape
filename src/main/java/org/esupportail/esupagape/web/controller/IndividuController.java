@@ -8,6 +8,7 @@ import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,7 +49,6 @@ public class IndividuController {
         model.addAttribute("currentDossier", dossierService.getByYear(id, year));
         Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
         int age = agePeriod.getYears();
-        logger.info(String.format("Age : %s", age));
         model.addAttribute("age", age);
 
         return "individus/show";
@@ -77,5 +77,11 @@ public class IndividuController {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }
+    }
+
+    @RequestMapping(value = "/photo/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getPhoto(@PathVariable("id") Long id) {
+        return individuService.getPhoto(id);
     }
 }

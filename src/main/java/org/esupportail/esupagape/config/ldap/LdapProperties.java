@@ -18,6 +18,7 @@ public class LdapProperties {
     private String membersOfGroupSearchFilter;
     private String memberSearchFilter;
     private String userIdSearchFilter;
+
     private Map<String, String> mappingFiltersGroups = new HashMap<>();
 
     public String getSearchBase() {

@@ -8,6 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100% !important;
+    margin-top: 50px;
 }
 .d-flex {
     max-width: 600px;

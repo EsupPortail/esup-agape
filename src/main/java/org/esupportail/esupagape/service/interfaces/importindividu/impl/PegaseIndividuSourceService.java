@@ -6,6 +6,7 @@ import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Order(4)
 @ConditionalOnProperty(value = "individu-source.data-sources.PEGASE.name")
 public class PegaseIndividuSourceService implements IndividuSourceService {
 
@@ -25,11 +27,6 @@ public class PegaseIndividuSourceService implements IndividuSourceService {
 
     public PegaseIndividuSourceService(IndividuDataSourceService individuDataSourceService) {
         this.dataSource = individuDataSourceService.getDataSourceByName("PEGASE");
-    }
-
-    @Override
-    public Map<String, String> getSourcesPropertiesMapping() {
-        return null;
     }
 
     @Override
@@ -50,16 +47,6 @@ public class PegaseIndividuSourceService implements IndividuSourceService {
     @Override
     public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth) {
         return null;
-    }
-
-    @Override
-    public void updateIndividu(Individu individu) {
-
-    }
-
-    @Override
-    public void updateDossier(Individu individu, int year) {
-
     }
 
     @Override

@@ -4,10 +4,12 @@ import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.repository.ldap.PersonLdapRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.naming.directory.SearchControls;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,13 +37,13 @@ public class LdapPersonService {
         return personLdapRepository.findBySupannEtuId(numEtu);
     }
 
-    public PersonLdapRepository getPersonLdapRepository() {
-		return personLdapRepository;
-	}
-
-    public List<PersonLdap> getPersonLdap(String authName) {
-        String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[] { authName });
-        return ldapTemplate.search(ldapProperties.getSearchBase(), formattedFilter, new PersonLdapAttributesMapper());
+    public String getPersonLdapAttribute(String authName, String attribute) {
+        String formattedFilter = MessageFormat.format("(uid={0})", (Object[]) new String[] { authName });
+        return ldapTemplate.search(ldapProperties.getSearchBase(),
+                formattedFilter,
+                SearchControls.SUBTREE_SCOPE,
+                new String[] {attribute},
+                (AttributesMapper) attrs -> attrs.get(attribute).get().toString()).get(0).toString();
     }
 
     public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {

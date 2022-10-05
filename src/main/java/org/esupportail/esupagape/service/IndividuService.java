@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
@@ -12,23 +13,37 @@ import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourc
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
+@EnableConfigurationProperties(ApplicationProperties.class)
 public class IndividuService {
 
     private static final Logger logger = LoggerFactory.getLogger(IndividuService.class);
 
     private final List<IndividuSourceService> individuSourceServices;
+
+    @Resource
+    private ApplicationProperties applicationProperties;
 
     @Resource
     private IndividuRepository individuRepository;
@@ -62,7 +77,28 @@ public class IndividuService {
     public void syncIndividu(Long id) {
         Individu individu = individuRepository.findById(id).orElseThrow();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuSourceService.updateIndividu(individu);
+            Map<String, Object> individuProperties = individuSourceService.getIndividuProperties(individu.getNumEtu());
+            if(individuProperties != null && individuProperties.size() >0) {
+                for (String key : individuProperties.keySet()) {
+                    if (individuProperties.get(key) != null) {
+                        switch (key) {
+                            case "eppn" -> individu.setEppn(individuProperties.get(key).toString());
+                            case "name" -> individu.setName(individuProperties.get(key).toString());
+                            case "firstName" -> individu.setFirstName(individuProperties.get(key).toString());
+                            case "sex" -> individu.setSex(individuProperties.get(key).toString());
+                            case "emailEtu" -> individu.setEmailEtu(individuProperties.get(key).toString());
+                            case "emailPerso" -> individu.setEmailPerso(individuProperties.get(key).toString());
+                            case "fixAddress" -> individu.setFixAddress(individuProperties.get(key).toString());
+                            case "fixCp" -> individu.setFixCP(individuProperties.get(key).toString());
+                            case "fixCity" -> individu.setFixCity(individuProperties.get(key).toString());
+                            case "fixCountry" -> individu.setFixCountry(individuProperties.get(key).toString());
+                            case "fixPhone" -> individu.setFixPhone(individuProperties.get(key).toString());
+                            case "contactPhone" -> individu.setContactPhone(individuProperties.get(key).toString());
+                            case "photoId" -> individu.setPhotoId(individuProperties.get(key).toString());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -210,5 +246,36 @@ public class IndividuService {
             excludeIndividuRepository.save(excludeIndividu);
         }
         this.individuRepository.delete(individu);
+    }
+
+    public ResponseEntity<byte[]> getPhoto(Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_OCTET_STREAM));
+        ResponseEntity<byte[]> httpResponse = setNoPhoto();
+        RestTemplate template = new RestTemplate();
+        MultiValueMap<String, Object> multipartMap = new LinkedMultiValueMap<>();
+        HttpEntity<Object> request = new HttpEntity<>(multipartMap, headers);
+        Individu individu = getById(id);
+        if(!applicationProperties.getDisplayPhotoUriPattern().isEmpty() && individu != null && individu.getPhotoId() != null && !individu.getPhotoId().isEmpty()) {
+            String uri = MessageFormat.format(applicationProperties.getDisplayPhotoUriPattern(), individu.getPhotoId());
+            try {
+                httpResponse = template.exchange(uri, HttpMethod.GET, request, byte[].class);
+            } catch (RestClientException e) {
+                logger.debug("photo not found for " + id);
+            }
+        }
+        return httpResponse;
+    }
+
+    private ResponseEntity<byte[]> setNoPhoto() {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(List.of(MediaType.APPLICATION_OCTET_STREAM));
+            ClassPathResource noImg = new ClassPathResource("/static/images/NoPhoto.jpg");
+            return new ResponseEntity<>(noImg.getInputStream().readAllBytes(), headers, HttpStatus.OK);
+        } catch (IOException e) {
+            logger.error("NoPhoto.jpg not found", e);
+        }
+        return null;
     }
 }
