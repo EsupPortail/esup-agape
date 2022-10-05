@@ -64,7 +64,11 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<Dossier> getFullTextSearch(String fullTextSearch, Pageable pageable) {
-        return dossierRepository.findByFullTextSearch(fullTextSearch, pageable);
+    public Page<Dossier> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year,Pageable pageable) {
+        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,year, pageable);
+    }
+
+    public List<Integer> getYearDistinct(){
+        return dossierRepository.findYearDistinct();
     }
 }
