@@ -1,6 +1,5 @@
-package org.esupportail.esupagape.annotation.aspect;
+package org.esupportail.esupagape.annotation;
 
-import org.esupportail.esupagape.annotation.AgapeLdapAttributExist;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 
 import javax.validation.ConstraintValidator;
@@ -11,6 +10,6 @@ public class AgapeLdapAttributeExistValidator implements ConstraintValidator<Aga
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return Arrays.stream(PersonLdap.class.getDeclaredFields()).anyMatch(field -> field.getName().equals(value));
+        return value == null || Arrays.stream(PersonLdap.class.getDeclaredFields()).anyMatch(field -> field.getName().equals(value));
     }
 }

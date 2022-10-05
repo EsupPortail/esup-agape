@@ -1,7 +1,5 @@
 package org.esupportail.esupagape.annotation;
 
-import org.esupportail.esupagape.annotation.aspect.AgapeLdapAttributeExistValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
