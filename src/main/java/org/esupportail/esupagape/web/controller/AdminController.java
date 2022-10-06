@@ -42,7 +42,7 @@ public class AdminController {
     @DeleteMapping(value = "/delete/{id}")
     public String deleteIndividu(@PathVariable("id") long id) {
         individuService.deleteIndividu(id);
-        return "redirect:/individus/";
+        return "redirect:/dossiers/list";
     }
 
 }
