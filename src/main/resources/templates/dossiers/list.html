@@ -26,14 +26,14 @@
                             <div class="input-group mt-3 mb-4" style="width: 350px;">
                                 <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
                                 <select class="form-select"  name="typeIndividu" >
-                                    <option disabled selected value="">Choisir</option>
+                                    <option  value="">Choisir</option>
                                    <option th:selected="${typeIndividu == enumType}" th:each="enumType : ${T(org.esupportail.esupagape.entity.enums.TypeIndividu).values()}" th:value="${enumType}" th:text="${enumType.displayValue}"></option>
                                 </select>
                             </div>
                          <div class="input-group mt-3 mb-4" style="width: 500px;">
                                 <label class="input-group-text" th:for="statusDossier">Statut</label>
                                 <select class="form-select" name="statusDossier">
-                                    <option disabled selected value="">Choisir</option>
+                                    <option value="">Choisir</option>
                                     <option th:selected="${statusDossier== enumStatus}" th:each="enumStatus: ${T(org.esupportail.esupagape.entity.enums.StatusDossier).values()}"  th:value="${enumStatus}" th:text="${enumStatus.displayValue}"></option>
                                 </select>
                             </div>
