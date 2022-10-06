@@ -73,7 +73,7 @@
                                 <td th:utext="${dossier.individu.firstName}"></td>
                                 <td th:utext="${dossier.individu.dateOfBirth}"></td>
                                 <td th:utext="${dossier.individu.sex}"></td>
-                                <td th:utext="${dossier.type}"></td>
+                                <td th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
                                 <td th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
                                 <td class="container col-2">
                                     <a class="btn btn-info" th:href="@{/individus/{id}(id=${dossier.individu.id})}" role="button"><i class="bi bi-eye"></i>
