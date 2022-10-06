@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service.ldap;
 
 import org.esupportail.esupagape.config.ldap.LdapProperties;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.repository.ldap.PersonLdapRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,13 +38,17 @@ public class LdapPersonService {
         return personLdapRepository.findBySupannEtuId(numEtu);
     }
 
-    public String getPersonLdapAttribute(String authName, String attribute) {
-        String formattedFilter = MessageFormat.format("(uid={0})", (Object[]) new String[] { authName });
-        return ldapTemplate.search(ldapProperties.getSearchBase(),
-                formattedFilter,
-                SearchControls.SUBTREE_SCOPE,
-                new String[] {attribute},
-                (AttributesMapper) attrs -> attrs.get(attribute).get().toString()).get(0).toString();
+    public String getPersonLdapAttribute(String authName, String attribute) throws AgapeException {
+        if(attribute != null) {
+            String formattedFilter = MessageFormat.format("(uid={0})", (Object[]) new String[]{authName});
+            return ldapTemplate.search(ldapProperties.getSearchBase(),
+                    formattedFilter,
+                    SearchControls.SUBTREE_SCOPE,
+                    new String[]{attribute},
+                    (AttributesMapper) attrs -> attrs.get(attribute).get().toString()).get(0).toString();
+        }else {
+            throw new AgapeException("Attribut is null");
+        }
     }
 
     public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {

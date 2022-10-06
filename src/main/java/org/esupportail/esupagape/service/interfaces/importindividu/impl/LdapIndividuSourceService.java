@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -59,7 +60,11 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuDatas.put("emailPerso", personLdap.getSupannMailPerso());
             individuDatas.put("fixPhone", personLdap.getTelephoneNumber());
             individuDatas.put("contactPhone", personLdap.getSupannAutreTelephone());
-            individuDatas.put("photoId", ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
+            try {
+                individuDatas.put("photoId", ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
+            } catch (AgapeException e) {
+                logger.debug(e.getMessage());
+            }
             return individuDatas;
         }
         return null;
