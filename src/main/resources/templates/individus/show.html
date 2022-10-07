@@ -9,10 +9,12 @@
             <div class="col pt-3">
                 <a th:href="@{/dossiers}" class="text-center">Retour à la liste des individus</a>
                 <h1 th:text="'Informations sur' + ' ' + ${individu.name} + ' ' + ${individu.firstName} + ' dossier ' + ${currentDossier.year}"></h1>
-                <p th:each="dossier : ${dossiers}">
-                    <span th:text="${dossier.year}"></span>
-                </p>
-                <h1 th:text="${currentDossier.statusDossier.displayValue}"></h1>
+                <div class="d-flex flex-column  p-3">
+                    <p th:each="dossier : ${dossiers}">
+                        <span th:text="${dossier.year}"></span>
+                    </p>
+                    <h1 th:text="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></h1>
+                </div>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>

@@ -20,9 +20,9 @@
         <dt class="col-sm-3">Date de naissance</dt>
         <dd class="col-sm-9" th:utext="${individu.dateOfBirth}"></dd>
         <dt class="col-sm-3">Type d'individu</dt>
-        <dd class="col-sm-9" th:utext="${currentDossier.type.displayValue}"></dd>
+        <dd class="col-sm-9" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
         <dt class="col-sm-3">Statut du dossier</dt>
-        <dd class="col-sm-9" th:utext="${currentDossier.statusDossier.displayValue}"></dd>
+        <dd class="col-sm-9" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>
         <dt class="col-sm-3">Age</dt>
         <dd class="col-sm-9" th:utext="|${age} ans|"></dd>
     </dl>

@@ -38,10 +38,10 @@ public class IndividuController {
 
     @GetMapping("{id}")
     public String showRedirect(@PathVariable Long id) {
-        return "redirect:/individus/" + id + "/" + utilsService.getCurrentYear();
+        return "redirect:/individus/" + id + "/dossiers/" + utilsService.getCurrentYear();
     }
 
-    @GetMapping("{id}/{year}")
+    @GetMapping("{id}/dossiers/{year}")
     public String show(@PathVariable Long id, @PathVariable Integer year, Model model) {
         Individu individu = individuService.getById(id);
         model.addAttribute("individu", individu);
