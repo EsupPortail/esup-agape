@@ -50,7 +50,6 @@ public class IndividuController {
         Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
         int age = agePeriod.getYears();
         model.addAttribute("age", age);
-
         return "individus/show";
     }
 
