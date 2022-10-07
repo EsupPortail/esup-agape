@@ -7,59 +7,75 @@
         <main>
             <section class="text-center">
                 <h1 class="mt-3" th:text="'Liste des dossiers ' + ${currentYear}"></h1>
-                <a class="btn btn-primary" th:href="@{/individus/create}" type="button">Ajouter</a>
-                <div class="container">
+                <div class="container-fluid">
                     <form th:action="@{/dossiers}" method="get">
-                        <input class="form-control mt-2 mb-4" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}" /> &nbsp;
-                        <input class="btn btn-success ms-2 mb-1" type="submit" value="Rechercher" /> &nbsp;
-                        <a role="button" class="btn btn-secondary ms-2 mb-1" type="button" id="btnClear" th:href="@{/dossiers}">Effacer</a>
-                       <div class="row">
+                        <div class="row">
                             <div class="input-group mt-3 mb-4" style="width: 350px;">
                                 <label class="input-group-text">Année universitaire</label>
-                                <select class="form-select" name="yearFilter" >
+                                <select class="form-select" name="yearFilter">
                                     <option disabled selected value="">Choisir</option>
-                                    <option  th:selected="${yearFilter == year}" th:each="year : ${years}" th:value="${year}" th:text="${year} + ' - ' + ${year + 1} "></option>
+                                    <option th:selected="${yearFilter == year}" th:each="year : ${years}" th:value="${year}" th:text="${year} + ' - ' + ${year + 1} "></option>
                                 </select>
                             </div>
                             <div class="input-group mt-3 mb-4" style="width: 350px;">
                                 <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
-                                <select class="form-select"  name="typeIndividu" >
-                                    <option  value="">Choisir</option>
-                                   <option th:selected="${typeIndividu == enumType}" th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.type-individu.' + ${enumType}}"></option>
+                                <select class="form-select" name="typeIndividu">
+                                    <option value="">Choisir</option>
+                                    <option th:selected="${typeIndividu == enumType}"
+                                            th:each="enumType : ${typeIndividuList}"
+                                            th:value="${enumType}"
+                                            th:text="#{'dossier.type-individu.' + ${enumType}}"></option>
                                 </select>
                             </div>
-                         <div class="input-group mt-3 mb-4" style="width: 500px;">
+                            <div class="input-group mt-3 mb-4" style="width: 350px;">
                                 <label class="input-group-text" th:for="statusDossier">Statut</label>
                                 <select class="form-select" name="statusDossier">
                                     <option value="">Choisir</option>
-                                    <option th:selected="${statusDossier == enumStatus}" th:each="enumStatus : ${statusDossierList}"  th:value="${enumStatus}" th:text="#{'dossier.status-dossier.' + ${enumStatus}}"></option>
+                                    <option th:selected="${statusDossier == enumStatus}"
+                                            th:each="enumStatus : ${statusDossierList}"
+                                            th:value="${enumStatus}"
+                                            th:text="#{'dossier.status-dossier.' + ${enumStatus}}"></option>
                                 </select>
+                            </div>
+                            <input class="form-control mt-3 mb-4"
+                                    type="text"
+                                    placeholder="nom, prénom, numéro étudiant"
+                                    name="fullTextSearch"
+                                    id="fullTextSearch"
+                                    size="50"
+                                    style="width: 250px;"
+                                    th:value="${fullTextSearch}" /> &nbsp;
+                            <div class="d-flex gap-2 align-items-end">
+                                <input class="btn btn-success mt-3 mb-4" type="submit" value="Rechercher" />
+                                <a role="button" class="btn btn-secondary mt-3 mb-4" type="button" id="btnClear" th:href="@{/dossiers}">Effacer</a>
+                                <a class="btn btn-primary mt-3 mb-4" th:href="@{/individus/create}" type="button">Ajouter un individu</a>
                             </div>
                         </div>
                     </form>
+
                     <table class="table table-striped">
                         <thead class="text-center mt-2 mb-2">
                             <tr>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="individu.numEtu">NUMERO ETUDIANT</a>
+                                    <a class="sorted" sd:pagination-sort="individu.numEtu">Numéro étudiant</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="individu.name">NOM</a>
+                                    <a class="sorted" sd:pagination-sort="individu.name">Nom</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="individu.firstName">PRENOM</a>
+                                    <a class="sorted" sd:pagination-sort="individu.firstName">Prénom</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="individu.dateOfBirth">DATE DE NAISSANCE</a>
+                                    <a class="sorted" sd:pagination-sort="individu.dateOfBirth">Date de naissance</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="individu.sex">SEXE</a>
+                                    <a class="sorted" sd:pagination-sort="individu.sex">Sexe</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="type">TYPE INDIVIDU</a>
+                                    <a class="sorted" sd:pagination-sort="type">Type Individu</a>
                                 </th>
                                 <th scope="col">
-                                    <a class="sorted" sd:pagination-sort="statusDossier">STATUT DU DOSSIER</a>
+                                    <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
                                 </th>
                                 <th scope="col"></th>
                             </tr>
@@ -67,9 +83,9 @@
                         <tbody class="text-center">
                             <tr th:each="dossier : ${dossiers}">
                                 <td th:utext="${dossier.individu.numEtu}"></td>
-                                <td th:utext="${dossier.individu.name}"></td>
-                                <td th:utext="${dossier.individu.firstName}"></td>
-                                <td th:utext="${dossier.individu.dateOfBirth}"></td>
+                                <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.name))}"></td>
+                                <td  th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.firstName))}"></td>
+                                <td th:utext="${#temporals.format(dossier.individu.dateOfBirth, 'dd-MM-yyyy')}"></td>
                                 <td th:utext="${dossier.individu.sex}"></td>
                                 <td th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
                                 <td th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
@@ -111,14 +127,13 @@
                             </tr>
                         </tbody>
                     </table>
-                    <nav th:fragment="pagination" id="pagination" aria-label="pagination">
+                    <nav th:fragment="pagination" id="pagination" aria-label="pagination" class="mt-5">
                         <div class="col-lg-12 text-center">
                             <div sd:pagination-summary="">info</div>
                         </div>
-                        <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
+                        <ul class="d-print-none pagination justify-content-center " sd:pagination="full"></ul>
                     </nav>
                     <div class="alert alert-warning" th:if="${dossiers.isEmpty()}">Aucun individu ne correspond à votre recherche</div>
-                    <a th:href="@{/dossiers}">Retour à la liste des individus</a>
                 </div>
                 </div>
             </section>
