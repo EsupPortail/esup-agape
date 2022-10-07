@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DossierService {
@@ -22,16 +23,21 @@ public class DossierService {
     @Resource
     private DossierRepository dossierRepository;
 
-    public Dossier create(Individu individu) {
+    public Dossier create(Individu individu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
-        dossier.setStatusDossier(StatusDossier.IMPORTE);
+        dossier.setStatusDossier(statusDossier);
         if(individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
             dossier.setType(TypeIndividu.ETUDIANT);
         }
         dossierRepository.save(dossier);
         return dossier;
+    }
+
+    public void deleteDossier(Long id) {
+        Optional<Dossier> dossier = dossierRepository.findById(id);
+        dossier.ifPresent(d -> dossierRepository.delete(d));
     }
 
     public Page<Dossier> getAllByYear(int year, Pageable pageable) {

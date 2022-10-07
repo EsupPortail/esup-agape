@@ -1,50 +1,90 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head th:replace="fragments/head :: head"></head>
-    <body>
-        <header th:replace="fragments/header :: header"></header>
-        <main>
-            <h1 class="title-create text-center mt-5">Ajout d'un individu</h1>
-            <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
-                <div class="row mb3">
-                    <label th:for="numEtu" class="col-md-2 col-form-label mb-1">Numéro étudiant</label>
-                    <div class="col-sm-10">
-                        <input th:field="*{numEtu}" type="text" class="form-control">
-                        <p th:if="${#fields.hasErrors('numEtu')}" th:errorclass="error" th:errors="*{numEtu}"></p>
-                    </div>
-                    <label th:for="force" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
-                    <div class="col-sm-10">
-                        <input name="force" type="checkbox" class="form-check-input">
-                    </div>
-                    <label th:for="name" class="col-md-2 col-form-label mb-1">Nom</label>
-                    <div class="col-sm-10">
-                        <input th:field="*{name}" type="text" class="form-control">
-                        <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
-                    </div>
-                    <label th:for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
-                    <div class="col-sm-10">
-                        <input th:field="*{firstName}" type="text" class="form-control" />
-                        <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"></p>
-                    </div>
-                    <label th:for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
-                    <div class="col-sm-10">
-                        <input th:field="*{dateOfBirth}" type="date" class="form-control mb-1" />
-                        <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error" th:errors="*{dateOfBirth}"></p>
-                    </div>
-                    <label th:for="sex" class="col-md-2 col-form-label mb-1">Sexe</label>
-                    <div class="col-sm-10">
-                        <div class="col-sm-10">
-                            <input th:field="*{sex}" type="text" class="form-control">
-                            <p th:if="${#fields.hasErrors('sex')}" th:errorclass="error" th:errors="*{sex}"></p>
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main>
+    <h1 class="title-create text-center mt-5">Ajout d'un individu</h1>
+    <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                    Ajout par numéro d’étudiant
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
+                <div class="accordion-body">
+                    <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
+                        <div class="row">
+                            <label for="numEtu" class="form-label col-2">Numéro étudiant</label>
+                            <div class="mb-3 col-2">
+                                <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
+                            </div>
                         </div>
-                        <div>
-                            <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+                        <div class="row">
+                            <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
+                            <div class="mb-3 col-2">
+                                <input id="force" name="force" type="checkbox" class="form-check-input">
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+
                 </div>
-            </form>
-        </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
-    </body>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Ajout par nom / prénom / date de naissance
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResultError != null ? 'show' : ''}" aria-labelledby="headingTwo"
+                 data-bs-parent="#accordionCreateIndividu">
+                <div class="accordion-body">
+                    <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
+                        <div class="row mb3">
+                            <label for="name" class="col-md-2 col-form-label mb-1">Nom</label>
+                            <div class="col-sm-10">
+                                <input id="name" th:field="*{name}" type="text" class="form-control" required />
+                                <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
+                            </div>
+                            <label for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
+                            <div class="col-sm-10">
+                                <input id="firstName" th:field="*{firstName}" type="text" class="form-control" required />
+                                <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error"
+                                   th:errors="*{firstName}"></p>
+                            </div>
+                            <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
+                            <div class="col-sm-10">
+                                <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" class="form-control mb-1" required />
+                                <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"
+                                   th:errors="*{dateOfBirth}"></p>
+                            </div>
+                            <label th:for="sex" class="col-md-2 col-form-label mb-1">Sexe</label>
+                            <div class="col-sm-10">
+                                <input id="sex" th:field="*{sex}" type="text" class="form-control">
+                                <p th:if="${#fields.hasErrors('sex')}" th:errorclass="error" th:errors="*{sex}"></p>
+                            </div>
+                            <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
+                            <div class="col-sm-10">
+                                <input id="force2" name="force" type="checkbox" class="form-check-input">
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
 </html>

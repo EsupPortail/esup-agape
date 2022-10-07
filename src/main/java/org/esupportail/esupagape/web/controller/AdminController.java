@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,9 @@ public class AdminController {
     @Resource
     private IndividuService individuService;
 
+    @Resource
+    private DossierService dossierService;
+
     @GetMapping
     public String index() {
         return "admin/index";
@@ -39,9 +43,15 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/delete-individu/{id}")
     public String deleteIndividu(@PathVariable("id") long id) {
         individuService.deleteIndividu(id);
+        return "redirect:/dossiers";
+    }
+
+    @DeleteMapping(value = "/delete-dossier/{id}")
+    public String deleteDossier(@PathVariable("id") long id) {
+        dossierService.deleteDossier(id);
         return "redirect:/dossiers";
     }
 

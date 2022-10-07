@@ -2,6 +2,6 @@ package org.esupportail.esupagape.entity.enums;
 
 public enum TypeIndividu {
 
-    LYCEEN, ETUDIANT, HORS_UNIV;
+    INCONNU, LYCEEN, ETUDIANT, HORS_UNIV;
 
 }

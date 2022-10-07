@@ -5,6 +5,7 @@ import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
@@ -128,7 +129,7 @@ public class IndividuService {
             individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
             List<Dossier> dossiers = new ArrayList<>();
             for(Individu individu : individusWithoutDossier) {
-                Dossier dossier = dossierService.create(individu);
+                Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
                 individu.getDossiers().add(dossier);
             }
@@ -138,26 +139,29 @@ public class IndividuService {
     }
 
     public void save(Individu individuToAdd, String force) throws AgapeJpaException {
-        ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
-        if (force == null && excludeIndividu != null) {
-            throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
+        ExcludeIndividu excludeIndividu = null;
+        if(individuToAdd.getNumEtu() != null && individuToAdd.getNumEtu().isEmpty()) {
+             excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
+            if (force == null && excludeIndividu != null) {
+                throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
+            }
         }
         Individu foundIndividu = null;
-        if (!individuToAdd.getNumEtu().isEmpty()) {
+        if (individuToAdd.getNumEtu() != null && !individuToAdd.getNumEtu().isEmpty()) {
             foundIndividu = individuRepository.findByNumEtu(individuToAdd.getNumEtu());
         } else {
-            //numEtu à null pour éviter la contrainte d'unicité
+            //numEtu à null pour éviter la contrainte d’unicité
             individuToAdd.setNumEtu(null);
         }
         if (foundIndividu != null) {
-            dossierService.create(foundIndividu);
+            dossierService.create(foundIndividu, StatusDossier.AJOUT_MANUEL);
         } else {
             if (excludeIndividu != null) {
-                // suppression de l'exclusion si l'insertion est forcée
+                // suppression de l'exclusion si l’insertion est forcée
                 excludeIndividuRepository.delete(excludeIndividu);
             }
             individuRepository.save(individuToAdd);
-            dossierService.create(individuToAdd);
+            dossierService.create(individuToAdd, StatusDossier.AJOUT_MANUEL);
         }
     }
 
@@ -181,7 +185,9 @@ public class IndividuService {
     @Transactional
     public Individu create(Individu individu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
-        if (!individu.getNumEtu().isEmpty()) {
+//        individu.setName(StringUtils.capitalize(individu.getName()));
+//        individu.setFirstName(StringUtils.capitalize(individu.getFirstName()));
+        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
             individuTestIsExist = getIndividu(individu.getNumEtu());
             if (individuTestIsExist == null) {
                 return createFromSources(individu.getNumEtu(), force);

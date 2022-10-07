@@ -63,12 +63,29 @@ public class IndividuController {
     public String create(@RequestParam(required = false) String force,
                          @Valid Individu individu,
                          BindingResult bindingResult,
+                         Model model,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("bindingResultError", true);
             return "individus/create";
         }
-
         try {
+            Individu individuOk = individuService.create(individu, force);
+            logger.info("Nouvel étudiant" + individuOk.getId());
+            return "redirect:/individus/" + individuOk.getId();
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            return "redirect:/individus/create";
+        }
+    }
+
+    @PostMapping("/create-by-numetu")
+    public String create(@RequestParam(required = false) String force,
+                         String numEtu,
+                         RedirectAttributes redirectAttributes) {
+        try {
+            Individu individu = new Individu();
+            individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId();

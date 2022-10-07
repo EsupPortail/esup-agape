@@ -37,7 +37,7 @@ public class Dossier {
     private RentreeProchaine rentreeProchaine;
 
     @Enumerated(EnumType.STRING)
-    private TypeIndividu type;
+    private TypeIndividu type = TypeIndividu.INCONNU;
 
     private int taux;
 

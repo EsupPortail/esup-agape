@@ -2,6 +2,7 @@ package org.esupportail.esupagape.entity.enums;
 
 public enum StatusDossier {
     IMPORTE,
+    AJOUT_MANUEL,
     ACCUEILLI_ENTRETIEN_PHYSIQUE,
     ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL,
     SUIVI,
