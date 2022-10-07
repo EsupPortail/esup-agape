@@ -178,6 +178,7 @@ public class IndividuService {
         return individuRepository.findAllByNameContainsIgnoreCase(name, pageable);
     }
 
+    @Transactional
     public Individu create(Individu individu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
         if (!individu.getNumEtu().isEmpty()) {

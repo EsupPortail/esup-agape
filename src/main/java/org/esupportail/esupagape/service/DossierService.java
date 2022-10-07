@@ -27,12 +27,10 @@ public class DossierService {
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(StatusDossier.IMPORTE);
-        if(!individu.getNumEtu().isEmpty()) {
+        if(individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
             dossier.setType(TypeIndividu.ETUDIANT);
         }
-//        dossier.setComposante("");
-//        dossier.setFilliere("");
-//        dossierRepository.save(dossier);
+        dossierRepository.save(dossier);
         return dossier;
     }
 
