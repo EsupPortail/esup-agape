@@ -54,42 +54,42 @@
                     </form>
 
                     <table class="table table-striped">
-                        <thead class="text-center mt-2 mb-2">
+                        <thead class="text-center mt-2 mb-2 table-secondary">
                             <tr>
-                                <th scope="col">
+                                <th class="text-start"scope="col">
                                     <a class="sorted" sd:pagination-sort="individu.numEtu">Numéro étudiant</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start" scope="col">
                                     <a class="sorted" sd:pagination-sort="individu.name">Nom</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start" scope="col">
                                     <a class="sorted" sd:pagination-sort="individu.firstName">Prénom</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start"scope="col">
                                     <a class="sorted" sd:pagination-sort="individu.dateOfBirth">Date de naissance</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start"scope="col">
                                     <a class="sorted" sd:pagination-sort="individu.sex">Sexe</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start"scope="col">
                                     <a class="sorted" sd:pagination-sort="type">Type Individu</a>
                                 </th>
-                                <th scope="col">
+                                <th class="text-start"scope="col">
                                     <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
                                 </th>
-                                <th scope="col"></th>
+                                <th class="text-start"scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
                             <tr th:each="dossier : ${dossiers}">
-                                <td th:utext="${dossier.individu.numEtu}"></td>
-                                <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.name))}"></td>
-                                <td  th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.firstName))}"></td>
-                                <td th:utext="${#temporals.format(dossier.individu.dateOfBirth, 'dd-MM-yyyy')}"></td>
-                                <td th:utext="${dossier.individu.sex}"></td>
-                                <td th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
-                                <td th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
-                                <td class="container col-2">
+                                <td class="text-start"th:utext="${dossier.individu.numEtu}"></td>
+                                <td class="text-start" th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.name))}"></td>
+                                <td class="text-start" th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.firstName))}"></td>
+                                <td class="text-start"th:utext="${#temporals.format(dossier.individu.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                                <td class="text-start"th:utext="${dossier.individu.sex}"></td>
+                                <td class="text-start"th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
+                                <td class="text-start"th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
+                                <td class="text-start container col-2">
                                     <a class="btn btn-info" th:href="@{/individus/{id}(id=${dossier.individu.id})}" role="button"><i class="bi bi-eye"></i>
                                     </a>
                                     <a data-bs-toggle="modal"
