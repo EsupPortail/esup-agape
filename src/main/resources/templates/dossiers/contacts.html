@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="row">
+            <div th:replace="fragments/side :: side"></div>
+            <div class="col pt-3">
+               <div class="mb-3"> <a th:href="@{/dossiers}" class="text-center ">Retour à la liste des individus</a></div>
+                <div th:replace="fragments/tabs-years :: tabs-years" ></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='contacts')"></div>
+                <div>
+                    <div>
+                        <a class="btn btn-primary mt-3" type="button"> Ajouter </a>
+                    </div>
+                </div>
+                <h1>Page des contacts des dossiers à créer</h1>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
+</html>

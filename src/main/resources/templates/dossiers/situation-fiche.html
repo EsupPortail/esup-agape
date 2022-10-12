@@ -7,7 +7,7 @@
         <main class="row">
             <div th:replace="fragments/side :: side"></div>
             <div class="col pt-3">
-                <a class="text-center">Retour à la liste des individus</a>
+                <a th:href="@{/dossiers}" class="text-center">Retour à la liste des individus</a>
                 <h1 th:text="'Informations sur' + ' ' + ${individu.name} + ' ' + ${individu.firstName} + ' dossier ' + ${currentDossier.year}"></h1>
                 <div class="d-flex flex-column  p-3">
                     <p th:each="dossier : ${dossiers}">
@@ -16,8 +16,13 @@
                     <h1 th:text="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></h1>
                 </div>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content"></div>
-            </div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='situation')"></div>
+                <div>
+                    <div>
+                        <a class="btn btn-primary mt-3" type="button"> Ajouter </a>
+                    </div>
+                </div>
+                <h1>Page des fiches de situations</h1>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>

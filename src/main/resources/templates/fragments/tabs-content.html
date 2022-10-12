@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div th:fragment="tabs-content">
+        <nav class="mt-4">
+            <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/contacts(id=${dossier.individu.id},year=${year})}" th:classappend="${active == 'contacts' ? 'active':''}"> Contacts
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"  th:classappend="${active == 'situation' ? 'active' : ''}" href="#" role="button" aria-expanded="false">Situation</a>
+                    <ul class="dropdown-menu mb-2">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/situation-fiche(id=${dossier.individu.id},year=${year})}"> Fiche</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/situation-tableau(id=${dossier.individu.id},year=${year})}"> Tableau</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/parcours(id=${dossier.individu.id},year=${year})}" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" href="#"  th:classappend="${active == 'aides' ? 'active':''}">Aides</a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/aides-humaines(id=${dossier.individu.id},year=${year})}"> Aides humaines</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/aides-materielles(id=${dossier.individu.id},year=${year})}"> Aides matérielles</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"  th:href="@{/individus/{id}/dossiers/{year}/archives-amenagements-examens(id=${dossier.individu.id},year=${year})}"> Archives aménagements examens</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"  th:href="@{/individus/{id}/dossiers/{year}/suivi-handisup(id=${dossier.individu.id},year=${year})}"> Suivi handisup</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/enquete(id=${dossier.individu.id},year=${year})}" th:classappend="${active == 'enquete' ? 'active':''}"> Enquête
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  th:href="@{/individus/{id}/dossiers/{year}/amenagements-examens(id=${dossier.individu.id},year=${year})}" th:classappend="${active == 'amenagement' ? 'active':''}"> Aménagements d'examen
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</html>

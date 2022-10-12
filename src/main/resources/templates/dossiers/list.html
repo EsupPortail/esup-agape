@@ -7,7 +7,7 @@
 <header th:replace="fragments/header :: header"></header>
 <main>
     <section class="text-center">
-        <h1 class="mt-3" th:text="'Liste des dossiers ' + ${currentYear}"></h1>
+        <h1 class="mt-3" th:text="'Liste des dossiers ' + ${yearFilter}"></h1>
         <div class="container-fluid">
             <form th:action="@{/dossiers}" method="get">
                 <div class="row my-3">
@@ -103,20 +103,20 @@
                     <td class="text-start" th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
                     <td class="text-start" th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
                     <td class="text-start container col-2">
-                        <a class="btn btn-info" th:href="@{/individus/{id}(id=${dossier.individu.id})}" role="button"><i
+                        <a class="btn btn-info" th:href="@{/individus/{id}/dossiers/{year}/contacts(id=${dossier.individu.id},year=${yearFilter})}" role="button"><i
                                 class="bi bi-eye"></i>
                         </a>
-                        <a data-bs-toggle="modal"
+                      <a data-bs-toggle="modal"
                            href="#"
                            data-bs-target="#modal-warning"
                            th:attr="data-bs-target='#modal-warning'+${dossier.individu.id}"
                            class="btn btn-danger"
-                           sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-x"></i></a>
+                           sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-person-x"></i></a>
                         <div class="modal modal-warning fade in" th:id="modal-warning+${dossier.individu.id}">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <form th:action="@{/admin/delete-individu/{id}(id=${dossier.individu.id})}"
-                                          th:method="delete">
+                                            th:method="delete">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Suppression d'un individu</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -126,7 +126,43 @@
                                             <div class="alert alert-danger text-center">Confirmez-vous la suppression de
                                                 cet individu : <br/>
                                                 <span th:text="'Numéro étudiant:' + ' ' + ${dossier.individu.id} + ' ' + '(' + 'nom = ' + ${dossier.individu.name} + ')'"
-                                                      class="font-weight-bold"></span> ?
+                                                        class="font-weight-bold"></span> ?
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline pull-left"
+                                                    data-bs-dismiss="modal">
+                                                Annuler
+                                            </button>
+                                            <button type="submit" class="btn btn-outline pull-left btn-danger"
+                                                    sec:authorize="hasRole('ROLE_ADMIN')">Supprimer
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                     <a data-bs-toggle="modal"
+                                href="#"
+                                data-bs-target="#modal-warning"
+                                th:attr="data-bs-target='#modal-warning'+${dossier.id}"
+                                class="btn btn-danger"
+                                sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-folder-x"></i></a>
+                        <div class="modal modal-warning fade in" th:id="modal-warning+${dossier.id}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form th:action="@{/admin/delete-dossier/{id}(id=${dossier.id})}"
+                                            th:method="delete">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Suppression d'un dossier</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de
+                                                ce dossier : <br/>
+                                                <span th:text="'Dossier:' + ' ' + ${dossier.id} + ' ' + '(' + 'nom = ' + ${dossier.individu.name} + ')'"
+                                                        class="font-weight-bold"></span> ?
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -143,6 +179,7 @@
                             </div>
                         </div>
                     </td>
+
                 </tr>
                 </tbody>
             </table>

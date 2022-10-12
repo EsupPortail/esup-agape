@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div th:fragment="tabs-years">
+        <nav class="nav nav-tabs">
+            <a type="button"
+                    th:href="@{/individus/{id}/dossiers/{year}/contacts(id=${dossier.individu.id},year=${dossier.year})}"
+                    th:each="dossier : ${dossiers}"
+                    th:text="${dossier.year} + '-' + ${dossier.year + 1}"
+                    class="nav-link"
+                    th:classappend="${dossier.year == year ? 'active':''}"></a>
+        </nav>
+    </div>
+</html>
