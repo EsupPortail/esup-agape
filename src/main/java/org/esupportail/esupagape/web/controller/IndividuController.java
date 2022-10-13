@@ -61,7 +61,6 @@ public class IndividuController {
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
         int age = agePeriod.getYears();
-
         model.addAttribute("individu", individu);
         model.addAttribute("dossiers", dossiers);
         model.addAttribute("currentDossier", dossierService.getByYear(id, year));
