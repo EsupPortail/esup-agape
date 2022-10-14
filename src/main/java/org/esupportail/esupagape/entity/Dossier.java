@@ -68,7 +68,7 @@ public class Dossier {
     @ManyToOne
     private Individu individu;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Contact> contacts = new ArrayList<>();
 
     public Long getId() {

@@ -26,6 +26,8 @@ public class Contact
     @Enumerated(EnumType.STRING)
     private TypeContact typeContact;
 
+    @ManyToOne
+    private Dossier dossier;
 
     public Long getId() {
         return id;
@@ -67,4 +69,11 @@ public class Contact
         this.typeContact = typeContact;
     }
 
+    public Dossier getDossier() {
+        return dossier;
+    }
+
+    public void setDossier(Dossier dossier) {
+        this.dossier = dossier;
+    }
 }

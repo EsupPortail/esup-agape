@@ -3,9 +3,9 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.ContactService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
-import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -36,7 +31,7 @@ public class IndividuController {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Resource
-    private UtilsService utilsService;
+    private ContactService contactService;
 
     @Resource
     private IndividuService individuService;
@@ -54,37 +49,19 @@ public class IndividuController {
         return "redirect:/individus";
     }
 
-    @GetMapping("{id}/dossiers/{year}")
-    public String show(@PathVariable Long id, @PathVariable Integer year, Model model) {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        return "individus/show";
-    }
-
-    @GetMapping("{id}/dossiers/{year}/contacts")
-    public String showDossierContacts(@PathVariable Long id, @PathVariable Integer year, Model model) {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/contacts";
-    }
+//    @GetMapping("{id}/dossiers/{year}")
+//    public String show(@PathVariable Long id, @PathVariable Integer year, Model model) {
+//        Individu individu = individuService.getById(id);
+//        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
+//        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
+//        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
+//        int age = agePeriod.getYears();
+//        model.addAttribute("individu", individu);
+//        model.addAttribute("dossiers", dossiers);
+//        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
+//        model.addAttribute("age", age);
+//        return "individus/show";
+//    }
 
     @GetMapping("{id}/dossiers/{year}/enquete")
     public String showDossierEnquete(@PathVariable Long id, @PathVariable Integer year, Model model) {
@@ -241,6 +218,7 @@ public class IndividuController {
 
         return "dossiers/amenagements-examens";
     }
+
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("individu", new Individu());

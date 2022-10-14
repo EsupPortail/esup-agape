@@ -57,7 +57,7 @@ public class DossierService {
     }
 
     public Dossier getCurrent(Long individuId) {
-        return dossierRepository.findByIndividuIdAndYear(individuId, utilsService.getCurrentYear()).orElseThrow();
+        return getByYear(individuId, utilsService.getCurrentYear());
     }
 
     public List<Dossier> getAllByIndividu(Long individuId) {

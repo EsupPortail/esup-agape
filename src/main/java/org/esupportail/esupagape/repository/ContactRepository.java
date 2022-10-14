@@ -3,5 +3,10 @@ package org.esupportail.esupagape.repository;
 import org.esupportail.esupagape.entity.Contact;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ContactsRepository extends JpaRepository <Contact, Long>{
+import java.util.List;
+
+public interface ContactRepository extends JpaRepository <Contact, Long> {
+
+    List<Contact> findContactByDossierId(Long dossierId);
+
 }
