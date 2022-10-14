@@ -7,8 +7,10 @@
         <main class="row">
             <div th:replace="fragments/side :: side"></div>
             <div class="col pt-3">
-               <div class="mb-3"> <a th:href="@{/dossiers}" class="text-center ">Retour à la liste des individus</a></div>
-                <div th:replace="fragments/tabs-years :: tabs-years" ></div>
+                <div class="mb-3">
+                    <a th:href="@{/dossiers}" class="text-center ">Retour à la liste des individus</a>
+                </div>
+                <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='contacts')"></div>
                 <div>
                     <div>
@@ -16,6 +18,32 @@
                     </div>
                 </div>
                 <h1>Page des contacts des dossiers à créer</h1>
+                <table class="table">
+                    <thead class="table table-info table-striped">
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Interlocuteur</th>
+                            <th>Compte rendu</th>
+                            <th>Voir</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dossier : ${dossiers}">
+                            <td th:text="${}"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>

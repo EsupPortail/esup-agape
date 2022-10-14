@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.entity;
 
+import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,6 +22,10 @@ public class Contact
 
     @Column(columnDefinition = "TEXT")
     private String compteRendu;
+
+    @Enumerated(EnumType.STRING)
+    private TypeContact typeContact;
+
 
     public Long getId() {
         return id;
@@ -53,4 +58,13 @@ public class Contact
     public void setCompteRendu(String compteRendu) {
         this.compteRendu = compteRendu;
     }
+
+    public TypeContact getTypeContact() {
+        return typeContact;
+    }
+
+    public void setTypeContact(TypeContact typeContact) {
+        this.typeContact = typeContact;
+    }
+
 }

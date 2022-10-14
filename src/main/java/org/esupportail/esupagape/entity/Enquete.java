@@ -1,6 +1,24 @@
 package org.esupportail.esupagape.entity;
 
-import javax.persistence.*;
+import org.esupportail.esupagape.entity.enums.enquete.CodFil;
+import org.esupportail.esupagape.entity.enums.enquete.CodFmt;
+import org.esupportail.esupagape.entity.enums.enquete.CodHd;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
+import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
+import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
+import org.esupportail.esupagape.entity.enums.enquete.CodSco;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.Sexe;
+import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Collection;
 
 @Entity
@@ -16,25 +34,25 @@ public class Enquete {
 
     private String an;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Sexe sexe;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private TypeFrmn typefrmn;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ModFrmn modfrmn;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodSco codsco;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodFmt codfmt;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodFil codfil;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodHd codhd;
 
     private boolean hdtmp;
@@ -42,10 +60,10 @@ public class Enquete {
     @Column(columnDefinition = "TEXT")
     private String com;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodPfpp codpfpp;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodPfas codpfas;
 
     @ElementCollection(targetClass=Enquete.CodMeahF.class)
@@ -66,7 +84,7 @@ public class Enquete {
     @Column(columnDefinition = "TEXT")
     private String autae;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CodMeaa codmeaa;
 
     @Column(columnDefinition = "TEXT")
@@ -82,214 +100,6 @@ public class Enquete {
 
     private String newid;
 
-    public enum Sexe {
-        nul("--Choisir--"), f("féminin"), m("masculin");
-
-        private final String libelle;
-
-        private Sexe(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum TypeFrmn {
-        nul("--Choisir--"), i("initiale"), c("continue");
-
-        private final String libelle;
-
-        private TypeFrmn(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum ModFrmn {
-        nul("--Choisir--"), p("présentiel"), d("distance"), a("alternance");
-
-        private final String libelle;
-
-        private ModFrmn(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodSco {
-        nul("--Choisir--"),
-        iutiu1("IUT 1e année"),
-        iutiu2("IUT 2e année"),
-        licL1("Licence 1"),
-        licL2("Licence 2"),
-        licL3("Licence 3"),
-        masM1("Master 1"),
-        masM2("Master 2"),
-        iep1("IEP Bac+1"),
-        iep2("IEP Bac+2"),
-        iep3("IEP Bac+3"),
-        iep4("IEP Bac+4"),
-        iep5("IEP Bac+5"),
-        ing1("Ingénieur prépa 1"),
-        ing2("Ingénieur prépa 2"),
-        ing3("Ingénieur 1e année ingénieur"),
-        ing4("Ingénieur 2e année ingénieur"),
-        ing5("Ingénieur 3e année ingénieur"),
-        ing6("Ingénieur Bac+6 et plus"),
-        san1a("Santé/paramédicale 1e année"),
-        san2a("Santé/paramédicale 2e année"),
-        san3a("Santé/paramédicale 3e année"),
-        san4a("Santé/paramédicale 4e année"),
-        san5a("Santé/paramédicale 5e année"),
-        san6a("Santé/paramédicale 6e année et plus"),
-        cycx1("Autre 1e cycle"),
-        cycx2("Autre 2e cycle");
-
-        private final String libelle;
-
-        private CodSco(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodFmt {
-        nul("--Choisir--"),
-        CA("Capacité en droit"),
-        DaA("DAEU A"),
-        DaB("DAEU B"),
-        iut("DUT"),
-        L("Licence"),
-        Lp("Licence Pro"),
-        M("Master"),
-        Mf("Master MEEF"),
-        iep("IEP"),
-        ing("Ingénieur"),
-        D("Doctorat"),
-        HDR("HDR"),
-        DU("DU"),
-        pa("PACES"),
-        med("Médecine"),
-        odo("Odontologie"),
-        pha("Pharmacie"),
-        mai("Sage-femme"),
-        aup("Audioprothésiste"),
-        inf("Infirmier"),
-        ane("Infirmier anesthésiste"),
-        ped("Pédicure-podologue"),
-        psm("Psychomotricien"),
-        orh("Orthophoniste"),
-        ort("Orthoptiste"),
-        bim("Biologie médicale"),
-        kin("Masseur-kinésithérapeuteé"),
-        mem("Manipulateur d'électroradiologie médicale"),
-        erg("Ergothérapeute"),
-        afp("Paramédicale Autre"),
-        x("Autres formations");
-
-        private final String libelle;
-
-        private CodFmt(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodFil {
-        nul("--Choisir--"),
-        lsh("Lettres, Sciences humaines et sociales, Langues"),
-        dsg("Droit, sciences Eco, gestion, AES"),
-        sci("Sciences"),
-        sta("STAPS"),
-        san("Santé (médecine,odontologie,sage-femme,pharmacie)"),
-        par("Paramédicale (psychomotricien,orthophoniste,kinésithérapeute,…)");
-
-        private final String libelle;
-
-        private CodFil(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodHd {
-        nul("--Choisir--"),
-        cog("Troubles cognitifs"),
-        tsa("TSA (troubles spécifiques de l'autisme)"),
-        psy("Troubles psychiques"),
-        lng("Troubles du langage et de la parole"),
-        mot("Troubles moteurs"),
-        vis("Troubles viscéraux (maladies invalidantes)"),
-        vis0("Troubles viscéraux Pathologies cancéreuses"),
-        vue("Troubles Visuels Majeurs (Cécité)"),
-        vuA("Autres troubles visuels"),
-        aud("Troubles Auditifs Majeurs (Surdité sévère et profond)"),
-        auA("Autres Troubles Auditifs"),
-        pta("Plusieurs troubles majeurs associés / poly handicap"),
-        aut("Autres troubles"),
-        tnd("Troubles non divulgués (par l'étudiant)");
-
-        private final String libelle;
-
-        private CodHd(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodPfpp {
-        nul("--Choisir--"),
-        pp0("pas d'aide, ni d'aménagement mis en place dans le cadre de la formation suivie durant la présente année universitaire"),
-        mh1("plan d'accompagnement formalisé communiqué à la MDPH"),
-        mh0("plan d'accompagnement formalisé non communiqué à la MDPH"),
-        pp2("plan d'accompagnement non encore formalisé");
-
-        private final String libelle;
-
-        private CodPfpp(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodPfas {
-        nul("--Choisir--"),
-        as0("pas d'aménagement spécifique du cursus ou du parcours en raison du handicap"),
-        as1("cursus ou parcours aménagé en raison du handicap");
-
-        private final String libelle;
-
-        private CodPfas(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
 
     public enum CodMeahF {
         ahs0("aucune aide humaine spécifique"),
@@ -337,24 +147,6 @@ public class Enquete {
         private final String libelle;
 
         private CodMeae(String value) {
-            libelle = value;
-        }
-
-        public String getLibelle() {
-            return libelle;
-        }
-    }
-
-    public enum CodMeaa {
-        nul("--Choisir--"),
-        aa1("l'étudiant est reçu ponctuellement par la structure ou le responsable handicap de l’établissement"),
-        aa2("l'étudiant est suivi par la structure ou le responsable handicap de l’établissement"),
-        aa3("recours à un matériel ou support spécialement adapté au besoin de l'étudiant handicapé"),
-        aao("autre (à préciser)");
-
-        private final String libelle;
-
-        private CodMeaa(String value) {
             libelle = value;
         }
 
