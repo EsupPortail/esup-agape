@@ -31,9 +31,6 @@ public class IndividuController {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Resource
-    private ContactService contactService;
-
-    @Resource
     private IndividuService individuService;
 
     @Resource
@@ -44,24 +41,10 @@ public class IndividuController {
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         if (!dossiers.isEmpty()) {
-            return "redirect:/individus/" + id + "/dossiers/" + dossiers.get(0).getYear();
+            return "redirect:/dossiers/" + dossiers.get(0).getId();
         }
         return "redirect:/individus";
     }
-
-//    @GetMapping("{id}/dossiers/{year}")
-//    public String show(@PathVariable Long id, @PathVariable Integer year, Model model) {
-//        Individu individu = individuService.getById(id);
-//        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-//        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-//        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-//        int age = agePeriod.getYears();
-//        model.addAttribute("individu", individu);
-//        model.addAttribute("dossiers", dossiers);
-//        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-//        model.addAttribute("age", age);
-//        return "individus/show";
-//    }
 
     @GetMapping("{id}/dossiers/{year}/enquete")
     public String showDossierEnquete(@PathVariable Long id, @PathVariable Integer year, Model model) {

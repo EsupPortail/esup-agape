@@ -4,7 +4,7 @@
         <nav class="mt-4">
             <ul class="nav nav-tabs" id="nav-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/contacts(id=${individu.id},year=${year})}" th:classappend="${active == 'contacts' ? 'active':''}"> Contacts
+                    <a class="nav-link" th:href="@{/dossiers/{id}/contacts(id=${currentDossier.id})}" th:classappend="${active == 'contacts' ? 'active':''}"> Contacts
                     </a>
                 </li>
 
@@ -12,15 +12,15 @@
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"  th:classappend="${active == 'situation' ? 'active' : ''}" href="#" role="button" aria-expanded="false">Situation</a>
                     <ul class="dropdown-menu mb-2">
                         <li>
-                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/situation-fiche(id=${individu.id},year=${year})}"> Fiche</a>
+                            <a class="dropdown-item" href="#"> Fiche</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/situation-tableau(id=${individu.id},year=${year})}"> Tableau</a>
+                            <a class="dropdown-item" href="#"> Tableau</a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/parcours(id=${individu.id},year=${year})}" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
+                    <a class="nav-link" href="#" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
                     </a>
                 </li>
 
@@ -28,27 +28,25 @@
                     <a class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" href="#"  th:classappend="${active == 'aides' ? 'active':''}">Aides</a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/aides-humaines(id=${individu.id},year=${year})}"> Aides humaines</a>
+                            <a class="dropdown-item" href="#"> Aides humaines</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" th:href="@{/individus/{id}/dossiers/{year}/aides-materielles(id=${individu.id},year=${year})}"> Aides matérielles</a>
+                            <a class="dropdown-item" href="#"> Aides matérielles</a>
                         </li>
                         <li>
-                            <a class="dropdown-item"  th:href="@{/individus/{id}/dossiers/{year}/archives-amenagements-examens(id=${individu.id},year=${year})}"> Archives aménagements examens</a>
+                            <a class="dropdown-item" href="#"> Archives aménagements examens</a>
                         </li>
                         <li>
-                            <a class="dropdown-item"  th:href="@{/individus/{id}/dossiers/{year}/suivi-handisup(id=${individu.id},year=${year})}"> Suivi handisup</a>
+                            <a class="dropdown-item" href="#"> Suivi handisup</a>
                         </li>
 
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/individus/{id}/dossiers/{year}/enquete(id=${individu.id},year=${year})}" th:classappend="${active == 'enquete' ? 'active':''}"> Enquête
-                    </a>
+                    <a class="nav-link" href="#"> Enquête</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"  th:href="@{/individus/{id}/dossiers/{year}/amenagements-examens(id=${individu.id},year=${year})}" th:classappend="${active == 'amenagement' ? 'active':''}"> Aménagements d'examen
-                    </a>
+                    <a class="nav-link" href="#" th:classappend="${active == 'amenagement' ? 'active':''}"> Aménagements d'examen</a>
                 </li>
             </ul>
         </nav>
