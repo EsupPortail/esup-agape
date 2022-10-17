@@ -32,4 +32,5 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     List<Integer> findYearDistinct();
 
     List<Dossier> findAllByIndividuId(Long id);
+
 }

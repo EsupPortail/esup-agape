@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +119,7 @@ public class IndividuService {
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
+            logger.info("{}", individusFromSource.size());
             List<Individu> individusToCreate = individusFromSource.stream().filter(
                     individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
                     &&
@@ -284,5 +286,10 @@ public class IndividuService {
             logger.error("NoPhoto.jpg not found", e);
         }
         return null;
+    }
+
+    public int computeAge(Individu individu) {
+        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
+        return agePeriod.getYears();
     }
 }
