@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
@@ -68,11 +69,12 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<Dossier> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year,Pageable pageable) {
+    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year,Pageable pageable) {
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,year, pageable);
     }
 
     public List<Integer> getYearDistinct(){
         return dossierRepository.findYearDistinct();
     }
+
 }

@@ -3,6 +3,7 @@ package org.esupportail.esupagape.repository;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +14,10 @@ import java.util.Optional;
 
 public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
-    @Query("select d from Dossier d where " +
-            "(:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%')) " +
+    @Query("select d.id as id, i.numEtu as numEtu, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.sex as sex, " +
+            "d.type as type, d.statusDossier as statusDossier " +
+            "from Dossier d join Individu i on i.id = d.individu.id " +
+            "where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%')) " +
             "or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch)) " +
             "or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')) " +
             "or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%')) " +
@@ -22,15 +25,16 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             "and (:typeIndividu is null or d.type = : typeIndividu) " +
             "and (:statusDossier is null or d.statusDossier = :statusDossier) " +
             "and (:yearFilter is null or d.year = :yearFilter)")
-    Page<Dossier> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer yearFilter, Pageable pageable);
+    Page<DossierIndividuDto> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer yearFilter, Pageable pageable);
 
     Page<Dossier> findAllByYear(Integer year, Pageable pageable);
 
     Optional<Dossier> findByIndividuIdAndYear(Long id, Integer year);
 
-    @Query("select distinct year from Dossier")
+    @Query("select distinct year from Dossier order by year desc")
     List<Integer> findYearDistinct();
 
     List<Dossier> findAllByIndividuId(Long id);
+
 
 }

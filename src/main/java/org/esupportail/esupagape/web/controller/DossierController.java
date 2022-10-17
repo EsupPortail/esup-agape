@@ -1,23 +1,16 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.service.DossierService;
-import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Comparator;
-import java.util.List;
 
 @Controller
 @RequestMapping("/dossiers")

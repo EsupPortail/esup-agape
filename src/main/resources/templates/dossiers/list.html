@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:sd="http://www.w3.org/1999/xhtml">
-<!--/*@thymesVar id="dossiers" type="java.util.List<org.esupportail.esupagape.entity.Dossier>"*/-->
 <head th:replace="fragments/head :: head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
@@ -65,61 +64,59 @@
 
             <table class="table table-striped table-responsive">
                 <thead class="text-center mt-2 mb-2 table-secondary">
-                <tr>
-                    <th class="text-start" scope="col">
+                <tr class="text-start">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="individu.numEtu">Numéro étudiant</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="individu.name">Nom</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="individu.firstName">Prénom</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="individu.dateOfBirth">Date de naissance</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="individu.sex">Sexe</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="type">Type Individu</a>
                     </th>
-                    <th class="text-start" scope="col">
+                    <th scope="col">
                         <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
                     </th>
-                    <th class="text-start" scope="col"></th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <tr th:each="dossier : ${dossiers}">
-                    <td class="text-start" th:utext="${dossier.individu.numEtu}"></td>
-                    <td class="text-start"
-                        th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.name))}"></td>
-                    <td class="text-start"
-                        th:utext="${#strings.capitalize(#strings.toLowerCase(dossier.individu.firstName))}"></td>
-                    <td class="text-start"
-                        th:utext="${#temporals.format(dossier.individu.dateOfBirth, 'dd/MM/yyyy')}"></td>
-                    <td class="text-start" th:utext="${dossier.individu.sex}"></td>
-                    <td class="text-start" th:utext="#{'dossier.type-individu.' +${dossier.type}}"></td>
-                    <td class="text-start" th:utext="#{'dossier.status-dossier.' +${dossier.statusDossier}}"></td>
-                    <td class="text-start container col-2">
+                <tr th:each="dossierIndividuDto : ${dossiers}"
+                    class="align-middle text-start">
+                    <td th:utext="${dossierIndividuDto.numEtu}"></td>
+                    <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.name))}"></td>
+                    <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}"></td>
+                    <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}"></td>
+                    <td th:utext="${dossierIndividuDto.sex}"></td>
+                    <td th:utext="#{'dossier.type-individu.' +${dossierIndividuDto.type}}"></td>
+                    <td th:utext="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier}}"></td>
+                    <td>
                         <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item border-0 p-1">
-                                <a class="btn btn-info" th:href="@{/dossiers/{id}(id=${dossier.id})}" role="button"><i
+                            <li class="list-group-item border-0 p-1 bg-transparent">
+                                <a class="btn btn-info" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i
                                         class="bi bi-eye"></i>
                                 </a>
                             </li>
-                            <li class="list-group-item border-0 p-1">
+                            <li class="list-group-item border-0 p-1 bg-transparent">
                                 <a data-bs-toggle="modal"
                                    href="#"
                                    data-bs-target="#modal-warning"
-                                   th:attr="data-bs-target='#modal-warning'+${dossier.individu.id}"
+                                   th:attr="data-bs-target='#modal-warning'+${dossierIndividuDto.id}"
                                    class="btn btn-danger"
                                    sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-person-x"></i></a>
-                                <div class="modal modal-warning fade in" th:id="modal-warning+${dossier.individu.id}">
+                                <div class="modal modal-warning fade in" th:id="modal-warning+${dossierIndividuDto.id}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/admin/delete-individu/{id}(id=${dossier.individu.id})}"
+                                            <form th:action="@{/admin/delete-individu/{id}(id=${dossierIndividuDto.id})}"
                                                   th:method="delete">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Suppression d'un individu</h5>
@@ -129,7 +126,7 @@
                                                 <div class="modal-body">
                                                     <div class="alert alert-danger text-center">Confirmez-vous la suppression de
                                                         cet individu : <br>
-                                                        <span th:text="'Numéro étudiant:' + ' ' + ${dossier.individu.id} + ' ' + '(' + 'nom = ' + ${dossier.individu.name} + ')'"
+                                                        <span th:text="'Numéro étudiant:' + ' ' + ${dossierIndividuDto.id} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
                                                               class="font-weight-bold"></span> ?
                                                     </div>
                                                 </div>
@@ -147,17 +144,17 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="list-group-item border-0 p-1">
+                            <li class="list-group-item border-0 p-1 bg-transparent">
                                 <a data-bs-toggle="modal"
                                    href="#"
                                    data-bs-target="#modal-warning"
-                                   th:attr="data-bs-target='#modal-warning'+${dossier.id}"
+                                   th:attr="data-bs-target='#modal-warning'+${dossierIndividuDto.id}"
                                    class="btn btn-danger"
                                    sec:authorize="hasRole('ROLE_ADMIN')"><i class="bi bi-folder-x"></i></a>
-                                <div class="modal modal-warning fade in" th:id="modal-warning+${dossier.id}">
+                                <div class="modal modal-warning fade in" th:id="modal-warning+${dossierIndividuDto.id}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/admin/delete-dossier/{id}(id=${dossier.id})}"
+                                            <form th:action="@{/admin/delete-dossier/{id}(id=${dossierIndividuDto.id})}"
                                                   th:method="delete">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Suppression d'un dossier</h5>
@@ -167,7 +164,7 @@
                                                 <div class="modal-body">
                                                     <div class="alert alert-danger text-center">Confirmez-vous la suppression de
                                                         ce dossier : <br>
-                                                        <span th:text="'Dossier:' + ' ' + ${dossier.id} + ' ' + '(' + 'nom = ' + ${dossier.individu.name} + ')'"
+                                                        <span th:text="'Dossier:' + ' ' + ${dossierIndividuDto.id} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
                                                               class="font-weight-bold"></span> ?
                                                     </div>
                                                 </div>
