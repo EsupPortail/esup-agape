@@ -22,4 +22,6 @@ public interface DossierIndividuDto {
     TypeIndividu getType();
 
     StatusDossier getStatusDossier();
+
+    Long getIndividuId();
 }

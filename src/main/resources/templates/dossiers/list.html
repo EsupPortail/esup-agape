@@ -116,7 +116,7 @@
                                 <div class="modal modal-warning fade in" th:id="modal-warning+${dossierIndividuDto.id}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form th:action="@{/admin/delete-individu/{id}(id=${dossierIndividuDto.id})}"
+                                            <form th:action="@{/admin/delete-individu/{id}(id=${dossierIndividuDto.individuId})}"
                                                   th:method="delete">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Suppression d'un individu</h5>
@@ -126,7 +126,7 @@
                                                 <div class="modal-body">
                                                     <div class="alert alert-danger text-center">Confirmez-vous la suppression de
                                                         cet individu : <br>
-                                                        <span th:text="'Numéro étudiant:' + ' ' + ${dossierIndividuDto.id} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
+                                                        <span th:text="'Numéro étudiant:' + ' ' + ${dossierIndividuDto.individuId} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
                                                               class="font-weight-bold"></span> ?
                                                     </div>
                                                 </div>
