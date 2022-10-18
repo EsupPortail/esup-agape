@@ -6,4 +6,7 @@
 <footer th:fragment="white" class="footer mt-auto py-3 bg-light hidden-print text-center">
     <span class="text-black" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
 </footer>
+    <footer th:fragment="contact"  class="footer mt-auto py-3 bg-dark hidden-print text-center" style="width: 101%;">
+        <span class="text-white" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
+    </footer>
 </html>

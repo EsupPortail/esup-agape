@@ -14,40 +14,42 @@
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='contacts')"></div>
                 <div>
-                    <div>
-                        <a class="btn btn-primary mt-3" type="button"> Ajouter </a>
+                    <div class="mx-5 mt-2">
+                        <a class="btn btn-primary mt-3" type="button"> Ajouter</a>
                     </div>
                 </div>
-                <h1>Page des contacts des dossiers à créer</h1>
-                <table class="table">
-                    <thead class="table table-info table-striped">
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Interlocuteur</th>
-                            <th>Compte rendu</th>
-                            <th>Voir</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="contact : ${contacts}">
-                            <td></td>
-                            <td></td>
-                            <td th:text="${contact.interlocuteur}"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                <!-- <h1>Page des contacts des dossiers à créer</h1>-->
 
-                    </tbody>
-                </table>
+                    <table class="contact table table-striped table-responsive mx-auto mt-4">
+                        <thead class="text-center mt-2 mb-2 table-info">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Interlocuteur</th>
+                                <th>Compte rendu</th>
+                                <th>Voir</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="contact : ${contacts}">
+                                <td th:text="${contact.date}"></td>
+                                <td th:text="#{'contact.type-contact.' +${contact.typeContact}}"></td>
+                                <td th:text="${contact.interlocuteur}"></td>
+                                <td th:text="${contact.compteRendu}"></td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>@mdo</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
 
             </div>
         </main>
-        <footer th:replace="fragments/footer :: black"></footer>
+        <footer th:replace="fragments/footer :: contact"></footer>
         <div th:replace="fragments/flash :: flash"></div>
     </body>
 </html>
