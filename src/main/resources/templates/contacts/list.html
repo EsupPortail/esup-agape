@@ -5,7 +5,7 @@
     <head th:replace="fragments/head :: head"></head>
     <body>
         <header th:replace="fragments/header :: header"></header>
-        <main class="row">
+        <main class="row ms-3 me-2">
             <div th:replace="fragments/side :: side"></div>
             <div class="col pt-3">
                 <div class="mb-3">
@@ -20,8 +20,8 @@
                 </div>
                 <!-- <h1>Page des contacts des dossiers à créer</h1>-->
 
-                    <table class="contact table table-striped table-responsive mx-auto mt-4">
-                        <thead class="text-center mt-2 mb-2 table-info">
+                    <table class="table table-striped table-responsive mx-auto mt-4">
+                        <thead class="text-start mt-2 mb-2 table-info">
                             <tr>
                                 <th>Date</th>
                                 <th>Type</th>
@@ -34,7 +34,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="contact : ${contacts}">
-                                <td th:text="${contact.date}"></td>
+                                <td th:text="${#temporals.format(contact.date, 'dd/MM/yyyy')}"></td>
                                 <td th:text="#{'contact.type-contact.' +${contact.typeContact}}"></td>
                                 <td th:text="${contact.interlocuteur}"></td>
                                 <td th:text="${contact.compteRendu}"></td>
@@ -45,8 +45,6 @@
 
                         </tbody>
                     </table>
-
-
             </div>
         </main>
         <footer th:replace="fragments/footer :: contact"></footer>
