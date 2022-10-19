@@ -26,23 +26,22 @@ public class ContactController {
     }
 
     @GetMapping
-    public String list(@PathVariable Long id, Model model) {
+    public String list(@PathVariable Long id,  Model model) {
         List<Contact> contacts = contactService.getContactsByDossier(id);
         model.addAttribute("contacts", contacts);
         return "contacts/list";
     }
 
-    @GetMapping("/show")
-    public String showContact(@PathVariable Long id, Model model) {
-        List<Contact> contacts = contactService.getContactsByDossier(id);
-        model.addAttribute("contacts", contacts);
+    @GetMapping("/{contactId}/show")
+    public String showContact(@PathVariable Long contactId, Model model) throws AgapeException {
+        Contact contact = contactService.findById(contactId);
+        model.addAttribute("contact", contact);
         return "contacts/show";
     }
 
-    @GetMapping("/update")
-
-    public String updateContact(@PathVariable(value = "id") long id, Model model) throws AgapeException {
-        Contact contact = contactService.findById(id);
+    @GetMapping("{contactId}/update")
+    public String updateContact(@PathVariable Long contactId, Model model) throws AgapeException {
+        Contact contact = contactService.findById(contactId);
         model.addAttribute("contact", contact);
         return "contacts/update";
     }
@@ -52,12 +51,12 @@ public class ContactController {
             return "contacts/update";
         }
         contactService.save(contact);
-        return "redirect:/contacts";
+        return "redirect:/dossiers/{id}/contacts";
  }
 
-    @DeleteMapping(value = "/delete")
-    public String deleteDossier(@PathVariable("id") long id) {
-        contactService.deleteContact(id);
-        return "redirect:/contacts";
+    @DeleteMapping(value = "/{contactId}/delete")
+    public String deleteDossier(@PathVariable Long contactId) {
+        contactService.deleteContact(contactId);
+        return "redirect:/dossiers/{id}/contacts";
     }
 }
