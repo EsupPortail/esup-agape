@@ -39,7 +39,7 @@ public class ContactController {
         return "contacts/show";
     }
 
-    @GetMapping("{contactId}/update")
+    @GetMapping("/{contactId}/update")
     public String updateContact(@PathVariable Long contactId, Model model) throws AgapeException {
         Contact contact = contactService.findById(contactId);
         model.addAttribute("contact", contact);
