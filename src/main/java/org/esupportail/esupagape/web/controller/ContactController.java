@@ -6,11 +6,7 @@ import org.esupportail.esupagape.service.ContactService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -45,14 +41,15 @@ public class ContactController {
         model.addAttribute("contact", contact);
         return "contacts/update";
     }
- @PutMapping("/contacts")
+
+    @PutMapping("/contacts")
     public String update(@Valid Contact contact, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "contacts/update";
         }
         contactService.save(contact);
         return "redirect:/dossiers/{id}/contacts";
- }
+    }
 
     @DeleteMapping(value = "/{contactId}/delete")
     public String deleteDossier(@PathVariable Long contactId) {
