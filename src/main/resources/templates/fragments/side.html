@@ -5,28 +5,36 @@
             <div th:fragment="side" class="col-sm-auto bg-light mt-3 ms-3" style="width: 350px;">
                 <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche</span></span>
                 <hr>
-                <a href="#" class="d-flex align-items-center link-dark text-decoration-none">
-                    <img th:src="'/individus/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="90" height="100">
-                </a>
+                <div class="container">
+                    <div class="row">
+                        <div class="col"><a href="#" class="d-flex align-items-center link-dark text-decoration-none">
+                            <img th:src="'/individus/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="90" height="100">
+                        </a></div>
+                        <div class="col"><dt class="col-sm-6">Nom</dt>
+                            <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
+                            <dt class="col-sm-6">Prénom</dt>
+                            <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd></div>
+                    </div>
+                </div>
                 <dl class="row">
-                    <dt class="col-sm-6">Sexe</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.sex}"></dd>
                     <dt class="col-sm-6">N° Étudiant</dt>
                     <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
-                    <dt class="col-sm-6">Nom</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
-                    <dt class="col-sm-6">Prénom</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd>
+                    <!-- <dt class="col-sm-6">Nom</dt>
+                     <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
+                     <dt class="col-sm-6">Prénom</dt>
+                     <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd>-->
                     <dt>Login</dt>
                     <dd th:utext="${currentDossier.individu.eppn}"></dd>
                     <dt class="col-sm-6">Date de naissance</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.dateOfBirth}"></dd>
+                    <dd class="col-sm-6" th:utext="|${currentDossier.individu.dateOfBirth} (${age} ans)|"></dd>
                     <dt class="col-sm-6">Type d'individu</dt>
                     <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
                     <dt class="col-sm-6">Statut du dossier</dt>
                     <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>
-                    <dt class="col-sm-6">Age</dt>
-                    <dd class="col-sm-6" th:utext="|${age} ans|"></dd>
+                    <!-- <dt class="col-sm-6">Age</dt>
+                     <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
+                    <dt class="col-sm-6">Sexe</dt>
+                    <dd class="col-sm-6" th:utext="${currentDossier.individu.sex}"></dd>
                 </dl>
                 <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
                 <hr>
