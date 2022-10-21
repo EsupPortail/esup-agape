@@ -28,9 +28,9 @@ public class LdapIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
-    Map<String, String> sexMap  = new HashMap<>() {{
-        put("MME", "F");
-        put("M.", "M");
+    Map<String, String> civiliteMap  = new HashMap<>() {{
+        put("MME", "MADAME");
+        put("M.", "MONSIEUR");
     }};
 
     @Resource
@@ -55,7 +55,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
                 }
                 individuDatas.put("fixCountry", address.split("\\$")[address.split("\\$").length - 1].trim());
             }
-            individuDatas.put("sex", sexMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individuDatas.put("civilite", civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             individuDatas.put("emailEtu", personLdap.getMail());
             individuDatas.put("emailPerso", personLdap.getSupannMailPerso());
             individuDatas.put("fixPhone", personLdap.getTelephoneNumber());
@@ -88,7 +88,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
-            individu.setSex(sexMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individu.setSex(civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;

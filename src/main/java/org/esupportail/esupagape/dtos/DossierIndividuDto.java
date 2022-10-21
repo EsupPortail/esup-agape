@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.dtos;
 
+import org.esupportail.esupagape.entity.enums.Civilite;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 
@@ -24,4 +25,6 @@ public interface DossierIndividuDto {
     StatusDossier getStatusDossier();
 
     Long getIndividuId();
+
+    Civilite getCivilite();
 }

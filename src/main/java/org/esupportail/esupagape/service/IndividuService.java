@@ -5,6 +5,7 @@ import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Civilite;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -88,6 +89,7 @@ public class IndividuService {
                             case "name" -> individu.setName(individuProperties.get(key).toString());
                             case "firstName" -> individu.setFirstName(individuProperties.get(key).toString());
                             case "sex" -> individu.setSex(individuProperties.get(key).toString());
+                            case "civilite" -> individu.setCivilite(Civilite.valueOf(individuProperties.get(key).toString()));
                             case "emailEtu" -> individu.setEmailEtu(individuProperties.get(key).toString());
                             case "emailPerso" -> individu.setEmailPerso(individuProperties.get(key).toString());
                             case "fixAddress" -> individu.setFixAddress(individuProperties.get(key).toString());
