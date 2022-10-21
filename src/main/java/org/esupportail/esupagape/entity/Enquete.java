@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.entity;
 
+import org.esupportail.esupagape.entity.enums.Civilite;
 import org.esupportail.esupagape.entity.enums.enquete.CodFil;
 import org.esupportail.esupagape.entity.enums.enquete.CodFmt;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;
@@ -8,7 +9,6 @@ import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
 import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
 import org.esupportail.esupagape.entity.enums.enquete.CodSco;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.Sexe;
 import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 
 import javax.persistence.Column;
@@ -35,7 +35,7 @@ public class Enquete {
     private String an;
 
     @Enumerated(EnumType.STRING)
-    private Sexe sexe;
+    private Civilite civilite;
 
     @Enumerated(EnumType.STRING)
     private TypeFrmn typefrmn;
