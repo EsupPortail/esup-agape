@@ -94,25 +94,10 @@
                                 <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}"></td>
                                 <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}"></td>
                                 <td th:utext="#{'dossier.type-individu.' +${dossierIndividuDto.type}}"></td>
-                                <!-- <td th:utext="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier}}"></td>
-                                 <td>-->
-
-                               <!-- <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.SUIVI}"><span class="badge text-bg-success">Suivi</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.IMPORTE}"><span class="badge text-bg-danger">Importe</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span class="badge text-bg-secondary">Ajout manuel</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}">
-                                    <span class="badge text-bg-warning">Accueilli en présentiel</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}">
-                                    <span class="badge text-bg-light">Accueilli à distance par tél ou mail</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}">
-                                    <span class="badge text-bg-dark">Impossible à contacter</span></td>
-                                <td th:if="${dossierIndividuDto.statusDossier == dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
-                                    <span class="badge text-bg-primary">Reçu par la médecine préventive</span></td>-->
-
                                 <th:block th:switch="${dossierIndividuDto.statusDossier}">
                                     <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
                                     <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></td>
-                                    <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-danger"></span></td>
+                                    <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
                                     <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
                                     <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
                                     <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
