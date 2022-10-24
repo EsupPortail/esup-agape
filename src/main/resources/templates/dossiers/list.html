@@ -89,7 +89,7 @@
                         <tbody class="text-center">
                             <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle text-start">
                                 <td th:utext="${dossierIndividuDto.numEtu}"></td>
-                                <td th:utext="#{'individu.civilite.'+${dossierIndividuDto.civilite}}"></td>
+                                <td th:utext="${dossierIndividuDto.civilite != null} ? #{'individu.civilite.'+${dossierIndividuDto.civilite}} : 'Inconnue'"></td>
                                 <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.name))}"></td>
                                 <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}"></td>
                                 <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}"></td>
