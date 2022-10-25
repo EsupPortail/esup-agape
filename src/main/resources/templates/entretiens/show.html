@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-    <head th:replace="fragments/head :: head"></head>
-    <body>
-        <header th:replace="fragments/header :: header"></header>
-        <main class="row">
-            <div th:replace="fragments/side :: side"></div>
-            <div class="col pt-3">
-                <a class="text-center">Retour à la liste des individus</a>
-                <h1>La vue voir des entretiens</h1>
-
-            </div>
-        </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
-    </body>
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="row ms-3 me-2">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="col pt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></li>
+            </ol>
+        </nav>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+        <h1 th:text="${entretien.compteRendu}"></h1>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: contact"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
 </html>

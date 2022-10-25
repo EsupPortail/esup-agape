@@ -15,7 +15,7 @@ public class Entretien
     private Long id;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
     private String interlocuteur;

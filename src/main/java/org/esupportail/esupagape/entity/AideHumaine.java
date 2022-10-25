@@ -28,14 +28,14 @@ public class AideHumaine {
     @NotNull
     private String firstName;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateOfBirth;
 
     private String email;
 
     private String phone;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime startDate;
 
     private String function;

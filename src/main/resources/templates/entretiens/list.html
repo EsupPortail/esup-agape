@@ -8,9 +8,10 @@
         <main class="row ms-3 me-2">
             <div th:replace="fragments/side :: side"></div>
             <div class="col pt-3">
-                <div class="mb-3">
-                    <a th:href="@{/dossiers}" class="text-center ">Retour à la liste des dossiers</a>
-                </div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Liste des entretiens</li>
+                </ol>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
                 <div>
@@ -30,16 +31,16 @@
                     </thead>
                     <tbody>
                         <tr th:each="entretien : ${entretiens}">
-                            <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
                            <!-- <td th:text="#{'entretien.type-contact.' +${entretien.typeContact}}"></td>-->
                             <td th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
                            <!-- <td th:text="${entretien.interlocuteur}"></td>-->
                             <td th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
-                            <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${entretien.compteRendu}"></td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
-                                        <a class="btn btn-info" th:href="@{/dossiers/{id}/entretiens/{entretienId}/show(id=${currentDossier.id},entretienId=${entretien.id})}" role="button"><i class="bi bi-eye"></i>
+                                        <a class="btn btn-info" th:href="@{/dossiers/{id}/entretiens/{entretienId}(id=${currentDossier.id},entretienId=${entretien.id})}" role="button"><i class="bi bi-eye"></i>
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent">

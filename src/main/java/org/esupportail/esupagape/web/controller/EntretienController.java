@@ -28,7 +28,7 @@ public class EntretienController {
         return "entretiens/list";
     }
 
-    @GetMapping("/{entretienId}/show")
+    @GetMapping("/{entretienId}")
     public String showEntretien(@PathVariable Long entretienId, Model model) throws AgapeException {
         Entretien entretien = entretienService.findById(entretienId);
         model.addAttribute("entretien", entretien);
@@ -48,7 +48,7 @@ public class EntretienController {
             return "entretiens/update";
         }
         entretienService.save(entretien);
-        return "redirect:/dossiers/{id}entretiens";
+        return "redirect:/dossiers/{id}/entretiens";
     }
 
     @DeleteMapping(value = "/{entretienId}/delete")

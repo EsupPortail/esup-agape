@@ -49,8 +49,9 @@ public class DossierService {
         return dossierRepository.findAllByYear(utilsService.getCurrentYear(), pageable);
     }
 
-    public Dossier getId(Long id) {
-        return dossierRepository.findById(id).orElseThrow();
+    public Dossier getById(Long id) {
+        Dossier test = dossierRepository.findById(id).orElseThrow();
+        return test;
     }
 
     public Dossier getByYear(Long individuId, int year) {
