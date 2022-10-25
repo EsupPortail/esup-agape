@@ -26,15 +26,16 @@
                             <th>Interlocuteur</th>
                             <th>Compte rendu</th>
                             <th>Actions</th>
-
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="entretien : ${entretiens}">
                             <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy')}"></td>
-                            <td th:text="#{'entretien.type-contact.' +${entretien.typeContact}}"></td>
-                            <td th:text="${entretien.interlocuteur}"></td>
-                            <td th:text="${entretien.date}"></td>
+                           <!-- <td th:text="#{'entretien.type-contact.' +${entretien.typeContact}}"></td>-->
+                            <td th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
+                           <!-- <td th:text="${entretien.interlocuteur}"></td>-->
+                            <td th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
+                            <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
