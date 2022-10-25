@@ -8,7 +8,6 @@ import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -243,9 +242,4 @@ public class IndividuController {
         }
     }
 
-    @RequestMapping(value = "/photo/{id}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getPhoto(@PathVariable("id") Long id) {
-        return individuService.getPhoto(id);
-    }
 }

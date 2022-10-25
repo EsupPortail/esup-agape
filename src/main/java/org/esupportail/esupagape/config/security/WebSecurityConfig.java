@@ -86,7 +86,11 @@ public class WebSecurityConfig {
                 .antMatchers("/css", "/css/**").permitAll()
                 .antMatchers("/images", "/images/**").permitAll()
                 .antMatchers("/js", "/js/**").permitAll()
-                .antMatchers("/", "/**").authenticated();
+                .antMatchers("/").hasAnyRole("USER")
+                .antMatchers("/dossiers").hasAnyRole("USER")
+                .antMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/individus", "/individus/**").hasAnyRole("MANAGER", "ESPACE_HANDI", "MEDECIN")
+                .antMatchers("/dossiers/*/entretiens", "/dossiers/*/entretiens/**").hasAnyRole("MANAGER", "ESPACE_HANDI");
         return http.build();
     }
 
