@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-    <!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Contact>"*/-->
+    <!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
     <head th:replace="fragments/head :: head"></head>
     <body>
         <header th:replace="fragments/header :: header"></header>
@@ -12,10 +12,10 @@
                     <a th:href="@{/templates/dossiers}" class="text-center ">Retour à la liste des individus</a>
                 </div>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='contacts')"></div>
-                <form  th:method="post" th:action="@{/individus/{id}/dossiers/{year}/contacts/create(id=${currentDossier.individu.id},year=${year})}">
+                <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+                <form  th:method="post" th:action="@{/individus/{id}/dossiers/{year}/entretiens/create(id=${currentDossier.individu.id},year=${year})}">
                     <div class="mb-3 mt-3">
-                        <label for="exampleInputEmail1" class="form-label">Date du contact</label>
+                        <label for="exampleInputEmail1" class="form-label">Date de l'entretien</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
                     <div class="form-check">

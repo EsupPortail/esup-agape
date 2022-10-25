@@ -3,7 +3,6 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
-import org.esupportail.esupagape.service.ContactService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;

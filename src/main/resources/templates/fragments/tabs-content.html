@@ -3,50 +3,50 @@
     <div th:fragment="tabs-content">
         <nav class="mt-4">
             <ul class="nav nav-tabs" id="nav-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dossiers/{id}/contacts(id=${currentDossier.id})}" th:classappend="${active == 'contacts' ? 'active':''}"> Contacts
-                    </a>
-                </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"  th:classappend="${active == 'situation' ? 'active' : ''}" href="#" role="button" aria-expanded="false">Situation</a>
+                    <a class="nav-link  dropdown-toggle" data-bs-toggle="dropdown" th:classappend="${active == 'situation' ? 'active' : ''}" href="#" role="button" aria-expanded="false">Situation</a>
                     <ul class="dropdown-menu mb-2">
                         <li>
-                            <a class="dropdown-item" href="#"> Fiche</a>
+                            <a class="dropdown-item"> Fiche</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"> Tableau</a>
+                            <a class="dropdown-item"> Tableau</a>
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
+                    <a class="nav-link" th:href="@{/dossiers/{id}/entretiens(id=${currentDossier.id})}" th:classappend="${active == 'entretiens' ? 'active' :' '}"> Entretiens
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
                     </a>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" href="#"  th:classappend="${active == 'aides' ? 'active':''}">Aides</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" th:classappend="${active == 'aides' ? 'active' : ''}">Aides</a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="#"> Aides humaines</a>
+                            <a class="dropdown-item" href=""> Aides humaines</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"> Aides matérielles</a>
+                            <a class="dropdown-item" href=""> Aides matérielles</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"> Archives aménagements examens</a>
+                            <a class="dropdown-item" href=""> Archives aménagements examens</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"> Suivi handisup</a>
+                            <a class="dropdown-item" href=""> Suivi handisup</a>
                         </li>
-
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"> Enquête</a>
+                    <a class="nav-link"> Enquête</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" th:classappend="${active == 'amenagement' ? 'active':''}"> Aménagements d'examen</a>
+                    <a class="nav-link" th:classappend="${active == 'amenagement' ? 'active' : ''}"> Aménagements d'examen</a>
                 </li>
             </ul>
         </nav>

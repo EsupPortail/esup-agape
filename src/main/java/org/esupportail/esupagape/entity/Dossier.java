@@ -69,7 +69,7 @@ public class Dossier {
     private Individu individu;
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
-    private List<Contact> contacts = new ArrayList<>();
+    private List<Entretien> entretiens = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -255,11 +255,11 @@ public class Dossier {
         this.individu = individu;
     }
 
-    public List<Contact> getContacts() {
-        return contacts;
+    public List<Entretien> getEntretiens() {
+        return entretiens;
     }
 
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
+    public void setEntretiens(List<Entretien> entretiens) {
+        this.entretiens = entretiens;
     }
 }

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-public class Contact
+public class Entretien
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

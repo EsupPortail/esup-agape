@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
         <div>
-            <div th:fragment="side" class="col-sm-auto bg-light mt-3 ms-3" style="width: 350px;">
+            <div th:fragment="side" class="col-sm-auto bg-light mt-3 ms-3" style="width: 380px;">
                 <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche</span></span>
                 <hr>
                 <div class="container">
@@ -16,7 +16,7 @@
                             <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd></div>
                     </div>
                 </div>
-                <dl class="row">
+                <dl class="row" style="width: 375px;">
                     <dt class="col-sm-6">N° Étudiant</dt>
                     <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
                     <!-- <dt class="col-sm-6">Nom</dt>
@@ -30,7 +30,16 @@
                     <dt class="col-sm-6">Type d'individu</dt>
                     <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
                     <dt class="col-sm-6">Statut du dossier</dt>
-                    <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>
+                   <!-- <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>-->
+                    <th:block class="col-sm-6" th:each="dossierIndividuDto : ${dossiers}" th:switch="${dossierIndividuDto.statusDossier}">
+                        <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success col-sm-6"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-danger col-sm-6"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info col-sm-6"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning col-sm-6"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg col-sm-6" style="background-color:#d3d3d3;"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark col-sm-6"></span></td>
+                        <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary col-sm-6"></span></td>
+                    </th:block>
                     <!-- <dt class="col-sm-6">Age</dt>
                      <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
                     <dt class="col-sm-6">Sexe</dt>

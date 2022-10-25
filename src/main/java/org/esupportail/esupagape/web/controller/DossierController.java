@@ -50,7 +50,7 @@ public class DossierController {
 
     @GetMapping("/{id}")
     public String show() {
-        return "redirect:/dossiers/{id}/contacts";
+        return "redirect:/dossiers/{id}/entretiens";
     }
 
 }
