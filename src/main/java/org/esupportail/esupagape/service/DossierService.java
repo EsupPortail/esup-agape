@@ -50,8 +50,7 @@ public class DossierService {
     }
 
     public Dossier getById(Long id) {
-        Dossier test = dossierRepository.findById(id).orElseThrow();
-        return test;
+        return dossierRepository.findById(id).orElseThrow();
     }
 
     public Dossier getByYear(Long individuId, int year) {
