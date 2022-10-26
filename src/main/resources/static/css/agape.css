@@ -8,7 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     /*height: 95% !important;*/
-    margin-top: 60px;
+    overflow-x: hidden;
 }
 
 
@@ -29,4 +29,19 @@ ul {
 
 .sorted-asc::after{
     content: "\25B2";
+}
+
+.agape-side {
+    width: 450px;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    height: calc(100vh - 112px);
+    margin-top: 56px;
+}
+
+.agape-content {
+    width: calc(100vw - 450px);
+    height: calc(100vh - 112px);
+    margin-top: 56px;
+    overflow-y: auto;
 }

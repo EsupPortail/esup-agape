@@ -6,9 +6,9 @@
 <head th:replace="fragments/head :: head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
-<main class="row ms-3 me-2">
+<main class="d-inline-flex">
     <div th:replace="fragments/side :: side"></div>
-    <div class="col pt-3">
+    <div class="agape-content">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
@@ -35,7 +35,7 @@
         </form>
     </div>
 </main>
-<footer th:replace="fragments/footer :: contact"></footer>
+<footer th:replace="fragments/footer :: black"></footer>
 <div th:replace="fragments/flash :: flash"></div>
 </body>
 </html>

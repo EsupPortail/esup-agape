@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<footer th:fragment="black" class="footer mt-auto py-3 bg-dark hidden-print text-center">
+<footer th:fragment="black" class="footer fixed-bottom mt-auto py-3 bg-dark hidden-print text-center">
     <span class="text-white" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
 </footer>
-<footer th:fragment="white" class="footer mt-auto py-3 bg-light hidden-print text-center">
-    <span class="text-black" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
-</footer>
-    <footer th:fragment="contact"  class="footer mt-auto py-3 bg-dark hidden-print text-center" style="width: 100%;">
-        <span class="text-white" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
-    </footer>
 </html>

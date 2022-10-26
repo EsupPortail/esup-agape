@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-<!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
 <head th:replace="fragments/head :: head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
 <main class="d-inline-flex">
     <div th:replace="fragments/side :: side"></div>
-    <div class="position-sticky flex" style="width: calc(100vw - 450px)">
+    <div class="agape-content">
         <div class="mb-3">
             <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
         </div>
@@ -16,7 +15,7 @@
         <h1>La situation</h1>
     </div>
 </main>
-<footer th:replace="fragments/footer :: contact"></footer>
+<footer th:replace="fragments/footer :: black"></footer>
 <div th:replace="fragments/flash :: flash"></div>
 </body>
 </html>
