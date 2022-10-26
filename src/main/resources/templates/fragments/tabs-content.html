@@ -12,11 +12,6 @@
                     <a class="nav-link" th:href="@{/dossiers/{id}/entretiens(id=${currentDossier.id})}" th:classappend="${active == 'entretiens' ? 'active' :' '}"> Entretiens
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:classappend="${active == 'parcours' ? 'active':''}"> Parcours
-                    </a>
-                </li>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" th:classappend="${active == 'aides' ? 'active' : ''}">Aides</a>
                     <ul class="dropdown-menu">
