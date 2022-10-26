@@ -38,7 +38,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 @Configuration
@@ -54,20 +53,20 @@ public class WebSecurityConfig {
 
     private final WebSecurityProperties webSecurityProperties;
 
-    public WebSecurityConfig(LdapProperties ldapProperties, CasProperties casProperties, WebSecurityProperties webSecurityProperties) {
+    public WebSecurityConfig(LdapProperties ldapProperties, CasProperties casProperties, WebSecurityProperties webSecurityProperties, LdapContextSource ldapContextSource, SpelGroupService spelGroupService, LdapTemplate ldapTemplate) {
         this.ldapProperties = ldapProperties;
         this.casProperties = casProperties;
         this.webSecurityProperties = webSecurityProperties;
+        this.ldapContextSource = ldapContextSource;
+        this.spelGroupService = spelGroupService;
+        this.ldapTemplate = ldapTemplate;
     }
 
-    @Resource
-    private LdapContextSource ldapContextSource;
+    private final LdapContextSource ldapContextSource;
 
-    @Resource
-    private SpelGroupService spelGroupService;
+    private final SpelGroupService spelGroupService;
 
-    @Resource
-    private LdapTemplate ldapTemplate;
+    private final LdapTemplate ldapTemplate;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

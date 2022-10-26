@@ -1,28 +1,30 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DossierService {
 
-    @Resource
-    private UtilsService utilsService;
+    private final UtilsService utilsService;
 
-    @Resource
-    private DossierRepository dossierRepository;
+    private final DossierRepository dossierRepository;
+
+    public DossierService(UtilsService utilsService, DossierRepository dossierRepository) {
+        this.utilsService = utilsService;
+        this.dossierRepository = dossierRepository;
+    }
 
     public Dossier create(Individu individu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();

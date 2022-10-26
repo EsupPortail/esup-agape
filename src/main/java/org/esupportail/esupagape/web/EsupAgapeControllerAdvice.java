@@ -13,16 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.annotation.Resource;
-
 @ControllerAdvice
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class EsupAgapeControllerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(EsupAgapeControllerAdvice.class);
 
-    @Resource
-    private UtilsService utilsService;
+    private final UtilsService utilsService;
 
     private final Environment environment;
 
@@ -30,7 +27,8 @@ public class EsupAgapeControllerAdvice {
 
     private final ApplicationProperties applicationProperties;
 
-    public EsupAgapeControllerAdvice(Environment environment, @Autowired(required = false) BuildProperties buildProperties, ApplicationProperties applicationProperties) {
+    public EsupAgapeControllerAdvice(UtilsService utilsService, Environment environment, @Autowired(required = false) BuildProperties buildProperties, ApplicationProperties applicationProperties) {
+        this.utilsService = utilsService;
         this.environment = environment;
         this.buildProperties = buildProperties;
         this.applicationProperties = applicationProperties;

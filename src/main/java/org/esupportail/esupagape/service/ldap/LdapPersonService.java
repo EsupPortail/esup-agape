@@ -9,7 +9,6 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.naming.directory.SearchControls;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -21,14 +20,17 @@ import java.util.List;
 @EnableConfigurationProperties(LdapProperties.class)
 public class LdapPersonService {
 
-    @Resource
-    private LdapProperties ldapProperties;
+    private final LdapProperties ldapProperties;
 
-    @Resource
-    private LdapTemplate ldapTemplate;
+    private final LdapTemplate ldapTemplate;
 
-    @Resource
-    private PersonLdapRepository personLdapRepository;
+    private final PersonLdapRepository personLdapRepository;
+
+    public LdapPersonService(LdapProperties ldapProperties, LdapTemplate ldapTemplate, PersonLdapRepository personLdapRepository) {
+        this.ldapProperties = ldapProperties;
+        this.ldapTemplate = ldapTemplate;
+        this.personLdapRepository = personLdapRepository;
+    }
 
     public List<PersonLdap> search(String searchString) {
         return personLdapRepository.findByDisplayNameStartingWithIgnoreCaseOrCnStartingWithIgnoreCaseOrUidStartingWithOrMailStartingWith(searchString, searchString, searchString, searchString);

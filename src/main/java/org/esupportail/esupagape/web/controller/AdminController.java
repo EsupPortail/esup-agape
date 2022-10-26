@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
-
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Resource
-    private IndividuService individuService;
+    private final IndividuService individuService;
 
-    @Resource
-    private DossierService dossierService;
+    private final DossierService dossierService;
+
+    public AdminController(IndividuService individuService, DossierService dossierService) {
+        this.individuService = individuService;
+        this.dossierService = dossierService;
+    }
 
     @GetMapping
     public String index() {

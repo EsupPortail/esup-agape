@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -28,11 +27,14 @@ public class IndividuController {
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Resource
-    private IndividuService individuService;
+    private final IndividuService individuService;
 
-    @Resource
-    private DossierService dossierService;
+    private final DossierService dossierService;
+
+    public IndividuController(IndividuService individuService, DossierService dossierService) {
+        this.individuService = individuService;
+        this.dossierService = dossierService;
+    }
 
     @GetMapping("{id}")
     public String showRedirect(@PathVariable Long id) {

@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Service
@@ -18,8 +17,11 @@ public class IndividuDataSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(IndividuSourceService.class);
 
-    @Resource
-    private IndividuSourceProperties individuSourceProperties;
+    private final IndividuSourceProperties individuSourceProperties;
+
+    public IndividuDataSourceService(IndividuSourceProperties individuSourceProperties) {
+        this.individuSourceProperties = individuSourceProperties;
+    }
 
     public DataSource getDataSourceByName(String name) {
         logger.info("initialize db " + name + " with type " + individuSourceProperties.getDataSources().get(name).getType());

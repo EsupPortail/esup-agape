@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,11 +32,14 @@ public class LdapIndividuSourceService implements IndividuSourceService {
         put("M.", "MONSIEUR");
     }};
 
-    @Resource
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
-    @Resource
-    private LdapPersonService ldapPersonService;
+    private final LdapPersonService ldapPersonService;
+
+    public LdapIndividuSourceService(ApplicationProperties applicationProperties, LdapPersonService ldapPersonService) {
+        this.applicationProperties = applicationProperties;
+        this.ldapPersonService = ldapPersonService;
+    }
 
     @Override
     public Map<String, Object> getIndividuProperties(String numEtu) {

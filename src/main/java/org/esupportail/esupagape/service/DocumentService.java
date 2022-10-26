@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,11 +23,14 @@ public class DocumentService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
-	@Resource
-	private DocumentRepository documentRepository;
+	private final DocumentRepository documentRepository;
 
-	@Resource
-	private BigFileService bigFileService;
+	private final BigFileService bigFileService;
+
+	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService) {
+		this.documentRepository = documentRepository;
+		this.bigFileService = bigFileService;
+	}
 
 	@Transactional
 	public Document createDocument(InputStream inputStream, String name, String contentType, Long parentId, String parentType, Dossier dossier) throws AgapeIOException {

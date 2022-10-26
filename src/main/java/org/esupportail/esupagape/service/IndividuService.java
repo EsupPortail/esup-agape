@@ -28,7 +28,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -46,23 +45,23 @@ public class IndividuService {
 
     private final List<IndividuSourceService> individuSourceServices;
 
-    @Resource
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
-    @Resource
-    private IndividuRepository individuRepository;
+    private final IndividuRepository individuRepository;
 
-    @Resource
-    private UtilsService utilsService;
+    private final UtilsService utilsService;
 
-    @Resource
-    private ExcludeIndividuRepository excludeIndividuRepository;
+    private final ExcludeIndividuRepository excludeIndividuRepository;
 
-    @Resource
-    private DossierService dossierService;
+    private final DossierService dossierService;
 
-    public IndividuService(List<IndividuSourceService> individuSourceServices) {
+    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService) {
         this.individuSourceServices = individuSourceServices;
+        this.applicationProperties = applicationProperties;
+        this.individuRepository = individuRepository;
+        this.utilsService = utilsService;
+        this.excludeIndividuRepository = excludeIndividuRepository;
+        this.dossierService = dossierService;
     }
 
     public Individu getIndividu(String numEtu) {

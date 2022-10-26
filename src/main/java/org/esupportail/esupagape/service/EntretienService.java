@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +18,14 @@ import java.util.Optional;
 @Service
 public class EntretienService {
 
-    @Resource
-    private EntretienRepository entretienRepository;
+    private final EntretienRepository entretienRepository;
 
-    @Resource
-    private DocumentService documentService;
+    private final DocumentService documentService;
+
+    public EntretienService(EntretienRepository entretienRepository, DocumentService documentService) {
+        this.entretienRepository = entretienRepository;
+        this.documentService = documentService;
+    }
 
     public List<Entretien> getAllEntretiens() {
         return entretienRepository.findAll();
