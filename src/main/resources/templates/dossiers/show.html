@@ -5,17 +5,15 @@
 <head th:replace="fragments/head :: head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
-<main>
-    <div class="d-inline-flex vw-100">
+<main class="d-inline-flex">
     <div th:replace="fragments/side :: side"></div>
-    <div class="ms-2 vw-100">
+    <div class="position-sticky flex" style="width: calc(100vw - 450px)">
         <div class="mb-3">
             <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
         </div>
         <div th:replace="fragments/tabs-years :: tabs-years"></div>
         <div th:replace="fragments/tabs-content :: tabs-content(active='situation')"></div>
         <h1>La situation</h1>
-    </div>
     </div>
 </main>
 <footer th:replace="fragments/footer :: contact"></footer>
