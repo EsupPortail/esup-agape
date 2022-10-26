@@ -71,6 +71,9 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Entretien> entretiens = new ArrayList<>();
 
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    private List<Document> documents = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -261,5 +264,13 @@ public class Dossier {
 
     public void setEntretiens(List<Entretien> entretiens) {
         this.entretiens = entretiens;
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 }
