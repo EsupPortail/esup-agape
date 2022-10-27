@@ -2,7 +2,9 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.entity.Document;
+import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Entretien;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -21,12 +23,15 @@ public class EntretienService {
 
     private final EntretienRepository entretienRepository;
 
+    private final DossierService dossierService;
+
     private final DocumentRepository documentRepository;
 
     private final DocumentService documentService;
 
-    public EntretienService(EntretienRepository entretienRepository, DocumentRepository documentRepository, DocumentService documentService) {
+    public EntretienService(EntretienRepository entretienRepository, DossierService dossierService, DocumentRepository documentRepository, DocumentService documentService) {
         this.entretienRepository = entretienRepository;
+        this.dossierService = dossierService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
     }
@@ -42,6 +47,11 @@ public class EntretienService {
 
     @Transactional
     public void save(Entretien entretien) {
+        Dossier dossier = dossierService.getById(entretien.getDossier().getId());
+        //passage automatique en suivi si status importé, a confirmer avec celine martin
+        if(dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            dossier.setStatusDossier(StatusDossier.SUIVI);
+        }
         entretienRepository.save(entretien);
     }
 
