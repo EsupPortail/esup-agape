@@ -13,7 +13,7 @@
                                     <label class="input-group-text">Année universitaire</label>
                                     <select class="form-select" name="yearFilter">
                                         <option disabled value="">Choisir</option>
-                                        <option th:selected="${yearFilter == year}" th:each="year : ${years}" th:value="${year}" th:text="${year} + ' - ' + ${year + 1} "></option>
+                                        <option th:selected="${yearFilter == year.number}" th:each="year : ${years}" th:value="${year.number}" th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
                                     </select>
                                 </div>
                             </div>

@@ -75,8 +75,4 @@ public class DossierService {
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,year, pageable);
     }
 
-    public List<Integer> getYearDistinct(){
-        return dossierRepository.findYearDistinct();
-    }
-
 }

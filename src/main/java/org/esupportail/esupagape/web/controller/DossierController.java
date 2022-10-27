@@ -49,7 +49,7 @@ public class DossierController {
         model.addAttribute("statusDossier", statusDossier);
         model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, yearFilter, pageable));
         model.addAttribute("yearFilter", yearFilter);
-        model.addAttribute("years", dossierService.getYearDistinct());
+        model.addAttribute("years", utilsService.getYears());
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
 
