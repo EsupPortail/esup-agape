@@ -1,17 +1,18 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +21,13 @@ public class EntretienService {
 
     private final EntretienRepository entretienRepository;
 
+    private final DocumentRepository documentRepository;
+
     private final DocumentService documentService;
 
-    public EntretienService(EntretienRepository entretienRepository, DocumentService documentService) {
+    public EntretienService(EntretienRepository entretienRepository, DocumentRepository documentRepository, DocumentService documentService) {
         this.entretienRepository = entretienRepository;
+        this.documentRepository = documentRepository;
         this.documentService = documentService;
     }
 
@@ -70,10 +74,8 @@ public class EntretienService {
     }
 
     @Transactional
-    public List<Document> getAttachements(Long id) throws AgapeException {
-        Entretien entretien = getById(id);
-        //new ArrayList to force lazy get attachments (because osiv disable)
-        return new ArrayList<>(entretien.getAttachments());
+    public List<DocumentDto> getAttachements(Long id) {
+        return documentRepository.findByParentId(id);
     }
 
     @Transactional

@@ -1,63 +1,70 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-    <!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
-    <head th:replace="fragments/head :: head"></head>
-    <body>
-        <header th:replace="fragments/header :: header"></header>
-        <main class="row">
-            <div th:replace="fragments/side :: side"></div>
-            <div class="col pt-3">
-                <div class="mb-3">
-                    <a th:href="@{/templates/dossiers}" class="text-center ">Retour à la liste des individus</a>
-                </div>
-                <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
-                <form  th:method="post" th:action="@{/dossiers/{id}/entretiens/(id=${currentDossier.id})}" th:object="${entretien}">
-                    <div class="mb-3 mt-3">
-                        <label th:for="date" class="form-label">Date de l'entretien</label>
-                        <input type="date" class="form-control" th:field="*{date}">
-                        <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
-                    </div>
-                    <label for="TypeContact1" class="form-label">Type de contact</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeContact1" id="typeContact1" checked>
-                        <label class="form-check-label" for="typeContact1">
-                           Courrier
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeContact2" id="typeContact2">
-                        <label class="form-check-label" for="typeContact2">
-                            Mail
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeContact3" id="typeContact3">
-                        <label class="form-check-label" for="typeContact3">
-                          Rendez-vous
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeContact4" id="typeContact4">
-                        <label class="form-check-label" for="typeContact4">
-                            Tel
-                        </label>
-                    </div>
-                    <div class="mt-3">
-                        <label for="interlocuteur" class="form-label">Interlocuteur</label>
-                        <input type="text" class="form-control" id="interlocuteur" name="interlocuteur">
-                    </div>
-                    <div class="mt-3">
-                        <label for="compteRendu" class="form-label">Compte rendu</label>
-                        <textarea class="form-control" cols="2"  id="compteRendu"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
-                </form>
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Nouvel entretien</li>
+            </ol>
+        </nav>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+        <div class="ms-4 me-4">
+        <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create(id=${currentDossier.id})}" th:object="${entretien}">
+            <div class="mb-3 mt-3">
+                <label th:for="date" class="form-label">Date de l’entretien</label>
+                <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}">
+                <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
             </div>
-        </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
-    </body>
+            <label for="TypeContact1" class="form-label">Type de contact</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeContact1" id="typeContact1" checked>
+                <label class="form-check-label" for="typeContact1">
+                    Courrier
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeContact2" id="typeContact2">
+                <label class="form-check-label" for="typeContact2">
+                    Mail
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeContact3" id="typeContact3">
+                <label class="form-check-label" for="typeContact3">
+                    Rendez-vous
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="typeContact4" id="typeContact4">
+                <label class="form-check-label" for="typeContact4">
+                    Tel
+                </label>
+            </div>
+            <div class="mt-3">
+                <label for="interlocuteur" class="form-label">Interlocuteur</label>
+                <input type="text" class="form-control" id="interlocuteur" th:field="*{interlocuteur}">
+            </div>
+            <div class="mt-3">
+                <label for="compteRendu" class="form-label">Compte rendu</label>
+                <textarea class="form-control" cols="2"  id="compteRendu"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
 </html>
