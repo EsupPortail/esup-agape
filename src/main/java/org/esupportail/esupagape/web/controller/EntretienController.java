@@ -2,6 +2,7 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Entretien;
+import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.service.DocumentService;
@@ -11,11 +12,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -45,6 +54,24 @@ public class EntretienController {
         model.addAttribute("attachments", entretienService.getAttachements(entretienId));
         return "entretiens/show";
     }
+
+    @GetMapping("/create")
+    public String createEntretien(Model model) {
+        List<TypeContact> typeContacts = Arrays.asList(TypeContact.values());
+        model.addAttribute("entretien", new Entretien());
+        model.addAttribute("typeContacts", typeContacts);
+        return "entretiens/create";
+    }
+
+    @PostMapping
+    public String create(@Valid Entretien entretien, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "entretiens/create";
+        }
+        entretienService.save(entretien);
+        return "redirect:/entretiens";
+    }
+
 
     @GetMapping("/{entretienId}/update")
     public String updateEntretien(@PathVariable Long entretienId, Model model) throws AgapeException {

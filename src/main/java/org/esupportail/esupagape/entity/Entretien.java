@@ -15,7 +15,7 @@ public class Entretien
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "La date doit être renseignée")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 

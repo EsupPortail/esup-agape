@@ -13,42 +13,45 @@
                 </div>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
-                <form  th:method="post" th:action="@{/individus/{id}/dossiers/{year}/entretiens/create(id=${currentDossier.individu.id},year=${year})}">
+                <form  th:method="post" th:action="@{/dossiers/{id}/entretiens/(id=${currentDossier.id})}" th:object="${entretien}">
                     <div class="mb-3 mt-3">
-                        <label for="exampleInputEmail1" class="form-label">Date de l'entretien</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label th:for="date" class="form-label">Date de l'entretien</label>
+                        <input type="date" class="form-control" th:field="*{date}">
+                        <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
                     </div>
+                    <label for="TypeContact1" class="form-label">Type de contact</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
+                        <input class="form-check-input" type="radio" name="typeContact1" id="typeContact1" checked>
+                        <label class="form-check-label" for="typeContact1">
                            Courrier
                         </label>
                     </div>
+
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2">
+                        <input class="form-check-input" type="radio" name="typeContact2" id="typeContact2">
+                        <label class="form-check-label" for="typeContact2">
                             Mail
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                        <label class="form-check-label" for="flexRadioDefault3">
+                        <input class="form-check-input" type="radio" name="typeContact3" id="typeContact3">
+                        <label class="form-check-label" for="typeContact3">
                           Rendez-vous
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
-                        <label class="form-check-label" for="flexRadioDefault4">
+                        <input class="form-check-input" type="radio" name="typeContact4" id="typeContact4">
+                        <label class="form-check-label" for="typeContact4">
                             Tel
                         </label>
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Interlocuteur</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1" name="interlocuteur">
+                    <div class="mt-3">
+                        <label for="interlocuteur" class="form-label">Interlocuteur</label>
+                        <input type="text" class="form-control" id="interlocuteur" name="interlocuteur">
                     </div>
-                    <div>
-                        <label>Compte rendu</label>
-                        <textarea class="form-control" cols="2"  id="floatingTextarea"></textarea>
+                    <div class="mt-3">
+                        <label for="compteRendu" class="form-label">Compte rendu</label>
+                        <textarea class="form-control" cols="2"  id="compteRendu"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary mt-2">Submit</button>
                 </form>
