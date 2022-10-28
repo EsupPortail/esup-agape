@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-@ControllerAdvice()
+@ControllerAdvice(basePackages = "org.esupportail.esupagape.web.controller")
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class EsupAgapeControllerAdvice {
 

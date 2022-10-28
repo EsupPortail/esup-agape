@@ -10,7 +10,15 @@ public class Year {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(unique = true)
     private Integer number;
+
+    public Year() {
+    }
+
+    public Year(Integer number) {
+        this.number = number;
+    }
 
     public Long getId() {
         return id;

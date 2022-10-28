@@ -3,80 +3,80 @@
 <head th:replace="fragments/head :: head"></head>
 <body>
 <header th:replace="fragments/header :: header"></header>
-<main class="d-inline-flex">
-    <div class="agape-content">
-        <div class="card col-lg-10 mx-auto mt-3">
-            <div class="card-body">
-                <h1>Une erreur s’est produite<span th:text=" ' : ' + ${status} + ' ' + ${error}"></span></h1>
-                <p>Merci de contacter le gestionnaire de cette application</p>
-                <p><a th:href="'mailto:' + ${applicationEmail}" th:text="${applicationEmail}" target="_blank"></a></p>
-                <a class="btn btn-success" href="javascript:window.history.back();">Retour</a>
-                <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseError">
-                    <i class="fas fa-chevron-down"></i> Détails de l’erreur
-                </button>
-                <div id="collapseError" class="collapse mt-2">
-                    <table class="table table-striped">
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Date</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${timestamp}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Path</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${path}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Error</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${error}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Status</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${status}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Message</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${message}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Exception</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${exception}"></span>
-                            </td>
-                        </tr>
-                        <tr class="row rowDesign">
-                            <td class="col-md-4 ms-auto">
-                                <span class="legend">Trace</span>
-                            </td>
-                            <td class="col-md-8">
-                                <span th:text="${trace}"></span>
-                            </td>
-                        </tr>
-                    </table>
+    <main>
+        <div class="agape-content">
+            <div class="card col-10 mx-auto mt-3">
+                <div class="card-body">
+                    <h1>Une erreur s’est produite<span th:text=" ' : ' + ${status} + ' ' + ${error}"></span></h1>
+                    <p>Merci de contacter le gestionnaire de cette application</p>
+                    <p><a th:href="'mailto:' + ${applicationEmail}" th:text="${applicationEmail}" target="_blank"></a></p>
+                    <a class="btn btn-success" href="javascript:window.history.back();">Retour</a>
+                    <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseError">
+                        <i class="fas fa-chevron-down"></i> Détails de l’erreur
+                    </button>
+                    <div id="collapseError" class="collapse mt-2">
+                        <table class="table table-striped">
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Date</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${timestamp}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Path</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${path}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Error</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${error}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Status</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${status}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Message</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${message}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Exception</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${exception}"></span>
+                                </td>
+                            </tr>
+                            <tr class="row rowDesign">
+                                <td class="col-md-4 ms-auto">
+                                    <span class="legend">Trace</span>
+                                </td>
+                                <td class="col-md-8">
+                                    <span th:text="${trace}"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </main>
     <footer th:replace="fragments/footer :: black"></footer>
 </body>

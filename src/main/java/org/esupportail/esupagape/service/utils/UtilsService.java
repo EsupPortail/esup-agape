@@ -1,8 +1,10 @@
 package org.esupportail.esupagape.service.utils;
 
 import org.esupportail.esupagape.entity.Year;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.YearRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Comparator;
@@ -20,8 +22,7 @@ public class UtilsService {
     public int getCurrentYear() {
         List<Year> years = getYears();
         if(years.size() == 0) {
-            Year year = new Year();
-            year.setNumber(computeCurrentYear());
+            Year year = new Year(computeCurrentYear());
             yearRepository.save(year);
             return year.getNumber();
         }
@@ -38,6 +39,21 @@ public class UtilsService {
 
     public List<Year> getYears() {
          return yearRepository.findAll().stream().sorted(Comparator.comparingInt(Year::getNumber).reversed()).toList();
+    }
 
+    @Transactional
+    public void addYear(Integer number) throws AgapeJpaException {
+        if(getYears().stream().noneMatch(year -> year.getNumber().equals(number))) {
+            Year year = new Year(number);
+            yearRepository.save(year);
+        } else {
+            throw new AgapeJpaException("Ajout impossible, cette année existe déjà");
+        }
+    }
+
+    @Transactional
+    public void deleteYear(Long id) {
+        Year year = yearRepository.findById(id).orElseThrow();
+        yearRepository.delete(year);
     }
 }

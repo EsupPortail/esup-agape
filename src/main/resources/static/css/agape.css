@@ -39,9 +39,14 @@ ul {
     margin-top: 56px;
 }
 
-.agape-content {
+.agape-content-side {
     width: calc(100vw - 450px);
+}
+
+.agape-content {
+    width: 100%;
     height: calc(100vh - 112px);
     margin-top: 56px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
