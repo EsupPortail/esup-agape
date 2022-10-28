@@ -39,7 +39,7 @@
                 </div>
                 <div class="input-group mb-1">
                     <label for="taux" class="input-group-text" style="width: 250px;">Taux</label>
-                    <input disabled id="taux" name="taux" type="text" class="form-control" th:value="${currentDossier.taux}">
+                    <input disabled id="taux" name="taux" type="number" min="0" max="100" class="form-control" th:value="${currentDossier.taux}">
                 </div>
                 <div class="input-group mb-1">
                     <label for="typeSuiviHandisup" class="input-group-text" style="width: 250px;">Suivi handisup</label>
@@ -72,8 +72,8 @@
                     <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
                 </div>
                 <div class="input-group mb-1">
-                    <label for="rentreeProchaine" class="input-group-text" style="width: 250px;">Suivi MDPH</label>
-                    <select disabled id="rentreeProchaine" name="classification" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
+                    <label for="rentreeProchaine" class="input-group-text" style="width: 250px;">Choix pour la rentrée prochaine</label>
+                    <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
                         <option value="" disabled selected>Choisir</option>
                         <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
                     </select>
