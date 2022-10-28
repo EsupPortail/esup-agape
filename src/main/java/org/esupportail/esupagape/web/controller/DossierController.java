@@ -57,6 +57,7 @@ public class DossierController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
+        dossierService.syncDossier(id);
         Dossier dossier = dossierService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
