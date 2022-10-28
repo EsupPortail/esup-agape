@@ -39,7 +39,7 @@ public class DossierController {
                        @RequestParam(required = false) TypeIndividu typeIndividu,
                        @RequestParam(required = false) StatusDossier statusDossier,
                        @RequestParam(required = false) Integer yearFilter,
-                       @PageableDefault Pageable pageable, Model model) {
+                       @PageableDefault(sort = "name") Pageable pageable, Model model) {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
