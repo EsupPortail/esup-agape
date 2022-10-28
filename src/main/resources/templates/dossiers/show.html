@@ -45,7 +45,7 @@
                     <label for="typeSuiviHandisup" class="input-group-text" style="width: 250px;">Suivi handisup</label>
                     <select disabled id="typeSuiviHandisup" name="typeSuiviHandisup" type="text" class="form-select" th:value="${currentDossier.typeSuiviHandisup}">
                         <option value="" disabled selected>Choisir</option>
-                        <option th:selected="${currentDossier.typeSuiviHandisup == typeSuiviHandisup}" th:each="typeSuiviHandisup : ${typeSuiviHandisups}" th:text="#{'dossier.typeSuiviHandisup.' +${typeSuiviHandisup}}" th:value="${typeSuiviHandisup}"></option>
+                        <option th:selected="${currentDossier.typeSuiviHandisup == typeSuiviHandisup}" th:each="typeSuiviHandisup : ${typeSuiviHandisups}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}" th:value="${typeSuiviHandisup}"></option>
                     </select>
                 </div>
                 <div class="input-group mb-1">
@@ -75,14 +75,14 @@
                     <label for="rentreeProchaine" class="input-group-text" style="width: 250px;">Choix pour la rentrée prochaine</label>
                     <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
                         <option value="" disabled selected>Choisir</option>
-                        <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
+                        <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentree-prochaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
                     </select>
                 </div>
             </dl>
             <div class="d-inline">
                 <input id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
                 <input id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
-                <input disabled type="submit" value="Enregister" class="btn btn-success">
+                <input id="submit-dossier" type="submit" value="Enregister" class="btn btn-success d-none">
             </div>
             </form>
             <input type="button" value="Voir les notes" class="btn btn-primary">
