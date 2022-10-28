@@ -1,41 +1,56 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-<!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
-<head th:replace="fragments/head :: head"></head>
-<body>
-<header th:replace="fragments/header :: header"></header>
-<main class="d-inline-flex">
-    <div th:replace="fragments/side :: side"></div>
-    <div class="agape-content agape-content-side">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
-                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></li>
-            </ol>
-        </nav>
-        <div th:replace="fragments/tabs-years :: tabs-years"></div>
-        <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
-        <h1 th:text="${entretien.compteRendu}"></h1>
-        <ul>
-        <th:block th:each="attachment : ${attachments}">
-            <li>
-                <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}" th:method="'DELETE'" enctype="multipart/form-data">
-                    <input type="submit" class="btn btn-sm btn-danger" value="X">
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side :: side"></div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></li>
+                    </ol>
+                </nav>
+                <div th:replace="fragments/tabs-years :: tabs-years"></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+                <dl class="row mt-3">
+                    <dt class="col-sm-2">Date</dt>
+                    <dd class="col-sm-10" th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></dd>
+                    <dt class="col-sm-2">Type de contact</dt>
+                    <dd class="col-sm-10" th:text="${entretien.typeContact}"></dd>
+                    <dt class="col-sm-2">Interlocuteur</dt>
+                    <dd class="col-sm-10" th:text="${entretien.interlocuteur}"></dd>
+                    <dt class="col-sm-2">Compte rendu</dt>
+                    <dd class="col-sm-10" th:text="${entretien.compteRendu}"></dd>
+                </dl>
+                <ul>
+                    <th:block th:each="attachment : ${attachments}">
+                        <li>
+                            <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}"
+                                    th:method="'DELETE'"
+                                    enctype="multipart/form-data">
+                                <input type="submit" class="btn btn-sm btn-danger" value="X">
+                            </form>
+                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
+                        </li>
+                    </th:block>
+                </ul>
+                <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="'POST'" enctype="multipart/form-data">
+                    <input type="file" name="multipartFiles" multiple class="form-control mb-2">
+                    <input type="submit" class="btn btn-success" value="Ajouter">
                 </form>
-                <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
-            </li>
-        </th:block>
-        </ul>
-        <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="'POST'" enctype="multipart/form-data">
-            <input type="file" name="multipartFiles" multiple class="form-control mb-2">
-            <input type="submit" class="btn btn-success" value="Ajouter">
-        </form>
-    </div>
-</main>
-<footer th:replace="fragments/footer :: black"></footer>
-<div th:replace="fragments/flash :: flash"></div>
-</body>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
 </html>
