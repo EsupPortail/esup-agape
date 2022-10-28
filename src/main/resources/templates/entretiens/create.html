@@ -60,7 +60,7 @@
                 <textarea class="form-control" rows="10" cols="60"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}"></textarea>
                 <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
         </form>
         </div>
     </div>
