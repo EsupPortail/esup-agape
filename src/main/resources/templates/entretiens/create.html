@@ -25,38 +25,40 @@
                 <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}">
                 <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
             </div>
-            <label for="TypeContact1" class="form-label">Type de contact</label>
+            <label class="form-label">Type de contact</label>
             <div class="form-check">
-                <input class="form-check-input" type="radio" value="COURRIER" th:field="*{typeContact}" id="typeContact1">
-                <label class="form-check-label" for="typeContact1">
+                <input class="form-check-input" type="radio" value="COURRIER" th:field="*{typeContact}" id="typeContactCourrier">
+                <label class="form-check-label" for="typeContactCourrier">
                     Courrier
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" value="MAIL" th:field="*{typeContact}" id="typeContact2">
-                <label class="form-check-label" for="typeContact2">
+                <input class="form-check-input" type="radio" value="MAIL" th:field="*{typeContact}" id="typeContactMail">
+                <label class="form-check-label" for="typeContactMail">
                     Mail
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" value="RENDEZ-VOUS" th:field="*{typeContact}" id="typeContact3">
-                <label class="form-check-label" for="typeContact3">
+                <input class="form-check-input" type="radio" value="RENDEZ-VOUS" th:field="*{typeContact}" id="typeContactRDV">
+                <label class="form-check-label" for="typeContactRDV">
                     Rendez-vous
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" value="TEL" th:field="*{typeContact}" id="typeContact4">
-                <label class="form-check-label" for="typeContact4">
+                <input class="form-check-input" type="radio" value="TEL" th:field="*{typeContact}" id="typeContactTel">
+                <label class="form-check-label" for="typeContactTel">
                     Tel
                 </label>
             </div>
             <div class="mt-3">
                 <label for="interlocuteur" class="form-label">Interlocuteur</label>
-                <input type="text" class="form-control" id="interlocuteur" th:field="*{interlocuteur}">
+                <input type="text" class="form-control" id="interlocuteur" th:value="${entretien.interlocuteur}" th:field="*{interlocuteur}">
+                <p th:if="${#fields.hasErrors('interlocuteur')}" th:errorclass="error" th:errors="*{interlocuteur}"></p>
             </div>
             <div class="mt-3">
                 <label for="compteRendu" class="form-label">Compte rendu</label>
-                <textarea class="form-control" cols="2" id="compteRendu" th:field="*{compteRendu}"></textarea>
+                <textarea class="form-control" cols="2"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}"></textarea>
+                <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Submit</button>
         </form>
