@@ -86,6 +86,6 @@ public class DossierService {
         dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEtat(dossier.getEtat());
-
+        dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
     }
 }
