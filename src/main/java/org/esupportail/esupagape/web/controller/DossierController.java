@@ -1,8 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class DossierController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
-
         model.addAttribute("fullTextSearch", fullTextSearch);
         model.addAttribute("typeIndividu", typeIndividu);
         model.addAttribute("statusDossier", statusDossier);
@@ -57,14 +56,25 @@ public class DossierController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id ,Model model) {
+    public String show(@PathVariable Long id, Model model) {
         Dossier dossier = dossierService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         model.addAttribute("dossiers", dossiers);
+        model.addAttribute("classifications", Classification.values());
+        model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
+        model.addAttribute("rentreeProchaines", RentreeProchaine.values());
+        model.addAttribute("mdphs", Mdph.values());
+        model.addAttribute("etats", Etat.values());
         model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         return "dossiers/show";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid Dossier dossier, Model model) {
+        dossierService.update(id, dossier);
+        return "redirect:/dossiers/" + id;
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

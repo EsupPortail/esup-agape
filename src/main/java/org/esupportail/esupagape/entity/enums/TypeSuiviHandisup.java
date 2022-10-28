@@ -1,6 +1,8 @@
 package org.esupportail.esupagape.entity.enums;
 
-public enum DetailSuiviHandisup {
+public enum TypeSuiviHandisup {
+
+    AUCUN,
     CONSTRUCTION_DE_PROJET,
     EMPLOI,
     EMPLOI_D_ETE,
@@ -9,5 +11,6 @@ public enum DetailSuiviHandisup {
     JOB_COACH_AUTISME,
     PRESENTATION_DE_L_ASSOCIATION,
     RECONNAISSANCE_MDPH,
-    STAGE;
+    STAGE
+
 }

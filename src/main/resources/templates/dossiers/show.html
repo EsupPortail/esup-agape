@@ -12,7 +12,81 @@
         </div>
         <div th:replace="fragments/tabs-years :: tabs-years"></div>
         <div th:replace="fragments/tabs-content :: tabs-content(active='situation')"></div>
-        <h1>La situation</h1>
+        <div class="m-3">
+            <form id="form-situation" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
+            <h4>Situation</h4>
+            <dl class="row">
+                <div class="input-group mb-1">
+                    <label for="classification" class="input-group-text" style="width: 250px;">Classification du handicap</label>
+                    <select disabled id="classification" name="classification" type="text" class="form-select" th:value="${currentDossier.classification}">
+                        <option value="" disabled selected>Choisir</option>
+                        <option th:selected="${currentDossier.classification == classification}" th:each="classification : ${classifications}" th:text="#{'dossier.classification.' +${classification}}" th:value="${classification}"></option>
+                    </select>
+                </div>
+                <div class="input-group mb-1">
+                    <label for="etat" class="input-group-text" style="width: 250px;">Etat</label>
+                    <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">
+                        <option value="" disabled selected>Choisir</option>
+                        <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>
+                    </select>
+                </div>
+                <div class="input-group mb-1">
+                    <label for="mdph" class="input-group-text" style="width: 250px;">Suivi MDPH</label>
+                    <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
+                        <option value="" disabled selected>Choisir</option>
+                        <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
+                    </select>
+                </div>
+                <div class="input-group mb-1">
+                    <label for="taux" class="input-group-text" style="width: 250px;">Taux</label>
+                    <input disabled id="taux" name="taux" type="text" class="form-control" th:value="${currentDossier.taux}">
+                </div>
+                <div class="input-group mb-1">
+                    <label for="typeSuiviHandisup" class="input-group-text" style="width: 250px;">Suivi handisup</label>
+                    <select disabled id="typeSuiviHandisup" name="typeSuiviHandisup" type="text" class="form-select" th:value="${currentDossier.typeSuiviHandisup}">
+                        <option value="" disabled selected>Choisir</option>
+                        <option th:selected="${currentDossier.typeSuiviHandisup == typeSuiviHandisup}" th:each="typeSuiviHandisup : ${typeSuiviHandisups}" th:text="#{'dossier.typeSuiviHandisup.' +${typeSuiviHandisup}}" th:value="${typeSuiviHandisup}"></option>
+                    </select>
+                </div>
+                <div class="input-group mb-1">
+                    <label for="suiviHandisup" class="input-group-text" style="width: 250px;">Commentaire handisup</label>
+                    <input disabled id="suiviHandisup" name="suiviHandisup" type="text" class="form-control" th:value="${currentDossier.suiviHandisup}">
+                </div>
+            </dl>
+            <h4>Parcours</h4>
+            <dl class="row">
+                <div class="input-group mb-1">
+                    <label for="libelleFormation" class="input-group-text" style="width: 250px;">Formation</label>
+                    <input disabled id="libelleFormation" type="text" class="form-control" th:value="${currentDossier.libelleFormation}">
+                </div>
+                <div class="input-group mb-1">
+                    <label for="site" class="input-group-text" style="width: 250px;">Lieu de formation</label>
+                    <input disabled id="site" type="text" class="form-control" th:value="${currentDossier.site}">
+                </div>
+                <div class="input-group mb-1">
+                    <label for="filliere" class="input-group-text" style="width: 250px;">Filière</label>
+                    <input disabled id="filliere" type="text" class="form-control" th:value="${currentDossier.filliere}">
+                </div>
+                <div class="input-group mb-1">
+                    <label for="composante" class="input-group-text" style="width: 250px;">Composante</label>
+                    <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
+                </div>
+                <div class="input-group mb-1">
+                    <label for="rentreeProchaine" class="input-group-text" style="width: 250px;">Suivi MDPH</label>
+                    <select disabled id="rentreeProchaine" name="classification" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
+                        <option value="" disabled selected>Choisir</option>
+                        <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
+                    </select>
+                </div>
+            </dl>
+            <div class="d-inline">
+                <input id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                <input id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                <input disabled type="submit" value="Enregister" class="btn btn-success">
+            </div>
+            </form>
+            <input type="button" value="Voir les notes" class="btn btn-primary">
+        </div>
     </div>
 </main>
 <footer th:replace="fragments/footer :: black"></footer>

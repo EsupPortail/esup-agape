@@ -25,7 +25,7 @@ public class Dossier {
     private Classification classification;
 
     @Enumerated(EnumType.STRING)
-    private DetailSuiviHandisup detailSuiviHandisup;
+    private TypeSuiviHandisup typeSuiviHandisup;
 
     @Enumerated(EnumType.STRING)
     private Etat etat;
@@ -106,12 +106,12 @@ public class Dossier {
         this.classification = classification;
     }
 
-    public DetailSuiviHandisup getDetailSuiviHandisup() {
-        return detailSuiviHandisup;
+    public TypeSuiviHandisup getTypeSuiviHandisup() {
+        return typeSuiviHandisup;
     }
 
-    public void setDetailSuiviHandisup(DetailSuiviHandisup detailSuiviHandisup) {
-        this.detailSuiviHandisup = detailSuiviHandisup;
+    public void setTypeSuiviHandisup(TypeSuiviHandisup detailSuiviHandisup) {
+        this.typeSuiviHandisup = detailSuiviHandisup;
     }
 
     public Etat getEtat() {

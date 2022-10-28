@@ -10,6 +10,7 @@ import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,4 +76,16 @@ public class DossierService {
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,year, pageable);
     }
 
+    @Transactional
+    public void update(Long id, Dossier dossier) {
+        Dossier dossierToUpdate = getById(id);
+        dossierToUpdate.setClassification(dossier.getClassification());
+        dossierToUpdate.setEtat(dossier.getEtat());
+        dossierToUpdate.setMdph(dossier.getMdph());
+        dossierToUpdate.setTaux(dossier.getTaux());
+        dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
+        dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
+        dossierToUpdate.setEtat(dossier.getEtat());
+
+    }
 }
