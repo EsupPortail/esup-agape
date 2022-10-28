@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="contacts" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></li>
+            </ol>
+        </nav>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+       <h1>Page modification de l'entretien</h1>
+        <form class="container" th:method="'PUT'" th:action="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" th:object="${entretien}">
+            <div class="mb-3 mt-3">
+                <input th:field="*{id}" type="hidden" readonly class="form-control">
+                <label th:for="date" class="form-label">Date de l’entretien</label>
+                <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${entretien.date}">
+                <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
+            </div>
+            <label for="TypeContact1" class="form-label">Type de contact</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="COURRIER" th:field="*{typeContact}" id="typeContact1" checked>
+                <label class="form-check-label">
+                    Courrier
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="MAIL" th:field="*{typeContact}" id="typeContact2">
+                <label class="form-check-label">
+                    Mail
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="RENDEZ_VOUS" th:field="*{typeContact}" id="typeContact3">
+                <label class="form-check-label">
+                    Rendez-vous
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="TEL" th:field="*{typeContact}" id="typeContact4">
+                <label class="form-check-label">
+                    Tel
+                </label>
+            </div>
+            <div class="mt-3">
+                <label for="interlocuteur" class="form-label">Interlocuteur</label>
+                <input type="text" class="form-control" id="interlocuteur" th:value="${entretien.interlocuteur}" th:field="*{interlocuteur}">
+                <p th:if="${#fields.hasErrors('interlocuteur')}" th:errorclass="error" th:errors="*{interlocuteur}"></p>
+            </div>
+            <div class="mt-3">
+                <label for="compteRendu" class="form-label">Compte rendu</label>
+                <textarea class="form-control" cols="2"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}"></textarea>
+                <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
+</html>

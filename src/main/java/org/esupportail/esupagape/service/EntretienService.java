@@ -46,7 +46,7 @@ public class EntretienService {
     }
 
     @Transactional
-    public void save(Entretien entretien) {
+    public void save(Entretien entretien){
         Dossier dossier = dossierService.getById(entretien.getDossier().getId());
         //passage automatique en suivi si status importé, a confirmer avec celine martin
         if(dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
@@ -96,4 +96,12 @@ public class EntretienService {
         documentService.delete(attachment);
     }
 
+    @Transactional
+    public void update(Long entretienId, Entretien entretien) throws AgapeJpaException {
+        Entretien entretienToUpdate = getById(entretienId);
+        entretienToUpdate.setDate(entretien.getDate());
+        entretienToUpdate.setTypeContact(entretien.getTypeContact());
+        entretienToUpdate.setInterlocuteur(entretien.getInterlocuteur());
+        entretienToUpdate.setCompteRendu(entretien.getCompteRendu());
+    }
 }

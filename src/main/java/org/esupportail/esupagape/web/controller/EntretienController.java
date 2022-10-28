@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.EntretienService;
 import org.springframework.http.HttpStatus;
@@ -77,14 +78,22 @@ public class EntretienController {
         return "entretiens/update";
     }
 
-    @PutMapping("/entretiens")
-    public String update(@Valid Entretien entretien, BindingResult bindingResult) {
+    /*@PutMapping("/{entretienId}")
+    public String update(@PathVariable Long entretienId, @Valid Entretien entretien, BindingResult bindingResult, Dossier dossier) {
         if (bindingResult.hasErrors()) {
             return "entretiens/update";
         }
         entretienService.save(entretien);
-        return "redirect:/dossiers/{id}/entretiens";
+        return "redirect:/dossiers/" + entretienId;
+    }*/
+
+    @PutMapping("/{entretienId}/update")
+    public String update(@PathVariable Long entretienId, @Valid Entretien entretien, Model model) throws AgapeJpaException {
+        entretienService.update(entretienId, entretien);
+        return "redirect:/dossiers/{id}/entretiens/";
     }
+
+
 
     @DeleteMapping(value = "/{entretienId}/delete")
     public String deleteDossier(@PathVariable Long entretienId, Dossier dossier) {
