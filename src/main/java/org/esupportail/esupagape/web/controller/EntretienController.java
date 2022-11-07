@@ -8,12 +8,23 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.EntretienService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,9 +47,19 @@ public class EntretienController {
         this.documentService = documentService;
     }
 
-    @GetMapping
+   /* @GetMapping
     public String list(@PathVariable Long id,  Model model) {
         List<Entretien> entretiens = entretienService.getEntretiensByDossier(id);
+        model.addAttribute("entretiens", entretiens);
+        return "entretiens/list";
+    }*/
+
+    @GetMapping
+    public String list(@PageableDefault(
+            sort = "date",
+            direction = Sort.Direction.DESC) Pageable pageable,
+                       Model model) {
+        Page<Entretien> entretiens = entretienService.findAll(pageable);
         model.addAttribute("entretiens", entretiens);
         return "entretiens/list";
     }

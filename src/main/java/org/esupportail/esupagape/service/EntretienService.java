@@ -10,6 +10,8 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,9 +38,9 @@ public class EntretienService {
         this.documentService = documentService;
     }
 
-    public List<Entretien> getAllEntretiens() {
+   /* public List<Entretien> getAllEntretiens() {
         return entretienRepository.findAll();
-    }
+    }*/
 
     @Transactional
     public List<Entretien> getEntretiensByDossier(Long dossierId) {
@@ -53,6 +55,12 @@ public class EntretienService {
             dossier.setStatusDossier(StatusDossier.SUIVI);
         }
         entretienRepository.save(entretien);
+    }
+
+    @Transactional
+    public Page<Entretien> findAll(Pageable pageable) {
+        Page<Entretien> entretiens = entretienRepository.findAll(pageable);
+        return entretiens;
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {
