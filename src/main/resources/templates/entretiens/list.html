@@ -83,7 +83,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <nav id="pagination" aria-label="pagination">
+                <section th:if="${#lists.isEmpty(entretiens.content)}" > <div class="col-lg-12 text-center">
+                    <div sd:pagination-summary="">info</div>
+                </div>
+                </section>
+                <nav th:unless="${#lists.isEmpty(entretiens.content)}" id="pagination" aria-label="pagination">
                     <div class="col-lg-12 text-center">
                         <div sd:pagination-summary="">info</div>
                     </div>
