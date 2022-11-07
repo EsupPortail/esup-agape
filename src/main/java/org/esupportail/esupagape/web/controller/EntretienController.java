@@ -47,19 +47,12 @@ public class EntretienController {
         this.documentService = documentService;
     }
 
-   /* @GetMapping
-    public String list(@PathVariable Long id,  Model model) {
-        List<Entretien> entretiens = entretienService.getEntretiensByDossier(id);
-        model.addAttribute("entretiens", entretiens);
-        return "entretiens/list";
-    }*/
-
     @GetMapping
-    public String list(@PageableDefault(
+    public String list(@PathVariable Long id, @PageableDefault(
             sort = "date",
             direction = Sort.Direction.DESC) Pageable pageable,
                        Model model) {
-        Page<Entretien> entretiens = entretienService.findAll(pageable);
+        Page<Entretien> entretiens = entretienService.findEntretiensByDossierId(id, pageable);
         model.addAttribute("entretiens", entretiens);
         return "entretiens/list";
     }

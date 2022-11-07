@@ -178,10 +178,6 @@ public class IndividuService {
         }
     }
 
-    public Page<Individu> getAllIndividus(Pageable pageable) {
-        return individuRepository.findAll(pageable);
-    }
-
     public Page<Individu> searchByName(String name, Pageable pageable) {
         return individuRepository.findAllByNameContainsIgnoreCase(name, pageable);
     }

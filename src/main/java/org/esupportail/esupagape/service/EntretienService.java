@@ -38,15 +38,6 @@ public class EntretienService {
         this.documentService = documentService;
     }
 
-   /* public List<Entretien> getAllEntretiens() {
-        return entretienRepository.findAll();
-    }*/
-
-    @Transactional
-    public List<Entretien> getEntretiensByDossier(Long dossierId) {
-        return entretienRepository.findEntretienByDossierId(dossierId);
-    }
-
     @Transactional
     public void save(Entretien entretien){
         Dossier dossier = dossierService.getById(entretien.getDossier().getId());
@@ -58,8 +49,8 @@ public class EntretienService {
     }
 
     @Transactional
-    public Page<Entretien> findAll(Pageable pageable) {
-        Page<Entretien> entretiens = entretienRepository.findAll(pageable);
+    public Page<Entretien> findEntretiensByDossierId(Long dossierId, Pageable pageable) {
+        Page<Entretien> entretiens = entretienRepository.findEntretiensByDossierId(dossierId, pageable);
         return entretiens;
     }
 
