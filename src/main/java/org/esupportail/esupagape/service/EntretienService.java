@@ -10,6 +10,8 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,23 +38,20 @@ public class EntretienService {
         this.documentService = documentService;
     }
 
-    public List<Entretien> getAllEntretiens() {
-        return entretienRepository.findAll();
-    }
-
     @Transactional
-    public List<Entretien> getEntretiensByDossier(Long dossierId) {
-        return entretienRepository.findEntretienByDossierId(dossierId);
-    }
-
-    @Transactional
-    public void save(Entretien entretien) {
+    public void save(Entretien entretien){
         Dossier dossier = dossierService.getById(entretien.getDossier().getId());
         //passage automatique en suivi si status importé, a confirmer avec celine martin
         if(dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.SUIVI);
         }
         entretienRepository.save(entretien);
+    }
+
+    @Transactional
+    public Page<Entretien> findEntretiensByDossierId(Long dossierId, Pageable pageable) {
+        Page<Entretien> entretiens = entretienRepository.findEntretiensByDossierId(dossierId, pageable);
+        return entretiens;
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {
@@ -96,4 +95,12 @@ public class EntretienService {
         documentService.delete(attachment);
     }
 
+    @Transactional
+    public void update(Long entretienId, Entretien entretien) throws AgapeJpaException {
+        Entretien entretienToUpdate = getById(entretienId);
+        entretienToUpdate.setDate(entretien.getDate());
+        entretienToUpdate.setTypeContact(entretien.getTypeContact());
+        entretienToUpdate.setInterlocuteur(entretien.getInterlocuteur());
+        entretienToUpdate.setCompteRendu(entretien.getCompteRendu());
+    }
 }
