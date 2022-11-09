@@ -10,6 +10,7 @@ import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServicePedago
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @Service
 @Order(1)
+@ConditionalOnProperty(value = "individu-source.data-sources.APO.name")
 public class ApoDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoDossierInfosService.class);
