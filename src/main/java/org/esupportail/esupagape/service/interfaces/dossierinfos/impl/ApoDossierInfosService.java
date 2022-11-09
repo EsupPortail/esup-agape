@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +21,19 @@ import java.util.Map;
 
 @Service
 @Order(1)
-@ConditionalOnProperty(value = "individu-source.data-sources.APO.name")
+@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
 public class ApoDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoDossierInfosService.class);
 
-    @Resource
-    WsApogeeServicePedago wsApogeeServicePedago;
+    private final WsApogeeServicePedago wsApogeeServicePedago;
 
-    @Resource
-    WsApogeeServiceAdministratif wsApogeeServiceAdministratif;
+    private final WsApogeeServiceAdministratif wsApogeeServiceAdministratif;
+
+    public ApoDossierInfosService(WsApogeeServicePedago wsApogeeServicePedago, WsApogeeServiceAdministratif wsApogeeServiceAdministratif) {
+        this.wsApogeeServicePedago = wsApogeeServicePedago;
+        this.wsApogeeServiceAdministratif = wsApogeeServiceAdministratif;
+    }
 
     public List<Map<String, Object>> getDossierProperties(Individu individu, Integer annee, boolean getAllSteps) {
 

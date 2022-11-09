@@ -192,7 +192,7 @@
         <dependency>
             <groupId>gouv.education</groupId>
             <artifactId>apogee-ws</artifactId>
-            <version>63030</version>
+            <version>63050</version>
         </dependency>
 
     </dependencies>

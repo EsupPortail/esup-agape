@@ -9,6 +9,8 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.Optional;
 
 @Service
 public class DossierService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DossierService.class);
 
     private final UtilsService utilsService;
 

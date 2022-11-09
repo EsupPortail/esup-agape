@@ -5,12 +5,14 @@ import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.PedagogiqueMetie
 import org.esupportail.esupagape.exception.AgapeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
+@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
 public class WsApogeeServicePedago {
 
 	private static final Logger logger = LoggerFactory.getLogger(WsApogeeServicePedago.class);

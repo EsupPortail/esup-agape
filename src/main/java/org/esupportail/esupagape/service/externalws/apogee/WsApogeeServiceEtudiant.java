@@ -6,6 +6,7 @@ import gouv.education.apogee.commun.client.ws.EtudiantMetier.IdentifiantsEtudian
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.InfoAdmEtuDTO4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
 public class WsApogeeServiceEtudiant {
 
 	private static final Logger logger = LoggerFactory.getLogger(WsApogeeServiceEtudiant.class);
