@@ -5,7 +5,9 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
+import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,10 +24,13 @@ public class DossierService {
 
     private final UtilsService utilsService;
 
+    private final List<DossierInfosService> dossierInfosServices;
+
     private final DossierRepository dossierRepository;
 
-    public DossierService(UtilsService utilsService, DossierRepository dossierRepository) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository) {
         this.utilsService = utilsService;
+        this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
     }
 
@@ -56,11 +63,15 @@ public class DossierService {
         return dossierRepository.findById(id).orElseThrow();
     }
 
-    public Dossier getByYear(Long individuId, int year) {
-        return dossierRepository.findByIndividuIdAndYear(individuId, year).orElseThrow();
+    public Dossier getByYear(Long individuId, int year) throws AgapeJpaException {
+        try {
+            return dossierRepository.findByIndividuIdAndYear(individuId, year).orElseThrow();
+        } catch (NoSuchElementException e) {
+            throw new AgapeJpaException(e.getMessage());
+        }
     }
 
-    public Dossier getCurrent(Long individuId) {
+    public Dossier getCurrent(Long individuId) throws AgapeJpaException {
         return getByYear(individuId, utilsService.getCurrentYear());
     }
 
@@ -87,5 +98,30 @@ public class DossierService {
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
+    }
+
+    public Map<String, Object> getInfos(Dossier dossier) {
+        return dossierInfosServices.get(0).getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false).get(0);
+    }
+
+    @Transactional
+    public void syncDossier(Long id) {
+        Dossier dossier = getById(id);
+        for (DossierInfosService dossierInfosService : dossierInfosServices) {
+            List<Map<String, Object>> dossierPropertiesList = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
+            for(Map<String, Object> dossierProperties : dossierPropertiesList) {
+                if (dossierProperties != null && dossierProperties.size() > 0) {
+                    for (String key : dossierProperties.keySet()) {
+                        if (dossierProperties.get(key) != null) {
+                            switch (key) {
+                                case "ufr" -> dossier.setComposante(dossierProperties.get(key).toString());
+                                case "filiere" -> dossier.setFilliere(dossierProperties.get(key).toString());
+                                case "etablissement" -> dossier.setSite(dossierProperties.get(key).toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

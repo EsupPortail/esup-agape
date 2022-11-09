@@ -3,6 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -47,7 +48,7 @@ public class IndividuController {
     }
 
     @GetMapping("{id}/dossiers/{year}/parcours")
-    public String showDossierParcours(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierParcours(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -63,8 +64,9 @@ public class IndividuController {
 
         return "dossiers/parcours";
     }
+
     @GetMapping("{id}/dossiers/{year}/situation-fiche")
-    public String showDossierSituationFiche(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierSituationFiche(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -81,7 +83,7 @@ public class IndividuController {
         return "dossiers/situation-fiche";
     }
     @GetMapping("{id}/dossiers/{year}/situation-tableau")
-    public String showDossierSituationTableau(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierSituationTableau(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -99,7 +101,7 @@ public class IndividuController {
     }
 
     @GetMapping("{id}/dossiers/{year}/aides-humaines")
-    public String showDossierAidesHumaines(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierAidesHumaines(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -116,7 +118,7 @@ public class IndividuController {
         return "dossiers/aides-humaines";
     }
     @GetMapping("{id}/dossiers/{year}/aides-materielles")
-    public String showDossierAidesMaterielles(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierAidesMaterielles(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -133,7 +135,7 @@ public class IndividuController {
         return "dossiers/aides-materielles";
     }
     @GetMapping("{id}/dossiers/{year}/archives-amenagements-examens")
-    public String showDossierArchivesAmenagementsExamens(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierArchivesAmenagementsExamens(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -150,7 +152,7 @@ public class IndividuController {
         return "dossiers/archives-amenagements-examens";
     }
     @GetMapping("{id}/dossiers/{year}/suivi-handisup")
-    public String showDossierSuiviHandisup(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierSuiviHandisup(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -167,7 +169,7 @@ public class IndividuController {
         return "dossiers/suivi-handisup";
     }
     @GetMapping("{id}/dossiers/{year}/amenagements-examens")
-    public String showDossierAmenagementsExamen(@PathVariable Long id, @PathVariable Integer year, Model model) {
+    public String showDossierAmenagementsExamen(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
