@@ -1,9 +1,9 @@
 package org.esupportail.esupagape.web;
 
-
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.web.controller.EnqueteController;
 import org.esupportail.esupagape.web.controller.EntretienController;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Comparator;
 import java.util.List;
 
-@ControllerAdvice(assignableTypes = { EntretienController.class })
+@ControllerAdvice(assignableTypes = { EntretienController.class, EnqueteController.class })
 public class DossierControllerAdvice {
 
     private final DossierService dossierService;

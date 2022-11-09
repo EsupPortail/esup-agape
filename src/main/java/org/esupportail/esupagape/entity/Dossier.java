@@ -74,8 +74,8 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
-    private List<Enquete> enquetes = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Enquete enquete = new Enquete();
 
     public Long getId() {
         return id;
@@ -277,7 +277,11 @@ public class Dossier {
         this.documents = documents;
     }
 
-    public  List<Enquete> getEnquetes(){return enquetes;}
+    public Enquete getEnquete() {
+        return enquete;
+    }
 
-    public void setEnquetes(List<Enquete> enquetes) {this.enquetes = enquetes;}
+    public void setEnquete(Enquete enquete) {
+        this.enquete = enquete;
+    }
 }
