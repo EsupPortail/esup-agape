@@ -103,7 +103,7 @@
                                     <div class="col-lg-6">
                                         <select id="_codpfpp_id" name="codpfpp" class="form-control" size="1">
                                             <option disabled selected value="nul">Choisir</option>
-                                            <option th:selected="${CodPfpp == enumCodPfpp}" th:each="enumCodPfpp : ${T(org.esupportail.esupagape.entity.enums.enquete.CodPfpp).values}" th:value="${enumCodPfpp}" th:text="${enumCodPfpp.libelle}"></option>
+                                            <option th:selected="${CodPfpp == enumCodPfpp}" th:each="enumCodPfpp : ${codPfpps}" th:value="${enumCodPfpp}" th:text="${enumCodPfpp.libelle}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -119,13 +119,19 @@
                                 <div class="form-group">
                                     <label class="col-md-3  control-label control-label" th:for="codmeahF"><strong>Mesures aides humaines</strong></label>
                                     <div class="col-lg-6">
-                                        <div>
-                                            <input id="_codmeahF_id1" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs0">
-                                            <label for="_codmeahF_id1">aucune aide humaine spécifique</label>
-                                        </div>
+                                        <th:block th:each="codeMeahF : ${codeMeahFs}">
+                                            <div>
+                                                <input th:id="${codeMeahF}" name="codmeahF" size="1" multiple="true" type="checkbox" th:value="${codeMeahF}">
+                                                <label th:for="${codeMeahF}" th:text="${codeMeahF}"></label>
+                                            </div>
+                                        </th:block>
                                         <div>
                                             <input id="_codmeahF_id2" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs1">
                                             <label for="_codmeahF_id2">interprète</label>
+                                        </div>
+                                        <div>
+                                            <input id="_codmeahF_id1" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs0">
+                                            <label for="_codmeahF_id1">aucune aide humaine spécifique</label>
                                         </div>
                                         <div>
                                             <input id="_codmeahF_id3" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs1e">
