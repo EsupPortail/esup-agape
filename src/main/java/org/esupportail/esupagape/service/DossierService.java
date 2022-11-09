@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -61,11 +63,15 @@ public class DossierService {
         return dossierRepository.findById(id).orElseThrow();
     }
 
-    public Dossier getByYear(Long individuId, int year) {
-        return dossierRepository.findByIndividuIdAndYear(individuId, year).orElseThrow();
+    public Dossier getByYear(Long individuId, int year) throws AgapeJpaException {
+        try {
+            return dossierRepository.findByIndividuIdAndYear(individuId, year).orElseThrow();
+        } catch (NoSuchElementException e) {
+            throw new AgapeJpaException(e.getMessage());
+        }
     }
 
-    public Dossier getCurrent(Long individuId) {
+    public Dossier getCurrent(Long individuId) throws AgapeJpaException {
         return getByYear(individuId, utilsService.getCurrentYear());
     }
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -62,6 +63,8 @@ public class DossierController {
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         model.addAttribute("dossiers", dossiers);
+        Map<String, Object> extendedInfos = dossierService.getInfos(dossier);
+        model.addAttribute("extendedInfos", extendedInfos);
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
         model.addAttribute("rentreeProchaines", RentreeProchaine.values());
