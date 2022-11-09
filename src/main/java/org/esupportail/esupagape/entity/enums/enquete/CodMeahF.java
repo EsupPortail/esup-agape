@@ -2,23 +2,23 @@ package org.esupportail.esupagape.entity.enums.enquete;
 
 public enum CodMeahF {
 
-    ahs0,
-    ahs1,
-    ahs1e,
-    ahs1f,
-    ahs2,
-    ahs2e,
-    ahs2f,
-    ahs3,
-    ahs3o,
-    ahs3p,
-    ahs4,
-    ahs5,
-    ahs5o,
-    ahs5q,
-    ahs5h,
-    ahs5m,
-    ahs5s,
-    ahs5e
-    
+    AHS0,
+    AHS1,
+    AHS1E,
+    AHS1F,
+    AHS2,
+    AHS2E,
+    AHS2F,
+    AHS3,
+    AHS3O,
+    AHS3P,
+    AHS4,
+    AHS5,
+    AHS5O,
+    AHS5Q,
+    AHS5H,
+    AHS5M,
+    AHS5S,
+    AHS5E
+
 }

@@ -1,5 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
 import org.slf4j.Logger;
@@ -28,8 +30,10 @@ public class EnqueteController {
 
     @GetMapping
     public String create(Model model) {
+        model.addAttribute("enquete", new Enquete());
+        model.addAttribute("codHds", CodHd.values());
         model.addAttribute("codPfpps", CodPfpp.values());
-        model.addAttribute("codeMeahFs", CodMeahF.values());
+        model.addAttribute("codMeahFs", CodMeahF.values());
         return "enquetes/create";
     }
 
