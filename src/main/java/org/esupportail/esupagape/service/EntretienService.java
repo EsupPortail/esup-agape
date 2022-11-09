@@ -41,7 +41,7 @@ public class EntretienService {
     @Transactional
     public void save(Entretien entretien){
         Dossier dossier = dossierService.getById(entretien.getDossier().getId());
-        //passage automatique en suivi si status importé, a confirmer avec celine martin
+        //TODO passage automatique en suivi si status importé, a confirmer avec celine martin
         if(dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.SUIVI);
         }
@@ -65,7 +65,7 @@ public class EntretienService {
 
     @Transactional
     public void deleteEntretien(Long id) {
-        this.entretienRepository.deleteById(id);
+        entretienRepository.deleteById(id);
     }
 
     @Transactional
