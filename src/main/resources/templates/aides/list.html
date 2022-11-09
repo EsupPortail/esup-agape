@@ -32,9 +32,39 @@
                         <tbody>
                         <th:block th:each="aideMaterielle : ${aideMaterielles}">
                             <tr>
-                                <td th:text="${aideMaterielle.typeAideMaterielle}"></td>
-                                <td th:text="${aideMaterielle.endDate}"></td>
-                                <td><button class="btn btn-info"><i class="bi bi-eye"></i></button></td>
+                                <td th:text="#{'aide.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></td>
+                                <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
+                                <td>
+                                    <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-eye"></i></button>
+                                    <div class="modal fade" th:id="'show-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'show-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" th:id="'show-aide-materielle-label' + ${aideMaterielle.id}">Détail aide humaine</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <dl class="row">
+                                                        <dt class="col-sm-6">Type</dt>
+                                                        <dd class="col-sm-6" th:text="#{'aide.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></dd>
+                                                        <dt class="col-sm-6">Date de début</dt>
+                                                        <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.startDate, 'dd/MM/yyyy')}"></dd>
+                                                        <dt class="col-sm-6">Date de fin</dt>
+                                                        <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></dd>
+                                                        <dt class="col-sm-6">Cout en euros</dt>
+                                                        <dd class="col-sm-6" th:text="${aideMaterielle.cost}"></dd>
+                                                        <dt class="col-sm-6">Commentaire</dt>
+                                                        <dd class="col-sm-6" th:text="${aideMaterielle.comment}"></dd>
+                                                    </dl>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                </div>
+                                            </div>
+                                       </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-trash"></i></button>
                                     <div class="modal fade" th:id="'delete-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'delete-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
@@ -74,23 +104,23 @@
                                     <label class="form-label">Type d’aide matérielle</label>
                                     <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}">
-                                            <label class="form-check-label" th:text="${typeAideMaterielle}"></label>
+                                            <input class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" required>
+                                            <label class="form-check-label" th:text="#{'aide.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
                                         </div>
                                     </th:block>
                                     <div class="mb-3 mt-3">
                                         <label th:for="start-date" class="form-label">Date de debut</label>
-                                        <input id="start-date" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}">
+                                        <input id="start-date" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}" required>
                                         <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                                     </div>
                                     <div class="mb-3 mt-3">
                                         <label th:for="end-date" class="form-label">Date de fin</label>
-                                        <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${now}">
+                                        <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${now}" required>
                                         <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
                                     </div>
                                     <div class="mb-3 mt-3">
                                         <label th:for="cost" class="form-label">Cout en euros</label>
-                                        <input id="cost" type="number" min="0" class="form-control" th:name="cost">
+                                        <input id="cost" type="number" min="0" class="form-control" th:name="cost" required>
                                         <p th:if="${#fields.hasErrors('cost')}" th:errorclass="error" th:errors="*{cost}"></p>
                                     </div>
                                     <div class="mb-3 mt-3">
