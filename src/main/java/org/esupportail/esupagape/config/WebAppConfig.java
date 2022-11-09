@@ -34,12 +34,12 @@ public class WebAppConfig implements WebMvcConfigurer {
                 try {
                     return LocalDate.parse(text, formatter).atStartOfDay();
                 } catch (Exception e) {
-                    logger.warn(e.getMessage());
+                    logger.debug(e.getMessage());
                 }
                 try {
                     return LocalDateTime.parse(text, formatterWithHour);
                 } catch (Exception e) {
-                    logger.warn(e.getMessage());
+                    logger.debug(e.getMessage());
                 }
                 throw new AgapeRuntimeException("unable to parse date " + text);
             }
