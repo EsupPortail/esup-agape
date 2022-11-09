@@ -28,9 +28,9 @@ public class WsApogeeServiceEtudiant {
 		String idEtu = "";
 		try {
 			if(!dateNaiss.equals("%")) {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = formatter.parse(dateNaiss);
-				DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				dateNaiss = dateFormat.format(date);
 			}
 			System.err.println(dateNaiss);
@@ -72,9 +72,9 @@ public class WsApogeeServiceEtudiant {
 		String login = "";
 		try {
 		if(!dateNaiss.equals("%")) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = formatter.parse(dateNaiss);
-			DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			dateNaiss = dateFormat.format(date);
 		}
 		IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeProxyEtu.recupererIdentifiantsEtudiantV2(
