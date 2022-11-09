@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +26,7 @@ import org.springframework.security.cas.authentication.CasAssertionAuthenticatio
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -43,6 +48,15 @@ import java.util.*;
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties({LdapProperties.class, CasProperties.class, WebSecurityProperties.class})
+@EnableLdapRepositories(basePackages = "org.esupportail.esupagape.repository.ldap")
+@EnableJpaRepositories(basePackages = "org.esupportail.esupagape.repository",
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.esupportail.esupagape.repository.ldap.*")
+        })
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true)
 public class WebSecurityConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
@@ -153,7 +167,6 @@ public class WebSecurityConfig {
 
     @Bean
     public ServiceProperties serviceProperties() {
-        logger.info("service properties");
         ServiceProperties serviceProperties = new ServiceProperties();
         serviceProperties.setService(casProperties.getService());
         serviceProperties.setSendRenew(false);

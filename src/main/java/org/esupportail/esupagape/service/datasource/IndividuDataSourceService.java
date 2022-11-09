@@ -24,7 +24,7 @@ public class IndividuDataSourceService {
     }
 
     public DataSource getDataSourceByName(String name) {
-        logger.info("initialize db " + name + " with type " + individuSourceProperties.getDataSources().get(name).getType());
+        logger.info("initialize db " + name + " with driver " + individuSourceProperties.getDataSources().get(name).getDriverClassName());
         return individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
