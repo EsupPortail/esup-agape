@@ -19,6 +19,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Collection;
 
 @Entity
@@ -100,7 +101,6 @@ public class Enquete {
 
     private String newid;
 
-
     public enum CodMeahF {
         ahs0("aucune aide humaine spécifique"),
         ahs1("interprète"),
@@ -130,6 +130,222 @@ public class Enquete {
         public String getLibelle() {
             return libelle;
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNfic() {
+        return nfic;
+    }
+
+    public String getNumetu() {
+        return numetu;
+    }
+
+    public String getAn() {
+        return an;
+    }
+
+    public Civilite getCivilite() {
+        return civilite;
+    }
+
+    public TypeFrmn getTypefrmn() {
+        return typefrmn;
+    }
+
+    public ModFrmn getModfrmn() {
+        return modfrmn;
+    }
+
+    public CodSco getCodsco() {
+        return codsco;
+    }
+
+    public CodFmt getCodfmt() {
+        return codfmt;
+    }
+
+    public CodFil getCodfil() {
+        return codfil;
+    }
+
+    public CodHd getCodhd() {
+        return codhd;
+    }
+
+    public boolean isHdtmp() {
+        return hdtmp;
+    }
+
+    public String getCom() {
+        return com;
+    }
+
+    public CodPfpp getCodpfpp() {
+        return codpfpp;
+    }
+
+    public CodPfas getCodpfas() {
+        return codpfas;
+    }
+
+    public Collection<CodMeahF> getCodmeahF() {
+        return codmeahF;
+    }
+
+    public int getInterpH() {
+        return interpH;
+    }
+
+    public int getCodeurH() {
+        return codeurH;
+    }
+
+    public String getAidhnat() {
+        return aidhnat;
+    }
+
+    public Collection<CodMeae> getCodmeae() {
+        return codmeae;
+    }
+
+    public String getAutae() {
+        return autae;
+    }
+
+    public CodMeaa getCodmeaa() {
+        return codmeaa;
+    }
+
+    public String getAutaa() {
+        return autaa;
+    }
+
+    public Collection<CodAmL> getCodamL() {
+        return codamL;
+    }
+
+    public String getDjaCop() {
+        return djaCop;
+    }
+
+    public String getNewnum() {
+        return newnum;
+    }
+
+    public String getNewid() {
+        return newid;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNfic(String nfic) {
+        this.nfic = nfic;
+    }
+
+    public void setNumetu(String numetu) {
+        this.numetu = numetu;
+    }
+
+    public void setAn(String an) {
+        this.an = an;
+    }
+
+    public void setCivilite(Civilite civilite) {
+        this.civilite = civilite;
+    }
+
+    public void setTypefrmn(TypeFrmn typefrmn) {
+        this.typefrmn = typefrmn;
+    }
+
+    public void setModfrmn(ModFrmn modfrmn) {
+        this.modfrmn = modfrmn;
+    }
+
+    public void setCodsco(CodSco codsco) {
+        this.codsco = codsco;
+    }
+
+    public void setCodfmt(CodFmt codfmt) {
+        this.codfmt = codfmt;
+    }
+
+    public void setCodfil(CodFil codfil) {
+        this.codfil = codfil;
+    }
+
+    public void setCodhd(CodHd codhd) {
+        this.codhd = codhd;
+    }
+
+    public void setHdtmp(boolean hdtmp) {
+        this.hdtmp = hdtmp;
+    }
+
+    public void setCom(String com) {
+        this.com = com;
+    }
+
+    public void setCodpfpp(CodPfpp codpfpp) {
+        this.codpfpp = codpfpp;
+    }
+
+    public void setCodpfas(CodPfas codpfas) {
+        this.codpfas = codpfas;
+    }
+
+    public void setCodmeahF(Collection<CodMeahF> codmeahF) {
+        this.codmeahF = codmeahF;
+    }
+
+    public void setInterpH(int interpH) {
+        this.interpH = interpH;
+    }
+
+    public void setCodeurH(int codeurH) {
+        this.codeurH = codeurH;
+    }
+
+    public void setAidhnat(String aidhnat) {
+        this.aidhnat = aidhnat;
+    }
+
+    public void setCodmeae(Collection<CodMeae> codmeae) {
+        this.codmeae = codmeae;
+    }
+
+    public void setAutae(String autae) {
+        this.autae = autae;
+    }
+
+    public void setCodmeaa(CodMeaa codmeaa) {
+        this.codmeaa = codmeaa;
+    }
+
+    public void setAutaa(String autaa) {
+        this.autaa = autaa;
+    }
+
+    public void setCodamL(Collection<CodAmL> codamL) {
+        this.codamL = codamL;
+    }
+
+    public void setDjaCop(String djaCop) {
+        this.djaCop = djaCop;
+    }
+
+    public void setNewnum(String newnum) {
+        this.newnum = newnum;
+    }
+
+    public void setNewid(String newid) {
+        this.newid = newid;
     }
 
     public enum CodMeae {
@@ -200,5 +416,6 @@ public class Enquete {
             return libelle;
         }
     }
-
+    @ManyToOne
+    private Dossier dossier;
 }

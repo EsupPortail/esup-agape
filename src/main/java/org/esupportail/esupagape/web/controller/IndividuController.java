@@ -47,24 +47,6 @@ public class IndividuController {
         return "redirect:/individus";
     }
 
-    @GetMapping("{id}/dossiers/{year}/enquete")
-    public String showDossierEnquete(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/enquete";
-    }
-
     @GetMapping("{id}/dossiers/{year}/parcours")
     public String showDossierParcours(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
@@ -82,6 +64,7 @@ public class IndividuController {
 
         return "dossiers/parcours";
     }
+
     @GetMapping("{id}/dossiers/{year}/situation-fiche")
     public String showDossierSituationFiche(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
         Individu individu = individuService.getById(id);
