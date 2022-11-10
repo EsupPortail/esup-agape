@@ -24,13 +24,13 @@
                                 <form id="enquete" class="form-horizontal">
                                     <div class="col-12">
                                         <div class="form-group" >
-                                            <label class="col-md-3  control-label control-label" for="an"><strong>Année de naissance</strong></label>
+                                            <label class="col-md-3  form-label" for="an">Année de naissance</label>
                                             <div class="col-lg-6">
                                                 <input id="an" name="an" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="typeFrmn"><strong>Type formation</strong></label>
+                                            <label class="col-md-3  form-label" th:for="typeFrmn">Type formation</label>
                                             <div class="col-lg-6">
                                                 <select id="typeFormation_id" name="typeFormation" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="modFrmn"><strong>Modalité formation</strong></label>
+                                            <label class="col-md-3  form-label" th:for="modFrmn">Modalité formation</label>
                                             <div class="col-lg-6">
                                                 <select id="modaliteFormation_id" name="typeFormation" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -48,7 +48,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codFil"><strong>Filière</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codFil">Filière</label>
                                             <div class="col-lg-6">
                                                 <select id="_codFil_id" name="codFil" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -57,7 +57,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codFmt"><strong>Cursus</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codFmt">Cursus</label>
                                             <div class="col-lg-6">
                                                 <select id="_codFmt_id" name="codFmt" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codSco"><strong>Année d'études</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codSco">Année d'études</label>
                                             <div class="col-lg-6">
                                                 <select id="_codSco_id" name="codSco" class="form-control" size="1">
                                                     <option disabled selected  value="nul">Choisir</option>
@@ -75,7 +75,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codHd"><strong>Type de handicap</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codHd">Type de handicap</label>
                                             <div class="col-lg-6">
                                                 <select id="_codHd_id" name="codHd" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -85,20 +85,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group" id="__id">
-                                            <label class="control-label control-label" for="_hdTmp_id">Handicap temporaire:
+                                            <label class="form-label" for="_hdTmp_id">Handicap temporaire:
                                             </label>
                                             <input id="_hdTmp_id" name="hdTmp" type="checkbox" value="true">
                                             <input type="hidden" name="_hdTmp" value="on">
                                         </div>
                                         <br>
                                         <div class="form-group">
-                                            <label for="_com_id" class="col-md-3  control-label  control-label"><strong>Commentaire</strong></label>
+                                            <label for="_com_id" class="col-md-3  control-label  control-label">Commentaire</label>
                                             <div class="col-lg-6">
                                                 <textarea id="_com_id" name="com" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codPfpp"><strong>Formation plan</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codPfpp">Formation plan</label>
                                             <div class="col-lg-6">
                                                 <select id="_codPfpp_id" name="codPfpp" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -107,7 +107,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codPfas"><strong>Formation aménagement</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codPfas">Formation aménagement</label>
                                             <div class="col-lg-6">
                                                 <select id="_codPfas_id" name="codPfas" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -116,7 +116,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codMeahF"><strong>Mesures aides humaines</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codMeahF">Mesures aides humaines</label>
                                             <div class="col-lg-6">
                                                 <div>
                                                     <input id="_codMeahF_id1" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs0">
@@ -194,25 +194,25 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" for="interpH"><strong>Interprète: nombre d'heures</strong></label>
+                                            <label class="col-md-3  form-label" for="interpH">Interprète: nombre d'heures</label>
                                             <div class="col-lg-6">
                                                 <input id="interpH" name="interpH" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" for="codeurH"><strong>Codeur: nombre d'heures</strong></label>
+                                            <label class="col-md-3  form-label" for="codeurH">Codeur: nombre d'heures</label>
                                             <div class="col-lg-6">
                                                 <input id="codeurH" name="codeurH" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_aidhnat_id" class="col-md-3  control-label  control-label"><strong>Autre aide humaine</strong></label>
+                                            <label for="_aidhnat_id" class="col-md-3  control-label  control-label">Autre aide humaine</label>
                                             <div class="col-lg-6">
                                                 <textarea id="_aidhnat_id" name="aidhnat" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codMeae"><strong>Aménagement des examens</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codMeae">Aménagement des examens</label>
                                             <div class="col-lg-6">
                                                 <div>
                                                     <input id="_codMeae_id1" name="codMeae" size="10" multiple="true" type="checkbox" value="ae0">
@@ -258,13 +258,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_autae_id" class="col-md-3  control-label  control-label"><strong>Autre aménagement des examens</strong></label>
+                                            <label for="_autae_id" class="col-md-3  control-label  control-label">Autre aménagement des examens</label>
                                             <div class="col-lg-6">
                                                 <textarea id="_autae_id" name="autae" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codMeaa"><strong>Autres aides</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codMeaa">Autres aides</label>
                                             <div class="col-lg-6">
                                                 <select id="_codMeaa_id" name="codMeaa" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -273,13 +273,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_autaa_id" class="col-md-3  control-label  control-label"><strong>Aides autres</strong></label>
+                                            <label for="_autaa_id" class="col-md-3  control-label  control-label">Aides autres</label>
                                             <div class="col-lg-6">
                                                 <textarea id="_autaa_id" name="autaa" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codAmL"><strong>Autres mesures</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codAmL">Autres mesures</label>
                                             <div class="col-lg-6">
                                                 <div>
                                                     <input id="_codAmL_id1" name="codAmL" size="10" multiple="true" type="checkbox" value="am00">

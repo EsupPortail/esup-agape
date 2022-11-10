@@ -29,13 +29,25 @@
                                 <form id="enquete" class="form-horizontal">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" for="an"><strong>Année de naissance</strong></label>
+                                            <label class="col-md-3  form-label" for="an">Année de naissance</label>
                                             <div>
                                                 <input id="an" name="an" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="typeFrmn"><strong>Type formation</strong></label>
+                                            <label class="col-md-3  form-label" th:for="typeFrmn">Civilité</label>
+                                            <div>
+                                                <select name="civilite" class="form-select" size="1">
+                                                    <option disabled selected value="nul">Choisir</option>
+                                                    <option th:selected="${civilite == enquete.civilite}"
+                                                            th:each="civilite : ${civilites}"
+                                                            th:value="${civilite}"
+                                                            th:text="#{'individu.civilite.' + ${civilite}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3  form-label" th:for="typeFrmn">Type formation</label>
                                             <div>
                                                 <select id="_typeFrmn_id" name="typeFrmn" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -47,7 +59,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="modFrmn"><strong>Modalité formation</strong></label>
+                                            <label class="col-md-3  form-label" th:for="modFrmn">Modalité formation</label>
                                             <div>
                                                 <select id="_modFrmn_id" name="modFrmn" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -59,7 +71,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codFil"><strong>Filière</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codFil">Filière</label>
                                             <div>
                                                 <select id="_codFil_id" name="codFil" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -71,31 +83,31 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codFmt"><strong>Cursus</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codFmt">Cursus</label>
                                             <div>
                                                 <select id="_codFmt_id" name="codFmt" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
                                                     <option th:selected="${enumCodFmt == enquete.codFmt}"
-                                                            th:each="enumCodfmt : ${codFmts}"
-                                                            th:value="${enumCodfmt}"
-                                                            th:text="#{'enquete.codFmt.' + ${enumCodfmt}}"></option>
+                                                            th:each="enumCodFmt : ${codFmts}"
+                                                            th:value="${enumCodFmt}"
+                                                            th:text="#{'enquete.codFmt.' + ${enumCodFmt}}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codSco"><strong>Année d'études</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codSco">Année d'études</label>
                                             <div>
                                                 <select id="_codSco_id" name="codSco" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${enumCodSco == enquete.codSco}"
-                                                            th:each="enumCodsco : ${codScos}"
-                                                            th:value="${enumCodsco}"
-                                                            th:text="#{'enquete.codSco.' + ${enumCodsco}}"></option>
+                                                            th:each="enumCodSco : ${codScos}"
+                                                            th:value="${enumCodSco}"
+                                                            th:text="#{'enquete.codSco.' + ${enumCodSco}}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codHd"><strong>Type de handicap</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codHd">Type de handicap</label>
                                             <div>
                                                 <select id="_codHd_id" name="codHd" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -107,20 +119,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group" id="__id">
-                                            <label class="control-label control-label" for="_hdTmp_id">Handicap temporaire:
+                                            <label class="form-label" for="_hdTmp_id">Handicap temporaire:
                                             </label>
                                             <input id="_hdTmp_id" name="hdTmp" type="checkbox" value="true">
                                             <input type="hidden" name="_hdTmp" value="on">
                                         </div>
                                         <br>
                                         <div class="form-group">
-                                            <label for="_com_id" class="col-md-3  control-label  control-label"><strong>Commentaire</strong></label>
+                                            <label for="_com_id" class="col-md-3  control-label  control-label">Commentaire</label>
                                             <div>
                                                 <textarea id="_com_id" name="com" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codPfpp"><strong>Formation plan</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codPfpp">Formation plan</label>
                                             <div>
                                                 <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
@@ -132,19 +144,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codPfas"><strong>Formation aménagement</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codPfas">Formation aménagement</label>
                                             <div>
                                                 <select id="_codPfas_id" name="codPfas" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${enumCodPfas == enquete.codPfas}"
-                                                            th:each="enumCodpfas : ${codPfass}"
-                                                            th:value="${enumCodpfas}"
-                                                            th:text="#{'enquete.codPfas.' + ${enumCodpfas}}"></option>
+                                                            th:each="enumCodPfas : ${codPfass}"
+                                                            th:value="${enumCodPfas}"
+                                                            th:text="#{'enquete.codPfas.' + ${enumCodPfas}}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codMeahF"><strong>Mesures aides humaines</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codMeahF">Mesures aides humaines</label>
                                             <div>
                                                 <th:block th:each="enumCodMeahF : ${codMeahFs}">
                                                     <div>
@@ -160,25 +172,25 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" for="interpH"><strong>Interprète: nombre d'heures</strong></label>
+                                            <label class="col-md-3  form-label" for="interpH">Interprète: nombre d'heures</label>
                                             <div>
                                                 <input id="interpH" name="interpH" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" for="codeurH"><strong>Codeur: nombre d'heures</strong></label>
+                                            <label class="col-md-3  form-label" for="codeurH">Codeur: nombre d'heures</label>
                                             <div>
                                                 <input id="codeurH" name="codeurH" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_aidhnat_id" class="col-md-3  control-label  control-label"><strong>Autre aide humaine</strong></label>
+                                            <label for="_aidhnat_id" class="col-md-3  control-label  control-label">Autre aide humaine</label>
                                             <div>
                                                 <textarea id="_aidhnat_id" name="aidhnat" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codMeae"><strong>Aménagement des examens</strong></label>
+                                            <label class="col-md-3  form-label" th:for="codMeae">Aménagement des examens</label>
                                             <div>
                                                 <th:block th:each="enumCodmeae : ${codMeaes}">
                                                     <div>
@@ -194,14 +206,14 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_autae_id" class="col-md-3  control-label  control-label"><strong>Autre aménagement des examens</strong></label>
+                                            <label for="_autae_id" class="col-md-3  control-label  control-label">Autre aménagement des examens</label>
                                             <div>
                                                 <textarea id="_autae_id" name="autae" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
                                             <div class="form-group">
-                                                <label class="col-md-3  control-label control-label" th:for="codMeaa"><strong>Autres aides</strong></label>
+                                                <label class="col-md-3  form-label" th:for="codMeaa">Autres aides</label>
                                                 <div>
                                                     <select id="_codMeaa_id" name="codPfas" class="form-select" size="1">
                                                         <option disabled selected value="nul">Choisir</option>
@@ -213,13 +225,13 @@
                                                 </div>
                                             </div>
                                         <div class="form-group">
-                                            <label for="_autaa_id" class="col-md-3  control-label  control-label"><strong>Aides autres</strong></label>
+                                            <label for="_autaa_id" class="col-md-3  control-label  control-label">Aides autres</label>
                                             <div>
                                                 <textarea id="_autaa_id" name="autaa" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                             <div class="form-group">
-                                                <label class="col-md-3  control-label control-label" th:for="codaml"><strong>Autres mesures</strong></label>
+                                                <label class="col-md-3  form-label" th:for="codaml">Autres mesures</label>
                                                 <div>
                                                     <th:block th:each="enumCodaml : ${codamls}">
                                                         <div>

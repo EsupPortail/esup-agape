@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.Civilite;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodFil;
 import org.esupportail.esupagape.entity.enums.enquete.CodFmt;
@@ -53,6 +54,7 @@ public class EnqueteController {
         model.addAttribute("codMeaes", CodMeae.values());
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
+        model.addAttribute("civilites", Civilite.values());
         return "enquetes/create";
     }
 

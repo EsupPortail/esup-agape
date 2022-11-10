@@ -8,6 +8,10 @@ ul {
     list-style-type: none;
 }
 
+.form-label {
+    font-weight: bold;
+}
+
 .error {
     color:orange;
 }
