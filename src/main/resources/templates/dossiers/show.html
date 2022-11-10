@@ -17,67 +17,113 @@
             <div class="row">
                 <div class="col-6">
                     <h4>Situation</h4>
-                    <div class="input-group mb-1">
-                        <label for="classification" class="input-group-text" style="width: 250px;">Classification du handicap</label>
+                    <hr>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="classification"><strong>Classification du handicap</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <select disabled id="classification" name="classification" type="text" class="form-select" th:value="${currentDossier.classification}">
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.classification == classification}" th:each="classification : ${classifications}" th:text="#{'dossier.classification.' +${classification}}" th:value="${classification}"></option>
                         </select>
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="etat" class="input-group-text" style="width: 250px;">Etat</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="etat"><strong>Etat</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>
                         </select>
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="mdph" class="input-group-text" style="width: 250px;">Suivi MDPH</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="mdph"><strong>Suivi MDPH</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
                         </select>
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="taux" class="input-group-text" style="width: 250px;">Taux</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="taux"><strong>Taux</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="taux" name="taux" type="number" min="0" max="100" class="form-control" th:value="${currentDossier.taux}">
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="typeSuiviHandisup" class="input-group-text" style="width: 250px;">Suivi handisup</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="typeSuiviHandisup"><strong>Suivi handisup</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <select disabled id="typeSuiviHandisup" name="typeSuiviHandisup" type="text" class="form-select" th:value="${currentDossier.typeSuiviHandisup}">
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.typeSuiviHandisup == typeSuiviHandisup}" th:each="typeSuiviHandisup : ${typeSuiviHandisups}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}" th:value="${typeSuiviHandisup}"></option>
                         </select>
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="suiviHandisup" class="input-group-text" style="width: 250px;">Commentaire handisup</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="suiviHandisup"><strong>Commentaire handisup</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="suiviHandisup" name="suiviHandisup" type="text" class="form-control" th:value="${currentDossier.suiviHandisup}">
+                        </div>
                     </div>
                 </div>
                 <div class="col-6">
                     <h4>Parcours</h4>
-                    <div class="input-group mb-1">
-                        <label for="libelleFormation" class="input-group-text" style="width: 250px;">Formation</label>
+                    <hr>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="libelleFormation"><strong>Formation</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="libelleFormation" type="text" class="form-control" th:value="${currentDossier.libelleFormation}">
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="site" class="input-group-text" style="width: 250px;">Lieu de formation</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="site"><strong>Lieu de formation</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="site" type="text" class="form-control" th:value="${currentDossier.site}">
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="filliere" class="input-group-text" style="width: 250px;">Filière</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="filliere"><strong>Filière</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="filliere" type="text" class="form-control" th:value="${currentDossier.filliere}">
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="composante" class="input-group-text" style="width: 250px;">Composante</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="composante"><strong>Composante</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
+                        </div>
                     </div>
-                    <div class="input-group mb-1">
-                        <label for="rentreeProchaine" class="input-group-text" style="width: 250px;">Choix pour la rentrée prochaine</label>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                        <label for="rentreeProchaine"><strong>Choix pour la rentrée prochaine</strong></label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
                         <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentree-prochaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
                         </select>
+                        </div>
                     </div>
                 </div>
             </div>
