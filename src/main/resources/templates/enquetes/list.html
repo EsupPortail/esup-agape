@@ -30,7 +30,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="typefrmn"><strong>Type formation</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="typeFrmn"><strong>Type formation</strong></label>
                                             <div class="col-lg-6">
                                                 <select id="typeFormation_id" name="typeFormation" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="modfrmn"><strong>Modalité formation</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="modFrmn"><strong>Modalité formation</strong></label>
                                             <div class="col-lg-6">
                                                 <select id="modaliteFormation_id" name="typeFormation" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
@@ -48,36 +48,36 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codfil"><strong>Filière</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codFil"><strong>Filière</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codfil_id" name="codfil" class="form-control" size="1">
+                                                <select id="_codFil_id" name="codFil" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
                                                     <option th:selected="${CodFil == enumCodFil}" th:each="enumCodFil : ${T(org.esupportail.esupagape.entity.enums.enquete.CodFil).values()}" th:value="${enumCodFil}" th:text="${enumCodFil.libelle}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codfmt"><strong>Cursus</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codFmt"><strong>Cursus</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codfmt_id" name="codfmt" class="form-control" size="1">
+                                                <select id="_codFmt_id" name="codFmt" class="form-control" size="1">
                                                     <option disabled selected value="">Choisir</option>
                                                     <option th:selected="${CodFmt == enumCodFmt}" th:each="enumCodFmt : ${T(org.esupportail.esupagape.entity.enums.enquete.CodFmt).values()}" th:value="${enumCodFmt}" th:text="${enumCodFmt.libelle}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codsco"><strong>Année d'études</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codSco"><strong>Année d'études</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codsco_id" name="codsco" class="form-control" size="1">
+                                                <select id="_codSco_id" name="codSco" class="form-control" size="1">
                                                     <option disabled selected  value="nul">Choisir</option>
                                                     <option th:selected="${CodSco == enumCodSco}" th:each="enumCodSco : ${T(org.esupportail.esupagape.entity.enums.enquete.CodSco).values()}" th:value="${enumCodSco}" th:text="${enumCodSco.libelle}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codhd"><strong>Type de handicap</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codHd"><strong>Type de handicap</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codhd_id" name="codhd" class="form-control" size="1">
+                                                <select id="_codHd_id" name="codHd" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${CodHd == enumCodHd}" th:each="enumCodHd : ${T(org.esupportail.esupagape.entity.enums.enquete.CodHd).values}" th:value="${enumCodHd}" th:text="${enumCodHd.libelle}"></option>
 
@@ -85,10 +85,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group" id="__id">
-                                            <label class="control-label control-label" for="_hdtmp_id">Handicap temporaire:
+                                            <label class="control-label control-label" for="_hdTmp_id">Handicap temporaire:
                                             </label>
-                                            <input id="_hdtmp_id" name="hdtmp" type="checkbox" value="true">
-                                            <input type="hidden" name="_hdtmp" value="on">
+                                            <input id="_hdTmp_id" name="hdTmp" type="checkbox" value="true">
+                                            <input type="hidden" name="_hdTmp" value="on">
                                         </div>
                                         <br>
                                         <div class="form-group">
@@ -98,99 +98,99 @@
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codpfpp"><strong>Formation plan</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codPfpp"><strong>Formation plan</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codpfpp_id" name="codpfpp" class="form-control" size="1">
+                                                <select id="_codPfpp_id" name="codPfpp" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${CodPfpp == enumCodPfpp}" th:each="enumCodPfpp : ${T(org.esupportail.esupagape.entity.enums.enquete.CodPfpp).values}" th:value="${enumCodPfpp}" th:text="${enumCodPfpp.libelle}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codpfas"><strong>Formation aménagement</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codPfas"><strong>Formation aménagement</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codpfas_id" name="codpfas" class="form-control" size="1">
+                                                <select id="_codPfas_id" name="codPfas" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${CodPfas == enumCodPfas}" th:each="enumCodPfas : ${T(org.esupportail.esupagape.entity.enums.enquete.CodPfas).values}" th:value="${enumCodPfas}" th:text="${enumCodPfas.libelle}"></option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codmeahF"><strong>Mesures aides humaines</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codMeahF"><strong>Mesures aides humaines</strong></label>
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <input id="_codmeahF_id1" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs0">
-                                                    <label for="_codmeahF_id1">aucune aide humaine spécifique</label>
+                                                    <input id="_codMeahF_id1" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs0">
+                                                    <label for="_codMeahF_id1">aucune aide humaine spécifique</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id2" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs1">
-                                                    <label for="_codmeahF_id2">interprète</label>
+                                                    <input id="_codMeahF_id2" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs1">
+                                                    <label for="_codMeahF_id2">interprète</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id3" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs1e">
-                                                    <label for="_codmeahF_id3">interprète: lors des examens</label>
+                                                    <input id="_codMeahF_id3" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs1e">
+                                                    <label for="_codMeahF_id3">interprète: lors des examens</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id4" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs1f">
-                                                    <label for="_codmeahF_id4">interprète: cadre de la formation suivie</label>
+                                                    <input id="_codMeahF_id4" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs1f">
+                                                    <label for="_codMeahF_id4">interprète: cadre de la formation suivie</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id5" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs2">
-                                                    <label for="_codmeahF_id5">codeur</label>
+                                                    <input id="_codMeahF_id5" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs2">
+                                                    <label for="_codMeahF_id5">codeur</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id6" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs2e">
-                                                    <label for="_codmeahF_id6">codeur : lors des examens</label>
+                                                    <input id="_codMeahF_id6" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs2e">
+                                                    <label for="_codMeahF_id6">codeur : lors des examens</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id7" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs2f">
-                                                    <label for="_codmeahF_id7">codeur: cadre de la formation suivie</label>
+                                                    <input id="_codMeahF_id7" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs2f">
+                                                    <label for="_codMeahF_id7">codeur: cadre de la formation suivie</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id8" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs3">
-                                                    <label for="_codmeahF_id8">preneur de notes</label>
+                                                    <input id="_codMeahF_id8" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs3">
+                                                    <label for="_codMeahF_id8">preneur de notes</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id9" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs3o">
-                                                    <label for="_codmeahF_id9">preneur de notes: ponctuelle</label>
+                                                    <input id="_codMeahF_id9" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs3o">
+                                                    <label for="_codMeahF_id9">preneur de notes: ponctuelle</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id10" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs3p">
-                                                    <label for="_codmeahF_id10">preneur de notes: permanente ou régulière</label>
+                                                    <input id="_codMeahF_id10" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs3p">
+                                                    <label for="_codMeahF_id10">preneur de notes: permanente ou régulière</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id11" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs4">
-                                                    <label for="_codmeahF_id11">soutien pédagogique ou tutorat en raison de la situation de handicap</label>
+                                                    <input id="_codMeahF_id11" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs4">
+                                                    <label for="_codMeahF_id11">soutien pédagogique ou tutorat en raison de la situation de handicap</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id12" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5">
-                                                    <label for="_codmeahF_id12">autre aide humaine spécifique</label>
+                                                    <input id="_codMeahF_id12" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5">
+                                                    <label for="_codMeahF_id12">autre aide humaine spécifique</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id13" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5o">
-                                                    <label for="_codmeahF_id13">autre aide humaine spécifique: ponctuelle</label>
+                                                    <input id="_codMeahF_id13" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5o">
+                                                    <label for="_codMeahF_id13">autre aide humaine spécifique: ponctuelle</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id14" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5q">
-                                                    <label for="_codmeahF_id14">autre aide humaine spécifique: quotidienne</label>
+                                                    <input id="_codMeahF_id14" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5q">
+                                                    <label for="_codMeahF_id14">autre aide humaine spécifique: quotidienne</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id15" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5h">
-                                                    <label for="_codmeahF_id15">autre aide humaine spécifique: hebdomadaire</label>
+                                                    <input id="_codMeahF_id15" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5h">
+                                                    <label for="_codMeahF_id15">autre aide humaine spécifique: hebdomadaire</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id16" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5m">
-                                                    <label for="_codmeahF_id16">autre aide humaine spécifique: mensuelle</label>
+                                                    <input id="_codMeahF_id16" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5m">
+                                                    <label for="_codMeahF_id16">autre aide humaine spécifique: mensuelle</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id17" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5s">
-                                                    <label for="_codmeahF_id17">autre aide humaine spécifique: semestrielle</label>
+                                                    <input id="_codMeahF_id17" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5s">
+                                                    <label for="_codMeahF_id17">autre aide humaine spécifique: semestrielle</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeahF_id18" name="codmeahF" size="1" multiple="true" type="checkbox" value="ahs5e">
-                                                    <label for="_codmeahF_id18">autre aide humaine spécifique: lors des examens</label>
+                                                    <input id="_codMeahF_id18" name="codMeahF" size="1" multiple="true" type="checkbox" value="ahs5e">
+                                                    <label for="_codMeahF_id18">autre aide humaine spécifique: lors des examens</label>
                                                 </div>
-                                                <input type="hidden" name="_codmeahF" value="on">
+                                                <input type="hidden" name="_codMeahF" value="on">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -212,49 +212,49 @@
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codmeae"><strong>Aménagement des examens</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codMeae"><strong>Aménagement des examens</strong></label>
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <input id="_codmeae_id1" name="codmeae" size="10" multiple="true" type="checkbox" value="ae0">
-                                                    <label for="_codmeae_id1">aucun aménagement des examens</label>
+                                                    <input id="_codMeae_id1" name="codMeae" size="10" multiple="true" type="checkbox" value="ae0">
+                                                    <label for="_codMeae_id1">aucun aménagement des examens</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id2" name="codmeae" size="10" multiple="true" type="checkbox" value="ae1">
-                                                    <label for="_codmeae_id2">mise à disposition de matériel adapté</label>
+                                                    <input id="_codMeae_id2" name="codMeae" size="10" multiple="true" type="checkbox" value="ae1">
+                                                    <label for="_codMeae_id2">mise à disposition de matériel adapté</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id3" name="codmeae" size="10" multiple="true" type="checkbox" value="ae2">
-                                                    <label for="_codmeae_id3">documents adaptés</label>
+                                                    <input id="_codMeae_id3" name="codMeae" size="10" multiple="true" type="checkbox" value="ae2">
+                                                    <label for="_codMeae_id3">documents adaptés</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id4" name="codmeae" size="10" multiple="true" type="checkbox" value="ae3">
-                                                    <label for="_codmeae_id4">secrétaire</label>
+                                                    <input id="_codMeae_id4" name="codMeae" size="10" multiple="true" type="checkbox" value="ae3">
+                                                    <label for="_codMeae_id4">secrétaire</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id5" name="codmeae" size="10" multiple="true" type="checkbox" value="ae4">
-                                                    <label for="_codmeae_id5">épreuves aménagées</label>
+                                                    <input id="_codMeae_id5" name="codMeae" size="10" multiple="true" type="checkbox" value="ae4">
+                                                    <label for="_codMeae_id5">épreuves aménagées</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id6" name="codmeae" size="10" multiple="true" type="checkbox" value="ae5">
-                                                    <label for="_codmeae_id6">interprètes, codeurs, autre aide à la communication</label>
+                                                    <input id="_codMeae_id6" name="codMeae" size="10" multiple="true" type="checkbox" value="ae5">
+                                                    <label for="_codMeae_id6">interprètes, codeurs, autre aide à la communication</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id7" name="codmeae" size="10" multiple="true" type="checkbox" value="ae6">
-                                                    <label for="_codmeae_id7">salle particulière</label>
+                                                    <input id="_codMeae_id7" name="codMeae" size="10" multiple="true" type="checkbox" value="ae6">
+                                                    <label for="_codMeae_id7">salle particulière</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id8" name="codmeae" size="10" multiple="true" type="checkbox" value="ae7">
-                                                    <label for="_codmeae_id8">temps majoré</label>
+                                                    <input id="_codMeae_id8" name="codMeae" size="10" multiple="true" type="checkbox" value="ae7">
+                                                    <label for="_codMeae_id8">temps majoré</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id9" name="codmeae" size="10" multiple="true" type="checkbox" value="ae8">
-                                                    <label for="_codmeae_id9">temps de pause</label>
+                                                    <input id="_codMeae_id9" name="codMeae" size="10" multiple="true" type="checkbox" value="ae8">
+                                                    <label for="_codMeae_id9">temps de pause</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codmeae_id10" name="codmeae" size="10" multiple="true" type="checkbox" value="aeo">
-                                                    <label for="_codmeae_id10">autre aménagement (à préciser)</label>
+                                                    <input id="_codMeae_id10" name="codMeae" size="10" multiple="true" type="checkbox" value="aeo">
+                                                    <label for="_codMeae_id10">autre aménagement (à préciser)</label>
                                                 </div>
-                                                <input type="hidden" name="_codmeae" value="on">
+                                                <input type="hidden" name="_codMeae" value="on">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -264,9 +264,9 @@
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codmeaa"><strong>Autres aides</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codMeaa"><strong>Autres aides</strong></label>
                                             <div class="col-lg-6">
-                                                <select id="_codmeaa_id" name="codmeaa" class="form-control" size="1">
+                                                <select id="_codMeaa_id" name="codMeaa" class="form-control" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${CodMeaa== enumCodMeaa}" th:each="enumCodMeaa : ${T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).values}" th:value="${enumCodMeaa}" th:text="${enumCodMeaa.libelle}"></option>
                                                 </select>
@@ -279,141 +279,141 @@
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3  control-label control-label" th:for="codamL"><strong>Autres mesures</strong></label>
+                                            <label class="col-md-3  control-label control-label" th:for="codAmL"><strong>Autres mesures</strong></label>
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <input id="_codamL_id1" name="codamL" size="10" multiple="true" type="checkbox" value="am00">
-                                                    <label for="_codamL_id1">Ne sais pas si l'étudiant en bénéficie</label>
+                                                    <input id="_codAmL_id1" name="codAmL" size="10" multiple="true" type="checkbox" value="am00">
+                                                    <label for="_codAmL_id1">Ne sais pas si l'étudiant en bénéficie</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id2" name="codamL" size="10" multiple="true" type="checkbox" value="am1" >
-                                                    <label for="_codamL_id2">Accompagnement par un établissement ou un service médico-social</label>
+                                                    <input id="_codAmL_id2" name="codAmL" size="10" multiple="true" type="checkbox" value="am1" >
+                                                    <label for="_codAmL_id2">Accompagnement par un établissement ou un service médico-social</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id3" name="codamL" size="10" multiple="true" type="checkbox" value="am10">
-                                                    <label for="_codamL_id3">non</label>
+                                                    <input id="_codAmL_id3" name="codAmL" size="10" multiple="true" type="checkbox" value="am10">
+                                                    <label for="_codAmL_id3">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id4" name="codamL" size="10" multiple="true" type="checkbox" value="am11">
-                                                    <label for="_codamL_id4">oui</label>
+                                                    <input id="_codAmL_id4" name="codAmL" size="10" multiple="true" type="checkbox" value="am11">
+                                                    <label for="_codAmL_id4">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id5" name="codamL" size="10" multiple="true" type="checkbox" value="am1x">
-                                                    <label for="_codamL_id5">ne sais pas</label>
+                                                    <input id="_codAmL_id5" name="codAmL" size="10" multiple="true" type="checkbox" value="am1x">
+                                                    <label for="_codAmL_id5">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id6" name="codamL" size="10" multiple="true" type="checkbox" value="am2" >
-                                                    <label for="_codamL_id6">Accompagnement par un auxiliaire de vie (PCH ou ATP)</label>
+                                                    <input id="_codAmL_id6" name="codAmL" size="10" multiple="true" type="checkbox" value="am2" >
+                                                    <label for="_codAmL_id6">Accompagnement par un auxiliaire de vie (PCH ou ATP)</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id7" name="codamL" size="10" multiple="true" type="checkbox" value="am20">
-                                                    <label for="_codamL_id7">non</label>
+                                                    <input id="_codAmL_id7" name="codAmL" size="10" multiple="true" type="checkbox" value="am20">
+                                                    <label for="_codAmL_id7">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id8" name="codamL" size="10" multiple="true" type="checkbox" value="am21">
-                                                    <label for="_codamL_id8">oui</label>
+                                                    <input id="_codAmL_id8" name="codAmL" size="10" multiple="true" type="checkbox" value="am21">
+                                                    <label for="_codAmL_id8">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id9" name="codamL" size="10" multiple="true" type="checkbox" value="am2x">
-                                                    <label for="_codamL_id9">ne sais pas</label>
+                                                    <input id="_codAmL_id9" name="codAmL" size="10" multiple="true" type="checkbox" value="am2x">
+                                                    <label for="_codAmL_id9">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id10" name="codamL" size="10" multiple="true" type="checkbox" value="am3">
-                                                    <label for="_codamL_id10">Recours à un mode de transport spécifique</label>
+                                                    <input id="_codAmL_id10" name="codAmL" size="10" multiple="true" type="checkbox" value="am3">
+                                                    <label for="_codAmL_id10">Recours à un mode de transport spécifique</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id11" name="codamL" size="10" multiple="true" type="checkbox" value="am30">
-                                                    <label for="_codamL_id11">non</label>
+                                                    <input id="_codAmL_id11" name="codAmL" size="10" multiple="true" type="checkbox" value="am30">
+                                                    <label for="_codAmL_id11">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id12" name="codamL" size="10" multiple="true" type="checkbox" value="am31">
-                                                    <label for="_codamL_id12">oui</label>
+                                                    <input id="_codAmL_id12" name="codAmL" size="10" multiple="true" type="checkbox" value="am31">
+                                                    <label for="_codAmL_id12">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id13" name="codamL" size="10" multiple="true" type="checkbox" value="am3x">
-                                                    <label for="_codamL_id13">ne sais pas</label>
+                                                    <input id="_codAmL_id13" name="codAmL" size="10" multiple="true" type="checkbox" value="am3x">
+                                                    <label for="_codAmL_id13">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id14" name="codamL" size="10" multiple="true" type="checkbox" value="am4" >
-                                                    <label for="_codamL_id14">Reconnaissance de la qualité de travailleur handicapé (RQTH)</label>
+                                                    <input id="_codAmL_id14" name="codAmL" size="10" multiple="true" type="checkbox" value="am4" >
+                                                    <label for="_codAmL_id14">Reconnaissance de la qualité de travailleur handicapé (RQTH)</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id15" name="codamL" size="10" multiple="true" type="checkbox" value="am40">
-                                                    <label for="_codamL_id15">non</label>
+                                                    <input id="_codAmL_id15" name="codAmL" size="10" multiple="true" type="checkbox" value="am40">
+                                                    <label for="_codAmL_id15">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id16" name="codamL" size="10" multiple="true" type="checkbox" value="am41">
-                                                    <label for="_codamL_id16">oui</label>
+                                                    <input id="_codAmL_id16" name="codAmL" size="10" multiple="true" type="checkbox" value="am41">
+                                                    <label for="_codAmL_id16">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id17" name="codamL" size="10" multiple="true" type="checkbox" value="am4x">
-                                                    <label for="_codamL_id17">ne sais pas</label>
+                                                    <input id="_codAmL_id17" name="codAmL" size="10" multiple="true" type="checkbox" value="am4x">
+                                                    <label for="_codAmL_id17">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id18" name="codamL" size="10" multiple="true" type="checkbox" value="am5">
-                                                    <label for="_codamL_id18">Autre mesure relevant d’une décision de la CDA PH (carte d'invalidité, de stationnement,...)</label>
+                                                    <input id="_codAmL_id18" name="codAmL" size="10" multiple="true" type="checkbox" value="am5">
+                                                    <label for="_codAmL_id18">Autre mesure relevant d’une décision de la CDA PH (carte d'invalidité, de stationnement,...)</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id19" name="codamL" size="10" multiple="true" type="checkbox" value="am50">
-                                                    <label for="_codamL_id19">non</label>
+                                                    <input id="_codAmL_id19" name="codAmL" size="10" multiple="true" type="checkbox" value="am50">
+                                                    <label for="_codAmL_id19">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id20" name="codamL" size="10" multiple="true" type="checkbox" value="am51">
-                                                    <label for="_codamL_id20">oui</label>
+                                                    <input id="_codAmL_id20" name="codAmL" size="10" multiple="true" type="checkbox" value="am51">
+                                                    <label for="_codAmL_id20">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id21" name="codamL" size="10" multiple="true" type="checkbox" value="am5x">
-                                                    <label for="_codamL_id21">ne sais pas</label>
+                                                    <input id="_codAmL_id21" name="codAmL" size="10" multiple="true" type="checkbox" value="am5x">
+                                                    <label for="_codAmL_id21">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id22" name="codamL" size="10" multiple="true" type="checkbox" value="am6">
-                                                    <label for="_codamL_id22">Accompagnement par un établissement ou un service sanitaire [mesure non CDA PH]</label>
+                                                    <input id="_codAmL_id22" name="codAmL" size="10" multiple="true" type="checkbox" value="am6">
+                                                    <label for="_codAmL_id22">Accompagnement par un établissement ou un service sanitaire [mesure non CDA PH]</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id23" name="codamL" size="10" multiple="true" type="checkbox" value="am60">
-                                                    <label for="_codamL_id23">non</label>
+                                                    <input id="_codAmL_id23" name="codAmL" size="10" multiple="true" type="checkbox" value="am60">
+                                                    <label for="_codAmL_id23">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id24" name="codamL" size="10" multiple="true" type="checkbox" value="am61">
-                                                    <label for="_codamL_id24">oui</label>
+                                                    <input id="_codAmL_id24" name="codAmL" size="10" multiple="true" type="checkbox" value="am61">
+                                                    <label for="_codAmL_id24">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id25" name="codamL" size="10" multiple="true" type="checkbox" value="am6x">
-                                                    <label for="_codamL_id25">ne sais pas</label>
+                                                    <input id="_codAmL_id25" name="codAmL" size="10" multiple="true" type="checkbox" value="am6x">
+                                                    <label for="_codAmL_id25">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id26" name="codamL" size="10" multiple="true" type="checkbox" value="am7">
-                                                    <label for="_codamL_id26">Autre(s) intervenant(s) [mesure non CDA PH]</label>
+                                                    <input id="_codAmL_id26" name="codAmL" size="10" multiple="true" type="checkbox" value="am7">
+                                                    <label for="_codAmL_id26">Autre(s) intervenant(s) [mesure non CDA PH]</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id27" name="codamL" size="10" multiple="true" type="checkbox" value="am70">
-                                                    <label for="_codamL_id27">non</label>
+                                                    <input id="_codAmL_id27" name="codAmL" size="10" multiple="true" type="checkbox" value="am70">
+                                                    <label for="_codAmL_id27">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id28" name="codamL" size="10" multiple="true" type="checkbox" value="am71">
-                                                    <label for="_codamL_id28">oui</label>
+                                                    <input id="_codAmL_id28" name="codAmL" size="10" multiple="true" type="checkbox" value="am71">
+                                                    <label for="_codAmL_id28">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id29" name="codamL" size="10" multiple="true" type="checkbox" value="am7x">
-                                                    <label for="_codamL_id29">ne sais pas</label>
+                                                    <input id="_codAmL_id29" name="codAmL" size="10" multiple="true" type="checkbox" value="am7x">
+                                                    <label for="_codAmL_id29">ne sais pas</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id30" name="codamL" size="10" multiple="true" type="checkbox" value="am8">
-                                                    <label for="_codamL_id30">Carte d'invalidité ou AAH</label>
+                                                    <input id="_codAmL_id30" name="codAmL" size="10" multiple="true" type="checkbox" value="am8">
+                                                    <label for="_codAmL_id30">Carte d'invalidité ou AAH</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id31" name="codamL" size="10" multiple="true" type="checkbox" value="am80">
-                                                    <label for="_codamL_id31">non</label>
+                                                    <input id="_codAmL_id31" name="codAmL" size="10" multiple="true" type="checkbox" value="am80">
+                                                    <label for="_codAmL_id31">non</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id32" name="codamL" size="10" multiple="true" type="checkbox" value="am81">
-                                                    <label for="_codamL_id32">oui</label>
+                                                    <input id="_codAmL_id32" name="codAmL" size="10" multiple="true" type="checkbox" value="am81">
+                                                    <label for="_codAmL_id32">oui</label>
                                                 </div>
                                                 <div>
-                                                    <input id="_codamL_id33" name="codamL" size="10" multiple="true" type="checkbox" value="am8x">
-                                                    <label for="_codamL_id33">ne sais pas</label>
+                                                    <input id="_codAmL_id33" name="codAmL" size="10" multiple="true" type="checkbox" value="am8x">
+                                                    <label for="_codAmL_id33">ne sais pas</label>
                                                 </div>
-                                                <input type="hidden" name="_codamL" value="on">
+                                                <input type="hidden" name="_codAmL" value="on">
                                             </div>
                                         </div>
                                     <div  class="submit form-group mb-3">

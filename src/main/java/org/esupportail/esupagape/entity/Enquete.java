@@ -23,67 +23,67 @@ public class Enquete {
     private Civilite civilite;
 
     @Enumerated(EnumType.STRING)
-    private TypeFrmn typefrmn;
+    private TypeFrmn typeFrmn;
 
     @Enumerated(EnumType.STRING)
-    private ModFrmn modfrmn;
+    private ModFrmn modFrmn;
 
     @Enumerated(EnumType.STRING)
-    private CodSco codsco;
+    private CodSco codSco;
 
     @Enumerated(EnumType.STRING)
-    private CodFmt codfmt;
+    private CodFmt codFmt;
 
     @Enumerated(EnumType.STRING)
-    private CodFil codfil;
+    private CodFil codFil;
 
     @Enumerated(EnumType.STRING)
-    private CodHd codhd;
+    private CodHd codHd;
 
-    private boolean hdtmp;
+    private Boolean hdTmp;
 
     @Column(columnDefinition = "TEXT")
     private String com;
 
     @Enumerated(EnumType.STRING)
-    private CodPfpp codpfpp;
+    private CodPfpp codPfpp;
 
     @Enumerated(EnumType.STRING)
-    private CodPfas codpfas;
+    private CodPfas codPfas;
 
     @ElementCollection(targetClass=CodMeahF.class)
     @Enumerated(EnumType.STRING)
-    private Set<CodMeahF> codmeahF;
+    private Set<CodMeahF> codMeahF;
 
-    private int interpH;
+    private Integer interpH;
 
-    private int codeurH;
+    private Integer codeurH;
 
     @Column(columnDefinition = "TEXT")
-    private String aidhnat;
+    private String aidHNat;
 
     @ElementCollection(targetClass=CodMeae.class)
     @Enumerated(EnumType.STRING)
-    private Set<CodMeae> codmeae;
+    private Set<CodMeae> codMeae;
 
     @Column(columnDefinition = "TEXT")
-    private String autae;
+    private String autAE;
 
     @Enumerated(EnumType.STRING)
-    private CodMeaa codmeaa;
+    private CodMeaa codMeaa;
 
     @Column(columnDefinition = "TEXT")
-    private String autaa;
+    private String autAA;
 
     @ElementCollection(targetClass=CodAmL.class)
     @Enumerated(EnumType.STRING)
-    private Set<CodAmL> codamL;
+    private Set<CodAmL> codAmL;
 
     private String djaCop;
 
-    private String newnum;
+    private String newNum;
 
-    private String newid;
+    private String newId;
 
     @OneToOne
     private Dossier dossier;
@@ -128,60 +128,60 @@ public class Enquete {
         this.civilite = civilite;
     }
 
-    public TypeFrmn getTypefrmn() {
-        return typefrmn;
+    public TypeFrmn getTypeFrmn() {
+        return typeFrmn;
     }
 
-    public void setTypefrmn(TypeFrmn typefrmn) {
-        this.typefrmn = typefrmn;
+    public void setTypeFrmn(TypeFrmn typeFrmn) {
+        this.typeFrmn = typeFrmn;
     }
 
-    public ModFrmn getModfrmn() {
-        return modfrmn;
+    public ModFrmn getModFrmn() {
+        return modFrmn;
     }
 
-    public void setModfrmn(ModFrmn modfrmn) {
-        this.modfrmn = modfrmn;
+    public void setModFrmn(ModFrmn modFrmn) {
+        this.modFrmn = modFrmn;
     }
 
-    public CodSco getCodsco() {
-        return codsco;
+    public CodSco getCodSco() {
+        return codSco;
     }
 
-    public void setCodsco(CodSco codsco) {
-        this.codsco = codsco;
+    public void setCodSco(CodSco codSco) {
+        this.codSco = codSco;
     }
 
-    public CodFmt getCodfmt() {
-        return codfmt;
+    public CodFmt getCodFmt() {
+        return codFmt;
     }
 
-    public void setCodfmt(CodFmt codfmt) {
-        this.codfmt = codfmt;
+    public void setCodFmt(CodFmt codFmt) {
+        this.codFmt = codFmt;
     }
 
-    public CodFil getCodfil() {
-        return codfil;
+    public CodFil getCodFil() {
+        return codFil;
     }
 
-    public void setCodfil(CodFil codfil) {
-        this.codfil = codfil;
+    public void setCodFil(CodFil codFil) {
+        this.codFil = codFil;
     }
 
-    public CodHd getCodhd() {
-        return codhd;
+    public CodHd getCodHd() {
+        return codHd;
     }
 
-    public void setCodhd(CodHd codhd) {
-        this.codhd = codhd;
+    public void setCodHd(CodHd codHd) {
+        this.codHd = codHd;
     }
 
-    public boolean isHdtmp() {
-        return hdtmp;
+    public Boolean getHdTmp() {
+        return hdTmp;
     }
 
-    public void setHdtmp(boolean hdtmp) {
-        this.hdtmp = hdtmp;
+    public void setHdTmp(Boolean hdTmp) {
+        this.hdTmp = hdTmp;
     }
 
     public String getCom() {
@@ -192,92 +192,92 @@ public class Enquete {
         this.com = com;
     }
 
-    public CodPfpp getCodpfpp() {
-        return codpfpp;
+    public CodPfpp getCodPfpp() {
+        return codPfpp;
     }
 
-    public void setCodpfpp(CodPfpp codpfpp) {
-        this.codpfpp = codpfpp;
+    public void setCodPfpp(CodPfpp codPfpp) {
+        this.codPfpp = codPfpp;
     }
 
-    public CodPfas getCodpfas() {
-        return codpfas;
+    public CodPfas getCodPfas() {
+        return codPfas;
     }
 
-    public void setCodpfas(CodPfas codpfas) {
-        this.codpfas = codpfas;
+    public void setCodPfas(CodPfas codPfas) {
+        this.codPfas = codPfas;
     }
 
-    public Set<CodMeahF> getCodmeahF() {
-        return codmeahF;
+    public Set<CodMeahF> getCodMeahF() {
+        return codMeahF;
     }
 
-    public void setCodmeahF(Set<CodMeahF> codmeahF) {
-        this.codmeahF = codmeahF;
+    public void setCodMeahF(Set<CodMeahF> codMeahF) {
+        this.codMeahF = codMeahF;
     }
 
-    public int getInterpH() {
+    public Integer getInterpH() {
         return interpH;
     }
 
-    public void setInterpH(int interpH) {
+    public void setInterpH(Integer interpH) {
         this.interpH = interpH;
     }
 
-    public int getCodeurH() {
+    public Integer getCodeurH() {
         return codeurH;
     }
 
-    public void setCodeurH(int codeurH) {
+    public void setCodeurH(Integer codeurH) {
         this.codeurH = codeurH;
     }
 
-    public String getAidhnat() {
-        return aidhnat;
+    public String getAidHNat() {
+        return aidHNat;
     }
 
-    public void setAidhnat(String aidhnat) {
-        this.aidhnat = aidhnat;
+    public void setAidHNat(String aidHNat) {
+        this.aidHNat = aidHNat;
     }
 
-    public Set<CodMeae> getCodmeae() {
-        return codmeae;
+    public Set<CodMeae> getCodMeae() {
+        return codMeae;
     }
 
-    public void setCodmeae(Set<CodMeae> codmeae) {
-        this.codmeae = codmeae;
+    public void setCodMeae(Set<CodMeae> codMeae) {
+        this.codMeae = codMeae;
     }
 
-    public String getAutae() {
-        return autae;
+    public String getAutAE() {
+        return autAE;
     }
 
-    public void setAutae(String autae) {
-        this.autae = autae;
+    public void setAutAE(String autAE) {
+        this.autAE = autAE;
     }
 
-    public CodMeaa getCodmeaa() {
-        return codmeaa;
+    public CodMeaa getCodMeaa() {
+        return codMeaa;
     }
 
-    public void setCodmeaa(CodMeaa codmeaa) {
-        this.codmeaa = codmeaa;
+    public void setCodMeaa(CodMeaa codMeaa) {
+        this.codMeaa = codMeaa;
     }
 
-    public String getAutaa() {
-        return autaa;
+    public String getAutAA() {
+        return autAA;
     }
 
-    public void setAutaa(String autaa) {
-        this.autaa = autaa;
+    public void setAutAA(String autAA) {
+        this.autAA = autAA;
     }
 
-    public Set<CodAmL> getCodamL() {
-        return codamL;
+    public Set<CodAmL> getCodAmL() {
+        return codAmL;
     }
 
-    public void setCodamL(Set<CodAmL> codamL) {
-        this.codamL = codamL;
+    public void setCodAmL(Set<CodAmL> codAmL) {
+        this.codAmL = codAmL;
     }
 
     public String getDjaCop() {
@@ -288,20 +288,20 @@ public class Enquete {
         this.djaCop = djaCop;
     }
 
-    public String getNewnum() {
-        return newnum;
+    public String getNewNum() {
+        return newNum;
     }
 
-    public void setNewnum(String newnum) {
-        this.newnum = newnum;
+    public void setNewNum(String newNum) {
+        this.newNum = newNum;
     }
 
-    public String getNewid() {
-        return newid;
+    public String getNewId() {
+        return newId;
     }
 
-    public void setNewid(String newid) {
-        this.newid = newid;
+    public void setNewId(String newId) {
+        this.newId = newId;
     }
 
     public Dossier getDossier() {

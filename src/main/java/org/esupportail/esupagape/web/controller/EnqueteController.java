@@ -39,18 +39,19 @@ public class EnqueteController {
 
     @GetMapping
     public String create(Model model) {
-        model.addAttribute("enquete", new Enquete());
-        model.addAttribute("typefrmns", TypeFrmn.values());
-        model.addAttribute("modfrmns", ModFrmn.values());
-        model.addAttribute("codfils", CodFil.values());
-        model.addAttribute("codfmts", CodFmt.values());
-        model.addAttribute("codscos", CodSco.values());
+        Enquete enquete = new Enquete();
+        model.addAttribute("enquete", enquete);
+        model.addAttribute("typeFrmns", TypeFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
+        model.addAttribute("codFils", CodFil.values());
+        model.addAttribute("codFmts", CodFmt.values());
+        model.addAttribute("codScos", CodSco.values());
         model.addAttribute("codHds", CodHd.values());
-        model.addAttribute("codpfpps", CodPfpp.values());
-        model.addAttribute("codpfass", CodPfas.values());
+        model.addAttribute("codPfpps", CodPfpp.values());
+        model.addAttribute("codPfass", CodPfas.values());
         model.addAttribute("codMeahFs", CodMeahF.values());
-        model.addAttribute("codmeaes", CodMeae.values());
-        model.addAttribute("codmeaas", CodMeaa.values());
+        model.addAttribute("codMeaes", CodMeae.values());
+        model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
         return "enquetes/create";
     }
