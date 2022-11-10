@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="aideMaterielles" type="java.util.List<org.esupportail.esupagape.entity.AideMaterielle>"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content agape-content-side">
+        <div class="mb-3">
+            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+        </div>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='aides')"></div>
+        <div class="m-3">
+            <div class="row">
+                <div class="col-6">
+                    <div class="clearfix w-100">
+                        <h4 class="float-start">Aides matérielles</h4>
+                        <button title="Ajouter une aide materielle" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                    <table class="table table-striped table-responsive mx-auto mt-4">
+                        <thead class="text-start mt-2 mb-2 table-info">
+                            <tr>
+                                <th>Type</th>
+                                <th>Date de fin</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="aideMaterielle : ${aideMaterielles}">
+                            <tr>
+                                <td th:text="#{'aide.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></td>
+                                <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
+                                <td>
+                                    <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-eye"></i></button>
+                                    <div class="modal fade" th:id="'show-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'show-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" th:id="'show-aide-materielle-label' + ${aideMaterielle.id}">Détail aide humaine</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <dl class="row">
+                                                        <dt class="col-sm-6">Type</dt>
+                                                        <dd class="col-sm-6" th:text="#{'aide.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></dd>
+                                                        <dt class="col-sm-6">Date de début</dt>
+                                                        <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.startDate, 'dd/MM/yyyy')}"></dd>
+                                                        <dt class="col-sm-6">Date de fin</dt>
+                                                        <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></dd>
+                                                        <dt class="col-sm-6">Cout en euros</dt>
+                                                        <dd class="col-sm-6" th:text="${aideMaterielle.cost}"></dd>
+                                                        <dt class="col-sm-6">Commentaire</dt>
+                                                        <dd class="col-sm-6" th:text="${aideMaterielle.comment}"></dd>
+                                                    </dl>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                </div>
+                                            </div>
+                                       </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-trash"></i></button>
+                                    <div class="modal fade" th:id="'delete-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'delete-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <form th:method="delete" th:action="@{/dossiers/{id}/aides/aides-materielles/{aideMaterielleId}/delete(id=${currentDossier.id}, aideMaterielleId=${aideMaterielle.id})}" th:object="${newAideMaterielle}">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" th:id="'delete-aide-materielle-label' + ${aideMaterielle.id}">Confirmer la suppression de l’aide</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    Confirmer vous la suppression de cette aide ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                </div>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="add-aide-materielle-modal" tabindex="-1" aria-labelledby="add-aide-materielle-modal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="add-aide-materielle-label">Ajouter une aide materielle</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                </div>
+                                <form th:method="post" th:action="@{/dossiers/{id}/aides/create-aide-materiel(id=${currentDossier.id})}" th:object="${newAideMaterielle}">
+                                <div class="modal-body">
+                                    <label class="form-label">Type d’aide matérielle</label>
+                                    <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" required>
+                                            <label class="form-check-label" th:text="#{'aide.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
+                                        </div>
+                                    </th:block>
+                                    <div class="mb-3 mt-3">
+                                        <label th:for="start-date" class="form-label">Date de debut</label>
+                                        <input id="start-date" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}" required>
+                                        <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label th:for="end-date" class="form-label">Date de fin</label>
+                                        <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${now}" required>
+                                        <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label th:for="cost" class="form-label">Cout en euros</label>
+                                        <input id="cost" type="number" min="0" class="form-control" th:name="cost" required>
+                                        <p th:if="${#fields.hasErrors('cost')}" th:errorclass="error" th:errors="*{cost}"></p>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label th:for="comment" class="form-label">Commentaire</label>
+                                        <textarea id="comment" class="form-control" th:name="comment"></textarea>
+                                        <p th:if="${#fields.hasErrors('comment')}" th:errorclass="error" th:errors="*{comment}"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-success">Enregister</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="clearfix w-100">
+                        <h4 class="float-start">Aides humaine</h4>
+                        <button class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                    <table class="table table-striped table-responsive mx-auto mt-4">
+                        <thead class="text-start mt-2 mb-2 table-info">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Type</th>
+                            <th>Date de fin</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block>
+                            <tr>
+
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
+</html>

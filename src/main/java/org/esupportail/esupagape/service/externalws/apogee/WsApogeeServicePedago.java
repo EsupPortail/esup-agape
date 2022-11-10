@@ -21,7 +21,7 @@ public class WsApogeeServicePedago {
 	PedagogiqueMetierServiceInterface apogeeProxyPedago;
 
 	public ContratPedagogiqueResultatElpEprDTO5[] recupererResultatsElpEprDTO(String codEtu, String annee, String codEtp, String codVrsVet) throws AgapeException {
-		logger.info("recup des resultats dans apogee.");
+		logger.debug("recup des resultats dans apogee.");
 		try {
 			List<ContratPedagogiqueResultatElpEprDTO5> resultatElp = apogeeProxyPedago.recupererContratPedagogiqueResultatElpEprV6(codEtu, annee, codEtp, codVrsVet, "Apogee", null, null, null, null);
 			return resultatElp.toArray(new ContratPedagogiqueResultatElpEprDTO5[resultatElp.size()]);

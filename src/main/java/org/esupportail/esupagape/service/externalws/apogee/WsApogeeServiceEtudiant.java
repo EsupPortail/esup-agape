@@ -23,14 +23,14 @@ public class WsApogeeServiceEtudiant {
 	@Resource
 	EtudiantMetierServiceInterface apogeeProxyEtu;
 
-	public String recupererIdentifiantsEtudiant(String nom, String prenom,
-			String dateNaiss) {
+	public String recupererIdentifiantsEtudiant(String nom, String prenom, String dateNaiss) {
+		logger.debug("recup infos etudiant dans apogee.");
 		String idEtu = "";
 		try {
 			if(!dateNaiss.equals("%")) {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = formatter.parse(dateNaiss);
-				DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				dateNaiss = dateFormat.format(date);
 			}
 			System.err.println(dateNaiss);
@@ -41,41 +41,40 @@ public class WsApogeeServiceEtudiant {
 		} catch (Exception e) {
 			logger.error("Erreur lors de la recup des infos", e);
 		}
-		logger.info("recup infos etudiant dans apogee.");
 		return idEtu;
 
 	}
 	
 	public InfoAdmEtuDTO4 recupererInfosAdmEtu(String codEtu) {
+		logger.debug("recup infos administratives dans apogee.");
 		InfoAdmEtuDTO4 infoEtudiant = null;
 		try {
 			infoEtudiant = apogeeProxyEtu.recupererInfosAdmEtuV4(codEtu);
 		} catch (Exception e) {
 			logger.warn("Erreur lors de la recup des infos", e);
 		}
-		logger.info("recup infos administratives dans apogee.");
 		return infoEtudiant;
 	}
 
 	public CoordonneesDTO2 recupererAdressesEtudiant(String codEtu, String annee) {
+		logger.debug("recup infos adresse dans apogee.");
 		CoordonneesDTO2 adresseEtudiant = null;
 		try {
 			adresseEtudiant = apogeeProxyEtu.recupererAdressesEtudiantV2(codEtu, annee, "O");
 		} catch (Exception e) {
 			logger.warn("Erreur lors de la recup des infos", e);
 		}
-		logger.info("recup infos adresse dans apogee.");
 		return adresseEtudiant;
 	}
 	
-	public String recupererLogin(String nom, String prenom,
-			String dateNaiss) {
+	public String recupererLogin(String nom, String prenom, String dateNaiss) {
+		logger.debug("recup login dans apogee.");
 		String login = "";
 		try {
 		if(!dateNaiss.equals("%")) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = formatter.parse(dateNaiss);
-			DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			dateNaiss = dateFormat.format(date);
 		}
 		IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeProxyEtu.recupererIdentifiantsEtudiantV2(

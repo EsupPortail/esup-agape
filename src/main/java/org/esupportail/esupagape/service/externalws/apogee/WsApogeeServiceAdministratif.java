@@ -20,7 +20,7 @@ public class WsApogeeServiceAdministratif {
 	AdministratifMetierServiceInterface apogeeProxyAdministratif;
 
 	public List<InsAdmEtpDTO3> recupererIAEtapes(String codEtu, String annee) {
-		logger.info("recup des données administratives dans apogee.");
+		logger.debug("recup des données administratives dans apogee.");
 		List<InsAdmEtpDTO3> ieEtapes = null;
 		try {
 			ieEtapes = apogeeProxyAdministratif.recupererIAEtapesV3(codEtu, annee, null, null);

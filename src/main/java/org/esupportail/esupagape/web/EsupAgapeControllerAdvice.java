@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @ControllerAdvice(basePackages = "org.esupportail.esupagape.web.controller")
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class EsupAgapeControllerAdvice {
@@ -47,6 +50,7 @@ public class EsupAgapeControllerAdvice {
         }
         model.addAttribute("applicationEmail", applicationProperties.getApplicationEmail());
         model.addAttribute("currentYear", utilsService.getCurrentYear());
+        model.addAttribute("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
     }
 
 }

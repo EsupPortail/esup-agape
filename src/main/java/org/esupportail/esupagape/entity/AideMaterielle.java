@@ -13,8 +13,8 @@ public class AideMaterielle {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated
-    private TypeAideMaterielle type;
+    @Enumerated(EnumType.STRING)
+    private TypeAideMaterielle typeAideMaterielle;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime startDate;
@@ -22,10 +22,13 @@ public class AideMaterielle {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime endDate;
 
-    private double cost;
+    private Double cost;
 
     @Column(columnDefinition = "TEXT")
-    private String commentaire;
+    private String comment;
+
+    @ManyToOne
+    private Dossier dossier;
 
     public Long getId() {
         return id;
@@ -35,12 +38,12 @@ public class AideMaterielle {
         this.id = id;
     }
 
-    public TypeAideMaterielle getType() {
-        return type;
+    public TypeAideMaterielle getTypeAideMaterielle() {
+        return typeAideMaterielle;
     }
 
-    public void setType(TypeAideMaterielle type) {
-        this.type = type;
+    public void setTypeAideMaterielle(TypeAideMaterielle type) {
+        this.typeAideMaterielle = type;
     }
 
     public LocalDateTime getStartDate() {
@@ -59,19 +62,27 @@ public class AideMaterielle {
         this.endDate = endDate;
     }
 
-    public double getCost() {
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
-    public String getCommentaire() {
-        return commentaire;
+    public String getComment() {
+        return comment;
     }
 
-    public void setCommentaire(String commentaire) {
-        this.commentaire = commentaire;
+    public void setComment(String commentaire) {
+        this.comment = commentaire;
+    }
+
+    public Dossier getDossier() {
+        return dossier;
+    }
+
+    public void setDossier(Dossier dossier) {
+        this.dossier = dossier;
     }
 }

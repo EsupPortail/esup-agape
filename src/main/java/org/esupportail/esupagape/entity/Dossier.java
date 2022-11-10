@@ -72,6 +72,9 @@ public class Dossier {
     private List<Entretien> entretiens = new ArrayList<>();
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    private List<AideMaterielle> aidesMaterielles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
