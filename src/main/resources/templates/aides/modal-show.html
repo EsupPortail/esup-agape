@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="show" class="modal fade" th:id="'show-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'show-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" th:id="'show-aide-materielle-label' + ${aideMaterielle.id}">Détail aide matériel</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-6">Type</dt>
+                    <dd class="col-sm-6" th:text="#{'aide.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></dd>
+                    <dt class="col-sm-6">Date de début</dt>
+                    <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.startDate, 'dd/MM/yyyy')}"></dd>
+                    <dt class="col-sm-6">Date de fin</dt>
+                    <dd class="col-sm-6" th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></dd>
+                    <dt class="col-sm-6">Cout en euros</dt>
+                    <dd class="col-sm-6" th:text="${aideMaterielle.cost}"></dd>
+                    <dt class="col-sm-6">Commentaire</dt>
+                    <dd class="col-sm-6" th:text="${aideMaterielle.comment}"></dd>
+                </dl>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -28,6 +28,7 @@ public class Entretien
     private String compteRendu;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TypeContact typeContact;
 
     @ManyToOne

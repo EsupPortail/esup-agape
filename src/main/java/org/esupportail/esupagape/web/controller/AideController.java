@@ -23,16 +23,16 @@ public class AideController {
 
     @GetMapping
     public String list(Dossier dossier, Model model) {
-        model.addAttribute("aideMaterielles", aideMaterielleService.findByDossier(dossier));
-        model.addAttribute("newAideMaterielle", new AideMaterielle());
-        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
+        setModel(model, dossier);
+        model.addAttribute("aideMaterielle", new AideMaterielle());
         return "aides/list";
     }
 
     @PostMapping("/create-aide-materiel")
-    public String createAideMaterielle(@Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Dossier dossier) {
+    public String createAideMaterielle(@Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Model model, Dossier dossier) {
         if (bindingResult.hasErrors()) {
-            return "entretiens/create";
+            setModel(model, dossier);
+            return "aides/list";
         }
         aideMaterielle.setDossier(dossier);
         aideMaterielleService.create(aideMaterielle);
@@ -43,6 +43,11 @@ public class AideController {
     public String deleteAideMaterielle(@PathVariable Long aideMaterielleId, Dossier dossier) {
         aideMaterielleService.delete(aideMaterielleId);
         return "redirect:/dossiers/" + dossier.getId() + "/aides";
+    }
+
+    private void setModel(Model model, Dossier dossier) {
+        model.addAttribute("aideMaterielles", aideMaterielleService.findByDossier(dossier));
+        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
     }
 
 }

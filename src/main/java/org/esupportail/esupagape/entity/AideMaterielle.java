@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,6 +23,7 @@ public class AideMaterielle {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime endDate;
 
+    @NotNull
     private Double cost;
 
     @Column(columnDefinition = "TEXT")
