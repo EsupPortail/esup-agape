@@ -15,7 +15,7 @@
         <div th:replace="fragments/tabs-content :: tabs-content(active='aides')"></div>
         <div class="m-3">
             <div class="row">
-                <div class="col-6">
+                <div class="col-xl-6">
                     <div class="clearfix w-100">
                         <h4 class="float-start">Aides matérielles</h4>
                         <button title="Ajouter une aide materielle" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal"><i class="bi bi-plus-lg"></i></button>
@@ -67,7 +67,7 @@
                     </table>
                     <div th:replace="aides/modal-create :: create"></div>
                 </div>
-                <div class="col-6">
+                <div class="col-xl-6">
                     <div class="clearfix w-100">
                         <h4 class="float-start">Aides humaines</h4>
                         <button class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i></button>

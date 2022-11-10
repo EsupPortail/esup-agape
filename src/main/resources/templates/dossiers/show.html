@@ -20,7 +20,7 @@
                     <hr>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="classification">Classification du handicap</label>
+                        <label class="form-label" for="classification">Classification du handicap</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="classification" name="classification" type="text" class="form-select" th:value="${currentDossier.classification}">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="etat">Etat</label>
+                        <label class="form-label" for="etat">Etat</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">
@@ -42,7 +42,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="mdph">Suivi MDPH</label>
+                        <label class="form-label" for="mdph">Suivi MDPH</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="taux">Taux</label>
+                        <label class="form-label" for="taux">Taux</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="taux" name="taux" type="number" min="0" max="100" class="form-control" th:value="${currentDossier.taux}">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="typeSuiviHandisup">Suivi handisup</label>
+                        <label class="form-label" for="typeSuiviHandisup">Suivi handisup</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="typeSuiviHandisup" name="typeSuiviHandisup" type="text" class="form-select" th:value="${currentDossier.typeSuiviHandisup}">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="suiviHandisup">Commentaire handisup</label>
+                        <label class="form-label" for="suiviHandisup">Commentaire handisup</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="suiviHandisup" name="suiviHandisup" type="text" class="form-control" th:value="${currentDossier.suiviHandisup}">
@@ -84,7 +84,7 @@
                     <hr>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="libelleFormation">Formation</label>
+                        <label class="form-label" for="libelleFormation">Formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="libelleFormation" type="text" class="form-control" th:value="${currentDossier.libelleFormation}">
@@ -92,7 +92,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="site">Lieu de formation</label>
+                        <label class="form-label" for="site">Lieu de formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="site" type="text" class="form-control" th:value="${currentDossier.site}">
@@ -100,7 +100,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="filliere">Filière</label>
+                        <label class="form-label" for="filliere">Filière</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="filliere" type="text" class="form-control" th:value="${currentDossier.filliere}">
@@ -108,7 +108,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="composante">Composante</label>
+                        <label class="form-label" for="composante">Composante</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
@@ -116,7 +116,7 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label for="rentreeProchaine">Choix pour la rentrée prochaine</label>
+                        <label class="form-label" for="rentreeProchaine">Choix pour la rentrée prochaine</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
