@@ -53,7 +53,7 @@
                                     <label class="form-label" for="comment">Commentaire</label>
                                 </div>
                                 <div class="col-12 col-xxl-8">
-                                    <textarea id="comment" class="form-control" th:name="comment" th:value="${aideMaterielle.comment}" th:text="${aideMaterielle.comment}" disabled></textarea>
+                                    <textarea onkeyup="textAreaAdjust(this);" th:id="'comment-' + ${aideMaterielle.id}" class="form-control" th:name="comment" th:value="${aideMaterielle.comment}" th:text="${aideMaterielle.comment}" disabled></textarea>
                                 </div>
                             </div>
 
@@ -62,8 +62,10 @@
                 <div class="modal-footer">
                     <div class="d-inline">
                         <button th:id="'close-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <input onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Modifier le dossier" class="btn btn-warning">
-                        <input onclick="lockForm(this);" th:id="'lock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Annuler" class="btn btn-danger d-none">
+                        <button role="button" onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <input onclick="lockForm();" th:id="'lock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Annuler" class="btn btn-danger d-none">
                         <input th:id="'submit-aide-materielle-' + ${aideMaterielle.id}" type="submit" value="Enregister" class="btn btn-success d-none">
                     </div>
                 </div>

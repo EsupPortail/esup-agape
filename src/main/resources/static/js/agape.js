@@ -7,24 +7,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         toast.show();
     }
 
+    Array.prototype.slice.call(document.getElementsByTagName('textarea')).forEach(function (element) {
+        textAreaAdjust(element);
+    });
+
 });
 
-function lockForm(button) {
-    let formName = button.form.getAttribute("id").replace("form-" , "");
-    button.classList.toggle('d-none');
-    let unlockButton = document.getElementById('unlock-' + formName);
-    unlockButton.classList.toggle('d-none');
-    document.getElementById('submit-' + formName).classList.toggle('d-none');
-    let form = document.getElementById('form-' + formName);
-    [...form.elements].forEach(item => {
-        item.disabled = true;
-    });
-    unlockButton.disabled = false;
-    let closeButton = document.getElementById('close-' + formName);
-    if(closeButton != null) {
-        closeButton.classList.toggle('d-none');
-        closeButton.disabled = false;
-    }
+function lockForm() {
+    location.reload();
 }
 
 function unlockForm(button) {
@@ -41,4 +31,11 @@ function unlockForm(button) {
         item.disabled = false;
     });
 
+}
+
+function textAreaAdjust(element) {
+    let text = element.value;
+    let lines = text.split(/\r|\r\n|\n/);
+    let count = lines.length;
+    element.style.height = (30*count)+"px";
 }

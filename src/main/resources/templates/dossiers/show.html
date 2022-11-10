@@ -130,11 +130,11 @@
             <hr>
             <div class="d-inline">
                 <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
-                <input onclick="lockForm(this);" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
                 <input id="submit-dossier" type="submit" value="Enregister" class="btn btn-success d-none">
             </div>
             </form>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notes-modal">Voir les notes</button>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notes-modal">Voir les notes</button>
             <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
