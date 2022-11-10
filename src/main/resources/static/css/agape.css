@@ -8,6 +8,10 @@ ul {
     list-style-type: none;
 }
 
+.form-check-input:disabled~.form-check-label, .form-check-input[disabled]~.form-check-label {
+    opacity: initial !important;
+}
+
 .form-label {
     font-weight: bold;
 }

@@ -13,7 +13,7 @@
         <div th:replace="fragments/tabs-years :: tabs-years"></div>
         <div th:replace="fragments/tabs-content :: tabs-content(active='dossier')"></div>
         <div class="m-3">
-            <form id="form-situation" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
+            <form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
             <div class="row">
                 <div class="col-6">
                     <h4>Situation</h4>
@@ -129,8 +129,8 @@
             </div>
             <hr>
             <div class="d-inline">
-                <input id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
-                <input id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                <input onclick="lockForm(this);" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
                 <input id="submit-dossier" type="submit" value="Enregister" class="btn btn-success d-none">
             </div>
             </form>

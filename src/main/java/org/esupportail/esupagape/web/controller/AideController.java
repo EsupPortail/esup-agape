@@ -3,11 +3,13 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AideMaterielleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -36,6 +38,13 @@ public class AideController {
         }
         aideMaterielle.setDossier(dossier);
         aideMaterielleService.create(aideMaterielle);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+    }
+
+    @PutMapping("/aides-materielles/{aideMaterielleId}/update")
+    public String updateAideMaterielle(@PathVariable Long aideMaterielleId, @Valid AideMaterielle aideMaterielle, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        aideMaterielleService.save(aideMaterielleId, aideMaterielle);
+        redirectAttributes.addFlashAttribute("lastEdit", aideMaterielleId);
         return "redirect:/dossiers/" + dossier.getId() + "/aides";
     }
 

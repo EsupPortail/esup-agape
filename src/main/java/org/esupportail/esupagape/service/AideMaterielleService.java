@@ -17,8 +17,11 @@ public class AideMaterielleService {
 
     private final AideMaterielleRepository aideMaterielleRepository;
 
-    public AideMaterielleService(AideMaterielleRepository aideMaterielleRepository) {
+    private final DossierService dossierService;
+
+    public AideMaterielleService(AideMaterielleRepository aideMaterielleRepository, DossierService dossierService) {
         this.aideMaterielleRepository = aideMaterielleRepository;
+        this.dossierService = dossierService;
     }
 
     public AideMaterielle getById(Long id) throws AgapeJpaException {
@@ -42,5 +45,16 @@ public class AideMaterielleService {
     @Transactional
     public void delete(Long aideMaterielleId) {
         aideMaterielleRepository.deleteById(aideMaterielleId);
+    }
+
+    @Transactional
+    public void save(Long id, AideMaterielle aideMaterielle) throws AgapeJpaException {
+        AideMaterielle toUpdateAideMaterielle = getById(id);
+        toUpdateAideMaterielle.setTypeAideMaterielle(aideMaterielle.getTypeAideMaterielle());
+        toUpdateAideMaterielle.setStartDate(aideMaterielle.getStartDate());
+        toUpdateAideMaterielle.setEndDate(aideMaterielle.getEndDate());
+        toUpdateAideMaterielle.setCost(aideMaterielle.getCost());
+        toUpdateAideMaterielle.setComment(aideMaterielle.getComment());
+        aideMaterielleRepository.save(aideMaterielle);
     }
 }

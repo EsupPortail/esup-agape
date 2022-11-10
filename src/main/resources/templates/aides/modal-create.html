@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="aideMaterielle" type="org.esupportail.esupagape.entity.AideMaterielle"*/-->
 <div th:fragment="create" class="modal fade" id="add-aide-materielle-modal" tabindex="-1" aria-labelledby="add-aide-materielle-modal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="add-aide-materielle-label">Ajouter une aide materielle</h1>
+                <h1 class="modal-title fs-5" id="add-aide-materielle-label">Ajouter une aide matérielle</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <form th:method="post" th:action="@{/dossiers/{id}/aides/create-aide-materiel(id=${currentDossier.id})}" th:object="${aideMaterielle}">
@@ -42,7 +43,9 @@
                     <button type="submit" class="btn btn-success">Enregister</button>
                 </div>
                 <script th:if="${#fields.hasAnyErrors()}">
+                    document.getElementById('add-aide-materielle-modal').classList.toggle("fade");
                     new bootstrap.Modal(document.getElementById('add-aide-materielle-modal')).show();
+                    document.getElementById('add-aide-materielle-modal').classList.toggle("fade");
                 </script>
             </form>
         </div>

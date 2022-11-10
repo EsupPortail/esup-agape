@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function(event) {
 
     //Lancement automatique du toast
@@ -8,26 +7,38 @@ document.addEventListener("DOMContentLoaded", function(event) {
         toast.show();
     }
 
-    //Gestion de la vue situation
-    document.getElementById('unlock-dossier').addEventListener('click', function (e) {
-        e.target.classList.toggle('d-none');
-        document.getElementById('lock-dossier').classList.toggle('d-none');
-        document.getElementById('submit-dossier').classList.toggle('d-none');
-        let form = document.getElementById('form-situation');
-        [...form.elements].forEach(item => {
-            item.disabled = false;
-        });
-    });
-
-    document.getElementById('lock-dossier').addEventListener('click', function (e) {
-        e.target.classList.toggle('d-none');
-        let form = document.getElementById('form-situation');
-        [...form.elements].forEach(item => {
-            item.disabled = true;
-        });
-        document.getElementById('unlock-dossier').classList.toggle('d-none');
-        document.getElementById('unlock-dossier').disabled = false;
-        document.getElementById('submit-dossier').classList.toggle('d-none');
-    });
-
 });
+
+function lockForm(button) {
+    let formName = button.form.getAttribute("id").replace("form-" , "");
+    button.classList.toggle('d-none');
+    let unlockButton = document.getElementById('unlock-' + formName);
+    unlockButton.classList.toggle('d-none');
+    document.getElementById('submit-' + formName).classList.toggle('d-none');
+    let form = document.getElementById('form-' + formName);
+    [...form.elements].forEach(item => {
+        item.disabled = true;
+    });
+    unlockButton.disabled = false;
+    let closeButton = document.getElementById('close-' + formName);
+    if(closeButton != null) {
+        closeButton.classList.toggle('d-none');
+        closeButton.disabled = false;
+    }
+}
+
+function unlockForm(button) {
+    let formName = button.form.getAttribute("id").replace("form-" , "");
+    button.classList.toggle('d-none');
+    document.getElementById('lock-' + formName).classList.toggle('d-none');
+    document.getElementById('submit-' + formName).classList.toggle('d-none');
+    let closeButton = document.getElementById('close-' + formName);
+    if(closeButton != null) {
+        document.getElementById('close-' + formName).classList.toggle('d-none');
+    }
+    let form = document.getElementById('form-' + formName);
+    [...form.elements].forEach(item => {
+        item.disabled = false;
+    });
+
+}
