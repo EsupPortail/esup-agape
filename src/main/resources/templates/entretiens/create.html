@@ -1,72 +1,65 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-<!--/*@thymesVar id="entretiens" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
-<head th:replace="fragments/head :: head"></head>
-<body>
-<header th:replace="fragments/header :: header"></header>
-<main class="d-inline-flex">
-    <div th:replace="fragments/side :: side"></div>
-    <div class="agape-content agape-content-side">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
-                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Nouvel entretien</li>
-            </ol>
-        </nav>
-        <div th:replace="fragments/tabs-years :: tabs-years"></div>
-        <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
-        <div class="ms-4 me-4">
-        <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create(id=${currentDossier.id})}" th:object="${entretien}">
-            <div class="mb-3 mt-3">
-                <label th:for="date" class="form-label">Date de l’entretien</label>
-                <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}">
-                <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="entretiens" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side :: side"></div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Nouvel entretien</li>
+                    </ol>
+                </nav>
+                <div th:replace="fragments/tabs-years :: tabs-years"></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+                <div class="ms-4 me-4">
+                    <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create(id=${currentDossier.id})}" th:object="${entretien}">
+                        <div class="mb-3 mt-3">
+                            <label th:for="date" class="form-label">Date de l’entretien</label>
+                            <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}">
+                            <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
+                        </div>
+                            <label class="col-md-3 mt-3 form-label" th:for="type-contact">Type Contact</label>
+                            <div>
+                                <th:block th:each="enumTypeContact : ${typeContacts}">
+                                    <div>
+                                        <input th:selected="${enumTypeContact == entretien.typeContact}"
+                                                th:id="${enumTypeContact}"
+                                                name="typeContact"
+                                                size="1"
+                                                type="radio"
+                                                th:value="${enumTypeContact}">
+                                        <label th:for="${enumTypeContact}" th:text="#{'entretien.type-contact.' + ${enumTypeContact}}"></label>
+                                    </div>
+                                </th:block>
+                            </div>
+                        <p th:if="${#fields.hasErrors('typeContact')}" th:errorclass="error" th:errors="*{typeContact}"></p>
+                        <div class="mt-3">
+                            <label for="interlocuteur" class="form-label">Interlocuteur</label>
+                            <input type="text" class="form-control" id="interlocuteur" th:value="${entretien.interlocuteur}" th:field="*{interlocuteur}" required>
+                            <p th:if="${#fields.hasErrors('interlocuteur')}" th:errorclass="error" th:errors="*{interlocuteur}"></p>
+                        </div>
+                        <div class="mt-3">
+                            <label for="compteRendu" class="form-label">Compte rendu</label>
+                            <textarea class="form-control" id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}" required></textarea>
+                            <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
+                    </form>
+                </div>
             </div>
-            <label class="form-label">Type de contact</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" value="COURRIER" th:field="*{typeContact}" id="typeContactCourrier" required>
-                <label class="form-check-label" for="typeContactCourrier">
-                    Courrier
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" value="MAIL" th:field="*{typeContact}" id="typeContactMail" required>
-                <label class="form-check-label" for="typeContactMail">
-                    Mail
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" value="RENDEZ_VOUS" th:field="*{typeContact}" id="typeContactRDV" required>
-                <label class="form-check-label" for="typeContactRDV">
-                    Rendez-vous
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" value="TEL" th:field="*{typeContact}" id="typeContactTel" required>
-                <label class="form-check-label" for="typeContactTel">
-                    Tel
-                </label>
-            </div>
-            <p th:if="${#fields.hasErrors('typeContact')}" th:errorclass="error" th:errors="*{typeContact}"></p>
-            <div class="mt-3">
-                <label for="interlocuteur" class="form-label">Interlocuteur</label>
-                <input type="text" class="form-control" id="interlocuteur" th:value="${entretien.interlocuteur}" th:field="*{interlocuteur}" required>
-                <p th:if="${#fields.hasErrors('interlocuteur')}" th:errorclass="error" th:errors="*{interlocuteur}"></p>
-            </div>
-            <div class="mt-3">
-                <label for="compteRendu" class="form-label">Compte rendu</label>
-                <textarea class="form-control" rows="10" cols="60"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}" required ></textarea>
-                <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
-        </form>
-        </div>
-    </div>
-</main>
-<footer th:replace="fragments/footer :: black"></footer>
-<div th:replace="fragments/flash :: flash"></div>
-</body>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
 </html>
