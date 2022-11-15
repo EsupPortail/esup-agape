@@ -28,6 +28,7 @@ public class LdapDossierInfosService implements DossierInfosService {
         if(personLdaps.size() > 0) {
             PersonLdap personLdap = personLdaps.get(0);
             DossierInfos dossierDatas = new DossierInfos();
+            //TODO recup du nom du lieu ldap
             dossierDatas.setEtablissement(personLdap.getSupannEtablissement());
             dossierProperties.add(dossierDatas);
         }
