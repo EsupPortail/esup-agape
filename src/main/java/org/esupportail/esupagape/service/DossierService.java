@@ -16,10 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DossierService {
@@ -105,7 +102,14 @@ public class DossierService {
     }
 
     public Map<String, Object> getInfos(Dossier dossier) {
-        return dossierInfosServices.get(0).getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false).get(0);
+        Map<String, Object> infos = new HashMap<>();
+        for(DossierInfosService dossierInfosService : dossierInfosServices) {
+            List<Map<String, Object>> info = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
+            if(info.size() > 0) {
+                infos.putAll(info.get(0));
+            }
+        }
+        return infos;
     }
 
     @Transactional
