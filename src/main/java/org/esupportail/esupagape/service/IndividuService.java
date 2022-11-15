@@ -123,7 +123,7 @@ public class IndividuService {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
             logger.info("{}", individusFromSource.size());
             List<Individu> individusToCreate = individusFromSource.stream().filter(
-                    individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
+                    individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
                     &&
                     excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))
             ).toList();
