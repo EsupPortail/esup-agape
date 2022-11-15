@@ -53,8 +53,7 @@ public class EnqueteController {
 
     @GetMapping
     public String create(Dossier dossier, Model model) {
-        Enquete enquete = dossier.getEnquete();
-        model.addAttribute("enquete", enquete);
+        model.addAttribute("enquete", new Enquete());
         model.addAttribute("typeFrmns", TypeFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("codFils", CodFil.values());

@@ -78,7 +78,7 @@ public class Dossier {
     private List<Document> documents = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    private Enquete enquete = new Enquete();
+    private Enquete enquete;
 
     public Long getId() {
         return id;
