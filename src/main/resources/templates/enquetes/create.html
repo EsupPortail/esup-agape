@@ -26,20 +26,16 @@
                     <div>
                         <div>
                             <div id="createTag" class=" d-flex justify-content-center">
-                                <form id="enquete"
-                                        class="form-horizontal"
-                                        th:method="'PUT'"
-                                        th:action="@{/dossiers/{id}/enquetes/{enqueteId}/update(id=${currentDossier.id}, enqueteId=${enquete.id})}"
-                                        th:object="${enquete}">
+                                <form id="enquete" class="form-horizontal" th:method="post" th:action="@{/dossiers/{id}/enquetes/create(id=${currentDossier.id})}" th:object="${enquete}">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label class="col-md-3 mt-3 form-label" for="an">Année de naissance</label>
+                                            <label class="col-md-3 mt-3 form-label" th:for="an">Année de naissance</label>
                                             <div>
-                                                <input id="an" name="an" class="form-control" type="text" value="">
+                                                <input id="an" name="an" class="form-control" type="text" th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 mt-3 form-label" th:for="typeFrmn">Civilité</label>
+                                            <label class="col-md-3 mt-3 form-label" th:for="civilites">Civilité</label>
                                             <div>
                                                 <select name="civilite" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
