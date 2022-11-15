@@ -12,7 +12,7 @@
                 <div class="col"><dt class="col-sm-6">Nom</dt>
                     <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
                     <dt class="col-sm-6">Prénom</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd></div>
+                    <dd class="col-sm-6"  th:utext="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd></div>
             </div>
         </div>
         <dl class="row">
