@@ -49,9 +49,8 @@ public class EntretienService {
     }
 
     @Transactional
-    public Page<Entretien> findEntretiensByDossierId(Long dossierId, Pageable pageable) {
-        Page<Entretien> entretiens = entretienRepository.findEntretiensByDossierId(dossierId, pageable);
-        return entretiens;
+    public void create (Entretien entretien) {
+        entretienRepository.save(entretien);
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {
@@ -102,5 +101,10 @@ public class EntretienService {
         entretienToUpdate.setTypeContact(entretien.getTypeContact());
         entretienToUpdate.setInterlocuteur(entretien.getInterlocuteur());
         entretienToUpdate.setCompteRendu(entretien.getCompteRendu());
+        entretienRepository.save(entretien);
+    }
+
+    public Page<Entretien> findByDossier(Dossier dossier, Pageable pageable) {
+        return entretienRepository.findEntretiensByDossierId(dossier.getId(), pageable);
     }
 }
