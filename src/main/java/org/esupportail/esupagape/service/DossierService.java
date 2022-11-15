@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
+import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -101,33 +102,28 @@ public class DossierService {
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
     }
 
-    public Map<String, Object> getInfos(Dossier dossier) {
-        Map<String, Object> infos = new HashMap<>();
+    public DossierInfos getInfos(Dossier dossier) {
+        List<DossierInfos> infos = new ArrayList<>();
         for(DossierInfosService dossierInfosService : dossierInfosServices) {
-            List<Map<String, Object>> info = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
-            if(info.size() > 0) {
-                infos.putAll(info.get(0));
-            }
+            infos.addAll(dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false));
         }
-        return infos;
+        if(infos.size() > 0) {
+            return infos.get(0);
+        } else {
+            return new DossierInfos();
+        }
     }
 
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            List<Map<String, Object>> dossierPropertiesList = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
-            for(Map<String, Object> dossierProperties : dossierPropertiesList) {
-                if (dossierProperties != null && dossierProperties.size() > 0) {
-                    for (String key : dossierProperties.keySet()) {
-                        if (dossierProperties.get(key) != null) {
-                            switch (key) {
-                                case "ufr" -> dossier.setComposante(dossierProperties.get(key).toString());
-                                case "filiere" -> dossier.setFilliere(dossierProperties.get(key).toString());
-                                case "etablissement" -> dossier.setSite(dossierProperties.get(key).toString());
-                            }
-                        }
-                    }
+            List<DossierInfos> dossierPropertiesList = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
+            for(DossierInfos dossierProperties : dossierPropertiesList) {
+                if (dossierProperties != null) {
+                    dossier.setComposante(dossierProperties.getUfr());
+                    dossier.setFilliere(dossierProperties.getFiliere());
+                    dossier.setSite(dossierProperties.getEtablissement());
                 }
             }
         }
