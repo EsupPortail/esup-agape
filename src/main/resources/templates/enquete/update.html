@@ -170,21 +170,21 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 mt-3 form-label" for="interpH">Interprète: nombre d'heures</label>
+                                            <label class="col-md-3 mt-3 form-label" th:for="interpH">Interprète: nombre d'heures</label>
                                             <div>
-                                                <input id="interpH" name="interpH" class="form-control" type="text" value="">
+                                                <input th:field="*{interpH}" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 mt-3 form-label" for="codeurH">Codeur: nombre d'heures</label>
+                                            <label class="col-md-3 mt-3 form-label" th:for="codeurH">Codeur: nombre d'heures</label>
                                             <div>
-                                                <input id="codeurH" name="codeurH" class="form-control" type="text" value="">
+                                                <input th:field="*{codeurH}" class="form-control" type="text" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_aidhnat_id" class="col-md-3 mt-3 form-label">Autre aide humaine</label>
+                                            <label th:for="aidHNat" class="col-md-3 mt-3 form-label">Autre aide humaine</label>
                                             <div>
-                                                <textarea id="_aidhnat_id" name="aidhnat" class="form-control" rows="5" cols="50"></textarea>
+                                                <textarea th:field="*{aidHNat}" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
@@ -199,15 +199,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="_autae_id" class="col-md-3 mt-3 form-label">Autre aménagement des examens</label>
+                                            <label th:for="autAE" class="col-md-3 mt-3 form-label">Autre aménagement des examens</label>
                                             <div>
-                                                <textarea id="_autae_id" name="autae" class="form-control" rows="5" cols="50"></textarea>
+                                                <textarea th:field="*{autAE}" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 form-label" th:for="codMeaa">Autres aides</label>
                                             <div>
-                                                <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
+                                                <select th:field="*{codMeaa}" class="form-select" size="1">
                                                     <option disabled selected value="nul">Choisir</option>
                                                     <option th:selected="${enumCodmeaa== enquete.codMeaa}"
                                                             th:each="enumCodmeaa : ${codMeaas}"
@@ -216,9 +216,9 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="_autaa_id" class="col-md-3 mt-3 form-label">Aides autres</label>
+                                                <label th:for="autAA" class="col-md-3 mt-3 form-label">Aides autres</label>
                                                 <div>
-                                                    <textarea id="_autaa_id" name="autaa" class="form-control" rows="5" cols="50"></textarea>
+                                                    <textarea  th:field="*{autAA}" class="form-control" rows="5" cols="50"></textarea>
                                                     <br></div>
                                             </div>
                                             <div class="form-group">
