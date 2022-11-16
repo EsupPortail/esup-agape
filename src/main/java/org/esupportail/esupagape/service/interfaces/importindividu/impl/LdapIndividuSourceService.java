@@ -28,8 +28,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
     Map<String, String> civiliteMap  = new HashMap<>() {{
-        put("MME", "MONSIEUR");
-        put("M.", "MADAME");
+        put("MME", "MADAME");
+        put("M.", "MONSIEUR");
     }};
 
     private final ApplicationProperties applicationProperties;
