@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Order(3)
@@ -36,8 +34,8 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Map<String, Object> getIndividuProperties(String numEtu) {
-        return new HashMap<>();
+    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos) {
+        return individuInfos;
     }
 
     @Override
@@ -47,11 +45,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     @Override
     public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth) {
         return null;
     }
 

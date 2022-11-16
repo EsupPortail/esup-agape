@@ -3,6 +3,7 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -13,7 +14,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
     Map<String, String> civiliteMap  = new HashMap<>() {{
-        put("MME", "MADAME");
-        put("M.", "MONSIEUR");
+        put("MME", "MONSIEUR");
+        put("M.", "MADAME");
     }};
 
     private final ApplicationProperties applicationProperties;
@@ -42,34 +42,33 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Map<String, Object> getIndividuProperties(String numEtu) {
+    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos) {
         List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(numEtu);
         if(personLdaps.size() > 0) {
             PersonLdap personLdap = personLdaps.get(0);
-            Map<String, Object> individuDatas = new HashMap<>();
-            individuDatas.put("eppn", personLdap.getEduPersonPrincipalName());
+            individuInfos.setEppn(personLdap.getEduPersonPrincipalName());
             String address = personLdap.getPostalAddress();
             if (address != null && !address.isEmpty()) {
-                individuDatas.put("fixAddress", address.split("\\$")[0].trim());
+                individuInfos.setFixAddress(address.split("\\$")[0].trim());
                 if(address.split("\\$")[1].split(" ").length > 0) {
-                    individuDatas.put("fixCP", address.split("\\$")[1].split(" ")[0].trim());
-                    individuDatas.put("fixCity", address.split("\\$")[1].replace(address.split("\\$")[1].split(" ")[0], "").trim());
+                    individuInfos.setFixCP(address.split("\\$")[1].split(" ")[0].trim());
+                    individuInfos.setFixCity(address.split("\\$")[1].replace(address.split("\\$")[1].split(" ")[0], "").trim());
                 }
-                individuDatas.put("fixCountry", address.split("\\$")[address.split("\\$").length - 1].trim());
+                individuInfos.setFixCountry(address.split("\\$")[address.split("\\$").length - 1].trim());
             }
-            individuDatas.put("civilite", civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
-            individuDatas.put("emailEtu", personLdap.getMail());
-            individuDatas.put("emailPerso", personLdap.getSupannMailPerso());
-            individuDatas.put("fixPhone", personLdap.getTelephoneNumber());
-            individuDatas.put("contactPhone", personLdap.getSupannAutreTelephone());
+            individuInfos.setGenre(civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individuInfos.setEmailEtu(personLdap.getMail());
+            individuInfos.setEmailPerso(personLdap.getSupannMailPerso());
+            individuInfos.setFixPhone(personLdap.getTelephoneNumber());
+            individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
             try {
-                individuDatas.put("photoId", ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
+                individuInfos.setPhotoId(ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
             } catch (AgapeException e) {
                 logger.debug(e.getMessage());
             }
-            return individuDatas;
         }
-        return null;
+        return individuInfos;
+
     }
 
     @Override
@@ -95,11 +94,6 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;
         }
-        return null;
-    }
-
-    @Override
-    public Map<String, String> getIndividuProperties(String name, String firstname, LocalDateTime dateOfBirth) {
         return null;
     }
 

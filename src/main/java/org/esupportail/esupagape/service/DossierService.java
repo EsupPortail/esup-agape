@@ -116,9 +116,15 @@ public class DossierService {
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
             if(dossierInfos != null) {
-                dossier.setComposante(dossierInfos.getUfr());
-                dossier.setFilliere(dossierInfos.getFiliere());
-                dossier.setSite(dossierInfos.getEtablissement());
+                if(dossierInfos.getUfr() != null && !dossierInfos.getUfr().isEmpty()) {
+                    dossier.setComposante(dossierInfos.getUfr());
+                }
+                if(dossierInfos.getFiliere() != null && !dossierInfos.getFiliere().isEmpty()) {
+                    dossier.setLibelleFormation(dossierInfos.getFiliere());
+                }
+                if(dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
+                    dossier.setSite(dossierInfos.getEtablissement());
+                }
             }
         }
     }

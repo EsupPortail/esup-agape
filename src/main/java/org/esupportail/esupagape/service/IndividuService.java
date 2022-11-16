@@ -11,6 +11,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
+import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -34,7 +35,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -79,30 +79,51 @@ public class IndividuService {
     @Transactional
     public void syncIndividu(Long id) {
         Individu individu = individuRepository.findById(id).orElseThrow();
+        IndividuInfos individuInfos = new IndividuInfos();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            Map<String, Object> individuProperties = individuSourceService.getIndividuProperties(individu.getNumEtu());
-            if(individuProperties != null && individuProperties.size() >0) {
-                for (String key : individuProperties.keySet()) {
-                    if (individuProperties.get(key) != null) {
-                        switch (key) {
-                            case "eppn" -> individu.setEppn(individuProperties.get(key).toString());
-                            case "name" -> individu.setName(individuProperties.get(key).toString());
-                            case "firstName" -> individu.setFirstName(individuProperties.get(key).toString());
-                            case "sex" -> individu.setSex(individuProperties.get(key).toString());
-                            case "civilite" -> individu.setCivilite(Civilite.valueOf(individuProperties.get(key).toString()));
-                            case "emailEtu" -> individu.setEmailEtu(individuProperties.get(key).toString());
-                            case "emailPerso" -> individu.setEmailPerso(individuProperties.get(key).toString());
-                            case "fixAddress" -> individu.setFixAddress(individuProperties.get(key).toString());
-                            case "fixCp" -> individu.setFixCP(individuProperties.get(key).toString());
-                            case "fixCity" -> individu.setFixCity(individuProperties.get(key).toString());
-                            case "fixCountry" -> individu.setFixCountry(individuProperties.get(key).toString());
-                            case "fixPhone" -> individu.setFixPhone(individuProperties.get(key).toString());
-                            case "contactPhone" -> individu.setContactPhone(individuProperties.get(key).toString());
-                            case "photoId" -> individu.setPhotoId(individuProperties.get(key).toString());
-                        }
-                    }
-                }
-            }
+            individuInfos = individuSourceService.getIndividuProperties(individu.getNumEtu(), individuInfos);
+        }
+        if(individuInfos.getEppn() != null && !individuInfos.getEppn().isEmpty()) {
+            individu.setEppn(individuInfos.getEppn());
+        }
+        if(individuInfos.getName() != null && !individuInfos.getName().isEmpty()) {
+            individu.setName(individuInfos.getName());
+        }
+        if(individuInfos.getFirstName() != null && !individuInfos.getFirstName().isEmpty()) {
+            individu.setFirstName(individuInfos.getFirstName());
+        }
+        if(individuInfos.getGenre() != null && !individuInfos.getGenre().isEmpty()) {
+            individu.setSex(individuInfos.getGenre());
+        }
+        if(individuInfos.getGenre() != null && !individuInfos.getGenre().isEmpty()) {
+            individu.setCivilite(Civilite.valueOf(individuInfos.getGenre()));
+        }
+        if(individuInfos.getEmailEtu() != null && !individuInfos.getEmailEtu().isEmpty()) {
+            individu.setEmailEtu(individuInfos.getEmailEtu());
+        }
+        if(individuInfos.getEmailPerso() != null && !individuInfos.getEmailPerso().isEmpty()) {
+            individu.setEmailPerso(individuInfos.getEmailPerso());
+        }
+        if(individuInfos.getFixAddress() != null && !individuInfos.getFixAddress().isEmpty()) {
+            individu.setFixAddress(individuInfos.getFixAddress());
+        }
+        if(individuInfos.getFixCP() != null && !individuInfos.getFixCP().isEmpty()) {
+            individu.setFixCP(individuInfos.getFixCP());
+        }
+        if(individuInfos.getFixCity() != null && !individuInfos.getFixCity().isEmpty()) {
+            individu.setFixCity(individuInfos.getFixCity());
+        }
+        if(individuInfos.getFixCountry() != null && !individuInfos.getFixCountry().isEmpty()) {
+            individu.setFixCountry(individuInfos.getFixCountry());
+        }
+        if(individuInfos.getFixPhone() != null && !individuInfos.getFixPhone().isEmpty()) {
+            individu.setFixPhone(individuInfos.getFixPhone());
+        }
+        if(individuInfos.getContactPhone() != null && !individuInfos.getContactPhone().isEmpty()) {
+            individu.setContactPhone(individuInfos.getContactPhone());
+        }
+        if(individuInfos.getPhotoId() != null && !individuInfos.getPhotoId().isEmpty()) {
+            individu.setPhotoId(individuInfos.getPhotoId());
         }
     }
 

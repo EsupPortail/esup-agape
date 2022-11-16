@@ -87,7 +87,7 @@
                         <label class="form-label" for="libelleFormation">Formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <input disabled id="libelleFormation" type="text" class="form-control" th:value="${currentDossier.libelleFormation}">
+                            <textarea rows="3" disabled id="libelleFormation" class="form-control" style="min-height:60px; resize: none;" th:text="${currentDossier.libelleFormation}"></textarea>
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
@@ -96,14 +96,6 @@
                         </div>
                         <div class="col-12 col-xxl-8">
                         <input disabled id="site" type="text" class="form-control" th:value="${currentDossier.site}">
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="filliere">Filière</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                        <input disabled id="filliere" type="text" class="form-control" th:value="${currentDossier.filliere}">
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
