@@ -43,17 +43,11 @@ public class EnqueteController {
     public EnqueteController(EnqueteService enqueteService) {
         this.enqueteService = enqueteService;
     }
-    /*@GetMapping
-    public String list(@PathVariable Long id,Dossier dossier, Model model) throws AgapeJpaException {
-        List<Enquete> enquetes = enqueteService.findEntretiensByDossierId(id);
-        model.addAttribute("enquetes", enquetes);
-        model.addAttribute("dossier", dossier);
-        return "enquetes/list";
-    }*/
 
     @GetMapping
-    public String create(Dossier dossier, Model model) {
-        model.addAttribute("enquete", new Enquete());
+    public String show(Dossier dossier, Model model) {
+        Enquete enquete = enqueteService.findByDossierId(dossier.getId());
+        model.addAttribute("enquete", enquete);
         model.addAttribute("typeFrmns", TypeFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("codFils", CodFil.values());
@@ -67,36 +61,12 @@ public class EnqueteController {
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("civilites", Civilite.values());
-        return "enquetes/create";
-    }
-
-    @PostMapping("/create")
-    public String create(@Valid Enquete enquete, BindingResult bindingResult, Dossier dossier, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("enquete", enquete);
-            model.addAttribute("typeFrmns", TypeFrmn.values());
-            model.addAttribute("modFrmns", ModFrmn.values());
-            model.addAttribute("codFils", CodFil.values());
-            model.addAttribute("codFmts", CodFmt.values());
-            model.addAttribute("codScos", CodSco.values());
-            model.addAttribute("codHds", CodHd.values());
-            model.addAttribute("codPfpps", CodPfpp.values());
-            model.addAttribute("codPfass", CodPfas.values());
-            model.addAttribute("codMeahFs", CodMeahF.values());
-            model.addAttribute("codMeaes", CodMeae.values());
-            model.addAttribute("codMeaas", CodMeaa.values());
-            model.addAttribute("codamls", CodAmL.values());
-            model.addAttribute("civilites", Civilite.values());
-            return "enquetes/create";
-        }
-        enquete.setDossier(dossier);
-        enqueteService.create(enquete);
-        return "redirect:/dossiers/" + dossier.getId() + "/enquetes";
+        return "enquetes/update";
     }
 
     @PutMapping("/{enqueteId}/update")
-    public String updateEnquete(@PathVariable Long enqueteId, @Valid Enquete enquete, Dossier dossier) throws AgapeJpaException {
+    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
         enqueteService.save(enqueteId, enquete);
-        return "redirect:/dossiers/" + dossier.getId() + "/enquetes";
+        return "redirect:/dossiers/" + id + "/enquetes";
     }
 }

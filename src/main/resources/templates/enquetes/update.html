@@ -26,7 +26,9 @@
                     <div>
                         <div>
                             <div id="createTag" class=" d-flex justify-content-center">
-                                <form id="enquete" class="form-horizontal" th:method="post" th:action="@{/dossiers/{id}/enquetes/create(id=${currentDossier.id})}" th:object="${enquete}">
+                                <form id="enquete" class="form-horizontal" th:method="put" th:action="@{/dossiers/{id}/enquetes/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}" th:object="${enquete}">
+                                    <input th:field="*{id}" type="hidden" readonly class="form-control">
+                                    <input th:field="*{dossier}" type="hidden" readonly class="form-control">
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="col-md-3 mt-3 form-label" th:for="an">Année de naissance</label>
@@ -119,16 +121,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group" id="__id">
-                                            <label class="form-label mt-4" for="_hdTmp_id">Handicap temporaire:
+                                            <label class="form-label mt-4" th:for="hdTmp">Handicap temporaire:
                                             </label>
-                                            <input id="_hdTmp_id" name="hdTmp" type="checkbox" value="true">
-                                            <input type="hidden" name="_hdTmp" value="on">
+                                            <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}">
                                         </div>
                                         <br>
                                         <div class="form-group">
-                                            <label for="_com_id" class="col-md-3 form-label">Commentaire</label>
+                                            <label th:for="com" class="col-md-3 form-label">Commentaire</label>
                                             <div>
-                                                <textarea id="_com_id" name="com" class="form-control" rows="5" cols="50"></textarea>
+                                                <textarea th:field="*{com}" class="form-control" rows="5" cols="50"></textarea>
                                                 <br></div>
                                         </div>
                                         <div class="form-group">
