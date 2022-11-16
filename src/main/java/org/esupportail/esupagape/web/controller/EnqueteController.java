@@ -48,7 +48,7 @@ public class EnqueteController {
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("civilites", Civilite.values());
-        return "enquetes/update";
+        return "enquete/update";
     }
 
     @PutMapping("/{enqueteId}/update")
