@@ -4,7 +4,10 @@ import org.esupportail.esupagape.entity.Enquete;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EnqueteRepository extends JpaRepository <Enquete, Long> {
-    List<Enquete> findEnquetesByDossierId(Long dossierId);
+
+       Optional<Enquete> findByDossierId(Long id);
+
 }

@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.EnqueteRepository;
@@ -19,13 +20,6 @@ public class EnqueteService {
         this.enqueteRepository = enqueteRepository;
         this.dossierService = dossierService;
     }
-
-
-   /* @Transactional
-    public List<Enquete> findEntretiensByDossierId(Long dossierId) {
-        List<Enquete> enquetes = enqueteRepository.findEnquetesByDossierId(dossierId);
-        return enquetes;
-    } */
 
     public Enquete getById(Long id) throws AgapeJpaException {
         Optional<Enquete> optionalEnquete = enqueteRepository.findById(id);
@@ -74,41 +68,19 @@ public class EnqueteService {
         enqueteToUpdate.setDjaCop(enquete.getDjaCop());
         enqueteToUpdate.setNewNum(enquete.getNewNum());
         enqueteToUpdate.setNewId(enquete.getNewId());
+        enqueteToUpdate.setDossier(enquete.getDossier());
         enqueteRepository.save(enquete);
     }
 
-   /* @Transactional
-    public void updateEnquete(Long id, Enquete enquete) throws AgapeJpaException {
-        Enquete enqueteToUpdate = getById();
-        enqueteToUpdate.setId(enqueteToUpdate.getId());
-        enqueteToUpdate.setNfic(enquete.getNfic());
-        enqueteToUpdate.setNumetu(enquete.getNumetu());
-        enqueteToUpdate.setAn(enqueteToUpdate.getAn());
-        enqueteToUpdate.setCivilite(enquete.getCivilite());
-        enqueteToUpdate.setTypeFrmn(enquete.getTypeFrmn());
-        enqueteToUpdate.setModFrmn(enquete.getModFrmn());
-        enqueteToUpdate.setCodSco(enquete.getCodSco());
-        enqueteToUpdate.setCodFmt(enquete.getCodFmt());
-        enqueteToUpdate.setCodFil(enquete.getCodFil());
-        enqueteToUpdate.setCodHd(enquete.getCodHd());
-        enqueteToUpdate.setHdTmp(enquete.getHdTmp());
-        enqueteToUpdate.setCom(enquete.getCom());
-        enqueteToUpdate.setCodPfpp(enquete.getCodPfpp());
-        enqueteToUpdate.setCodPfas(enquete.getCodPfas());
-        enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
-        enqueteToUpdate.setInterpH(enquete.getInterpH());
-        enqueteToUpdate.setCodAmL(enquete.getCodAmL());
-        enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
-        enqueteToUpdate.setCodeurH(enquete.getCodeurH());
-        enqueteToUpdate.setAidHNat(enquete.getAidHNat());
-        enqueteToUpdate.setCodMeae(enquete.getCodMeae());
-        enqueteToUpdate.setAutAE(enquete.getAutAE());
-        enqueteToUpdate.setCodMeaa(enquete.getCodMeaa());
-        enqueteToUpdate.setAutAA(enquete.getAutAA());
-        enqueteToUpdate.setCodAmL(enquete.getCodAmL());
-        enqueteToUpdate.setDjaCop(enquete.getDjaCop());
-        enqueteToUpdate.setNewNum(enquete.getNewNum());
-        enqueteToUpdate.setNewId(enquete.getNewId());
-        enqueteRepository.save(enquete);
-    }*/
+    private Enquete createByDossierId(Long id) {
+        Enquete enquete = new Enquete();
+        Dossier dossier = dossierService.getById(id);
+        enquete.setDossier(dossier);
+        return enqueteRepository.save(enquete);
+    }
+
+    @Transactional
+    public Enquete findByDossierId(Long id) {
+        return enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
+    }
 }
