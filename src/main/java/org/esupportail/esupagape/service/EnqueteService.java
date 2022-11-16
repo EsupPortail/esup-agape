@@ -21,13 +21,6 @@ public class EnqueteService {
         this.dossierService = dossierService;
     }
 
-
-   /* @Transactional
-    public List<Enquete> findEntretiensByDossierId(Long dossierId) {
-        List<Enquete> enquetes = enqueteRepository.findEnquetesByDossierId(dossierId);
-        return enquetes;
-    } */
-
     public Enquete getById(Long id) throws AgapeJpaException {
         Optional<Enquete> optionalEnquete = enqueteRepository.findById(id);
         if (optionalEnquete.isPresent()) {

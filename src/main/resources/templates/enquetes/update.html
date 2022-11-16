@@ -14,19 +14,16 @@
                         <li class="breadcrumb-item">
                             <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a th:href="@{'/dossiers/' + ${currentDossier.id} + '/entretiens'}" class="text-center ">Liste des entretiens</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Nouvel entretien</li>
+                        <li class="breadcrumb-item">Enquête</li>
                     </ol>
                 </nav>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='enquetes')"></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='enquete')"></div>
                 <div class="ms-4 me-4">
                     <div>
                         <div>
                             <div id="createTag" class=" d-flex justify-content-center">
-                                <form id="enquete" class="form-horizontal" th:method="put" th:action="@{/dossiers/{id}/enquetes/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}" th:object="${enquete}">
+                                <form id="enquete" class="form-horizontal" th:method="put" th:action="@{/dossiers/{id}/enquete/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}" th:object="${enquete}">
                                     <input th:field="*{id}" type="hidden" readonly class="form-control">
                                     <input th:field="*{dossier}" type="hidden" readonly class="form-control">
                                     <div class="col-12">

@@ -3,28 +3,15 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Civilite;
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodFil;
-import org.esupportail.esupagape.entity.enums.enquete.CodFmt;
-import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
-import org.esupportail.esupagape.entity.enums.enquete.CodSco;
-import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,7 +19,7 @@ import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
 @Controller
-@RequestMapping("/dossiers/{id}/enquetes")
+@RequestMapping("/dossiers/{id}/enquete")
 
 public class EnqueteController {
 
@@ -67,6 +54,6 @@ public class EnqueteController {
     @PutMapping("/{enqueteId}/update")
     public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
         enqueteService.save(enqueteId, enquete);
-        return "redirect:/dossiers/" + id + "/enquetes";
+        return "redirect:/dossiers/" + id + "/enquete";
     }
 }
