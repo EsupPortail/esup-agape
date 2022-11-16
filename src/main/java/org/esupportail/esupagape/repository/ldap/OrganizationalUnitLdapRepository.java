@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface OrganizationalUnitLdapRepository extends LdapRepository<OrganizationalUnitLdap> {
     List<OrganizationalUnitLdap> findBySupannRefIdAndSupannTypeEntite(String supannRefId, String supanntypeEntity);
+    List<OrganizationalUnitLdap> findBySupannCodeEntite(String supannCodeEntite);
 }

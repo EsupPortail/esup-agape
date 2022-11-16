@@ -116,14 +116,14 @@ public class DossierService {
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
             if(dossierInfos != null) {
+                if(dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
+                    dossier.setSite(dossierInfos.getEtablissement());
+                }
                 if(dossierInfos.getUfr() != null && !dossierInfos.getUfr().isEmpty()) {
                     dossier.setComposante(dossierInfos.getUfr());
                 }
                 if(dossierInfos.getFiliere() != null && !dossierInfos.getFiliere().isEmpty()) {
                     dossier.setLibelleFormation(dossierInfos.getFiliere());
-                }
-                if(dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
-                    dossier.setSite(dossierInfos.getEtablissement());
                 }
                 if(dossierInfos.getFormAddress() != null && !dossierInfos.getFormAddress().isEmpty()) {
                     dossier.setFormAddress(dossierInfos.getFormAddress());

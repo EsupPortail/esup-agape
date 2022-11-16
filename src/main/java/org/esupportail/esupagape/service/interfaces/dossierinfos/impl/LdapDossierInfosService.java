@@ -5,6 +5,7 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
+import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,10 @@ public class LdapDossierInfosService implements DossierInfosService {
         if(personLdaps.size() > 0) {
             PersonLdap personLdap = personLdaps.get(0);
             try {
-                dossierInfos.setEtablissement(ldapPersonService.getSupannEtablissement(personLdap.getSupannEtablissement()).getDescription());
-                dossierInfos.setFormAddress(ldapPersonService.getSupannEtablissement(personLdap.getSupannEtablissement()).getPostalAddress());
+                OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getScol(personLdap.getSupannEntiteAffectationPrincipale());
+                dossierInfos.setUfr(organizationalUnitLdap.getDescription());
+                dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
+                dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
             } catch (AgapeJpaException e) {
                 logger.debug(e.getMessage());
             }

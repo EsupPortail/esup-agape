@@ -4,13 +4,14 @@ import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
 import javax.naming.Name;
+import java.util.List;
 
 @Entry(objectClasses = {"organizationalUnit"})
 public final class OrganizationalUnitLdap {
 
     @Id
     private Name dn;
-    private String supannRefId;
+    private List<String> supannRefId; //code UAI pour la liaison avec les personnels des scols
     private String postalAddress;
     private String supannCodeEntiteParent;
     private String supannCodeEntite;
@@ -25,11 +26,11 @@ public final class OrganizationalUnitLdap {
         this.dn = dn;
     }
 
-    public String getSupannRefId() {
+    public List<String> getSupannRefId() {
         return supannRefId;
     }
 
-    public void setSupannRefId(String supannRefId) {
+    public void setSupannRefId(List<String> supannRefId) {
         this.supannRefId = supannRefId;
     }
 

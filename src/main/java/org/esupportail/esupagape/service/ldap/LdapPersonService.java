@@ -64,8 +64,17 @@ public class LdapPersonService {
         return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
     }
 
-    public OrganizationalUnitLdap getSupannEtablissement(String supannEtablissement) throws AgapeJpaException {
-        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefIdAndSupannTypeEntite(supannEtablissement, "SCO");
+    public OrganizationalUnitLdap getScol(String scol) throws AgapeJpaException {
+        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannCodeEntite(scol);
+        if(organizationalUnitLdaps.size() > 0) {
+            return organizationalUnitLdaps.get(0);
+        } else {
+            throw new AgapeJpaException(scol + " not fount in OU");
+        }
+    }
+
+    public OrganizationalUnitLdap getEtablissement(String supannEtablissement) throws AgapeJpaException {
+        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefIdAndSupannTypeEntite(supannEtablissement, "Etablissement");
         if(organizationalUnitLdaps.size() > 0) {
             return organizationalUnitLdaps.get(0);
         } else {
