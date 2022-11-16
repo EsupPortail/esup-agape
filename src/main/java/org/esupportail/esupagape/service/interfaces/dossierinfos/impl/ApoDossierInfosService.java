@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,9 +33,7 @@ public class ApoDossierInfosService implements DossierInfosService {
         this.wsApogeeServiceAdministratif = wsApogeeServiceAdministratif;
     }
 
-    public List<DossierInfos> getDossierProperties(Individu individu, Integer annee, boolean getAllSteps) {
-
-        List<DossierInfos> dossierProperties = new ArrayList<>();
+    public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, DossierInfos dossierInfos) {
 
         try {
             List<InsAdmEtpDTO3> ieEtapes = wsApogeeServiceAdministratif.recupererIAEtapes(individu.getNumEtu(), annee.toString());
@@ -45,10 +42,9 @@ public class ApoDossierInfosService implements DossierInfosService {
                     if (!insAdmEtpDTO.getEtapePremiere().equals("oui") && !getAllSteps) {
                         continue;
                     }
-                    DossierInfos dossierDatas = new DossierInfos();
-                    dossierDatas.setUfr(insAdmEtpDTO.getComposante().getLibComposante());
-                    dossierDatas.setFiliere(insAdmEtpDTO.getEtape().getLibWebVet());
-                    dossierDatas.setEtablissement(insAdmEtpDTO.getComposante().getLibComposante());
+                    dossierInfos.setUfr(insAdmEtpDTO.getComposante().getLibComposante());
+                    dossierInfos.setFiliere(insAdmEtpDTO.getEtape().getLibWebVet());
+                    dossierInfos.setEtablissement(insAdmEtpDTO.getComposante().getLibComposante());
                     ContratPedagogiqueResultatElpEprDTO5[] resultatElpEprDTOs = wsApogeeServicePedago
                             .recupererResultatsElpEprDTO(individu.getNumEtu(), annee.toString(), insAdmEtpDTO.getEtape().getCodeEtp(),
                                     insAdmEtpDTO.getEtape().getVersionEtp());
@@ -62,8 +58,8 @@ public class ApoDossierInfosService implements DossierInfosService {
                                 || resultatElpEprDTO.getElp().getNumPreElp() == 5)) {
                             if (resultatElpEprDTO.getResultatsElp() != null) {
                                 ResultatElpDTO3[] resultat = resultatElpEprDTO.getResultatsElp().getItem().toArray(new ResultatElpDTO3[0]);
-                                dossierDatas.setNoteS1(resultat[0].getNotElp());
-                                dossierDatas.setResultatS1(resultat[0].getTypResultat().getLibTre());
+                                dossierInfos.setNoteS1(resultat[0].getNotElp());
+                                dossierInfos.setResultatS1(resultat[0].getTypResultat().getLibTre());
                             }
 
                         }
@@ -76,8 +72,8 @@ public class ApoDossierInfosService implements DossierInfosService {
                                 || resultatElpEprDTO.getElp().getNumPreElp() == 6)) {
                             if (resultatElpEprDTO.getResultatsElp() != null) {
                                 ResultatElpDTO3[] resultat = resultatElpEprDTO.getResultatsElp().getItem().toArray(new ResultatElpDTO3[0]);
-                                dossierDatas.setNoteS2(resultat[0].getNotElp());
-                                dossierDatas.setResultatS2(resultat[0].getTypResultat().getLibTre());
+                                dossierInfos.setNoteS2(resultat[0].getNotElp());
+                                dossierInfos.setResultatS2(resultat[0].getTypResultat().getLibTre());
                             }
                         }
 
@@ -85,20 +81,19 @@ public class ApoDossierInfosService implements DossierInfosService {
                                 && resultatElpEprDTO.getElp().getNatureElp().getTemFictif().equals("N")) {
                             if (resultatElpEprDTO.getResultatsElp() != null) {
                                 ResultatElpDTO3[] resultat = resultatElpEprDTO.getResultatsElp().getItem().toArray(new ResultatElpDTO3[0]);
-                                dossierDatas.setNoteAnn(resultat[0].getNotElp());
+                                dossierInfos.setNoteAnn(resultat[0].getNotElp());
                                 if (resultat[0].getTypResultat() != null) {
-                                    dossierDatas.setResultatAnn(resultat[0].getTypResultat().getLibTre());
+                                    dossierInfos.setResultatAnn(resultat[0].getTypResultat().getLibTre());
                                 }
                             }
                         }
                     }
-                    dossierProperties.add(dossierDatas);
                 }
             }
         } catch (AgapeException e) {
             logger.debug(e.getMessage());
         }
 
-        return dossierProperties;
+        return dossierInfos;
     }
 }

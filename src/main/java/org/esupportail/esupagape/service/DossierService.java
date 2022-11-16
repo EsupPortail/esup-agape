@@ -103,28 +103,22 @@ public class DossierService {
     }
 
     public DossierInfos getInfos(Dossier dossier) {
-        List<DossierInfos> infos = new ArrayList<>();
+        DossierInfos infos = new DossierInfos();
         for(DossierInfosService dossierInfosService : dossierInfosServices) {
-            infos.addAll(dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false));
+            dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, infos);
         }
-        if(infos.size() > 0) {
-            return infos.get(0);
-        } else {
-            return new DossierInfos();
-        }
+        return infos;
     }
 
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            List<DossierInfos> dossierPropertiesList = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false);
-            for(DossierInfos dossierProperties : dossierPropertiesList) {
-                if (dossierProperties != null) {
-                    dossier.setComposante(dossierProperties.getUfr());
-                    dossier.setFilliere(dossierProperties.getFiliere());
-                    dossier.setSite(dossierProperties.getEtablissement());
-                }
+            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
+            if(dossierInfos != null) {
+                dossier.setComposante(dossierInfos.getUfr());
+                dossier.setFilliere(dossierInfos.getFiliere());
+                dossier.setSite(dossierInfos.getEtablissement());
             }
         }
     }
