@@ -92,6 +92,14 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="composante">Composante</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
                         <label class="form-label" for="site">Lieu de formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
@@ -100,10 +108,10 @@
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="composante">Composante</label>
+                            <label class="form-label" for="formAddress">Adresse de formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
+                            <input disabled id="formAddress" type="text" class="form-control" th:value="${currentDossier.formAddress}">
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">

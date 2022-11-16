@@ -10,11 +10,28 @@ public final class OrganizationalUnitLdap {
 
     @Id
     private Name dn;
+    private String supannRefId;
     private String postalAddress;
     private String supannCodeEntiteParent;
     private String supannCodeEntite;
     private String supannTypeEntite;
     private String description;
+
+    public Name getDn() {
+        return dn;
+    }
+
+    public void setDn(Name dn) {
+        this.dn = dn;
+    }
+
+    public String getSupannRefId() {
+        return supannRefId;
+    }
+
+    public void setSupannRefId(String supannRefId) {
+        this.supannRefId = supannRefId;
+    }
 
     public String getPostalAddress() {
         return postalAddress;

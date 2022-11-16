@@ -125,6 +125,9 @@ public class DossierService {
                 if(dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
                     dossier.setSite(dossierInfos.getEtablissement());
                 }
+                if(dossierInfos.getFormAddress() != null && !dossierInfos.getFormAddress().isEmpty()) {
+                    dossier.setFormAddress(dossierInfos.getFormAddress());
+                }
             }
         }
     }

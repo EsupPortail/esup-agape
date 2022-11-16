@@ -47,6 +47,8 @@ public class Dossier {
 
     private String site;
 
+    private String formAddress;
+
     private String filliere;
 
     private String composante;
@@ -182,6 +184,14 @@ public class Dossier {
 
     public void setSite(String site) {
         this.site = site;
+    }
+
+    public String getFormAddress() {
+        return formAddress;
+    }
+
+    public void setFormAddress(String formAddress) {
+        this.formAddress = formAddress;
     }
 
     public String getFilliere() {

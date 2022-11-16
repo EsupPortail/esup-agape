@@ -5,6 +5,7 @@ public class DossierInfos {
     String ufr;
     String filiere;
     String etablissement;
+    String formAddress;
     String noteS1;
     String resultatS1;
     String noteS2;
@@ -34,6 +35,14 @@ public class DossierInfos {
 
     public void setEtablissement(String etablissement) {
         this.etablissement = etablissement;
+    }
+
+    public String getFormAddress() {
+        return formAddress;
+    }
+
+    public void setFormAddress(String formAddress) {
+        this.formAddress = formAddress;
     }
 
     public String getNoteS1() {
