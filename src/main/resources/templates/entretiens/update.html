@@ -21,7 +21,6 @@
        <h1>Page modification de l'entretien</h1>
         <form class="container" th:method="'PUT'" th:action="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" th:object="${entretien}">
             <div class="mb-3 mt-3">
-                <input th:field="*{id}" type="hidden" readonly class="form-control">
                 <label th:for="date" class="form-label">Date de l’entretien</label>
                 <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${entretien.date}">
                 <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>

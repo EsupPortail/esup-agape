@@ -101,7 +101,7 @@ public class EntretienService {
         entretienToUpdate.setTypeContact(entretien.getTypeContact());
         entretienToUpdate.setInterlocuteur(entretien.getInterlocuteur());
         entretienToUpdate.setCompteRendu(entretien.getCompteRendu());
-        entretienRepository.save(entretien);
+        entretienRepository.save(entretienToUpdate);
     }
 
     public Page<Entretien> findByDossier(Dossier dossier, Pageable pageable) {
