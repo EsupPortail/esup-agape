@@ -51,7 +51,7 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private CodPfas codPfas;
 
-    @ElementCollection(targetClass=CodMeahF.class)
+    @ElementCollection(targetClass=CodMeahF.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<CodMeahF> codMeahF;
 
