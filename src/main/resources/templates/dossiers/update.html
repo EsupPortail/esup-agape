@@ -102,6 +102,28 @@
                 <div class="col-6">
                     <h4>Parcours</h4>
                     <hr>
+                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="typeFormation">Type de formation</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select disabled id="typeFormation" name="typeFormation" type="text" class="form-select" th:value="${currentDossier.taux}">
+                                <option value="" disabled selected>Choisir</option>
+                                <option th:selected="${currentDossier.typeFormation == typeFormation}" th:each="typeFormation : ${typeFormations}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="modeFormation">Modalités de formation</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select disabled id="modeFormation" name="modeFormation" type="text" class="form-select" th:value="${currentDossier.modeFormation}">
+                                <option value="" disabled selected>Choisir</option>
+                                <option th:selected="${currentDossier.modeFormation == modeFormation}" th:each="modeFormation : ${modeFormations}" th:text="#{'enquete.modFrmn.' +${modeFormation}}" th:value="${modeFormation}"></option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
                             <label class="form-label" for="site">Établissement</label>

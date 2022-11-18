@@ -1,6 +1,8 @@
 package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,6 +44,10 @@ public class Dossier {
 
     @Enumerated(EnumType.STRING)
     private Taux taux;
+
+    private TypeFrmn typeFormation;
+
+    private ModFrmn modeFormation;
 
     private String commentaire;
 
@@ -160,6 +166,22 @@ public class Dossier {
 
     public void setTaux(Taux taux) {
         this.taux = taux;
+    }
+
+    public TypeFrmn getTypeFormation() {
+        return typeFormation;
+    }
+
+    public void setTypeFormation(TypeFrmn typeFormation) {
+        this.typeFormation = typeFormation;
+    }
+
+    public ModFrmn getModeFormation() {
+        return modeFormation;
+    }
+
+    public void setModeFormation(ModFrmn modeFormation) {
+        this.modeFormation = modeFormation;
     }
 
     public String getCommentaire() {

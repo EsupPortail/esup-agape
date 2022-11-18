@@ -2,6 +2,8 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -70,6 +72,8 @@ public class DossierController {
         model.addAttribute("tauxs", Taux.values());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("etats", Etat.values());
+        model.addAttribute("typeFormations", TypeFrmn.values());
+        model.addAttribute("modeFormations", ModFrmn.values());
         model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         return "dossiers/update";

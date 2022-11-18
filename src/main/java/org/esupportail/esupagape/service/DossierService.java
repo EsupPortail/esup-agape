@@ -104,6 +104,8 @@ public class DossierService {
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
+        dossierToUpdate.setTypeFormation(dossier.getTypeFormation());
+        dossierToUpdate.setModeFormation(dossier.getModeFormation());
         if(StringUtils.hasText(dossier.getSite())) {
             dossierToUpdate.setSite(dossier.getSite());
         }
