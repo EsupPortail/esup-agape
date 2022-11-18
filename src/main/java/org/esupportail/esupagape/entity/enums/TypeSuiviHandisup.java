@@ -2,7 +2,6 @@ package org.esupportail.esupagape.entity.enums;
 
 public enum TypeSuiviHandisup {
 
-    AUCUN,
     CONSTRUCTION_DE_PROJET,
     EMPLOI,
     EMPLOI_D_ETE,

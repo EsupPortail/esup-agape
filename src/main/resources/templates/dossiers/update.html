@@ -29,26 +29,26 @@
                         </select>
                         </div>
                     </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="etat">Etat</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                        <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">
-                            <option value="" disabled selected>Choisir</option>
-                            <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>
-                        </select>
-                        </div>
-                    </div>
+<!--                    <div class="row mb-1 align-items-baseline">-->
+<!--                        <div class="col-4" style="width: 250px;">-->
+<!--                        <label class="form-label" for="etat">Etat</label>-->
+<!--                        </div>-->
+<!--                        <div class="col-12 col-xxl-8">-->
+<!--                        <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">-->
+<!--                            <option value="" disabled selected>Choisir</option>-->
+<!--                            <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>-->
+<!--                        </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
                         <label class="form-label" for="mdph">Suivi MDPH</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
-                            <option value="" disabled selected>Choisir</option>
-                            <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
-                        </select>
+                            <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
+                                <option value="" disabled selected>Choisir</option>
+                                <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
@@ -56,26 +56,46 @@
                         <label class="form-label" for="taux">Taux</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <input disabled id="taux" name="taux" type="number" min="0" max="100" class="form-control" th:value="${currentDossier.taux}">
+                            <select disabled id="taux" name="taux" type="text" class="form-select" th:value="${currentDossier.taux}">
+                                <option value="" disabled selected>Choisir</option>
+                                <option th:selected="${currentDossier.taux == taux}" th:each="taux : ${tauxs}" th:text="#{'dossier.taux.' +${taux}}" th:value="${taux}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="typeSuiviHandisup">Suivi handisup</label>
+                            <label class="form-label" for="suiviHandisupOui">Suivi handisup</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <select disabled id="typeSuiviHandisup" name="typeSuiviHandisup" type="text" class="form-select" th:value="${currentDossier.typeSuiviHandisup}">
-                            <option value="" disabled selected>Choisir</option>
-                            <option th:selected="${currentDossier.typeSuiviHandisup == typeSuiviHandisup}" th:each="typeSuiviHandisup : ${typeSuiviHandisups}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}" th:value="${typeSuiviHandisup}"></option>
-                        </select>
+                            <input disabled type="radio" class="form-check-input" id="suiviHandisupOui" name="suiviHandisup" value="true" th:checked="${currentDossier.suiviHandisup == true}">
+                            <label class="form-check-label" for="suiviHandisupOui">
+                                Oui
+                            </label>
+                            <input disabled type="radio" class="form-check-input" id="suiviHandisupNon" name="suiviHandisup" value="false" th:checked="${currentDossier.suiviHandisup == false}">
+                            <label class="form-check-label" for="suiviHandisupNon">
+                                Non
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline" th:classappend="${currentDossier.suiviHandisup == false ? 'd-none' : ''}" id="typeSuiviHandisupDiv">
+                        <div class="col-4" style="width: 250px;">
+                        <label class="form-label" th:for="${typeSuiviHandisup}">Types de suivi handisup</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <th:block th:each="typeSuiviHandisup : ${typeSuiviHandisups}">
+                                <div class="form-check">
+                                <input disabled type="checkbox" class="form-check-input" th:id="${typeSuiviHandisup}" name="typeSuiviHandisup" th:value="${typeSuiviHandisup.name()}" th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
+                                <label class="form-check-label" th:for="${typeSuiviHandisup.name()}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
+                                </div>
+                            </th:block>
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="suiviHandisup">Commentaire handisup</label>
+                        <label class="form-label" for="commentaire">Commentaire</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                        <input disabled id="suiviHandisup" name="suiviHandisup" type="text" class="form-control" th:value="${currentDossier.suiviHandisup}">
+                            <textarea disabled id="commentaire" name="commentaire" type="text" class="form-control" th:value="${currentDossier.commentaire}" th:text="${currentDossier.commentaire}"></textarea>
                         </div>
                     </div>
                 </div>
@@ -84,10 +104,15 @@
                     <hr>
                     <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="site">Etablissement</label>
+                            <label class="form-label" for="site">Établissement</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <input disabled id="site" type="text" class="form-control" th:value="${currentDossier.site}">
+                            <div class="input-group">
+                                <input disabled id="site" name="site" type="text" class="form-control" th:value="${currentDossier.site}" th:readonly="${currentDossier.site != ''}">
+                                <a onclick="toggleInputLock('site');" role="button" id="siteEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
@@ -95,15 +120,20 @@
                         <label class="form-label" for="libelleFormation">Formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <textarea rows="3" disabled id="libelleFormation" class="form-control" style="min-height:60px; resize: none;" th:text="${currentDossier.libelleFormation}"></textarea>
+                            <div class="input-group">
+                                <textarea rows="3" disabled id="libelleFormation" name="libelleFormation" class="form-control" style="min-height:60px; resize: none;" th:text="${currentDossier.libelleFormation}" th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
+                                <a onclick="toggleInputLock('libelleFormation');" role="button" id="libelleFormationEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-1 align-items-baseline">
+                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                         <div class="col-4" style="width: 250px;">
                             <label class="form-label" for="composante">Composante</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}">
+                            <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}" th:readonly="${currentDossier.composante != ''}">
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
@@ -111,12 +141,17 @@
                             <label class="form-label" for="formAddress">Adresse de formation</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <input disabled id="formAddress" type="text" class="form-control" th:value="${currentDossier.formAddress}">
+                            <div class="input-group">
+                                <input disabled id="formAddress" name="formAddress" type="text" class="form-control" th:value="${currentDossier.formAddress}" th:readonly="${currentDossier.formAddress != ''}">
+                                <a onclick="toggleInputLock('formAddress');" role="button" id="formAddressEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-1 align-items-baseline">
+                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                         <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="rentreeProchaine">Choix pour la rentrée prochaine</label>
+                        <label class="form-label" for="rentreeProchaine">Filière envisagée</label>
                         </div>
                         <div class="col-12 col-xxl-8">
                         <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">

@@ -12,6 +12,10 @@ ul {
     opacity: initial !important;
 }
 
+select[disabled] > option {
+    color: initial;
+}
+
 .form-label {
     font-weight: bold;
 }

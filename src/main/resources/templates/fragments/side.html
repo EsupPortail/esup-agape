@@ -27,7 +27,6 @@
             <dt class="col-sm-6">Date de naissance</dt>
             <!--<dd class="col-sm-6" th:utext="|${currentDossier.individu.dateOfBirth} (${age} ans)|"></dd>-->
             <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
-
             <dt class="col-sm-6">Type d'individu</dt>
             <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
             <dt class="col-sm-6">Statut du dossier</dt>
@@ -45,6 +44,8 @@
              <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
             <dt class="col-sm-6">Sexe</dt>
             <dd class="col-sm-6" th:utext="${currentDossier.individu.sex}"></dd>
+            <dt class="col-sm-6">Nationalité</dt>
+            <dd class="col-sm-6" th:utext="${currentDossier.individu.nationalite}"></dd>
         </dl>
         <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
         <hr>

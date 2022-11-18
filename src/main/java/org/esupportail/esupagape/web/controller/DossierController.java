@@ -56,9 +56,9 @@ public class DossierController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, Model model) {
+    public String update(@PathVariable Long id, Model model) {
         //TODO supprimer synchro dossier ?
-        dossierService.syncDossier(id);
+//        dossierService.syncDossier(id);
         Dossier dossier = dossierService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -67,15 +67,16 @@ public class DossierController {
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
         model.addAttribute("rentreeProchaines", RentreeProchaine.values());
+        model.addAttribute("tauxs", Taux.values());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("etats", Etat.values());
         model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
-        return "dossiers/show";
+        return "dossiers/update";
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid Dossier dossier, Model model) {
+    public String update(@PathVariable Long id, @Valid Dossier dossier) {
         dossierService.update(id, dossier);
         return "redirect:/dossiers/" + id;
     }

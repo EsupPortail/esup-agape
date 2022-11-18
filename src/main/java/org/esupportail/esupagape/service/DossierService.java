@@ -16,8 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DossierService {
@@ -100,6 +103,16 @@ public class DossierService {
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
+        dossierToUpdate.setCommentaire(dossier.getCommentaire());
+        if(StringUtils.hasText(dossier.getSite())) {
+            dossierToUpdate.setSite(dossier.getSite());
+        }
+        if(StringUtils.hasText(dossier.getLibelleFormation())) {
+            dossierToUpdate.setLibelleFormation(dossier.getLibelleFormation());
+        }
+        if(StringUtils.hasText(dossier.getFormAddress())) {
+            dossierToUpdate.setFormAddress(dossier.getFormAddress());
+        }
     }
 
     public DossierInfos getInfos(Dossier dossier) {
@@ -108,6 +121,15 @@ public class DossierService {
             dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, infos);
         }
         return infos;
+    }
+
+    @Transactional
+    public void syncAllDossiers() {
+        List<Dossier> dossiers = dossierRepository.findAll();
+        for (Dossier dossier : dossiers) {
+            syncDossier(dossier.getId());
+        }
+        logger.info("Sync dossiers done");
     }
 
     @Transactional

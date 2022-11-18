@@ -41,8 +41,15 @@ public class AdminController {
 
     @GetMapping("/sync-individus")
     public String syncIndividus(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro est terminée"));
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
         individuService.syncAllIndividus();
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/sync-dossiers")
+    public String syncDossier(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des dossiers est terminée"));
+        dossierService.syncAllDossiers();
         return "redirect:/admin";
     }
 
