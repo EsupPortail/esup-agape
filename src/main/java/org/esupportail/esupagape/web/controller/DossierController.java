@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
@@ -53,7 +54,6 @@ public class DossierController {
         model.addAttribute("years", utilsService.getYears());
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
-
         return "dossiers/list";
     }
 
@@ -72,16 +72,25 @@ public class DossierController {
         model.addAttribute("tauxs", Taux.values());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("etats", Etat.values());
+        model.addAttribute("typeIndividus", TypeIndividu.values());
+        model.addAttribute("statusDossiers", StatusDossier.values());
         model.addAttribute("typeFormations", TypeFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
         model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
+        model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
         return "dossiers/update";
     }
 
     @PutMapping("/{id}")
     public String update(@PathVariable Long id, @Valid Dossier dossier) {
         dossierService.update(id, dossier);
+        return "redirect:/dossiers/" + id;
+    }
+
+    @PutMapping("/{id}/update-dossier-individu")
+    public String update(@PathVariable Long id, @Valid DossierIndividuForm dossierIndividuForm) {
+        dossierService.updateDossierIndividu(id, dossierIndividuForm);
         return "redirect:/dossiers/" + id;
     }
 

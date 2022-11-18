@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
+import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -154,5 +155,16 @@ public class DossierService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
+        Dossier dossierToUpdate = getById(id);
+        dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
+        dossierToUpdate.setType(dossierIndividuForm.getType());
+        if(StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
+            dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
+        }
+        dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
     }
 }
