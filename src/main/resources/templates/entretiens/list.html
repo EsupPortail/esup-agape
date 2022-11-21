@@ -25,6 +25,7 @@
                             <th><a class="sorted">Type</a></th>
                             <th><a class="sorted">Interlocuteur</a></th>
                             <th><a class="sorted">Compte rendu</a></th>
+                            <th>Pièce(s) jointe(s)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -36,6 +37,7 @@
                            <!-- <td th:text="${entretien.interlocuteur}"></td>-->
                             <td th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
                             <td class="text-break" th:text="${entretien.compteRendu}"></td>
+                            <td th:text="${entretien.numberOfAttachements}">0</td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">

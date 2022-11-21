@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.DocumentDto;
+import org.esupportail.esupagape.dtos.EntretienAttachement;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Entretien;
@@ -106,5 +107,9 @@ public class EntretienService {
 
     public Page<Entretien> findByDossier(Dossier dossier, Pageable pageable) {
         return entretienRepository.findEntretiensByDossierId(dossier.getId(), pageable);
+    }
+
+    public Page<EntretienAttachement> findEntretiensWithAttachementsByDossierId(Long dossierId, Pageable pageable) {
+        return entretienRepository.findEntretiensWithAttachementsByDossierId(dossierId, pageable);
     }
 }

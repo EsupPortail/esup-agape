@@ -36,7 +36,7 @@
                     <th:block th:each="attachment : ${attachments}">
                         <li>
                             <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}"
-                                    th:method="'DELETE'"
+                                    th:method="delete"
                                     enctype="multipart/form-data">
                                 <input type="submit" class="btn btn-sm btn-danger" value="X">
                             </form>
@@ -45,7 +45,7 @@
                     </th:block>
                 </ul>
                 <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="'POST'" enctype="multipart/form-data">
-                    <input type="file" name="multipartFiles" multiple class="form-control mb-2">
+                    <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
                     <input type="submit" class="btn btn-success" value="Ajouter">
                 </form>
             </div>
