@@ -19,19 +19,13 @@
             <dl class="row">
                 <dt class="col-sm-6">N° Étudiant</dt>
                 <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
-                <!-- <dt class="col-sm-6">Nom</dt>
-                 <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
-                 <dt class="col-sm-6">Prénom</dt>
-                 <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd>-->
                 <dt>Login</dt>
                 <dd th:utext="${currentDossier.individu.eppn}"></dd>
                 <dt class="col-sm-6">Date de naissance</dt>
-                <!--<dd class="col-sm-6" th:utext="|${currentDossier.individu.dateOfBirth} (${age} ans)|"></dd>-->
                 <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
                 <dt class="col-sm-6">Type d'individu</dt>
                 <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
                 <dt class="col-sm-6">Statut du dossier</dt>
-               <!-- <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>-->
                 <th:block th:switch="${currentDossier.statusDossier}">
                     <dd class="col-sm-6" th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
                     <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></dd>
@@ -41,8 +35,6 @@
                     <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
                     <dd class="col-sm-6" th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
                 </th:block>
-                <!-- <dt class="col-sm-6">Age</dt>
-                 <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
                 <dt class="col-sm-6">Genre</dt>
                 <dd class="col-sm-6" th:utext="#{'individu.gender.'+${currentDossier.individu.gender}}"></dd>
                 <dt class="col-sm-6">Nationalité</dt>
