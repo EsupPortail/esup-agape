@@ -67,8 +67,8 @@
                             </div>
                             <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                             <div class="col-sm-10">
-                                <select th:field="*{gender}" type="text" class="form-select" required>
-                                    <option disabled selected value="nul">Choisir</option>
+                                <select selected th:field="*{gender}" type="text" class="form-select" required>
+                                    <option value="">Choisir</option>
                                     <option th:each="gender : ${genders}"
                                             th:selected="${individu.gender == gender}"
                                             th:text="#{'individu.gender.' +${gender}}"
