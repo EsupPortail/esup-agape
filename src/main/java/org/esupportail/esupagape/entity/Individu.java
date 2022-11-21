@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.entity;
 
-import org.esupportail.esupagape.entity.enums.Civilite;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -75,7 +75,7 @@ public class Individu {
     private String contactPhone;
 
     @Enumerated(EnumType.STRING)
-    private Civilite civilite;
+    private Gender gender;
 
     @OneToMany(mappedBy = "individu", orphanRemoval = true)
     private List<Dossier> dossiers = new ArrayList<>();
@@ -260,12 +260,12 @@ public class Individu {
         this.contactPhone = contactPhone;
     }
 
-    public Civilite getCivilite() {
-        return civilite;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setCivilite(Civilite civilite) {
-       this.civilite = civilite;
+    public void setGender(Gender gender) {
+       this.gender = gender;
     }
 
 

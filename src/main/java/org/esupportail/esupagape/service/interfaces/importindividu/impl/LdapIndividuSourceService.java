@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
@@ -27,9 +28,9 @@ public class LdapIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
-    Map<String, String> civiliteMap  = new HashMap<>() {{
-        put("MME", "MADAME");
-        put("M.", "MONSIEUR");
+    Map<String, String> genderMap  = new HashMap<>() {{
+        put("MME", "FEMININ");
+        put("M.", "MASCULIN");
     }};
 
     private final ApplicationProperties applicationProperties;
@@ -56,7 +57,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
                 }
                 individuInfos.setFixCountry(address.split("\\$")[address.split("\\$").length - 1].trim());
             }
-            individuInfos.setGenre(civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individuInfos.setGenre(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             individuInfos.setEmailEtu(personLdap.getMail());
             individuInfos.setEmailPerso(personLdap.getSupannMailPerso());
             individuInfos.setFixPhone(personLdap.getTelephoneNumber());
@@ -89,7 +90,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
-            individu.setSex(civiliteMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individu.setSex(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individu.setGender(Gender.valueOf(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase())));
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;

@@ -5,7 +5,7 @@ import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.Civilite;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -20,7 +20,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +101,7 @@ public class IndividuService {
             individu.setSex(individuInfos.getGenre());
         }
         if(individuInfos.getGenre() != null && !individuInfos.getGenre().isEmpty()) {
-            individu.setCivilite(Civilite.valueOf(individuInfos.getGenre()));
+            individu.setGender(Gender.valueOf(individuInfos.getGenre()));
         }
         if(individuInfos.getEmailEtu() != null && !individuInfos.getEmailEtu().isEmpty()) {
             individu.setEmailEtu(individuInfos.getEmailEtu());

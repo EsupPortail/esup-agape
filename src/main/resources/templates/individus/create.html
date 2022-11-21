@@ -65,10 +65,16 @@
                                 <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"
                                    th:errors="*{dateOfBirth}"></p>
                             </div>
-                            <label th:for="sex" class="col-md-2 col-form-label mb-1">Sexe</label>
+                            <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                             <div class="col-sm-10">
-                                <input id="sex" th:field="*{sex}" type="text" class="form-control">
-                                <p th:if="${#fields.hasErrors('sex')}" th:errorclass="error" th:errors="*{sex}"></p>
+                                <select th:field="*{gender}" type="text" class="form-select" required>
+                                    <option disabled selected value="nul">Choisir</option>
+                                    <option th:each="gender : ${genders}"
+                                            th:selected="${individu.gender == gender}"
+                                            th:text="#{'individu.gender.' +${gender}}"
+                                            th:value="${gender}"></option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('gender')}" th:errorclass="error" th:errors="*{gender}"></p>
                             </div>
                             <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
                             <div class="col-sm-10">

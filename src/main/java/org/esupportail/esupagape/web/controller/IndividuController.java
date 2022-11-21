@@ -2,6 +2,7 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DossierService;
@@ -189,6 +190,7 @@ public class IndividuController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("individu", new Individu());
+        model.addAttribute("genders", Gender.values());
         return "individus/create";
     }
 
