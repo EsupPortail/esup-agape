@@ -15,8 +15,7 @@
                         <li class="breadcrumb-item active" aria-current="page">Liste des enquêtes</li>
                     </ol>
                     <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                   <!-- <div th:replace="fragments/tabs-content :: tabs-content(active='enquetes')"></div>-->
-
+                    <div th:replace="fragments/tabs-content :: tabs-content(active='enquetes')"></div>
 
                     <div>
                         <div>
@@ -27,6 +26,18 @@
                                             <label class="col-md-3  form-label" for="an">Année de naissance</label>
                                             <div class="col-lg-6">
                                                 <input id="an" name="an" class="form-control" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 mt-3 form-label" th:for="genders">Genre</label>
+                                            <div>
+                                                <select name="gender" class="form-select" size="1">
+                                                    <option disabled selected value="nul">Choisir</option>
+                                                    <option th:selected="${gender == enquete.gender}"
+                                                            th:each="gender : ${genders}"
+                                                            th:value="${gender}"
+                                                            th:text="#{'individu.gender.' + ${gender}}"></option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">

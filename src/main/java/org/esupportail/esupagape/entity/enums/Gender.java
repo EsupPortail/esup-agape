@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.entity.enums;
 
-public enum Civilite {
+public enum Genre {
     MADAME,
     MONSIEUR
 }

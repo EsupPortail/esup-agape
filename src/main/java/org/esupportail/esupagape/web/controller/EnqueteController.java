@@ -2,7 +2,7 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
-import org.esupportail.esupagape.entity.enums.Civilite;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EnqueteService;
@@ -47,7 +47,7 @@ public class EnqueteController {
         model.addAttribute("codMeaes", CodMeae.values());
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
-        model.addAttribute("civilites", Civilite.values());
+        model.addAttribute("genders", Gender.values());
         return "enquete/update";
     }
 

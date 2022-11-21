@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.entity;
 
-import org.esupportail.esupagape.entity.enums.Civilite;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
 import javax.persistence.*;
@@ -20,7 +20,7 @@ public class Enquete {
     private String an;
 
     @Enumerated(EnumType.STRING)
-    private Civilite civilite;
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     private TypeFrmn typeFrmn;
@@ -120,12 +120,12 @@ public class Enquete {
         this.an = an;
     }
 
-    public Civilite getCivilite() {
-        return civilite;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setCivilite(Civilite civilite) {
-        this.civilite = civilite;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public TypeFrmn getTypeFrmn() {

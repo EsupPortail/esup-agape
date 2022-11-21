@@ -37,14 +37,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 mt-3 form-label" th:for="civilites">Civilité</label>
+                                    <label class="col-md-3 mt-3 form-label" th:for="genders">Genre</label>
                                     <div>
-                                        <select name="civilite" class="form-select" size="1">
+                                        <select name="gender" class="form-select" size="1">
                                             <option disabled selected value="nul">Choisir</option>
-                                            <option th:selected="${civilite == enquete.civilite}"
-                                                    th:each="civilite : ${civilites}"
-                                                    th:value="${civilite}"
-                                                    th:text="#{'individu.civilite.' + ${civilite}}"></option>
+                                            <option th:selected="${gender == enquete.gender}"
+                                                    th:each="gender : ${genders}"
+                                                    th:value="${gender}"
+                                                    th:text="#{'individu.gender.' + ${gender}}"></option>
                                         </select>
                                     </div>
                                 </div>

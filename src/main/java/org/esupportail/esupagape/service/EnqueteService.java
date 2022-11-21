@@ -43,7 +43,7 @@ public class EnqueteService {
         enqueteToUpdate.setNfic(enquete.getNfic());
         enqueteToUpdate.setNumetu(enquete.getNumetu());
         enqueteToUpdate.setAn(enqueteToUpdate.getAn());
-        enqueteToUpdate.setCivilite(enquete.getCivilite());
+        enqueteToUpdate.setGender(enquete.getGender());
         enqueteToUpdate.setTypeFrmn(enquete.getTypeFrmn());
         enqueteToUpdate.setModFrmn(enquete.getModFrmn());
         enqueteToUpdate.setCodSco(enquete.getCodSco());
