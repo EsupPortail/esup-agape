@@ -39,6 +39,8 @@ public class Individu {
 
     private String sex;
 
+    private String nationalite;
+
     @NotNull(message = "La date de naissance doit être renseignée")
     @Past(message = "La date de naissance doit être dans le passé.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -128,6 +130,14 @@ public class Individu {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getNationalite() {
+        return nationalite;
+    }
+
+    public void setNationalite(String nationalite) {
+        this.nationalite = nationalite;
     }
 
     public LocalDate getDateOfBirth() {

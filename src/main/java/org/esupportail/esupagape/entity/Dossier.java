@@ -1,6 +1,8 @@
 package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,8 +26,9 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Classification classification;
 
+    @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private TypeSuiviHandisup typeSuiviHandisup;
+    private List<TypeSuiviHandisup> typeSuiviHandisup;
 
     @Enumerated(EnumType.STRING)
     private Etat etat;
@@ -39,7 +42,12 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private TypeIndividu type = TypeIndividu.INCONNU;
 
-    private int taux;
+    @Enumerated(EnumType.STRING)
+    private Taux taux;
+
+    private TypeFrmn typeFormation;
+
+    private ModFrmn modeFormation;
 
     private String commentaire;
 
@@ -48,8 +56,6 @@ public class Dossier {
     private String site;
 
     private String formAddress;
-
-    private String filliere;
 
     private String composante;
 
@@ -65,7 +71,7 @@ public class Dossier {
 
     private double noteTotal;
 
-    private String suiviHandisup;
+    private Boolean suiviHandisup;
 
     @ManyToOne
     private Individu individu;
@@ -114,11 +120,11 @@ public class Dossier {
         this.classification = classification;
     }
 
-    public TypeSuiviHandisup getTypeSuiviHandisup() {
+    public List<TypeSuiviHandisup> getTypeSuiviHandisup() {
         return typeSuiviHandisup;
     }
 
-    public void setTypeSuiviHandisup(TypeSuiviHandisup detailSuiviHandisup) {
+    public void setTypeSuiviHandisup(List<TypeSuiviHandisup> detailSuiviHandisup) {
         this.typeSuiviHandisup = detailSuiviHandisup;
     }
 
@@ -154,12 +160,28 @@ public class Dossier {
         this.type = type;
     }
 
-    public int getTaux() {
+    public Taux getTaux() {
         return taux;
     }
 
-    public void setTaux(int taux) {
+    public void setTaux(Taux taux) {
         this.taux = taux;
+    }
+
+    public TypeFrmn getTypeFormation() {
+        return typeFormation;
+    }
+
+    public void setTypeFormation(TypeFrmn typeFormation) {
+        this.typeFormation = typeFormation;
+    }
+
+    public ModFrmn getModeFormation() {
+        return modeFormation;
+    }
+
+    public void setModeFormation(ModFrmn modeFormation) {
+        this.modeFormation = modeFormation;
     }
 
     public String getCommentaire() {
@@ -192,14 +214,6 @@ public class Dossier {
 
     public void setFormAddress(String formAddress) {
         this.formAddress = formAddress;
-    }
-
-    public String getFilliere() {
-        return filliere;
-    }
-
-    public void setFilliere(String filliere) {
-        this.filliere = filliere;
     }
 
     public String getComposante() {
@@ -258,11 +272,11 @@ public class Dossier {
         this.noteTotal = noteTotal;
     }
 
-    public String getSuiviHandisup() {
+    public Boolean getSuiviHandisup() {
         return suiviHandisup;
     }
 
-    public void setSuiviHandisup(String suiviHandisup) {
+    public void setSuiviHandisup(Boolean suiviHandisup) {
         this.suiviHandisup = suiviHandisup;
     }
 

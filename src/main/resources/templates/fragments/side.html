@@ -3,97 +3,99 @@
     <div th:fragment="side" class="agape-side bg-light position-sticky me-2" >
         <div class="p-2">
         <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche</span></span>
-        <hr>
-        <div class="container">
-            <div class="row">
-                <div class="col"><a href="#" class="d-flex align-items-center link-dark text-decoration-none">
-                    <img th:src="'/dossiers/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="90" height="100">
-                </a></div>
-                <div class="col"><dt class="col-sm-6">Nom</dt>
-                    <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
-                    <dt class="col-sm-6">Prénom</dt>
-                    <dd class="col-sm-6"  th:utext="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd></div>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal"><i class="bi bi-pencil"></i></button>
+            <hr>
+            <div class="container">
+                <div class="row">
+                    <div class="col"><a href="#" class="d-flex align-items-center link-dark text-decoration-none">
+                        <img th:src="'/dossiers/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="90" height="100">
+                    </a></div>
+                    <div class="col"><dt class="col-sm-6">Nom</dt>
+                        <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
+                        <dt class="col-sm-6">Prénom</dt>
+                        <dd class="col-sm-6"  th:utext="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd></div>
+                </div>
             </div>
-        </div>
-        <dl class="row">
-            <dt class="col-sm-6">N° Étudiant</dt>
-            <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
-            <!-- <dt class="col-sm-6">Nom</dt>
-             <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
-             <dt class="col-sm-6">Prénom</dt>
-             <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd>-->
-            <dt>Login</dt>
-            <dd th:utext="${currentDossier.individu.eppn}"></dd>
-            <dt class="col-sm-6">Date de naissance</dt>
-            <!--<dd class="col-sm-6" th:utext="|${currentDossier.individu.dateOfBirth} (${age} ans)|"></dd>-->
-            <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
-
-            <dt class="col-sm-6">Type d'individu</dt>
-            <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
-            <dt class="col-sm-6">Statut du dossier</dt>
-           <!-- <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>-->
-            <th:block th:switch="${currentDossier.statusDossier}">
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg" style="background-color:#d3d3d3;"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
-                <dd class="col-sm-6" th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
-            </th:block>
-            <!-- <dt class="col-sm-6">Age</dt>
-             <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
-            <dt class="col-sm-6">Sexe</dt>
-            <dd class="col-sm-6" th:utext="${currentDossier.individu.sex}"></dd>
-        </dl>
-        <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
-        <hr>
-        <dl class="row">
-            <dt>Email universitaire</dt>
-            <dd th:utext="${currentDossier.individu.emailEtu}"></dd>
-            <dt>Email personnel</dt>
-            <dd th:utext="${currentDossier.individu.emailPerso}"></dd>
-            <dt class="col-sm-6">Téléphone portable</dt>
-            <dd class="col-sm-6" th:utext="${currentDossier.individu.mobilPhone}"></dd>
-            <dt class="col-sm-6">Téléphone fixe</dt>
-            <dd class="col-sm-6" th:utext="${currentDossier.individu.fixPhone}"></dd>
-        </dl>
-        <span class="fs-6 card text-bg-primary"><span class="ms-3">Adresses</span></span>
-        <hr>
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                        Adresse annuelle
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <ul>
-                            <li th:text="${currentDossier.individu.currentAddress}">Adresse annuelle</li>
-                            <li th:text="${currentDossier.individu.currentCP}"></li>
-                            <li th:text="${currentDossier.individu.currentCity}"></li>
-                        </ul>
+            <dl class="row">
+                <dt class="col-sm-6">N° Étudiant</dt>
+                <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
+                <!-- <dt class="col-sm-6">Nom</dt>
+                 <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
+                 <dt class="col-sm-6">Prénom</dt>
+                 <dd class="col-sm-6" th:utext="${currentDossier.individu.firstName}"></dd>-->
+                <dt>Login</dt>
+                <dd th:utext="${currentDossier.individu.eppn}"></dd>
+                <dt class="col-sm-6">Date de naissance</dt>
+                <!--<dd class="col-sm-6" th:utext="|${currentDossier.individu.dateOfBirth} (${age} ans)|"></dd>-->
+                <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
+                <dt class="col-sm-6">Type d'individu</dt>
+                <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
+                <dt class="col-sm-6">Statut du dossier</dt>
+               <!-- <dd class="col-sm-6" th:utext="#{'dossier.status-dossier.' + ${currentDossier.statusDossier}}"></dd>-->
+                <th:block th:switch="${currentDossier.statusDossier}">
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg" style="background-color:#d3d3d3;"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
+                </th:block>
+                <!-- <dt class="col-sm-6">Age</dt>
+                 <dd class="col-sm-6" th:utext="|${age} ans|"></dd>-->
+                <dt class="col-sm-6">Sexe</dt>
+                <dd class="col-sm-6" th:utext="${currentDossier.individu.sex}"></dd>
+                <dt class="col-sm-6">Nationalité</dt>
+                <dd class="col-sm-6" th:utext="${currentDossier.individu.nationalite}"></dd>
+            </dl>
+            <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
+            <hr>
+            <dl class="row">
+                <dt>Email universitaire</dt>
+                <dd th:utext="${currentDossier.individu.emailEtu}"></dd>
+                <dt>Email personnel</dt>
+                <dd th:utext="${currentDossier.individu.emailPerso}"></dd>
+                <dt class="col-sm-6">Téléphone portable</dt>
+                <dd class="col-sm-6" th:utext="${currentDossier.individu.mobilPhone}"></dd>
+                <dt class="col-sm-6">Téléphone fixe</dt>
+                <dd class="col-sm-6" th:utext="${currentDossier.individu.fixPhone}"></dd>
+            </dl>
+            <span class="fs-6 card text-bg-primary"><span class="ms-3">Adresses</span></span>
+            <hr>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Adresse annuelle
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <ul>
+                                <li th:text="${currentDossier.individu.currentAddress}">Adresse annuelle</li>
+                                <li th:text="${currentDossier.individu.currentCP}"></li>
+                                <li th:text="${currentDossier.individu.currentCity}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Adresse fixe
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <ul>
+                                <li th:text="${currentDossier.individu.fixAddress}">Adresse fixe</li>
+                                <li th:text="${currentDossier.individu.fixCP}"></li>
+                                <li th:text="${currentDossier.individu.fixCity}"></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Adresse fixe
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <ul>
-                            <li th:text="${currentDossier.individu.fixAddress}">Adresse fixe</li>
-                            <li th:text="${currentDossier.individu.fixCP}"></li>
-                            <li th:text="${currentDossier.individu.fixCity}"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 </html>

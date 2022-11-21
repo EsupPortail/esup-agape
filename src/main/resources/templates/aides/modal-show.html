@@ -53,7 +53,7 @@
                                     <label class="form-label" id="comment" for="comment">Commentaire</label>
                                 </div>
                                 <div class="col-12 col-xxl-8">
-                                    <textarea onkeyup="textAreaAdjust(this);" th:id="'comment-' + ${aideMaterielle.id}" class="form-control" th:name="comment" th:value="${aideMaterielle.comment}" th:text="${aideMaterielle.comment}" disabled></textarea>
+                                    <textarea th:id="'comment-' + ${aideMaterielle.id}" class="form-control" th:name="comment" th:value="${aideMaterielle.comment}" th:text="${aideMaterielle.comment}" disabled></textarea>
                                 </div>
                             </div>
 

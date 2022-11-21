@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
+import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -16,8 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DossierService {
@@ -100,6 +104,18 @@ public class DossierService {
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
+        dossierToUpdate.setCommentaire(dossier.getCommentaire());
+        dossierToUpdate.setTypeFormation(dossier.getTypeFormation());
+        dossierToUpdate.setModeFormation(dossier.getModeFormation());
+        if(StringUtils.hasText(dossier.getSite())) {
+            dossierToUpdate.setSite(dossier.getSite());
+        }
+        if(StringUtils.hasText(dossier.getLibelleFormation())) {
+            dossierToUpdate.setLibelleFormation(dossier.getLibelleFormation());
+        }
+        if(StringUtils.hasText(dossier.getFormAddress())) {
+            dossierToUpdate.setFormAddress(dossier.getFormAddress());
+        }
     }
 
     public DossierInfos getInfos(Dossier dossier) {
@@ -108,6 +124,15 @@ public class DossierService {
             dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, infos);
         }
         return infos;
+    }
+
+    @Transactional
+    public void syncAllDossiers() {
+        List<Dossier> dossiers = dossierRepository.findAll();
+        for (Dossier dossier : dossiers) {
+            syncDossier(dossier.getId());
+        }
+        logger.info("Sync dossiers done");
     }
 
     @Transactional
@@ -130,5 +155,16 @@ public class DossierService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
+        Dossier dossierToUpdate = getById(id);
+        dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
+        dossierToUpdate.setType(dossierIndividuForm.getType());
+        if(StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
+            dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
+        }
+        dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
     }
 }

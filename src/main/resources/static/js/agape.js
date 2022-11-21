@@ -7,10 +7,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
         toast.show();
     }
 
+    //Ajustement automatique de la hauteur des textarea
     Array.prototype.slice.call(document.getElementsByTagName('textarea')).forEach(function (element) {
+        console.info("Enable textarea auto adjust on " + element.id);
         textAreaAdjust(element);
+        element.addEventListener("keyup", e => textAreaAdjust(e.target));
     });
 
+    //Activation suiviHansiSup
+    document.getElementById("suiviHandisupOui").addEventListener("click", function (){
+        document.getElementById("typeSuiviHandisupDiv").classList.remove("d-none");
+    });
+    document.getElementById("suiviHandisupNon").addEventListener("click", function (){
+        document.getElementById("typeSuiviHandisupDiv").classList.add("d-none");
+    });
 });
 
 function lockForm() {
@@ -28,9 +38,21 @@ function unlockForm(button) {
     }
     let form = document.getElementById('form-' + formName);
     [...form.elements].forEach(item => {
-        item.disabled = false;
+        if(item.readOnly === undefined || item.readOnly === false) {
+            item.disabled = false;
+        } else {
+            let editBtn = document.getElementById(item.id + "Edit");
+            if(editBtn != null) {
+                editBtn.classList.remove("d-none");
+            }
+        }
     });
+}
 
+function toggleInputLock(id) {
+    document.getElementById(id).toggleAttribute('disabled');
+    document.getElementById(id).toggleAttribute('readOnly');
+    document.getElementById(id + "Edit").remove();
 }
 
 function textAreaAdjust(element) {
