@@ -217,9 +217,9 @@
                                 <div class="form-group">
                                     <label class="col-md-3 form-label" th:for="codMeaa">Autres aides</label>
                                     <div>
-                                        <select th:field="*{codMeaa}" class="form-select" size="1">
+                                        <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
                                             <option disabled selected value="nul">Choisir</option>
-                                            <option th:selected="${enumCodmeaa== enquete.codMeaa}"
+                                            <option th:selected="${enumCodmeaa == enquete.codMeaa}"
                                                     th:each="enumCodmeaa : ${codMeaas}"
                                                     th:value="${enumCodmeaa}"
                                                     th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
