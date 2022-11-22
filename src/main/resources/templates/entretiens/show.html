@@ -30,17 +30,19 @@
                     <dt class="col-sm-2">Interlocuteur</dt>
                     <dd class="col-sm-10" th:text="${entretien.interlocuteur}"></dd>
                     <dt class="col-sm-2">Compte rendu</dt>
-                    <dd class="col-sm-10" th:text="${entretien.compteRendu}"></dd>
+                    <dd class="col-sm-10" style="max-width: 800px;" th:text="${entretien.compteRendu}"></dd>
                 </dl>
                 <ul>
                     <th:block th:each="attachment : ${attachments}">
                         <li>
+                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
                             <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}"
                                     th:method="delete"
-                                    enctype="multipart/form-data">
+                                    enctype="multipart/form-data"
+                                    class="mt-2">
                                 <input type="submit" class="btn btn-sm btn-danger" value="X">
                             </form>
-                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
+                            <!-- <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>-->
                         </li>
                     </th:block>
                 </ul>
