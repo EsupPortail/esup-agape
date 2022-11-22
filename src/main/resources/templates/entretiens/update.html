@@ -57,7 +57,7 @@
             </div>
             <div class="mt-3">
                 <label for="compteRendu" class="form-label">Compte rendu</label>
-                <textarea class="form-control" cols="2"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}"></textarea>
+                <textarea class="form-control"  id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}"></textarea>
                 <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
