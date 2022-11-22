@@ -24,8 +24,8 @@
                             <th><a class="sorted" sd:pagination-sort="date">Date</a></th>
                             <th><a class="sorted">Type</a></th>
                             <th><a class="sorted">Interlocuteur</a></th>
-                            <th><a class="sorted">Compte rendu</a></th>
-                            <th>Pièce(s) jointe(s)</th>
+                            <th class="d-none d-lg-table-cell d-xl-table-cell"><a class="sorted">Compte rendu</a></th>
+                            <th class="d-none d-lg-table-cell d-xl-table-cell">Pièce(s) jointe(s)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -34,8 +34,8 @@
                             <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
                             <td th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
                             <td th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
-                            <td class="text-break" th:text="${entretien.compteRendu}"></td>
-                            <td th:text="${entretien.numberOfAttachements}">0</td>
+                            <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;" th:text="${entretien.compteRendu}"></td>
+                            <td class="d-none d-lg-table-cell d-xl-table-cell" th:text="${entretien.numberOfAttachements}"></td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
