@@ -31,24 +31,20 @@
                     </thead>
                     <tbody>
                         <tr th:each="entretien : ${entretiens}">
-                            <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
-                            <td th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
-                            <td th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
-                            <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;" th:text="${entretien.compteRendu}"></td>
-                            <td class="d-none d-lg-table-cell d-xl-table-cell">
-                                <a role="button" class="btn btn-outline-info" th:href="@{/dossiers/{id}/entretiens/{entretienId}(id=${currentDossier.id},entretienId=${entretien.id})}">
+                            <td class="align-middle" th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="align-middle" th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
+                            <td class="align-middle" th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
+                            <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell align-middle" style="max-width: 150px;" th:text="${entretien.compteRendu}"></td>
+                            <td class="d-none d-lg-table-cell d-xl-table-cell align-middle">
+                                <div class="border border-1 border-info rounded p-1 text-center">
                                     Pièce(s) jointe(s) <span class="badge text-bg-secondary" th:text="${entretien.numberOfAttachements}"></span>
-                                </a>
+                                </div>
 
                             </td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
-                                        <a class="btn btn-info" th:href="@{/dossiers/{id}/entretiens/{entretienId}(id=${currentDossier.id},entretienId=${entretien.id})}" role="button"><i class="bi bi-eye"></i>
-                                        </a>
-                                    </li>
-                                    <li class="list-group-item border-0 p-1 bg-transparent">
-                                        <a class="btn btn-warning" th:href="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" role="button"><i class="bi bi-pencil"></i>
+                                        <a class="btn btn-info" th:href="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" role="button"><i class="bi bi-eye"></i>
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent">
