@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="aideHumaine" type="org.esupportail.esupagape.entity.AideHumaine"*/-->
+<div th:fragment="create" class="modal fade" id="add-aide-humaine-modal" tabindex="-1" aria-labelledby="add-aide-humaine-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="add-aide-humaine-label">Ajouter une aide humaine</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form th:method="post" th:action="@{/dossiers/{id}/aides/create-aide-humaine(id=${currentDossier.id})}" th:object="${aideHumaine}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label th:for="startDate" class="form-label">Date de debut</label>
+                        <input id="startDate" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}" required>
+                        <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fonction de l’aidant</label>
+                        <th:block th:each="fonctionAidant : ${fonctionAidants}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="fonctionAidant" th:value="${fonctionAidant}">
+                                <label class="form-check-label" th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></label>
+                            </div>
+                        </th:block>
+                    </div>
+                    <h4>Informations de l’aidant</h4>
+                    <div class="mb-3">
+                        <label th:for="numEtuAidant" class="form-label">Numéro d’étudiant</label>
+                        <input id="numEtuAidant" type="text" class="form-control" th:field="*{numEtuAidant}" required>
+                        <p th:if="${#fields.hasErrors('numEtuAidant')}" th:errorclass="error" th:errors="*{numEtuAidant}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="nameAidant" class="form-label">Nom</label>
+                        <input id="nameAidant" type="text" class="form-control" th:field="*{nameAidant}" required>
+                        <p th:if="${#fields.hasErrors('nameAidant')}" th:errorclass="error" th:errors="*{nameAidant}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="firstNameAidant" class="form-label">Prénom</label>
+                        <input id="firstNameAidant" type="text" class="form-control" th:field="*{firstNameAidant}" required>
+                        <p th:if="${#fields.hasErrors('firstNameAidant')}" th:errorclass="error" th:errors="*{firstNameAidant}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="dateOfBirthAidant" class="form-label">Date de naissance</label>
+                        <input id="dateOfBirthAidant" type="datetime-local" class="form-control" th:name="dateOfBirthAidant" required>
+                        <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="emailAidant" class="form-label">Email</label>
+                        <input id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}" required>
+                        <p th:if="${#fields.hasErrors('emailAidant')}" th:errorclass="error" th:errors="*{emailAidant}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label th:for="phoneAidant" class="form-label">Téléphone</label>
+                        <input id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}" required>
+                        <p th:if="${#fields.hasErrors('phoneAidant')}" th:errorclass="error" th:errors="*{phoneAidant}"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Enregister</button>
+                </div>
+                <script th:if="${#fields.hasAnyErrors()}">
+                    document.getElementById('add-aide-humaine-modal').classList.toggle("fade");
+                    new bootstrap.Modal(document.getElementById('add-aide-humaine-modal')).show();
+                    document.getElementById('add-aide-humaine-modal').classList.toggle("fade");
+                </script>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

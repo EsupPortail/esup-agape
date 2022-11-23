@@ -19,7 +19,7 @@
                                     <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
                                         <div class="form-check">
                                             <input id="typeAideMaterielle" th:checked="${aideMaterielle.typeAideMaterielle == typeAideMaterielle}" class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" disabled required>
-                                            <label class="form-check-label" th:text="#{'aide.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
+                                            <label class="form-check-label" th:text="#{'aides.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
                                         </div>
                                     </th:block>
                                 </div>

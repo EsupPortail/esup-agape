@@ -29,14 +29,14 @@
                             <input th:field="*{id}" type="hidden" readonly class="form-control">
                             <input th:field="*{dossier}" type="hidden" readonly class="form-control">
                             <div class="col-12">
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="an">Année de naissance</label>
                                     <div>
                                         <input id="an" name="an" class="form-control" type="text"
                                                th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="genders">Genre</label>
                                     <div>
                                         <select name="gender" class="form-select" size="1">
@@ -48,7 +48,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="typeFrmn">Type formation</label>
                                     <div>
                                         <select id="_typeFrmn_id" name="typeFrmn" class="form-select" size="1">
@@ -60,7 +60,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3  mt-3 form-label" th:for="modFrmn">Modalité formation</label>
                                     <div>
                                         <select id="_modFrmn_id" name="modFrmn" class="form-control" size="1">
@@ -72,7 +72,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codFil">Filière</label>
                                     <div>
                                         <select id="_codFil_id" name="codFil" class="form-control" size="1">
@@ -84,7 +84,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codFmt">Cursus</label>
                                     <div>
                                         <select id="_codFmt_id" name="codFmt" class="form-control" size="1">
@@ -96,7 +96,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3  mt-3 form-label" th:for="codSco">Année d'études</label>
                                     <div>
                                         <select id="_codSco_id" name="codSco" class="form-select" size="1">
@@ -108,7 +108,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codHd">Type de handicap</label>
                                     <div>
                                         <select id="_codHd_id" name="codHd" class="form-select" size="1">
@@ -120,19 +120,19 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group" id="__id">
+                                <div  id="__id">
                                     <label class="form-label mt-4" th:for="hdTmp">Handicap temporaire:
                                     </label>
                                     <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}">
                                 </div>
                                 <br>
-                                <div class="form-group">
+                                <div >
                                     <label th:for="com" class="col-md-3 form-label">Commentaire</label>
                                     <div>
                                         <textarea th:field="*{com}" class="form-control"></textarea>
                                         <br></div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 form-label" th:for="codPfpp">Formation plan</label>
                                     <div>
                                         <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
@@ -144,7 +144,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codPfas">Formation
                                         aménagement</label>
                                     <div>
@@ -157,7 +157,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codMeahF">Mesures aides
                                         humaines</label>
                                     <div>
@@ -173,27 +173,27 @@
                                         </th:block>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="interpH">Interprète: nombre
                                         d'heures</label>
                                     <div>
                                         <input th:field="*{interpH}" class="form-control" type="text" value="">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 mt-3 form-label" th:for="codeurH">Codeur: nombre
                                         d'heures</label>
                                     <div>
                                         <input th:field="*{codeurH}" class="form-control" type="text" value="">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label th:for="aidHNat" class="col-md-3 mt-3 form-label">Autre aide humaine</label>
                                     <div>
                                         <textarea th:field="*{aidHNat}" class="form-control"></textarea>
                                         <br></div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 form-label" th:for="codMeae">Aménagement des examens</label>
                                     <div>
                                         <th:block th:each="enumCodmeae : ${codMeaes}">
@@ -207,14 +207,14 @@
                                         </th:block>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label th:for="autAE" class="col-md-3 mt-3 form-label">Autre aménagement des
                                         examens</label>
                                     <div>
                                         <textarea th:field="*{autAE}" class="form-control"></textarea>
                                         <br></div>
                                 </div>
-                                <div class="form-group">
+                                <div >
                                     <label class="col-md-3 form-label" th:for="codMeaa">Autres aides</label>
                                     <div>
                                         <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
@@ -225,13 +225,13 @@
                                                     th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div >
                                         <label th:for="autAA" class="col-md-3 mt-3 form-label">Aides autres</label>
                                         <div>
                                             <textarea th:field="*{autAA}" class="form-control"></textarea>
                                             <br></div>
                                     </div>
-                                    <div class="form-group">
+                                    <div >
                                         <label class="col-md-3 form-label" th:for="codaml">Autres mesures</label>
                                         <div>
                                             <th:block th:each="enumCodaml : ${codamls}">
@@ -245,7 +245,7 @@
                                             </th:block>
                                         </div>
                                     </div>
-                                    <div class="submit form-group mb-3 mt-3">
+                                    <div class="submit mb-3 mt-3">
                                         <div class="btn-group"><span
                                                 class="visible-lg-block visible-md-block visible-sm-block">
                                         <input class="btn btn-success" value="Enregistrer" type="submit"

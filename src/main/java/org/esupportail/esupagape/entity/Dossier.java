@@ -83,6 +83,9 @@ public class Dossier {
     private List<AideMaterielle> aidesMaterielles = new ArrayList<>();
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    private List<AideHumaine> aidesHumaines = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -294,6 +297,22 @@ public class Dossier {
 
     public void setEntretiens(List<Entretien> entretiens) {
         this.entretiens = entretiens;
+    }
+
+    public List<AideMaterielle> getAidesMaterielles() {
+        return aidesMaterielles;
+    }
+
+    public void setAidesMaterielles(List<AideMaterielle> aidesMaterielles) {
+        this.aidesMaterielles = aidesMaterielles;
+    }
+
+    public List<AideHumaine> getAidesHumaines() {
+        return aidesHumaines;
+    }
+
+    public void setAidesHumaines(List<AideHumaine> aidesHumaines) {
+        this.aidesHumaines = aidesHumaines;
     }
 
     public List<Document> getDocuments() {

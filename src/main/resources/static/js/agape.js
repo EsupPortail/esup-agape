@@ -15,11 +15,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Activation suiviHansiSup
-    document.getElementById("suiviHandisupOui").addEventListener("click", function (){
-        document.getElementById("typeSuiviHandisupDiv").classList.remove("d-none");
-    });
-    document.getElementById("suiviHandisupNon").addEventListener("click", function (){
-        document.getElementById("typeSuiviHandisupDiv").classList.add("d-none");
+    let suiviHandisupOui = document.getElementById("suiviHandisupOui");
+    if(suiviHandisupOui != null) {
+        suiviHandisupOui.addEventListener("click", function () {
+            document.getElementById("typeSuiviHandisupDiv").classList.remove("d-none");
+        });
+    }
+
+    let suiviHandisupNon = document.getElementById("suiviHandisupNon");
+    if(suiviHandisupNon != null) {
+        suiviHandisupNon.addEventListener("click", function () {
+            document.getElementById("typeSuiviHandisupDiv").classList.add("d-none");
+        });
+    }
+
+    //Gestion des feuilles d’heures
+    document.querySelectorAll(`[id^="periode-"]`).forEach(function (element) {
+        if(element.id.includes("edit")) {
+            let monthNum = element.id.split("-")[1];
+            element.addEventListener("click", function () {
+                document.querySelectorAll(`[id^="periode-"]`).forEach(function (input) {
+                    input.disabled = true;
+                });
+                document.querySelectorAll(`[id^="periode-` + monthNum +`"]`).forEach(function (input) {
+                    input.disabled = false;
+                    if(input.id.includes("edit") || input.id.includes("submit")) {
+                        input.classList.toggle('d-none');
+                    }
+                });
+            });
+        }
     });
 });
 
