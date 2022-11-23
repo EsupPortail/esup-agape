@@ -4,7 +4,6 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeException;
-import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -13,13 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,145 +47,6 @@ public class IndividuController {
             return "redirect:/dossiers/" + dossiers.get(0).getId();
         }
         return "redirect:/individus";
-    }
-
-    @GetMapping("{id}/dossiers/{year}/parcours")
-    public String showDossierParcours(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/parcours";
-    }
-
-    @GetMapping("{id}/dossiers/{year}/situation-fiche")
-    public String showDossierSituationFiche(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/situation-fiche";
-    }
-    @GetMapping("{id}/dossiers/{year}/situation-tableau")
-    public String showDossierSituationTableau(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/situation-tableau";
-    }
-
-    @GetMapping("{id}/dossiers/{year}/aides-humaines")
-    public String showDossierAidesHumaines(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/aides-humaines";
-    }
-    @GetMapping("{id}/dossiers/{year}/aides-materielles")
-    public String showDossierAidesMaterielles(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/aides-materielles";
-    }
-    @GetMapping("{id}/dossiers/{year}/archives-amenagements-examens")
-    public String showDossierArchivesAmenagementsExamens(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/archives-amenagements-examens";
-    }
-    @GetMapping("{id}/dossiers/{year}/suivi-handisup")
-    public String showDossierSuiviHandisup(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/suivi-handisup";
-    }
-    @GetMapping("{id}/dossiers/{year}/amenagements-examens")
-    public String showDossierAmenagementsExamen(@PathVariable Long id, @PathVariable Integer year, Model model) throws AgapeJpaException {
-        Individu individu = individuService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        int age = agePeriod.getYears();
-        Dossier dossier = dossierService.getByYear(id, year);
-
-        model.addAttribute("individu", individu);
-        model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentDossier", dossierService.getByYear(id, year));
-        model.addAttribute("age", age);
-        model.addAttribute("dossier", dossier);
-
-        return "dossiers/amenagements-examens";
     }
 
     @GetMapping("/create")
