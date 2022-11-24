@@ -43,7 +43,7 @@ public class AideHumaineService {
     public void save(Long aideHumaineId, AideHumaine aideHumaine) {
         AideHumaine aideHumaineToUpdate = getById(aideHumaineId);
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
-        aideHumaineToUpdate.setFonctionAidant(aideHumaine.getFonctionAidant());
+        aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());
         if(!aideHumaine.getNumEtuAidant().equals(aideHumaineToUpdate.getNumEtuAidant())) {
             recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaineToUpdate);
         }

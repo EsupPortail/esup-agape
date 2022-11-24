@@ -45,7 +45,7 @@ public class AideHumaine {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<FonctionAidant> fonctionAidant;
+    private Set<FonctionAidant> fonctionAidants;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
     private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
@@ -139,12 +139,12 @@ public class AideHumaine {
         this.startDate = startDate;
     }
 
-    public Set<FonctionAidant> getFonctionAidant() {
-        return fonctionAidant;
+    public Set<FonctionAidant> getFonctionAidants() {
+        return fonctionAidants;
     }
 
-    public void setFonctionAidant(Set<FonctionAidant> fonctionAidant) {
-        this.fonctionAidant = fonctionAidant;
+    public void setFonctionAidants(Set<FonctionAidant> fonctionAidant) {
+        this.fonctionAidants = fonctionAidant;
     }
 
     public List<PeriodeAideHumaine> getPeriodeAideHumaines() {
