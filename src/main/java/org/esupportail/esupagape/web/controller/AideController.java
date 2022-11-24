@@ -82,6 +82,11 @@ public class AideController {
         return "redirect:/dossiers/" + dossier.getId() + "/aides";
     }
 
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete")
+    public String deleteAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier) {
+        aideHumaineService.delete(aideHumaineId);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+    }
     @GetMapping("/aides-humaines/{aideHumaineId}/update")
     public String editAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier, Model model) {
         setModel(model);
