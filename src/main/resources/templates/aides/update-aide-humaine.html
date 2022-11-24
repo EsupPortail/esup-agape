@@ -67,35 +67,35 @@
                                         <div class="row mb-3">
                                             <label th:for="nameAidant" class="form-label col-form-label col-sm-3">Nom</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="nameAidant" type="text" class="form-control" th:field="*{nameAidant}" required>
+                                            <input disabled readonly id="nameAidant" type="text" class="form-control" th:field="*{nameAidant}">
                                             <p th:if="${#fields.hasErrors('nameAidant')}" th:errorclass="error" th:errors="*{nameAidant}"></p>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <label th:for="firstNameAidant" class="form-label col-form-label col-sm-3">Prénom</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="firstNameAidant" type="text" class="form-control" th:field="*{firstNameAidant}" required>
+                                            <input disabled readonly id="firstNameAidant" type="text" class="form-control" th:field="*{firstNameAidant}">
                                             <p th:if="${#fields.hasErrors('firstNameAidant')}" th:errorclass="error" th:errors="*{firstNameAidant}"></p>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <label th:for="dateOfBirthAidant" class="form-label col-form-label col-sm-3">Date de naissance</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="dateOfBirthAidant" type="date" class="form-control" th:field="*{dateOfBirthAidant}" required>
+                                            <input disabled readonly id="dateOfBirthAidant" type="date" class="form-control" th:field="*{dateOfBirthAidant}">
                                             <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <label th:for="emailAidant" class="form-label col-form-label col-sm-3">Email</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}" required>
+                                            <input disabled readonly id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}">
                                             <p th:if="${#fields.hasErrors('emailAidant')}" th:errorclass="error" th:errors="*{emailAidant}"></p>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <label th:for="phoneAidant" class="form-label col-form-label col-sm-3">Téléphone</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}" required>
+                                            <input disabled readonly id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}">
                                             <p th:if="${#fields.hasErrors('phoneAidant')}" th:errorclass="error" th:errors="*{phoneAidant}"></p>
                                             </div>
                                         </div>
@@ -197,7 +197,6 @@
                                         </div>
                                     </div>
                                     </th:block>
-
                                 </td>
                                 <td>
                                     <th:block th:if="${periodeAideHumaineEntry.value.id != null}">

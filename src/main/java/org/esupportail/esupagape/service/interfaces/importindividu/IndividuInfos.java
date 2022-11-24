@@ -1,11 +1,14 @@
 package org.esupportail.esupagape.service.interfaces.importindividu;
 
+import java.time.LocalDate;
+
 public class IndividuInfos {
 
     String eppn;
     String name;
     String firstName;
     String genre;
+    LocalDate dateOfBirth;
     String emailEtu;
     String emailPerso;
     String fixPhone;
@@ -46,6 +49,14 @@ public class IndividuInfos {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getEmailEtu() {

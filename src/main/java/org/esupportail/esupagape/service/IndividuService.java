@@ -81,13 +81,18 @@ public class IndividuService {
         return individuRepository.findAll();
     }
 
+    public IndividuInfos getIndividuInfosByNumEtu(String numEtu) {
+        IndividuInfos individuInfos = new IndividuInfos();
+        for (IndividuSourceService individuSourceService : individuSourceServices) {
+            individuInfos = individuSourceService.getIndividuProperties(numEtu, individuInfos);
+        }
+        return individuInfos;
+    }
+
     @Transactional
     public void syncIndividu(Long id) {
         Individu individu = individuRepository.findById(id).orElseThrow();
-        IndividuInfos individuInfos = new IndividuInfos();
-        for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuInfos = individuSourceService.getIndividuProperties(individu.getNumEtu(), individuInfos);
-        }
+        IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
         if(individuInfos.getEppn() != null && !individuInfos.getEppn().isEmpty()) {
             individu.setEppn(individuInfos.getEppn());
         }

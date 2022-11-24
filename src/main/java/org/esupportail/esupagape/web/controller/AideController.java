@@ -77,8 +77,8 @@ public class AideController {
             return "aides/list";
         }
         aideHumaine.setDossier(dossier);
-        aideHumaineService.create(aideHumaine);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+        AideHumaine savedHumaine = aideHumaineService.create(aideHumaine);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + savedHumaine.getId() + "/update";
     }
 
     @PutMapping("/aides-materielles/{aideMaterielleId}/update")
@@ -110,10 +110,6 @@ public class AideController {
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
     public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
-        if (bindingResult.hasErrors()) {
-            setModel(model);
-            return "aides/update-aide-humaine";
-        }
         aideHumaineService.save(aideHumaineId, aideHumaine);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }

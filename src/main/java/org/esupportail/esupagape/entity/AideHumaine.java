@@ -25,7 +25,6 @@ public class AideHumaine {
     @Enumerated(EnumType.STRING)
     private StatusAideHumaine statusAideHumaine;
 
-    @Column(unique = true)
     private String numEtuAidant;
 
     @NotNull
