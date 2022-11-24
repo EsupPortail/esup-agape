@@ -4,8 +4,19 @@ import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +44,7 @@ public class AideHumaine {
     private String firstNameAidant;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime dateOfBirthAidant;
+    private LocalDate dateOfBirthAidant;
 
     private String emailAidant;
 
@@ -105,11 +116,11 @@ public class AideHumaine {
         this.firstNameAidant = firstNameAidant;
     }
 
-    public LocalDateTime getDateOfBirthAidant() {
+    public LocalDate getDateOfBirthAidant() {
         return dateOfBirthAidant;
     }
 
-    public void setDateOfBirthAidant(LocalDateTime dateOfBirthAidant) {
+    public void setDateOfBirthAidant(LocalDate dateOfBirthAidant) {
         this.dateOfBirthAidant = dateOfBirthAidant;
     }
 

@@ -42,7 +42,7 @@
                     </div>
                     <div class="mb-3">
                         <label th:for="dateOfBirthAidant" class="form-label">Date de naissance</label>
-                        <input id="dateOfBirthAidant" type="datetime-local" class="form-control" th:name="dateOfBirthAidant" required>
+                        <input id="dateOfBirthAidant" type="date" class="form-control" th:name="dateOfBirthAidant" required>
                         <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
                     </div>
                     <div class="mb-3">

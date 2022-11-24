@@ -81,7 +81,7 @@
                                         <div class="row mb-3">
                                             <label th:for="dateOfBirthAidant" class="form-label col-form-label col-sm-3">Date de naissance</label>
                                             <div class="col-sm-9">
-                                            <input disabled id="dateOfBirthAidant" type="datetime-local" class="form-control" th:field="*{dateOfBirthAidant}" required>
+                                            <input disabled id="dateOfBirthAidant" type="date" class="form-control" th:field="*{dateOfBirthAidant}" required>
                                             <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
                                             </div>
                                         </div>
