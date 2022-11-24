@@ -3,6 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
@@ -82,20 +83,31 @@ public class AideController {
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/update")
-    public String updateAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier, Model model) {
+    public String editAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier, Model model) {
         setModel(model);
         model.addAttribute("aideHumaine", aideHumaineService.getById(aideHumaineId));
         model.addAttribute("periodeAideHumaineServiceMap", periodeAideHumaineService.getPeriodeAideHumaineServiceMapByAideHumaine(aideHumaineId));
+        model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
         return "aides/update-aide-humaine";
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
-    public String updateAideHumaineSave(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
+    public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model);
-            return "aides/list";
+            return "aides/update-aide-humaine";
         }
         aideHumaineService.save(aideHumaineId, aideHumaine);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @PutMapping("/aides-humaines/{aideHumaineId}/update-periode/{month}")
+    public String updatePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
+        if (bindingResult.hasErrors()) {
+            setModel(model);
+            return "aides/update-aide-humaine";
+        }
+        periodeAideHumaineService.save(aideHumaineId, month, periodeAideHumaine);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 

@@ -19,7 +19,7 @@
             <h1>Années</h1>
             <hr>
             <div class="col-6 mx-auto">
-                <form th:action="@{/admin/add-year/}" th:method="'post'">
+                <form th:action="@{/admin/add-year/}" th:method="post">
                     <div class="input-group mb-3">
                     <label for="number" class="input-group-text">Ajouter une année</label>
                     <input id="number" class="form-control" type="number" min="1900" max="3000" name="number" >
@@ -39,7 +39,7 @@
                                     <div class="modal-content">
                                         <div class="modal-body">
                                             Confirmez la suppression de l’année ?
-                                            <form th:action="@{/admin/delete-year/}" th:method="'delete'" class="float-end">
+                                            <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
                                                 <input type="hidden" name="id" th:value="${year.id}">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                     Annuler

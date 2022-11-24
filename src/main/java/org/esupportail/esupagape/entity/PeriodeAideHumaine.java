@@ -123,10 +123,15 @@ public class PeriodeAideHumaine {
     }
 
     public String getCostString() {
-        return (double) cost / 100 + "";
+        if(this.cost != null) {
+            return (double) this.cost / 100 + "";
+        } else {
+            return "";
+        }
     }
 
     public void setCostString(String costString) {
         this.cost = (int) (Double.parseDouble(costString) * 100);
     }
+
 }

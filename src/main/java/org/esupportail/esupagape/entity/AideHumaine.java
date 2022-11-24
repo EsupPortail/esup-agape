@@ -46,7 +46,7 @@ public class AideHumaine {
     private FonctionAidant fonctionAidant;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
-    private List<PeriodeAideHumaine> feuilleHeures = new ArrayList<>();
+    private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
 
     @OneToOne
     private Document ficheRenseignement;
@@ -145,12 +145,12 @@ public class AideHumaine {
         this.fonctionAidant = fonctionAidant;
     }
 
-    public List<PeriodeAideHumaine> getFeuilleHeures() {
-        return feuilleHeures;
+    public List<PeriodeAideHumaine> getPeriodeAideHumaines() {
+        return periodeAideHumaines;
     }
 
-    public void setFeuilleHeures(List<PeriodeAideHumaine> feuilleHeures) {
-        this.feuilleHeures = feuilleHeures;
+    public void setPeriodeAideHumaines(List<PeriodeAideHumaine> periodeAideHumaines) {
+        this.periodeAideHumaines = periodeAideHumaines;
     }
 
     public Document getFicheRenseignement() {

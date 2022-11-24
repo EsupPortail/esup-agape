@@ -123,16 +123,23 @@
                         </tr>
                         <th:block th:each="periodeAideHumaineEntry : ${periodeAideHumaineServiceMap}">
                             <tr>
-                                <form>
+                                <form th:method="put" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update-periode/' + ${periodeAideHumaineEntry.key}">
                                 <td>
                                     <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="bi bi-lock"></i></button>
                                     <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-submit'" type="submit" class="btn btn-sm btn-success d-none"><i class="bi bi-unlock"></i></button>
                                 </td>
                                 <td th:text="${#strings.capitalize(periodeAideHumaineEntry.value.mois.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></td>
-                                <td><input th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-registrationDate'"  class="form-control form-control-sm" disabled></td>
-                                <td><input th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-nbHeures'"  class="form-control form-control-sm" disabled></td>
-                                <td><input th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-moisPaye'" class="form-control form-control-sm" disabled></td>
-                                <td><input th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-cost'" class="form-control form-control-sm" disabled></td>
+                                <td><input type="date" name="registrationDate" th:value="${periodeAideHumaineEntry.value.registrationDate}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-registrationDate'"  class="form-control form-control-sm" disabled></td>
+                                <td><input type="number" step="0.5" name="nbHeures" th:value="${periodeAideHumaineEntry.value.nbHeures}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-nbHeures'"  class="form-control form-control-sm" disabled></td>
+                                <td>
+                                    <select th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-moisPaye'" name="moisPaye" class="form-select form-select-sm" disabled>
+                                    <th:block th:each="month : ${T(java.time.Month).values()}">
+                                        <option th:value="${month}" th:text="${month.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE)}"
+                                        th:selected="${periodeAideHumaineEntry.value.moisPaye == month}"></option>
+                                    </th:block>
+                                    </select>
+                                </td>
+                                <td><input type="number" name="costString" th:value="${periodeAideHumaineEntry.value.costString}" step="0.01" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-cost'" class="form-control form-control-sm" disabled></td>
                                 <td><button class="btn btn-sm btn-primary"><i class="bi bi-clock"></i></button></td>
                                 <td><button class="btn btn-sm btn-primary"><i class="bi bi-calendar3"></i></button></td>
                                 </form>
@@ -140,22 +147,37 @@
                             <tr th:if="${periodeAideHumaineEntry.key == 12}">
                                 <td></td>
                                 <td>Semestre 1</td>
-                                <td colspan="6"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getNbHeuresSemestre1()}"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getCoutSemestre1()}"></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr th:if="${periodeAideHumaineEntry.key == 6}">
                                 <td></td>
                                 <td>Semestre 2</td>
-                                <td colspan="6"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getNbHeuresSemestre2()}"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getCoutSemestre2()}"></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr th:if="${periodeAideHumaineEntry.key == 6}">
                                 <td></td>
                                 <td>Total</td>
-                                <td colspan="6"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getNbHeuresTotales()}"></td>
+                                <td></td>
+                                <td th:text="${aideHumainePeriodeSums.getCoutTotal()}"></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </th:block>
                     </table>
                 </div>
-                <form class="me-2 d-none" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-attachments'" th:method="'POST'" enctype="multipart/form-data">
+                <form class="me-2 d-none" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-attachments'" th:method="post" enctype="multipart/form-data">
                     <label class="form-label">Ajouter un fichier</label>
                     <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
                     <input type="submit" class="btn btn-primary" value="Ajouter">

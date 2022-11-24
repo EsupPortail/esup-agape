@@ -8,7 +8,7 @@
                 <h1 class="modal-title fs-5" th:id="'show-aide-materielle-label' + ${aideMaterielle.id}">Détail aide matériel</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form th:id="'form-aide-materielle-' + ${aideMaterielle.id}" th:method="'put'" th:action="@{/dossiers/{id}/aides/aides-materielles/{aideMaterielleId}/update(id=${currentDossier.id}, aideMaterielleId=${aideMaterielle.id})}" th:object="${aideMaterielle}">
+            <form th:id="'form-aide-materielle-' + ${aideMaterielle.id}" th:method="put" th:action="@{/dossiers/{id}/aides/aides-materielles/{aideMaterielleId}/update(id=${currentDossier.id}, aideMaterielleId=${aideMaterielle.id})}" th:object="${aideMaterielle}">
                 <div class="modal-body">
                     <div class="row">
                             <div class="row mb-1 align-items-baseline">

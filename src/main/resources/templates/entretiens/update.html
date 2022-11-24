@@ -24,7 +24,7 @@
             <hr>
             <div class="row">
                 <div class="col-12 col-xl-6">
-                    <form id="form-entretien" class="container" th:method="'PUT'" th:action="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" th:object="${entretien}">
+                    <form id="form-entretien" class="container" th:method="put" th:action="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}" th:object="${entretien}">
                         <div class="mb-3">
                             <label th:for="date" class="form-label">Date de l’entretien</label>
                             <input disabled id="date" type="datetime-local" class="form-control" th:name="date" th:value="${entretien.date}">
@@ -73,7 +73,7 @@
                         </tr>
                     </th:block>
                     </table>
-                    <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="'POST'" enctype="multipart/form-data">
+                    <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="post" enctype="multipart/form-data">
                         <label class="form-label">Ajouter un fichier</label>
                         <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
                         <input type="submit" class="btn btn-primary" value="Ajouter">
