@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class AideHumaine {
@@ -45,7 +46,7 @@ public class AideHumaine {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<FonctionAidant> fonctionAidant;
+    private Set<FonctionAidant> fonctionAidant;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
     private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
@@ -139,11 +140,11 @@ public class AideHumaine {
         this.startDate = startDate;
     }
 
-    public List<FonctionAidant> getFonctionAidant() {
+    public Set<FonctionAidant> getFonctionAidant() {
         return fonctionAidant;
     }
 
-    public void setFonctionAidant(List<FonctionAidant> fonctionAidant) {
+    public void setFonctionAidant(Set<FonctionAidant> fonctionAidant) {
         this.fonctionAidant = fonctionAidant;
     }
 
