@@ -14,6 +14,8 @@ import org.esupportail.esupagape.service.AideHumaineService;
 import org.esupportail.esupagape.service.AideMaterielleService;
 import org.esupportail.esupagape.service.PeriodeAideHumaineService;
 import org.esupportail.esupagape.web.viewentity.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +27,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/dossiers/{id}/aides")
 public class AideController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AideController.class);
 
     private final AideMaterielleService aideMaterielleService;
 
@@ -123,22 +128,45 @@ public class AideController {
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-periode/{month}")
+    public String deletePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier, RedirectAttributes redirectAttributes) {
+        try {
+            periodeAideHumaineService.delete(aideHumaineId, month);
+            redirectAttributes.addFlashAttribute("message", new Message("info", "Période supprimée"));
+        } catch (NoSuchElementException e ) {
+            logger.debug("no periode to delete " + aideHumaineId + " : " + month);
+        }
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
     @PostMapping("/aides-humaines/{aideHumaineId}/add-feuille-heures/{month}")
-    public String addFeuille(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
+    public String addFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
         periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossier);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-feuille-heures/{month}")
+    public String deleteFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) throws AgapeException {
+        periodeAideHumaineService.deleteFeuilleHeures(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-feuille-heures/{month}")
     @ResponseBody
     public ResponseEntity<Void> getFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        periodeAideHumaineService.getFeuilleHttpResponse(aideHumaineId, month, httpServletResponse);
+        periodeAideHumaineService.getFeuilleHeuresHttpResponse(aideHumaineId, month, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-planning/{month}")
     public String addPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
         periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossier);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-planning/{month}")
+    public String deletePlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) throws AgapeException {
+        periodeAideHumaineService.deletePlanning(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 

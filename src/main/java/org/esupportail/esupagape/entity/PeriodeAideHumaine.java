@@ -33,10 +33,10 @@ public class PeriodeAideHumaine {
 
     private Integer cost;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Document feuilleHeures;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Document planning;
 
     @ManyToOne

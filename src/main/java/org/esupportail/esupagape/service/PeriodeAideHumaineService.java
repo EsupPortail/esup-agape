@@ -1,10 +1,15 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.AideHumainePeriodeSums;
-import org.esupportail.esupagape.entity.*;
+import org.esupportail.esupagape.entity.AideHumaine;
+import org.esupportail.esupagape.entity.Document;
+import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.repository.PeriodeAideHumaineRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +24,8 @@ import java.util.NoSuchElementException;
 
 @Service
 public class PeriodeAideHumaineService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PeriodeAideHumaineService.class);
 
     private final PeriodeAideHumaineRepository periodeAideHumaineRepository;
 
@@ -58,7 +65,7 @@ public class PeriodeAideHumaineService {
         periodeAideHumaine.setMois(Month.of(month));
         PeriodeAideHumaine periodeAideHumaineToUpdate;
         try {
-            periodeAideHumaineToUpdate = aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
+            periodeAideHumaineToUpdate = getPeriodeAideHumaineByMonth(aideHumaineId, month);
             periodeAideHumaineToUpdate.setRegistrationDate(periodeAideHumaine.getRegistrationDate());
             periodeAideHumaineToUpdate.setCost(periodeAideHumaine.getCost());
             periodeAideHumaineToUpdate.setMoisPaye(periodeAideHumaine.getMoisPaye());
@@ -89,10 +96,9 @@ public class PeriodeAideHumaineService {
 
     @Transactional
     public void addFeuilleHeures(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         try {
             for(MultipartFile multipartFile : multipartFiles) {
-                PeriodeAideHumaine periodeAideHumaineToUpdate = aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
+                PeriodeAideHumaine periodeAideHumaineToUpdate = getPeriodeAideHumaineByMonth(aideHumaineId, month);
                 Document feuille = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), periodeAideHumaineToUpdate.getId(), PeriodeAideHumaine.class.getTypeName(), dossier);
                 periodeAideHumaineToUpdate.setFeuilleHeures(feuille);
             }
@@ -102,14 +108,21 @@ public class PeriodeAideHumaineService {
     }
 
     @Transactional
-    public void getFeuilleHttpResponse(Long aideHumaineId, Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public void getFeuilleHeuresHttpResponse(Long aideHumaineId, Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
         try {
-            List<PeriodeAideHumaine> periodeAideHumaines = periodeAideHumaineRepository.findByAideHumaineId(aideHumaineId);
-            Document document = periodeAideHumaines.stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow().getFeuilleHeures();
+            Document document = getPeriodeAideHumaineByMonth(aideHumaineId, month).getFeuilleHeures();
             utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
         } catch (IOException e) {
             throw new AgapeIOException(e.getMessage());
         }
+    }
+
+    @Transactional
+    public void deleteFeuilleHeures(Long aideHumaineId, Integer month) {
+        PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
+        Document document = periodeAideHumaine.getFeuilleHeures();
+        periodeAideHumaine.setFeuilleHeures(null);
+        documentService.delete(document);
     }
 
     @Transactional
@@ -129,12 +142,31 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void getPlanningHttpResponse(Long aideHumaineId, Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
         try {
-            List<PeriodeAideHumaine> periodeAideHumaines = periodeAideHumaineRepository.findByAideHumaineId(aideHumaineId);
-            Document document = periodeAideHumaines.stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow().getPlanning();
+            Document document = getPeriodeAideHumaineByMonth(aideHumaineId, month).getPlanning();
             utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
         } catch (IOException e) {
             throw new AgapeIOException(e.getMessage());
         }
     }
 
+    @Transactional
+    public void deletePlanning(Long aideHumaineId, Integer month) {
+        PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
+        Document document = periodeAideHumaine.getPlanning();
+        periodeAideHumaine.setPlanning(null);
+        documentService.delete(document);
+    }
+
+    @Transactional
+    public void delete(Long aideHumaineId, Integer month) {
+        AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
+        PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
+        aideHumaine.getPeriodeAideHumaines().remove(periodeAideHumaine);
+        periodeAideHumaineRepository.delete(periodeAideHumaine);
+    }
+
+    private PeriodeAideHumaine getPeriodeAideHumaineByMonth(Long aideHumaineId, Integer month) {
+        AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
+        return aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
+    }
 }

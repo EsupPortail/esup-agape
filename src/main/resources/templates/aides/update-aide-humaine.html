@@ -124,7 +124,9 @@
                         <th:block th:each="periodeAideHumaineEntry : ${periodeAideHumaineServiceMap}">
                             <tr>
                                 <td style="width: 40px;">
-                                    <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-delete'" type="button" class="btn btn-sm btn-danger d-none"><i class="bi bi-x"></i></button>
+                                    <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-periode/' + ${periodeAideHumaineEntry.key}" th:method="delete">
+                                        <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-delete'" type="submit" class="btn btn-sm btn-danger d-none"><i class="bi bi-trash3"></i></button>
+                                    </form>
                                 </td>
                                 <form th:method="put" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update-periode/' + ${periodeAideHumaineEntry.key}">
                                 <td>
@@ -146,8 +148,11 @@
                                 <td><input required type="number" name="costString" th:value="${periodeAideHumaineEntry.value.costString}" step="0.01" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-cost'" class="form-control form-control-sm" disabled></td>
                                 </form>
                                 <td>
-                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null && periodeAideHumaineEntry.value.feuilleHeures == null}">
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" th:data-bs-target="'#feuilleModal-' + ${periodeAideHumaineEntry.key}"><i class="bi bi-clock"></i></button>
+                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
+                                        <button type="button" class="btn btn-sm btn-outline-dark" th:classappend="${periodeAideHumaineEntry.value.feuilleHeures != null ? 'btn-info' : 'btn-light' }" data-bs-toggle="modal" th:data-bs-target="'#feuilleModal-' + ${periodeAideHumaineEntry.key}">
+                                            <i th:if="${periodeAideHumaineEntry.value.feuilleHeures == null}" class="bi bi-file-earmark-plus"></i>
+                                            <i th:if="${periodeAideHumaineEntry.value.feuilleHeures != null}" class="bi bi-file-earmark-text"></i>
+                                        </button>
                                     <div class="modal fade" th:id="'feuilleModal-' + ${periodeAideHumaineEntry.key}" tabindex="-1" th:aria-labelledby="'feuilleModal-' + ${periodeAideHumaineEntry.key} + 'label'" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -158,23 +163,45 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
+                                                    <th:block th:if="${periodeAideHumaineEntry.value.feuilleHeures == null}">
                                                     <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-feuille-heures/' + ${periodeAideHumaineEntry.key}" th:method="post" enctype="multipart/form-data">
                                                         <label class="form-label">Ajouter un fichier</label>
                                                         <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
                                                         <input type="submit" class="btn btn-success float-end" value="Ajouter">
                                                     </form>
+                                                    </th:block>
+                                                    <th:block th:if="${periodeAideHumaineEntry.value.feuilleHeures != null}">
+                                                        <table class="w-100">
+                                                            <tr>
+                                                                <td>
+                                                                    <label class="form-label">Télécharger la feuille heures</label>
+                                                                </td>
+                                                                <td>
+                                                                    <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-feuille-heures/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <label class="form-label">Supprimer la feuille heures</label>
+                                                                </td>
+                                                                <td>
+                                                                    <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-feuille-heures/' + ${periodeAideHumaineEntry.key}" th:method="delete">
+                                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </th:block>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     </th:block>
-                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null && periodeAideHumaineEntry.value.feuilleHeures != null}">
-                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-feuille-heures/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
-                                    </th:block>
+
                                 </td>
                                 <td>
                                     <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
-                                    <button type="button" class="btn btn-sm" th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-primary' }" data-bs-toggle="modal" th:data-bs-target="'#planningModal-' + ${periodeAideHumaineEntry.key}">
+                                    <button type="button" class="btn btn-sm btn-outline-dark" th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-light' }" data-bs-toggle="modal" th:data-bs-target="'#planningModal-' + ${periodeAideHumaineEntry.key}">
                                         <i th:if="${periodeAideHumaineEntry.value.planning == null}" class="bi bi-calendar2-plus"></i>
                                         <i th:if="${periodeAideHumaineEntry.value.planning != null}" class="bi bi-calendar2-week"></i>
                                     </button>
@@ -196,8 +223,26 @@
                                                     </form>
                                                     </th:block>
                                                     <th:block th:if="${periodeAideHumaineEntry.value.planning != null}">
-                                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-planning/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
-                                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                                        <table class="w-100">
+                                                            <tr>
+                                                                <td>
+                                                                    <label class="form-label">Télécharger le planning</label>
+                                                                </td>
+                                                                <td>
+                                                                    <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-planning/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <label class="form-label">Supprimer le planning</label>
+                                                                </td>
+                                                                <td>
+                                                                    <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}" th:method="delete">
+                                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </th:block>
                                                 </div>
                                             </div>
