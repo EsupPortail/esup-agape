@@ -28,6 +28,10 @@ public class AideHumaineService {
     public AideHumaine getById(Long aideHumaineId) {
         return aideHumaineRepository.findById(aideHumaineId).orElseThrow();
     }
+    @Transactional
+    public void delete(Long aideHumaineId) {
+        aideHumaineRepository.deleteById(aideHumaineId);
+    }
 
     @Transactional
     public void save(Long aideHumaineId, AideHumaine aideHumaine) {
