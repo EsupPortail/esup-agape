@@ -44,7 +44,7 @@ public class AideHumaine {
     private LocalDateTime startDate;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<FonctionAidant> fonctionAidant;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
