@@ -88,7 +88,7 @@
                         <th:block th:each="aideHumaine : ${aideHumaines}">
                             <tr>
                                 <td th:text="${#temporals.format(aideHumaine.startDate, 'dd/MM/yyyy')}"></td>
-                                <td th:text="#{'aides.fonctionAidant.' + ${aideHumaine.fonctionAidant}}"></td>
+                                <td th:text="${aideHumaine.fonctionAidant != null} ? #{'aides.fonctionAidant.' + ${aideHumaine.fonctionAidant}} : 'Non renseigné'"></td>
                                 <td th:text="${aideHumaine.nameAidant}"></td>
                                 <td th:text="${aideHumaine.firstNameAidant}"></td>
                                 <td>
