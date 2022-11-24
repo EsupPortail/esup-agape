@@ -1,11 +1,17 @@
 package org.esupportail.esupagape.service.utils;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.esupportail.esupagape.entity.Year;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.YearRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -56,4 +62,11 @@ public class UtilsService {
         Year year = yearRepository.findById(id).orElseThrow();
         yearRepository.delete(year);
     }
+
+    public void copyFileStreamToHttpResponse(String name, String contentType, InputStream inputStream, HttpServletResponse httpServletResponse) throws IOException {
+        httpServletResponse.setContentType(contentType);
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(name, StandardCharsets.UTF_8.toString()));
+        IOUtils.copyLarge(inputStream, httpServletResponse.getOutputStream());
+    }
+
 }

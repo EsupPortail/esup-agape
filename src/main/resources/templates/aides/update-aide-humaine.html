@@ -112,7 +112,7 @@
                     <table class="table table-striped table-sm">
                         <tr>
                             <th></th>
-
+                            <th></th>
                             <th style="width: 100px;">Mois</th>
                             <th>Rendu le</th>
                             <th>Nombre d’heures</th>
@@ -123,28 +123,91 @@
                         </tr>
                         <th:block th:each="periodeAideHumaineEntry : ${periodeAideHumaineServiceMap}">
                             <tr>
+                                <td style="width: 40px;">
+                                    <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-delete'" type="button" class="btn btn-sm btn-danger d-none"><i class="bi bi-x"></i></button>
+                                </td>
                                 <form th:method="put" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update-periode/' + ${periodeAideHumaineEntry.key}">
                                 <td>
                                     <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="bi bi-lock"></i></button>
                                     <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-submit'" type="submit" class="btn btn-sm btn-success d-none"><i class="bi bi-unlock"></i></button>
                                 </td>
-                                <td th:text="${#strings.capitalize(periodeAideHumaineEntry.value.mois.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></td>
-                                <td><input type="date" name="registrationDate" th:value="${periodeAideHumaineEntry.value.registrationDate}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-registrationDate'"  class="form-control form-control-sm" disabled></td>
-                                <td><input type="number" step="0.5" name="nbHeures" th:value="${periodeAideHumaineEntry.value.nbHeures}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-nbHeures'"  class="form-control form-control-sm" disabled></td>
+                                <td th:text="${#strings.capitalize(T(java.time.Month).of(periodeAideHumaineEntry.key).getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></td>
+                                <td><input required type="date" name="registrationDate" th:value="${periodeAideHumaineEntry.value.registrationDate}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-registrationDate'"  class="form-control form-control-sm" disabled></td>
+                                <td><input required type="number" step="0.5" name="nbHeures" th:value="${periodeAideHumaineEntry.value.nbHeures}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-nbHeures'"  class="form-control form-control-sm" disabled></td>
                                 <td>
-                                    <select th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-moisPaye'" name="moisPaye" class="form-select form-select-sm" disabled>
-                                    <th:block th:each="month : ${T(java.time.Month).values()}">
-                                        <option th:value="${month}" th:text="${month.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE)}"
-                                        th:selected="${periodeAideHumaineEntry.value.moisPaye == month}"></option>
-                                    </th:block>
+                                    <select required th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-moisPaye'" name="moisPaye" class="form-select form-select-sm" disabled>
+                                        <option disabled selected value="">Choisir</option>
+                                        <th:block th:each="month : ${T(java.time.Month).values()}">
+                                            <option th:value="${month}" th:text="${#strings.capitalize(month.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"
+                                            th:selected="${periodeAideHumaineEntry.value.moisPaye == month}"></option>
+                                        </th:block>
                                     </select>
                                 </td>
-                                <td><input type="number" name="costString" th:value="${periodeAideHumaineEntry.value.costString}" step="0.01" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-cost'" class="form-control form-control-sm" disabled></td>
-                                <td><button class="btn btn-sm btn-primary"><i class="bi bi-clock"></i></button></td>
-                                <td><button class="btn btn-sm btn-primary"><i class="bi bi-calendar3"></i></button></td>
+                                <td><input required type="number" name="costString" th:value="${periodeAideHumaineEntry.value.costString}" step="0.01" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-cost'" class="form-control form-control-sm" disabled></td>
                                 </form>
+                                <td>
+                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null && periodeAideHumaineEntry.value.feuilleHeures == null}">
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" th:data-bs-target="'#feuilleModal-' + ${periodeAideHumaineEntry.key}"><i class="bi bi-clock"></i></button>
+                                    <div class="modal fade" th:id="'feuilleModal-' + ${periodeAideHumaineEntry.key}" tabindex="-1" th:aria-labelledby="'feuilleModal-' + ${periodeAideHumaineEntry.key} + 'label'" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" th:id="'feuilleModal-' + ${periodeAideHumaineEntry.key} + 'label'">
+                                                        Feuille d’heure de <span th:text="${#strings.capitalize(periodeAideHumaineEntry.value.mois.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></span>
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-feuille-heures/' + ${periodeAideHumaineEntry.key}" th:method="post" enctype="multipart/form-data">
+                                                        <label class="form-label">Ajouter un fichier</label>
+                                                        <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
+                                                        <input type="submit" class="btn btn-success float-end" value="Ajouter">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </th:block>
+                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null && periodeAideHumaineEntry.value.feuilleHeures != null}">
+                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-feuille-heures/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                    </th:block>
+                                </td>
+                                <td>
+                                    <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
+                                    <button type="button" class="btn btn-sm" th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-primary' }" data-bs-toggle="modal" th:data-bs-target="'#planningModal-' + ${periodeAideHumaineEntry.key}">
+                                        <i th:if="${periodeAideHumaineEntry.value.planning == null}" class="bi bi-calendar2-plus"></i>
+                                        <i th:if="${periodeAideHumaineEntry.value.planning != null}" class="bi bi-calendar2-week"></i>
+                                    </button>
+                                    <div class="modal fade" th:id="'planningModal-' + ${periodeAideHumaineEntry.key}" tabindex="-1" th:aria-labelledby="'planningModal-' + ${periodeAideHumaineEntry.key} + 'label'" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" th:id="'planningModal-' + ${periodeAideHumaineEntry.key} + 'label'">
+                                                        Planning de <span th:text="${#strings.capitalize(periodeAideHumaineEntry.value.mois.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></span>
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <th:block th:if="${periodeAideHumaineEntry.value.planning == null}">
+                                                    <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-planning/' + ${periodeAideHumaineEntry.key}" th:method="post" enctype="multipart/form-data">
+                                                        <label class="form-label">Ajouter un fichier</label>
+                                                        <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
+                                                        <input type="submit" class="btn btn-success float-end" value="Ajouter">
+                                                    </form>
+                                                    </th:block>
+                                                    <th:block th:if="${periodeAideHumaineEntry.value.planning != null}">
+                                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-planning/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}" type="button" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </th:block>
+                                </td>
                             </tr>
                             <tr th:if="${periodeAideHumaineEntry.key == 12}">
+                                <td></td>
                                 <td></td>
                                 <td>Semestre 1</td>
                                 <td></td>
@@ -156,6 +219,7 @@
                             </tr>
                             <tr th:if="${periodeAideHumaineEntry.key == 6}">
                                 <td></td>
+                                <td></td>
                                 <td>Semestre 2</td>
                                 <td></td>
                                 <td th:text="${aideHumainePeriodeSums.getNbHeuresSemestre2()}"></td>
@@ -165,6 +229,7 @@
                                 <td></td>
                             </tr>
                             <tr th:if="${periodeAideHumaineEntry.key == 6}">
+                                <td></td>
                                 <td></td>
                                 <td>Total</td>
                                 <td></td>
@@ -177,11 +242,6 @@
                         </th:block>
                     </table>
                 </div>
-                <form class="me-2 d-none" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-attachments'" th:method="post" enctype="multipart/form-data">
-                    <label class="form-label">Ajouter un fichier</label>
-                    <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
-                    <input type="submit" class="btn btn-primary" value="Ajouter">
-                </form>
             </div>
         </div>
     </div>

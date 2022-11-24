@@ -1,11 +1,11 @@
 package org.esupportail.esupagape.service;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.esupportail.esupagape.entity.BigFile;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.repository.DocumentRepository;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
@@ -27,9 +25,12 @@ public class DocumentService {
 
 	private final BigFileService bigFileService;
 
-	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService) {
+	private final UtilsService utilService;
+
+	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService, UtilsService utilService) {
 		this.documentRepository = documentRepository;
 		this.bigFileService = bigFileService;
+		this.utilService = utilService;
 	}
 
 	@Transactional
@@ -79,15 +80,10 @@ public class DocumentService {
 	public void getDocumentHttpResponse(Long id, HttpServletResponse httpServletResponse) throws AgapeIOException {
 		Document document = getById(id);
 		try {
-			copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+			utilService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
 		} catch (IOException e) {
 			throw new AgapeIOException(e.getMessage());
 		}
 	}
 
-	public void copyFileStreamToHttpResponse(String name, String contentType, InputStream inputStream, HttpServletResponse httpServletResponse) throws IOException {
-		httpServletResponse.setContentType(contentType);
-		httpServletResponse.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(name, StandardCharsets.UTF_8.toString()));
-		IOUtils.copyLarge(inputStream, httpServletResponse.getOutputStream());
-	}
 }

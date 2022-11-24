@@ -36,7 +36,7 @@ public class AideHumaineService {
         aideHumaineToUpdate.setFonctionAidant(aideHumaine.getFonctionAidant());
         if(!aideHumaine.getNumEtuAidant().equals(aideHumaineToUpdate.getNumEtuAidant())) {
             //TODO recup des infos dans ldap
-            aideHumaineToUpdate.setNameAidant(aideHumaine.getNumEtuAidant());
+            aideHumaineToUpdate.setNumEtuAidant(aideHumaine.getNumEtuAidant());
         }
     }
 }

@@ -7,16 +7,23 @@ import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
+import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AideHumaineService;
 import org.esupportail.esupagape.service.AideMaterielleService;
 import org.esupportail.esupagape.service.PeriodeAideHumaineService;
+import org.esupportail.esupagape.web.viewentity.Message;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -102,13 +109,39 @@ public class AideController {
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update-periode/{month}")
-    public String updatePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
+    public String updatePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, Dossier dossier, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            setModel(model);
-            return "aides/update-aide-humaine";
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le format des données saisies est mauvais"));
+        } else {
+            periodeAideHumaineService.save(aideHumaineId, month, periodeAideHumaine);
         }
-        periodeAideHumaineService.save(aideHumaineId, month, periodeAideHumaine);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-feuille-heures/{month}")
+    public String addFeuille(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
+        periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossier);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-feuille-heures/{month}")
+    @ResponseBody
+    public ResponseEntity<Void> getFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        periodeAideHumaineService.getFeuilleHttpResponse(aideHumaineId, month, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-planning/{month}")
+    public String addPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
+        periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossier);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-planning/{month}")
+    @ResponseBody
+    public ResponseEntity<Void> getPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        periodeAideHumaineService.getPlanningHttpResponse(aideHumaineId, month, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void setModel(Model model) {

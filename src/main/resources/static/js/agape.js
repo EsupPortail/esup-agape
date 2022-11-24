@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 });
                 document.querySelectorAll(`[id^="periode-` + monthNum +`"]`).forEach(function (input) {
                     input.disabled = false;
-                    if(input.id.includes("edit") || input.id.includes("submit")) {
+                    if(input.id.includes("edit") || input.id.includes("submit") || input.id.includes("delete")) {
                         input.classList.toggle('d-none');
                     }
                 });

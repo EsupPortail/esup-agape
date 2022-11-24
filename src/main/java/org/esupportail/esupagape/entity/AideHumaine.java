@@ -4,17 +4,7 @@ import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,7 +44,8 @@ public class AideHumaine {
     private LocalDateTime startDate;
 
     @Enumerated(EnumType.STRING)
-    private FonctionAidant fonctionAidant;
+    @ElementCollection
+    private List<FonctionAidant> fonctionAidant;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
     private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
@@ -148,11 +139,11 @@ public class AideHumaine {
         this.startDate = startDate;
     }
 
-    public FonctionAidant getFonctionAidant() {
+    public List<FonctionAidant> getFonctionAidant() {
         return fonctionAidant;
     }
 
-    public void setFonctionAidant(FonctionAidant fonctionAidant) {
+    public void setFonctionAidant(List<FonctionAidant> fonctionAidant) {
         this.fonctionAidant = fonctionAidant;
     }
 
