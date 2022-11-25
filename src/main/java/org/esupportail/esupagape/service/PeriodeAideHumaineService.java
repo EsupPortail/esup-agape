@@ -42,20 +42,20 @@ public class PeriodeAideHumaineService {
         this.utilsService = utilsService;
     }
 
-    public Map<Integer, PeriodeAideHumaine> getPeriodeAideHumaineServiceMapByAideHumaine(Long aideHumaineId) {
-        LinkedHashMap<Integer, PeriodeAideHumaine> periodeAideHumaineServiceMap = new LinkedHashMap<>();
+    public Map<Integer, PeriodeAideHumaine> getPeriodeAideHumaineMapByAideHumaine(Long aideHumaineId) {
+        LinkedHashMap<Integer, PeriodeAideHumaine> periodeAideHumaineMap = new LinkedHashMap<>();
         List<PeriodeAideHumaine> periodeAideHumaines = periodeAideHumaineRepository.findByAideHumaineId(aideHumaineId);
-        periodeAideHumaineServiceMap.put(9, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 9).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(10, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 10).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(11, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 11).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(12, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 12).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(1, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 1).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(2, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 2).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(3, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 3).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(4, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 4).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(5, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 5).findFirst().orElse(new PeriodeAideHumaine()));
-        periodeAideHumaineServiceMap.put(6, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 6).findFirst().orElse(new PeriodeAideHumaine()));
-        return periodeAideHumaineServiceMap;
+        periodeAideHumaineMap.put(9, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 9).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(10, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 10).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(11, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 11).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(12, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 12).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(1, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 1).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(2, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 2).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(3, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 3).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(4, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 4).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(5, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 5).findFirst().orElse(new PeriodeAideHumaine()));
+        periodeAideHumaineMap.put(6, periodeAideHumaines.stream().filter(p -> p.getMois().getValue() == 6).findFirst().orElse(new PeriodeAideHumaine()));
+        return periodeAideHumaineMap;
     }
 
     @Transactional

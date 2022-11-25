@@ -103,7 +103,7 @@ public class AideController {
     public String editAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier, Model model) {
         setModel(model);
         model.addAttribute("aideHumaine", aideHumaineService.getById(aideHumaineId));
-        model.addAttribute("periodeAideHumaineServiceMap", periodeAideHumaineService.getPeriodeAideHumaineServiceMapByAideHumaine(aideHumaineId));
+        model.addAttribute("periodeAideHumaineMap", periodeAideHumaineService.getPeriodeAideHumaineMapByAideHumaine(aideHumaineId));
         model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
         return "aides/update-aide-humaine";
     }
