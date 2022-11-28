@@ -18,7 +18,7 @@
                     <a class="nav-link"  th:href="@{/dossiers/{id}/enquete(id=${currentDossier.id})}" th:classappend="${active == 'enquete' ? 'active' :' '}"> Enquête</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${active == 'amenagement' ? 'active' : ''}"> Aménagements d'examen</a>
+                    <a class="nav-link" th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" th:classappend="${active == 'amenagements' ? 'active' : ''}"> Aménagements d’examen</a>
                 </li>
             </ul>
         </nav>

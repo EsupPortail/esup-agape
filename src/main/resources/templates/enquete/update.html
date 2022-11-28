@@ -19,7 +19,9 @@
                 </nav>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='enquete')"></div>
-                <h4 class="mt-3" style="margin-left: 60px;" th:text="'Enquête sur ' + |${currentDossier.individu.name} ${currentDossier.individu.firstName}|"></h4>
+                <div class="m-3">
+                <h4>Enquête</h4>
+                <hr>
                 <form id="enquete"
                         class="form-horizontal"
                         th:method="put"
@@ -27,8 +29,8 @@
                         th:object="${enquete}">
                     <input th:field="*{id}" type="hidden" readonly class="form-control">
                     <input th:field="*{dossier}" type="hidden" readonly class="form-control">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
+                    <div class="row">
+                        <div class="col-lg-6">
                             <div>
                             <div>
                                 <label class="mt-3 form-label" th:for="an">Année de naissance</label>
@@ -246,6 +248,7 @@
                     </div>
                     </div>
                 </form>
+                </div>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>

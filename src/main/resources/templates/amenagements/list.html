@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="aideMaterielles" type="java.util.List<org.esupportail.esupagape.entity.AideMaterielle>"*/-->
+<!--/*@thymesVar id="aideHumaines" type="java.util.List<org.esupportail.esupagape.entity.AideHumaine>"*/-->
+
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content agape-content-side">
+        <div class="mb-3">
+            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+        </div>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='amenagements')"></div>
+        <div class="m-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="clearfix w-100">
+                        <h4 class="float-start">Aménagements d’examen</h4>
+                        <button title="Ajouter un aménagement d'examen" class="btn btn-primary float-end" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
+</html>
