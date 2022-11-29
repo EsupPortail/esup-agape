@@ -39,25 +39,19 @@
                                 </div>
                             </div>
                                 <div>
-                                    <label class="mt-3 form-label" th:for="genders">Genre</label>
+                                    <label class="mt-1 form-label" th:for="genders">Genre</label>
                                     <div>
-                                        <input disabled readonly id="gender" name="gender" class="form-control" type="text" th:value="${currentDossier.individu.gender}">
+                                        <select name="gender" class="form-select" size="1" th:disabled="${enquete.gender != null}">
+                                            <option disabled selected value="nul">Choisir</option>
+                                            <option  th:selected="${gender == enquete.gender}" th:each="gender : ${genders}" th:value="${enquete.gender}" th:text="#{'individu.gender.' + ${gender}}"></option>
+                                        </select>
                                     </div>
                                 </div>
-                          <!--  <div>
-                                <label class="mt-1 form-label" th:for="genders">Genre</label>
-                                <div>
-                                    <select name="gender" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${gender == enquete.gender}" th:each="gender : ${genders}" th:value="${currentDossier.individu.gender}" th:text="#{'individu.gender.' + ${gender}}"></option>
-                                    </select>
-                                </div>
-                            </div>-->
                                 <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
                                 <div>
-                                    <select id="typeFormation" name="typeFormation" type="text" class="form-select" th:value="${currentDossier.enquete?.typeFrmn}">
+                                    <select id="typeFormation" name="typeFormation" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
                                         <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${currentDossier.typeFormation == typeFormation}" th:each="typeFormation : ${typeFrmns}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
+                                        <option th:selected="${enquete.typeFrmn == typeFormation}" th:each="typeFormation : ${typeFrmns}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
                                     </select>
                                 </div>
                             <!--<div>

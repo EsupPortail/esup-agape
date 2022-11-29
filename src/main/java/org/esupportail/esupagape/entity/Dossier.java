@@ -45,8 +45,10 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Taux taux;
 
+    @Enumerated(EnumType.STRING)
     private TypeFrmn typeFormation;
 
+    @Enumerated(EnumType.STRING)
     private ModFrmn modeFormation;
 
     private String commentaire;

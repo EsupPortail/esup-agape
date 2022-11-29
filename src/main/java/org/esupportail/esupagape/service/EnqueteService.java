@@ -83,4 +83,13 @@ public class EnqueteService {
     public Enquete findByDossierId(Long id) {
         return enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
     }
+
+    @Transactional
+    public Enquete getAndUpdateByDossierId(Long id) {
+        Dossier dossier = dossierService.getById(id);
+        Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
+        enquete.setGender(dossier.getIndividu().getGender());
+        enquete.setTypeFrmn(dossier.getTypeFormation());
+        return enquete;
+    }
 }

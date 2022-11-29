@@ -20,12 +20,12 @@ public class WsApogeeServiceAdministratif {
 	AdministratifMetierServiceInterface apogeeProxyAdministratif;
 
 	public List<InsAdmEtpDTO3> recupererIAEtapes(String codEtu, String annee) {
-		logger.debug("recup des données administratives dans apogee.");
+		logger.debug("recup des données administratives dans apoge : " + codEtu);
 		List<InsAdmEtpDTO3> ieEtapes = null;
 		try {
 			ieEtapes = apogeeProxyAdministratif.recupererIAEtapesV3(codEtu, annee, null, null);
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos administratives");
+			logger.warn("Erreur lors de la recup des infos administratives : " + codEtu);
 		}
 		return ieEtapes;
 	}

@@ -33,8 +33,19 @@ public class EnqueteController {
 
     @GetMapping
     public String show(Dossier dossier, Model model) {
-        Enquete enquete = enqueteService.findByDossierId(dossier.getId());
+        setModel(model);
+        Enquete enquete = enqueteService.getAndUpdateByDossierId(dossier.getId());
         model.addAttribute("enquete", enquete);
+        return "enquete/update";
+    }
+
+    @PutMapping("/{enqueteId}/update")
+    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
+        enqueteService.save(enqueteId, enquete);
+        return "redirect:/dossiers/" + id + "/enquete";
+    }
+
+    private static void setModel(Model model) {
         model.addAttribute("typeFrmns", TypeFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("codFils", CodFil.values());
@@ -48,12 +59,5 @@ public class EnqueteController {
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("genders", Gender.values());
-        return "enquete/update";
-    }
-
-    @PutMapping("/{enqueteId}/update")
-    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
-        enqueteService.save(enqueteId, enquete);
-        return "redirect:/dossiers/" + id + "/enquete";
     }
 }
