@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,5 +24,10 @@ public class AmenagementService {
 
     public Page<Amenagement> findByDossier(Dossier dossier) {
         return amenagementRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
+    }
+
+    public boolean isAmenagementvalid (Long dossierId){
+
+        return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISER_ADMINISTRATION).size() > 0;
     }
 }

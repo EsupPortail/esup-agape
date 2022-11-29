@@ -54,41 +54,18 @@
                                         <option th:selected="${enquete.typeFrmn == typeFormation}" th:each="typeFormation : ${typeFrmns}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
                                     </select>
                                 </div>
-                            <!--<div>
-                                <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
-                                <div>
-                                    <select id="_typeFrmn_id" name="typeFrmn" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumTypefrmn == enquete.typeFrmn}"
-                                                th:each="enumTypefrmn : ${typeFrmns}"
-                                                th:value="${enumTypefrmn}"
-                                                th:text="#{'enquete.typeFrmn.' + ${enumTypefrmn}}"></option>
-                                    </select>
-                                </div>
-                            </div>-->
+
                                 <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
                                 <div>
-                                    <select id="modeFormation" name="modeFormation" type="text" class="form-select" th:value="${currentDossier.enquete?.modFrmn}">
+                                    <select id="modeFormation" name="modeFormation" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
                                         <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${currentDossier.modeFormation == modeFormation}" th:each="modeFormation : ${modFrmns}" th:text="#{'enquete.modFrmn.' +${modeFormation}}" th:value="${modeFormation}"></option>
+                                        <option th:selected="${enquete.modFrmn == modeFormation}" th:each="modeFormation : ${modFrmns}" th:text="#{'enquete.modFrmn.' +${modeFormation}}" th:value="${modeFormation}"></option>
                                     </select>
                                 </div>
-                           <!-- <div>
-                                <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
-                                <div>
-                                    <select disabled id="_modFrmn_id" name="modFrmn" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumModfrmn == enquete.modFrmn}"
-                                                th:each="enumModfrmn : ${modFrmns}"
-                                                th:value="${enumModfrmn}"
-                                                th:text="#{'enquete.modFrmn.'+ ${enumModfrmn}}"></option>
-                                    </select>
-                                </div>
-                            </div>-->
                             <div>
                                 <label class="mt-1 form-label" th:for="codFil">Filière</label>
                                 <div>
-                                    <select id="_codFil_id" name="codFil" class="form-control" size="1">
+                                    <select id="_codFil_id" name="codFil" class="form-select" size="1">
                                         <option disabled selected value="">Choisir</option>
                                         <option th:selected="${enumCodfil == enquete.codFil}"
                                                 th:each="enumCodfil : ${codFils}"
@@ -100,7 +77,7 @@
                             <div>
                                 <label class="mt-1 form-label" th:for="codFmt">Cursus</label>
                                 <div>
-                                    <select id="_codFmt_id" name="codFmt" class="form-control" size="1">
+                                    <select id="_codFmt_id" name="codFmt" class="form-select" size="1">
                                         <option disabled selected value="">Choisir</option>
                                         <option th:selected="${enumCodFmt == enquete.codFmt}"
                                                 th:each="enumCodFmt : ${codFmts}"
@@ -147,7 +124,7 @@
                             <div>
                                 <label class="mt-1 form-label" th:for="codPfpp">Formation plan</label>
                                 <div>
-                                    <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
+                                    <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1" th:disabled="${enquete.codPfpp != null}">
                                         <option disabled selected value="nul">Choisir</option>
                                         <option th:selected="${enumCodpfpp == enquete.codPfpp}"
                                                 th:each="enumCodpfpp : ${codPfpps}"
@@ -159,7 +136,7 @@
                             <div>
                                 <label class="mt-1 form-label" th:for="codPfas">Formation aménagement</label>
                                 <div>
-                                    <select id="_codPfas_id" name="codPfas" class="form-select" size="1">
+                                    <select id="_codPfas_id" name="codPfas" class="form-select" size="1" th:disabled="${enquete.codPfas != null}">
                                         <option disabled selected value="nul">Choisir</option>
                                         <option th:selected="${enumCodPfas == enquete.codPfas}"
                                                 th:each="enumCodPfas : ${codPfass}"
