@@ -16,9 +16,12 @@ public class EnqueteService {
 
     private final DossierService dossierService;
 
-    public EnqueteService(EnqueteRepository enqueteRepository, DossierService dossierService) {
+    private final AmenagementService amenagementService;
+
+    public EnqueteService(EnqueteRepository enqueteRepository, DossierService dossierService, AmenagementService amenagementService) {
         this.enqueteRepository = enqueteRepository;
         this.dossierService = dossierService;
+        this.amenagementService = amenagementService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -90,6 +93,10 @@ public class EnqueteService {
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         enquete.setGender(dossier.getIndividu().getGender());
         enquete.setTypeFrmn(dossier.getTypeFormation());
+        enquete.setModFrmn(dossier.getModeFormation());
+       
+
+
         return enquete;
     }
 }
