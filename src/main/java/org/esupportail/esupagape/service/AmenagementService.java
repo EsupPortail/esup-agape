@@ -26,8 +26,7 @@ public class AmenagementService {
         return amenagementRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
     }
 
-    public boolean isAmenagementvalid (Long dossierId){
-
+    public boolean isAmenagementValid (Long dossierId){
         return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISER_ADMINISTRATION).size() > 0;
     }
 }

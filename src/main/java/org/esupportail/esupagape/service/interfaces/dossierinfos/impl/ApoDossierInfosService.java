@@ -42,9 +42,9 @@ public class ApoDossierInfosService implements DossierInfosService {
                     if (!insAdmEtpDTO.getEtapePremiere().equals("oui") && !getAllSteps) {
                         continue;
                     }
-                    dossierInfos.setUfr(insAdmEtpDTO.getComposante().getLibComposante());
-                    dossierInfos.setFiliere(insAdmEtpDTO.getEtape().getLibWebVet());
-                    dossierInfos.setEtablissement(insAdmEtpDTO.getComposante().getLibComposante());
+                    dossierInfos.setCodComposante(insAdmEtpDTO.getComposante().getCodComposante());
+                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
+                    dossierInfos.setLibelleFormation(insAdmEtpDTO.getEtape().getLibWebVet());
                     ContratPedagogiqueResultatElpEprDTO5[] resultatElpEprDTOs = wsApogeeServicePedago
                             .recupererResultatsElpEprDTO(individu.getNumEtu(), annee.toString(), insAdmEtpDTO.getEtape().getCodeEtp(),
                                     insAdmEtpDTO.getEtape().getVersionEtp());

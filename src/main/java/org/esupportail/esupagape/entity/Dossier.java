@@ -62,6 +62,8 @@ public class Dossier {
 
     private String formAddress;
 
+    private String codComposante;
+
     private String composante;
 
     private String resultatS1;
@@ -233,6 +235,14 @@ public class Dossier {
 
     public void setFormAddress(String formAddress) {
         this.formAddress = formAddress;
+    }
+
+    public String getCodComposante() {
+        return codComposante;
+    }
+
+    public void setCodComposante(String codComposante) {
+        this.codComposante = codComposante;
     }
 
     public String getComposante() {

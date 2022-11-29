@@ -2,8 +2,9 @@ package org.esupportail.esupagape.service.interfaces.dossierinfos;
 
 public class DossierInfos {
 
-    String ufr;
-    String filiere;
+    String codComposante;
+    String composante;
+    String libelleFormation;
     String etablissement;
     String formAddress;
     String noteS1;
@@ -13,20 +14,28 @@ public class DossierInfos {
     String noteAnn;
     String resultatAnn;
 
-    public String getUfr() {
-        return ufr;
+    public String getCodComposante() {
+        return codComposante;
     }
 
-    public void setUfr(String ufr) {
-        this.ufr = ufr;
+    public void setCodComposante(String codComposante) {
+        this.codComposante = codComposante;
     }
 
-    public String getFiliere() {
-        return filiere;
+    public String getComposante() {
+        return composante;
     }
 
-    public void setFiliere(String filiere) {
-        this.filiere = filiere;
+    public void setComposante(String composante) {
+        this.composante = composante;
+    }
+
+    public String getLibelleFormation() {
+        return libelleFormation;
+    }
+
+    public void setLibelleFormation(String libelleFormation) {
+        this.libelleFormation = libelleFormation;
     }
 
     public String getEtablissement() {

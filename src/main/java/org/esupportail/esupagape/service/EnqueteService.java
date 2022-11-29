@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.EnqueteRepository;
 import org.springframework.stereotype.Service;
@@ -39,9 +40,8 @@ public class EnqueteService {
     }
 
     @Transactional
-    public void save(Long id, Enquete enquete) throws AgapeJpaException {
+    public void update(Long id, Enquete enquete) throws AgapeJpaException {
         Enquete enqueteToUpdate = getById(id);
-        enqueteRepository.save(enquete);
         enqueteToUpdate.setId(enqueteToUpdate.getId());
         enqueteToUpdate.setNfic(enquete.getNfic());
         enqueteToUpdate.setNumetu(enquete.getNumetu());
@@ -55,7 +55,9 @@ public class EnqueteService {
         enqueteToUpdate.setCodHd(enquete.getCodHd());
         enqueteToUpdate.setHdTmp(enquete.getHdTmp());
         enqueteToUpdate.setCom(enquete.getCom());
-        enqueteToUpdate.setCodPfpp(enquete.getCodPfpp());
+        if(enquete.getCodPfpp() != null) {
+            enqueteToUpdate.setCodPfpp(enquete.getCodPfpp());
+        }
         enqueteToUpdate.setCodPfas(enquete.getCodPfas());
         enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
         enqueteToUpdate.setInterpH(enquete.getInterpH());
@@ -72,7 +74,6 @@ public class EnqueteService {
         enqueteToUpdate.setNewNum(enquete.getNewNum());
         enqueteToUpdate.setNewId(enquete.getNewId());
         enqueteToUpdate.setDossier(enquete.getDossier());
-        enqueteRepository.save(enquete);
     }
 
     private Enquete createByDossierId(Long id) {
@@ -83,20 +84,17 @@ public class EnqueteService {
     }
 
     @Transactional
-    public Enquete findByDossierId(Long id) {
-        return enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
-    }
-
-    @Transactional
     public Enquete getAndUpdateByDossierId(Long id) {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         enquete.setGender(dossier.getIndividu().getGender());
         enquete.setTypeFrmn(dossier.getTypeFormation());
         enquete.setModFrmn(dossier.getModeFormation());
-       
-
-
+        if(amenagementService.isAmenagementValid(id)) {
+            enquete.getCodMeae().add(CodMeae.AE4);
+        } else {
+            enquete.getCodMeae().add(CodMeae.AE0);
+        }
         return enquete;
     }
 }

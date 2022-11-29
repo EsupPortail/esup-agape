@@ -41,7 +41,7 @@ public class EnqueteController {
 
     @PutMapping("/{enqueteId}/update")
     public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
-        enqueteService.save(enqueteId, enquete);
+        enqueteService.update(enqueteId, enquete);
         return "redirect:/dossiers/" + id + "/enquete";
     }
 

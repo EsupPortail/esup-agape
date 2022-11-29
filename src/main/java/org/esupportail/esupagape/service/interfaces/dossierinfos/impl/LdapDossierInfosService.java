@@ -33,7 +33,7 @@ public class LdapDossierInfosService implements DossierInfosService {
             PersonLdap personLdap = personLdaps.get(0);
             try {
                 OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getScol(personLdap.getSupannEntiteAffectationPrincipale());
-                dossierInfos.setUfr(organizationalUnitLdap.getDescription());
+                dossierInfos.setComposante(organizationalUnitLdap.getDescription());
                 dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
                 dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
             } catch (AgapeJpaException e) {

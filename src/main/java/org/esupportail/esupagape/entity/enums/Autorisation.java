@@ -5,4 +5,5 @@ public enum Autorisation {
     OUI,
     NON,
     NC
+
 }
