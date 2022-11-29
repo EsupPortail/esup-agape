@@ -44,10 +44,10 @@ public class Amenagement {
     private String autresTempMajore;
 
     @Column(columnDefinition = "TEXT")
-    private String motifRefus;
-
-    @Column(columnDefinition = "TEXT")
     private String amenagement;
+
+    @Enumerated(EnumType.STRING)
+    private Classification classification;
 
     private String mailMedecin;
 
@@ -56,6 +56,9 @@ public class Amenagement {
     private String mailValideur;
 
     private String nomValideur;
+
+    @Column(columnDefinition = "TEXT")
+    private String motifRefus;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createDate = LocalDateTime.now();
@@ -157,20 +160,20 @@ public class Amenagement {
         this.autresTempMajore = autresTempMajore;
     }
 
-    public String getMotifRefus() {
-        return motifRefus;
-    }
-
-    public void setMotifRefus(String motifRefus) {
-        this.motifRefus = motifRefus;
-    }
-
     public String getAmenagement() {
         return amenagement;
     }
 
     public void setAmenagement(String amenagement) {
         this.amenagement = amenagement;
+    }
+
+    public Classification getClassification() {
+        return classification;
+    }
+
+    public void setClassification(Classification classification) {
+        this.classification = classification;
     }
 
     public String getMailMedecin() {
@@ -203,6 +206,14 @@ public class Amenagement {
 
     public void setNomValideur(String nomValideur) {
         this.nomValideur = nomValideur;
+    }
+
+    public String getMotifRefus() {
+        return motifRefus;
+    }
+
+    public void setMotifRefus(String motifRefus) {
+        this.motifRefus = motifRefus;
     }
 
     public LocalDateTime getCreateDate() {

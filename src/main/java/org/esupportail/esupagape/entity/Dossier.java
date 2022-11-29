@@ -24,6 +24,9 @@ public class Dossier {
     private StatusDossier statusDossier;
 
     @Enumerated(EnumType.STRING)
+    private Autorisation autorisation;
+
+    @Enumerated(EnumType.STRING)
     private Classification classification;
 
     @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
@@ -118,6 +121,14 @@ public class Dossier {
 
     public void setStatusDossier(StatusDossier statusDossier) {
         this.statusDossier = statusDossier;
+    }
+
+    public Autorisation getAutorisation() {
+        return autorisation;
+    }
+
+    public void setAutorisation(Autorisation autorisation) {
+        this.autorisation = autorisation;
     }
 
     public Classification getClassification() {
@@ -318,6 +329,14 @@ public class Dossier {
 
     public void setAidesHumaines(List<AideHumaine> aidesHumaines) {
         this.aidesHumaines = aidesHumaines;
+    }
+
+    public List<Amenagement> getAmenagements() {
+        return amenagements;
+    }
+
+    public void setAmenagements(List<Amenagement> amenagements) {
+        this.amenagements = amenagements;
     }
 
     public List<Document> getDocuments() {

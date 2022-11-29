@@ -84,8 +84,8 @@
                         <div class="col-12 col-xxl-8">
                             <th:block th:each="typeSuiviHandisup : ${typeSuiviHandisups}">
                                 <div class="form-check">
-                                <input disabled type="checkbox" class="form-check-input" th:id="${typeSuiviHandisup}" name="typeSuiviHandisup" th:value="${typeSuiviHandisup.name()}" th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
-                                <label class="form-check-label" th:for="${typeSuiviHandisup.name()}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
+                                <input disabled type="checkbox" class="form-check-input" th:id="${typeSuiviHandisup}" name="typeSuiviHandisup" th:value="${typeSuiviHandisup}" th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
+                                <label class="form-check-label" th:for="${typeSuiviHandisup}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
                                 </div>
                             </th:block>
                         </div>

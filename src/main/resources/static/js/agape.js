@@ -10,8 +10,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Ajustement automatique de la hauteur des textarea
     Array.prototype.slice.call(document.getElementsByTagName('textarea')).forEach(function (element) {
         console.info("Enable textarea auto adjust on " + element.id);
-        textAreaAdjust(element);
-        element.addEventListener("keyup", e => textAreaAdjust(e.target));
+        if(element.classList.contains("agape-amenagement-textarea")) {
+            textAreaAdjust(element, 18);
+            element.addEventListener("keyup", e => textAreaAdjust(e.target, 18));
+        } else {
+            textAreaAdjust(element, 30);
+            element.addEventListener("keyup", e => textAreaAdjust(e.target, 30));
+        }
     });
 
     //Activation suiviHansiSup
@@ -46,6 +51,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
             });
         }
     });
+
+    //Gestion des aménagements
+    document.getElementById("typeAmenagement").addEventListener("change", function(e) {
+        if(this.value === "DATE") {
+            document.getElementById("amenagement-end-date").classList.remove("d-none");
+        } else {
+            document.getElementById("amenagement-end-date").classList.add("d-none");
+        }
+    });
+
 });
 
 function lockForm() {
@@ -80,9 +95,9 @@ function toggleInputLock(id) {
     document.getElementById(id + "Edit").remove();
 }
 
-function textAreaAdjust(element) {
+function textAreaAdjust(element, lineHeight) {
     let text = element.value;
     let lines = text.split(/\r|\r\n|\n/);
     let count = lines.length;
-    element.style.height = (30*count)+"px";
+    element.style.height = (lineHeight * count) + "px";
 }
