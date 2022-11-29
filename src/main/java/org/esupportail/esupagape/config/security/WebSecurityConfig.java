@@ -102,10 +102,12 @@ public class WebSecurityConfig {
                 .antMatchers("/").hasAnyRole("USER")
                 .antMatchers("/dossiers").hasAnyRole("USER")
                 .antMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
-                .antMatchers("/individus", "/individus/**").hasAnyRole("MANAGER", "ESPACE_HANDI", "MEDECIN")
-                .antMatchers("/dossiers/*").hasAnyRole("MANAGER", "ESPACE_HANDI")
-                .antMatchers("/dossiers/*/entretiens", "/dossiers/*/entretiens/**").hasAnyRole("MANAGER", "ESPACE_HANDI")
-                .antMatchers("/dossiers/*/aides", "/dossiers/*/aides/**").hasAnyRole("MANAGER", "ESPACE_HANDI");
+                .antMatchers("/individus", "/individus/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
+                .antMatchers("/dossiers/*").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
+                .antMatchers("/dossiers/*/entretiens", "/dossiers/*/entretiens/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
+                .antMatchers("/dossiers/*/aides", "/dossiers/*/aides/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
+                .antMatchers("/dossiers/*/enquete", "/dossiers/*/enquete/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
+                .antMatchers("/dossiers/*/amenagements", "/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MEDECIN");
         return http.build();
     }
 
