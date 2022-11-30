@@ -123,7 +123,7 @@
                             <div>
                                 <label class="mt-1 form-label" th:for="codPfpp">Plan d’accompagnement</label>
                                 <div>
-                                    <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1" th:disabled="${enquete.codPfpp != null}">
+                                    <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
                                         <option disabled selected value="nul">Choisir</option>
                                         <option th:selected="${enumCodpfpp == enquete.codPfpp}"
                                                 th:each="enumCodpfpp : ${codPfpps}"
@@ -135,7 +135,7 @@
                             <div>
                                 <label class="mt-1 form-label" th:for="codPfas">Aménagement spécifique</label>
                                 <div>
-                                    <select id="_codPfas_id" name="codPfas" class="form-select" size="1" th:disabled="${enquete.codPfas != null}">
+                                    <select id="_codPfas_id" name="codPfas" class="form-select" size="1"> 
                                         <option disabled selected value="nul">Choisir</option>
                                         <option th:selected="${enumCodPfas == enquete.codPfas}"
                                                 th:each="enumCodPfas : ${codPfass}"
