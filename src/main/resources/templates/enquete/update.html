@@ -216,19 +216,16 @@
                                     <div>
                                         <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
                                             <div>
-                                                <input th:field="*{libelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL}">
                                                 <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
-                                            </div>
-                                        </th:block>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="mt-1 form-label" th:for="codaml">Autres mesures</label>
-                                    <div>
-                                        <th:block th:each="enumCodaml : ${codamls}">
-                                            <div>
-                                                <input th:field="*{codAmL}" size="1" type="radio" th:value="${enumCodaml}">
-                                                <label th:for="${enumCodaml}" th:text="#{'enquete.codAmL.' + ${enumCodaml}}"></label>
+                                                <br/>
+                                                <div class="d-inline">
+                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '0'">
+                                                    <label th:for="${enumLibelleCodAm}">Non</label>
+                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '1'">
+                                                    <label th:for="${enumLibelleCodAm}">Oui</label>
+                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + 'X'">
+                                                    <label th:for="${enumLibelleCodAm}">Ne sais pas</label>
+                                                </div>
                                             </div>
                                         </th:block>
                                     </div>
