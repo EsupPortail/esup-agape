@@ -22,8 +22,7 @@ public class ApogeeAdministratifFactory {
         try {
             return new AdministratifMetierServiceInterfaceService(new URL(urlWsdl)).getAdministratifMetier();
         } catch (Exception e) {
-            logger.warn("Error on get administratif ws instance : " + e.getMessage());
-            throw new AgapeException("Error on get administratif ws instance");
+            throw new AgapeException("Error on get administratif ws instance " + e.getMessage());
         }
     }
 

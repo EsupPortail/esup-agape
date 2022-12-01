@@ -1,15 +1,16 @@
 package org.esupportail.esupagape.service.externalws.apogee;
 
 import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmEtpDTO3;
+import org.esupportail.esupagape.exception.AgapeApogeeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
+@ConditionalOnBean(ApogeeAdministratifFactory.class)
 public class WsApogeeServiceAdministratif {
 
 	private static final Logger logger = LoggerFactory.getLogger(WsApogeeServiceAdministratif.class);
@@ -20,15 +21,13 @@ public class WsApogeeServiceAdministratif {
 		this.apogeeAdministratifFactory = apogeeAdministratifFactory;
 	}
 
-	public List<InsAdmEtpDTO3> recupererIAEtapes(String codEtu, String annee) {
+	public List<InsAdmEtpDTO3> recupererIAEtapes(String codEtu, String annee) throws AgapeApogeeException {
 		logger.debug("recup des données administratives dans apoge : " + codEtu);
-		List<InsAdmEtpDTO3> ieEtapes = null;
 		try {
-			ieEtapes = apogeeAdministratifFactory.getInstanceAdministratif().recupererIAEtapesV3(codEtu, annee, null, null);
+			return apogeeAdministratifFactory.getInstanceAdministratif().recupererIAEtapesV3(codEtu, annee, null, null);
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos administratives : " + codEtu);
+			throw new AgapeApogeeException("Erreur lors de la recup des infos administratives : " + codEtu + " error : " + e.getMessage());
 		}
-		return ieEtapes;
 	}
 
 }

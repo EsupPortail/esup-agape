@@ -4,14 +4,14 @@ import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmEtpDTO3;
 import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.ContratPedagogiqueResultatElpEprDTO5;
 import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.ResultatElpDTO3;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeApogeeException;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceAdministratif;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServicePedago;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @Order(1)
-@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
+@ConditionalOnBean(value = {WsApogeeServicePedago.class, WsApogeeServiceAdministratif.class})
 public class ApoDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoDossierInfosService.class);
@@ -90,8 +90,8 @@ public class ApoDossierInfosService implements DossierInfosService {
                     }
                 }
             }
-        } catch (AgapeException e) {
-            logger.debug(e.getMessage());
+        } catch (AgapeApogeeException e) {
+            logger.warn(e.getMessage());
         }
 
         return dossierInfos;

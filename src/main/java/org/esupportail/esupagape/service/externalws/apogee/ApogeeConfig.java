@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties({ApogeeProperties.class})
-@ConditionalOnProperty(value = {"apogee.etu-url", "apogee.administratif-url", "apogee.pedago-url"})
 public class ApogeeConfig {
 
     private final ApogeeProperties apogeeProperties;
@@ -17,16 +16,19 @@ public class ApogeeConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(value = {"apogee.etu-url"})
     public ApogeeEtuFactory etudiantMetierServiceInterface() {
         return new ApogeeEtuFactory(apogeeProperties.getEtuUrl());
     }
 
     @Bean
+    @ConditionalOnProperty("apogee.administratif-url")
     public ApogeeAdministratifFactory apogeeAdministratifFactory() {
         return new ApogeeAdministratifFactory(apogeeProperties.getAdministratifUrl());
     }
 
     @Bean
+    @ConditionalOnProperty(value = {"apogee.pedago-url"})
     public ApogeePedagoFactory apogeePedagoFactory() {
         return new ApogeePedagoFactory(apogeeProperties.getPedagoUrl());
     }

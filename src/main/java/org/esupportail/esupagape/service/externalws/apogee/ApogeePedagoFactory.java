@@ -22,8 +22,7 @@ public class ApogeePedagoFactory {
         try {
             return new PedagogiqueMetierServiceInterfaceService(new URL(urlWsdl)).getPedagogiqueMetier();
         } catch (Exception e) {
-            logger.warn("Error on get pedago ws instance : " + e.getMessage());
-            throw new AgapeException("Error on get pedago ws instance");
+            throw new AgapeException("Error on get pedago ws instance " + e.getMessage());
         }
     }
 
