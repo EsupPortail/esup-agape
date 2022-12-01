@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -64,7 +65,7 @@ public class Enquete {
 
     @ElementCollection(targetClass=CodMeae.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<CodMeae> codMeae;
+    private Set<CodMeae> codMeae = new HashSet<>();
 
     @Column(columnDefinition = "TEXT")
     private String autAE;
