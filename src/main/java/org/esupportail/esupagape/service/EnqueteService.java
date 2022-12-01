@@ -62,6 +62,7 @@ public class EnqueteService {
         enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
         enqueteToUpdate.setInterpH(enquete.getInterpH());
         enqueteToUpdate.setCodAmL(enquete.getCodAmL());
+        enqueteToUpdate.setLibelleCodAmL(enquete.getLibelleCodAmL());
         enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
         enqueteToUpdate.setCodeurH(enquete.getCodeurH());
         enqueteToUpdate.setAidHNat(enquete.getAidHNat());

@@ -80,6 +80,10 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private Set<CodAmL> codAmL;
 
+    @ElementCollection(targetClass = LibelleCodAmL.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<LibelleCodAmL> libelleCodAmL;
+
     private String djaCop;
 
     private String newNum;
@@ -279,6 +283,14 @@ public class Enquete {
 
     public void setCodAmL(Set<CodAmL> codAmL) {
         this.codAmL = codAmL;
+    }
+
+    public Set<LibelleCodAmL> getLibelleCodAmL() {
+        return libelleCodAmL;
+    }
+
+    public void setLibelleCodAmL(Set<LibelleCodAmL> libelleCodAmL) {
+        this.libelleCodAmL = libelleCodAmL;
     }
 
     public String getDjaCop() {
