@@ -5,8 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Amenagement {
@@ -32,9 +32,9 @@ public class Amenagement {
     @Enumerated(EnumType.STRING)
     private TypeAmenagement typeAmenagement;
 
-    @ElementCollection(targetClass = TypeEpreuve.class)
+    @ElementCollection(targetClass = TypeEpreuve.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<TypeEpreuve> typeEpreuve = new ArrayList<>();
+    private Set<TypeEpreuve> typeEpreuve = new HashSet<>();
 
     private String autresTypeEpreuve;
 
@@ -128,11 +128,11 @@ public class Amenagement {
         this.typeAmenagement = typeAmenagement;
     }
 
-    public List<TypeEpreuve> getTypeEpreuve() {
+    public Set<TypeEpreuve> getTypeEpreuve() {
         return typeEpreuve;
     }
 
-    public void setTypeEpreuve(List<TypeEpreuve> typeEpreuve) {
+    public void setTypeEpreuve(Set<TypeEpreuve> typeEpreuve) {
         this.typeEpreuve = typeEpreuve;
     }
 

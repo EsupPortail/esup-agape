@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints={
@@ -26,12 +27,13 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
+    @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Classification classification;
+    private Set<Classification> classification;
 
     @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<TypeSuiviHandisup> typeSuiviHandisup;
+    private Set<TypeSuiviHandisup> typeSuiviHandisup;
 
     @Enumerated(EnumType.STRING)
     private Etat etat;
@@ -133,19 +135,19 @@ public class Dossier {
         this.autorisation = autorisation;
     }
 
-    public Classification getClassification() {
+    public Set<Classification> getClassification() {
         return classification;
     }
 
-    public void setClassification(Classification classification) {
+    public void setClassification(Set<Classification> classification) {
         this.classification = classification;
     }
 
-    public List<TypeSuiviHandisup> getTypeSuiviHandisup() {
+    public Set<TypeSuiviHandisup> getTypeSuiviHandisup() {
         return typeSuiviHandisup;
     }
 
-    public void setTypeSuiviHandisup(List<TypeSuiviHandisup> detailSuiviHandisup) {
+    public void setTypeSuiviHandisup(Set<TypeSuiviHandisup> detailSuiviHandisup) {
         this.typeSuiviHandisup = detailSuiviHandisup;
     }
 

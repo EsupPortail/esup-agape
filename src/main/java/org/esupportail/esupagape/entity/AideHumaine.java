@@ -43,8 +43,8 @@ public class AideHumaine {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime startDate;
 
+    @ElementCollection(targetClass = FonctionAidant.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
     private Set<FonctionAidant> fonctionAidants;
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)

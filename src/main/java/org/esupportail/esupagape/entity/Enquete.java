@@ -62,7 +62,7 @@ public class Enquete {
     @Column(columnDefinition = "TEXT")
     private String aidHNat;
 
-    @ElementCollection(targetClass=CodMeae.class)
+    @ElementCollection(targetClass=CodMeae.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<CodMeae> codMeae;
 
@@ -75,7 +75,7 @@ public class Enquete {
     @Column(columnDefinition = "TEXT")
     private String autAA;
 
-    @ElementCollection(targetClass=CodAmL.class)
+    @ElementCollection(targetClass=CodAmL.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<CodAmL> codAmL;
 
