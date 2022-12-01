@@ -58,6 +58,7 @@ public class EnqueteController {
         model.addAttribute("codMeaes", CodMeae.values());
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
+        model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());
     }
 }
