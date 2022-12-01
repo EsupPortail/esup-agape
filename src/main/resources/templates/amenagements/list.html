@@ -21,6 +21,26 @@
                         <h4 class="float-start">Aménagements d’examen</h4>
                         <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i></a>
                     </div>
+
+                    <table class="table table-striped">
+                        <thead class="text-start mt-2 mb-2 table-info">
+                        <tr>
+                            <th>Date create</th>
+                            <th>Type</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="amenagement : ${amenagements}">
+                            <tr>
+                                <td th:text="${amenagement.getCreateDate()}"></td>
+                                <td th:text="${amenagement.getTypeAmenagement()}"></td>
+                                <td><a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

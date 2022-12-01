@@ -19,6 +19,9 @@ public class Amenagement {
     private Dossier dossier;
 
     @Enumerated(EnumType.STRING)
+    private Autorisation autorisation;
+
+    @Enumerated(EnumType.STRING)
     private StatusAmenagement statusAmenagement = StatusAmenagement.BROUILLON;
 
     private Boolean mailIndividu = false;
@@ -44,7 +47,7 @@ public class Amenagement {
     private String autresTempMajore;
 
     @Column(columnDefinition = "TEXT")
-    private String amenagement;
+    private String amenagementText;
 
     @Enumerated(EnumType.STRING)
     private Classification classification;
@@ -86,6 +89,14 @@ public class Amenagement {
 
     public void setDossier(Dossier dossier) {
         this.dossier = dossier;
+    }
+
+    public Autorisation getAutorisation() {
+        return autorisation;
+    }
+
+    public void setAutorisation(Autorisation autorisation) {
+        this.autorisation = autorisation;
     }
 
     public StatusAmenagement getStatusAmenagement() {
@@ -160,12 +171,12 @@ public class Amenagement {
         this.autresTempMajore = autresTempMajore;
     }
 
-    public String getAmenagement() {
-        return amenagement;
+    public String getAmenagementText() {
+        return amenagementText;
     }
 
-    public void setAmenagement(String amenagement) {
-        this.amenagement = amenagement;
+    public void setAmenagementText(String amenagement) {
+        this.amenagementText = amenagement;
     }
 
     public Classification getClassification() {

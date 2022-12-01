@@ -11,7 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/dossiers/{id}/amenagements")
@@ -36,6 +40,14 @@ public class AmenagementController {
         amenagement.setDossier(dossier);
         model.addAttribute("amenagement", amenagement);
         return "amenagements/create";
+    }
+
+    @PostMapping("/create")
+    public String createSave(@Valid Amenagement amenagement, Dossier dossier, RedirectAttributes redirectAttributes) {
+        amenagement.setDossier(dossier);
+        amenagementService.create(amenagement);
+//        redirectAttributes.addAllAttributes("message", new Message("success", ))
+        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("/{amenagementId}/update")

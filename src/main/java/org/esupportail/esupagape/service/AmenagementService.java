@@ -7,6 +7,7 @@ import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AmenagementService {
@@ -28,5 +29,10 @@ public class AmenagementService {
 
     public boolean isAmenagementValid (Long dossierId){
         return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISER_ADMINISTRATION).size() > 0;
+    }
+
+    @Transactional
+    public void create(Amenagement amenagement) {
+        amenagementRepository.save(amenagement);
     }
 }

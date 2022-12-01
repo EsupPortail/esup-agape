@@ -19,7 +19,7 @@
         <div class="m-3">
             <h4>Ajout d’un aménagement d’examen</h4>
             <hr>
-            <form th:method="post" th:action="@{/dossiers/{id}/amenagement/create(id=${currentDossier.id})}" th:object="${amenagement}">
+            <form th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
             <div class="row">
                 <div class="col-12 col-xl-6">
                         <input type="hidden" th:field="*{dossier}">
@@ -39,7 +39,7 @@
                                 <label th:for="end-date" class="form-label">Date de fin</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${now}" required>
+                                <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}" required>
                                 <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
                             </div>
                         </div>
@@ -67,13 +67,13 @@
                         </div>
                         <div class="row mb-1">
                             <div class="col-4" style="width: 250px;">
-                                <label th:for="amenagement" class="form-label">Aménagement</label>
+                                <label th:for="amenagementText" class="form-label">Aménagement</label>
                             </div>
                             <div class="col-12 col-xxl-8">
                                 <div class="agape-amenagement-textarea-wrapper">
-                                <textarea id="amenagement" type="text" rows="7" class="form-control agape-amenagement-textarea" th:field="*{amenagement}"></textarea>
+                                <textarea id="amenagementText" type="text" rows="7" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
                                 </div>
-                                <p th:if="${#fields.hasErrors('amenagement')}" th:errorclass="error" th:errors="*{amenagement}"></p>
+                                <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -83,7 +83,7 @@
                             <div class="col-12 col-xxl-8">
                                 <th:block th:each="autorisation : ${autorisations}">
                                     <div class="form-check">
-                                        <input th:id="${autorisation}" name="autorisation" type="radio" class="form-check-input" required>
+                                        <input th:id="${autorisation}" name="autorisation" type="radio" class="form-check-input" th:value="${autorisation}" required>
                                         <label class="form-check-label" th:for="${autorisation}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
                                     </div>
                                 </th:block>
@@ -105,7 +105,10 @@
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
+                <div class="col-12 col-xl-6">
+                    <input type="submit" class="btn btn-success" value="Valider">
+                </div>
             </form>
         </div>
     </div>
