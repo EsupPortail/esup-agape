@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.service.externalws.apogee;
 
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.CoordonneesDTO2;
-import gouv.education.apogee.commun.client.ws.EtudiantMetier.EtudiantMetierServiceInterface;
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.IdentifiantsEtudiantDTO2;
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.InfoAdmEtuDTO4;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,8 +18,11 @@ public class WsApogeeServiceEtudiant {
 
 	private static final Logger logger = LoggerFactory.getLogger(WsApogeeServiceEtudiant.class);
 
-	@Resource
-	EtudiantMetierServiceInterface apogeeProxyEtu;
+	private final ApogeeEtuFactory apogeeEtuFactory;
+
+	public WsApogeeServiceEtudiant(ApogeeEtuFactory apogeeEtuFactory) {
+		this.apogeeEtuFactory = apogeeEtuFactory;
+	}
 
 	public String recupererIdentifiantsEtudiant(String nom, String prenom, String dateNaiss) {
 		logger.debug("recup infos etudiant dans apogee.");
@@ -34,7 +35,7 @@ public class WsApogeeServiceEtudiant {
 				dateNaiss = dateFormat.format(date);
 			}
 			System.err.println(dateNaiss);
-			IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeProxyEtu
+			IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeEtuFactory.getInstanceEtudiant()
 					.recupererIdentifiantsEtudiantV2(null, null, null, null,
 							null, nom, prenom, dateNaiss, null);
 			idEtu = identifiantsEtudiantDTO.getCodEtu().toString();
@@ -49,7 +50,7 @@ public class WsApogeeServiceEtudiant {
 		logger.debug("recup infos administratives dans apogee.");
 		InfoAdmEtuDTO4 infoEtudiant = null;
 		try {
-			infoEtudiant = apogeeProxyEtu.recupererInfosAdmEtuV4(codEtu);
+			infoEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererInfosAdmEtuV4(codEtu);
 		} catch (Exception e) {
 			logger.warn("Erreur lors de la recup des infos", e);
 		}
@@ -60,7 +61,7 @@ public class WsApogeeServiceEtudiant {
 		logger.debug("recup infos adresse dans apogee.");
 		CoordonneesDTO2 adresseEtudiant = null;
 		try {
-			adresseEtudiant = apogeeProxyEtu.recupererAdressesEtudiantV2(codEtu, annee, "O");
+			adresseEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererAdressesEtudiantV2(codEtu, annee, "O");
 		} catch (Exception e) {
 			logger.warn("Erreur lors de la recup des infos", e);
 		}
@@ -77,7 +78,7 @@ public class WsApogeeServiceEtudiant {
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			dateNaiss = dateFormat.format(date);
 		}
-		IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeProxyEtu.recupererIdentifiantsEtudiantV2(
+		IdentifiantsEtudiantDTO2 identifiantsEtudiantDTO = apogeeEtuFactory.getInstanceEtudiant().recupererIdentifiantsEtudiantV2(
 				null, null, null, null, null, nom, prenom,
 				dateNaiss, null);
 		login = identifiantsEtudiantDTO.getLoginAnnuaire();

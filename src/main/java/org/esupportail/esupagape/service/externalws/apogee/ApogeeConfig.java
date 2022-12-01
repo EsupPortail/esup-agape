@@ -1,14 +1,9 @@
 package org.esupportail.esupagape.service.externalws.apogee;
 
-import gouv.education.apogee.commun.client.ws.AdministratifMetier.AdministratifMetierServiceInterface;
-import gouv.education.apogee.commun.client.ws.EtudiantMetier.EtudiantMetierServiceInterface;
-import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.PedagogiqueMetierServiceInterface;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.net.MalformedURLException;
 
 @Configuration
 @EnableConfigurationProperties({ApogeeProperties.class})
@@ -22,18 +17,18 @@ public class ApogeeConfig {
     }
 
     @Bean
-    public EtudiantMetierServiceInterface etudiantMetierServiceInterface() throws MalformedURLException {
-        return ApogeeEtuFactory.createInstanceEtudiant(apogeeProperties.getEtuUrl());
+    public ApogeeEtuFactory etudiantMetierServiceInterface() {
+        return new ApogeeEtuFactory(apogeeProperties.getEtuUrl());
     }
 
     @Bean
-    public AdministratifMetierServiceInterface administratifMetierServiceInterface() throws MalformedURLException {
-        return ApogeeAdministratifFactory.createInstanceAdministratif(apogeeProperties.getAdministratifUrl());
+    public ApogeeAdministratifFactory apogeeAdministratifFactory() {
+        return new ApogeeAdministratifFactory(apogeeProperties.getAdministratifUrl());
     }
 
     @Bean
-    public PedagogiqueMetierServiceInterface pedagogiqueMetierServiceInterface() throws MalformedURLException {
-        return ApogeePedagoFactory.createInstancePedago(apogeeProperties.getPedagoUrl());
+    public ApogeePedagoFactory apogeePedagoFactory() {
+        return new ApogeePedagoFactory(apogeeProperties.getPedagoUrl());
     }
 
 }
