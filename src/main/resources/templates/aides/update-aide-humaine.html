@@ -10,21 +10,72 @@
 <main class="d-inline-flex">
     <div th:replace="fragments/side :: side"></div>
     <div class="agape-content">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
-                <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/aides'}" class="text-center ">Liste des aides</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><span th:text="'Aide humaine du ' + ${#temporals.format(aideHumaine.startDate, 'dd/MM/yyyy HH:mm')}"></span></li>
-            </ol>
-        </nav>
         <div th:replace="fragments/tabs-years :: tabs-years"></div>
         <div th:replace="fragments/tabs-content :: tabs-content(active='aides')"></div>
         <div class="m-3">
-            <h4><span th:text="'Aide humaine : ' + ${aideHumaine.nameAidant}"></span></h4>
-            <hr>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{'/dossiers/' + ${currentDossier.id} + '/aides'}" class="text-center ">Liste des aides</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><span th:text="'Aide humaine du ' + ${#temporals.format(aideHumaine.startDate, 'dd/MM/yyyy HH:mm')}"></span></li>
+                </ol>
+            </nav>
             <div class="row">
                 <div class="col-12 col-xl-4">
                     <form id="form-aide-humaine" class="container" th:method="put" th:action="@{/dossiers/{id}/aides/aides-humaines/{aideHumaineId}/update(id=${currentDossier.id},aideHumaineId=${aideHumaine.id})}" th:object="${aideHumaine}">
+                        <div class="accordion mb-3" id="accordionAideHumaine">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAidant" aria-expanded="true" aria-controls="collapseAidant">
+                                        <h4>Aidant : <span th:text="${aideHumaine.firstNameAidant} + ' ' + ${aideHumaine.nameAidant}"></span></h4>
+                                    </button>
+                                </h2>
+                                <div id="collapseAidant" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionAideHumaine">
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                            <label th:for="nameAidant" class="form-label col-form-label col-sm-3">Nom</label>
+                                            <div class="col-sm-9">
+                                                <input disabled th:readonly="${aideHumaine.numEtuAidant != ''}" id="nameAidant" type="text" class="form-control" th:field="*{nameAidant}">
+                                                <p th:if="${#fields.hasErrors('nameAidant')}" th:errorclass="error" th:errors="*{nameAidant}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label th:for="firstNameAidant" class="form-label col-form-label col-sm-3">Prénom</label>
+                                            <div class="col-sm-9">
+                                                <input disabled th:readonly="${aideHumaine.numEtuAidant != ''}" id="firstNameAidant" type="text" class="form-control" th:field="*{firstNameAidant}">
+                                                <p th:if="${#fields.hasErrors('firstNameAidant')}" th:errorclass="error" th:errors="*{firstNameAidant}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label th:for="dateOfBirthAidant" class="form-label col-form-label col-sm-3">Date de naissance</label>
+                                            <div class="col-sm-9">
+                                                <input disabled th:readonly="${aideHumaine.numEtuAidant != ''}" id="dateOfBirthAidant" type="date" class="form-control" th:field="*{dateOfBirthAidant}">
+                                                <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label th:for="emailAidant" class="form-label col-form-label col-sm-3">Email</label>
+                                            <div class="col-sm-9">
+                                                <input disabled th:readonly="${aideHumaine.numEtuAidant != ''}" id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}">
+                                                <p th:if="${#fields.hasErrors('emailAidant')}" th:errorclass="error" th:errors="*{emailAidant}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label th:for="phoneAidant" class="form-label col-form-label col-sm-3">Téléphone</label>
+                                            <div class="col-sm-9">
+                                                <input disabled th:readonly="${aideHumaine.numEtuAidant != ''}" id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}">
+                                                <p th:if="${#fields.hasErrors('phoneAidant')}" th:errorclass="error" th:errors="*{phoneAidant}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label th:for="numEtuAidant" class="form-label">Numéro d’étudiant</label>
+                            <input disabled id="numEtuAidant" type="text" class="form-control" th:field="*{numEtuAidant}">
+                            <p th:if="${#fields.hasErrors('numEtuAidant')}" th:errorclass="error" th:errors="*{numEtuAidant}"></p>
+                        </div>
                         <div class="row mb-1 align-items-baseline">
                             <div class="col-4" style="width: 250px;">
                                 <label class="form-label" for="statusAideHumaine">Statut</label>
@@ -41,71 +92,37 @@
                             <input disabled id="startDate" type="datetime-local" class="form-control" th:name="startDate" th:value="${aideHumaine.startDate}" required>
                             <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fonction de l’aidant</label>
-                            <th:block th:each="fonctionAidant : ${fonctionAidants}">
-                                <div class="form-check">
-                                    <input disabled class="form-check-input" type="checkbox" name="fonctionAidants" th:value="${fonctionAidant}" th:checked="${aideHumaine.fonctionAidants.contains(fonctionAidant)}">
-                                    <label class="form-check-label" th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></label>
-                                </div>
-                            </th:block>
-                        </div>
-                        <div class="mb-3">
-                            <label th:for="numEtuAidant" class="form-label">Numéro d’étudiant</label>
-                            <input disabled id="numEtuAidant" type="text" class="form-control" th:field="*{numEtuAidant}">
-                            <p th:if="${#fields.hasErrors('numEtuAidant')}" th:errorclass="error" th:errors="*{numEtuAidant}"></p>
-                        </div>
-                        <div class="accordion" id="accordionAideHumaine">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAidant" aria-expanded="true" aria-controls="collapseAidant">
-                                        Informations de l’aidant : <span th:text="${aideHumaine.firstNameAidant} + ' ' + ${aideHumaine.nameAidant}"></span>
-                                    </button>
-                                </h2>
-                                <div id="collapseAidant" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionAideHumaine">
-                                    <div class="accordion-body">
-                                        <div class="row mb-3">
-                                            <label th:for="nameAidant" class="form-label col-form-label col-sm-3">Nom</label>
-                                            <div class="col-sm-9">
-                                            <input disabled readonly id="nameAidant" type="text" class="form-control" th:field="*{nameAidant}">
-                                            <p th:if="${#fields.hasErrors('nameAidant')}" th:errorclass="error" th:errors="*{nameAidant}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label th:for="firstNameAidant" class="form-label col-form-label col-sm-3">Prénom</label>
-                                            <div class="col-sm-9">
-                                            <input disabled readonly id="firstNameAidant" type="text" class="form-control" th:field="*{firstNameAidant}">
-                                            <p th:if="${#fields.hasErrors('firstNameAidant')}" th:errorclass="error" th:errors="*{firstNameAidant}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label th:for="dateOfBirthAidant" class="form-label col-form-label col-sm-3">Date de naissance</label>
-                                            <div class="col-sm-9">
-                                            <input disabled readonly id="dateOfBirthAidant" type="date" class="form-control" th:field="*{dateOfBirthAidant}">
-                                            <p th:if="${#fields.hasErrors('dateOfBirthAidant')}" th:errorclass="error" th:errors="*{dateOfBirthAidant}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label th:for="emailAidant" class="form-label col-form-label col-sm-3">Email</label>
-                                            <div class="col-sm-9">
-                                            <input disabled readonly id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}">
-                                            <p th:if="${#fields.hasErrors('emailAidant')}" th:errorclass="error" th:errors="*{emailAidant}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label th:for="phoneAidant" class="form-label col-form-label col-sm-3">Téléphone</label>
-                                            <div class="col-sm-9">
-                                            <input disabled readonly id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}">
-                                            <p th:if="${#fields.hasErrors('phoneAidant')}" th:errorclass="error" th:errors="*{phoneAidant}"></p>
-                                            </div>
-                                        </div>
+                        <div class="row">
+                            <div class=" col-6 mb-3">
+                                <label class="form-label">Fonction de l’aidant</label>
+                                <th:block th:each="fonctionAidant : ${fonctionAidants}">
+                                    <div class="form-check">
+                                        <input disabled class="form-check-input" type="checkbox" name="fonctionAidants" th:value="${fonctionAidant}" th:checked="${aideHumaine.fonctionAidants.contains(fonctionAidant)}">
+                                        <label class="form-check-label" th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></label>
                                     </div>
+                                </th:block>
+                            </div>
+                            <div class=" col-6 mb-3">
+                                <label class="form-label">Pieces justificatives</label>
+                                <div class="form-check">
+                                    <input disabled class="form-check-input" type="checkbox" name="rib" th:checked="${aideHumaine.rib}">
+                                    <label class="form-check-label">RIB</label>
+                                </div>
+                                <div class="form-check">
+                                    <input disabled class="form-check-input" type="checkbox" name="carteVitale" th:checked="${aideHumaine.carteVitale}">
+                                    <label class="form-check-label">Carte vitale</label>
+                                </div>
+                                <div class="form-check">
+                                    <input disabled class="form-check-input" type="checkbox" name="carteEtu" th:checked="${aideHumaine.carteEtu}">
+                                    <label class="form-check-label">Carte d’étudiant</label>
                                 </div>
                             </div>
                         </div>
                         <input onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2">
                         <input onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none">
                         <button type="submit" id="submit-aide-humaine" class="btn btn-success mt-2 d-none">Enregistrer</button>
+                        <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="bi bi-paperclip"></i></button>
+
                     </form>
                 </div>
                 <div class="col-12 col-xl-8">
@@ -219,7 +236,7 @@
                                                                     <label class="form-label">Supprimer la feuille heures</label>
                                                                 </td>
                                                                 <td>
-                                                                    <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-feuille-heures/' + ${periodeAideHumaineEntry.key}" th:method="delete">
+                                                                    <form onsubmit="return confirm('Confirmez la suppression de la feuille heure');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-feuille-heures/' + ${periodeAideHumaineEntry.key}" th:method="delete">
                                                                     <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
                                                                     </form>
                                                                 </td>
@@ -270,7 +287,7 @@
                                                                     <label class="form-label">Supprimer le planning</label>
                                                                 </td>
                                                                 <td>
-                                                                    <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}" th:method="delete">
+                                                                    <form onsubmit="return confirm('Confirmez la suppression du planning');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}" th:method="delete">
                                                                         <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
                                                                     </form>
                                                                 </td>
@@ -324,6 +341,12 @@
         </div>
     </div>
 </main>
+<div th:replace="aides/modal-pj-aide-humaine :: pj"></div>
+<script th:if="${returnModPJ}">
+    document.getElementById('pj-aide-humaine').classList.toggle("fade");
+    new bootstrap.Modal(document.getElementById('pj-aide-humaine')).show();
+    document.getElementById('pj-aide-humaine').classList.toggle("fade");
+</script>
 <footer th:replace="fragments/footer :: black"></footer>
 <div th:replace="fragments/flash :: flash"></div>
 </body>

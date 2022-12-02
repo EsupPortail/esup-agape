@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="aideHumaine" type="org.esupportail.esupagape.entity.AideHumaine"*/-->
+<div th:fragment="pj" class="modal fade" id="pj-aide-humaine" tabindex="-1" aria-labelledby="pj-aide-humaine-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="show-aide-materielle-label">Pièces jointe</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Type</th>
+                        <th>Nom</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr th:if="${aideHumaine.ficheRenseignement != null}">
+                        <td>Fiche de renseignement</td>
+                        <td th:text="${aideHumaine.ficheRenseignement.getFileName()}"></td>
+                        <td><a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-fiche'"><i class="bi bi-download"></i></a></td>
+                        <td>
+                            <form onsubmit="return confirm('Confirmez la suppression de la fiche');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-fiche/'" th:method="delete">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${aideHumaine.annexe != null}">
+                        <td>Annexe</td>
+                        <td th:text="${aideHumaine.annexe.getFileName()}"></td>
+                        <td><a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-annexe'"><i class="bi bi-download"></i></a></td>
+                        <td>
+                            <form onsubmit="return confirm('Confirmez la suppression de l’annexe');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-annexe/'" th:method="delete">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${aideHumaine.contrat != null}">
+                        <td>Contrat</td>
+                        <td th:text="${aideHumaine.contrat.getFileName()}"></td>
+                        <td><a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-contrat'"><i class="bi bi-download"></i></a></td>
+                        <td>
+                            <form onsubmit="return confirm('Confirmez la suppression de la fiche');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'" th:method="delete">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <form th:if="${aideHumaine.ficheRenseignement == null}" class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-fiche/'" th:method="post" enctype="multipart/form-data">
+                    <label class="form-label">Ajouter la fiche de renseignements</label>
+                    <div class="input-group">
+                    <input type="file" name="multipartFiles" multiple class="form-control" required>
+                    <input type="submit" class="btn btn-success " value="Ajouter">
+                    </div>
+                </form>
+                <form th:if="${aideHumaine.annexe == null}" class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-annexe/'" th:method="post" enctype="multipart/form-data">
+                    <label class="form-label">Ajouter l’annexe</label>
+                    <div class="input-group">
+                    <input type="file" name="multipartFiles" multiple class="form-control" required>
+                    <input type="submit" class="btn btn-success" value="Ajouter">
+                    </div>
+                </form>
+                <form th:if="${aideHumaine.contrat == null}" class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-contrat/'" th:method="post" enctype="multipart/form-data">
+                    <label class="form-label">Ajouter le contrat</label>
+                    <div class="input-group">
+                    <input type="file" name="multipartFiles" multiple class="form-control" required>
+                    <input type="submit" class="btn btn-success " value="Ajouter">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="d-inline">
+                    <button d="close-pj-aide-humaine" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

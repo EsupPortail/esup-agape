@@ -23,7 +23,7 @@ public class AideHumaine {
     private Dossier dossier;
 
     @Enumerated(EnumType.STRING)
-    private StatusAideHumaine statusAideHumaine;
+    private StatusAideHumaine statusAideHumaine = StatusAideHumaine.EN_COURS;
 
     private String numEtuAidant;
 
@@ -58,6 +58,12 @@ public class AideHumaine {
 
     @OneToOne
     private Document annexe;
+
+    private Boolean rib;
+
+    private Boolean carteVitale;
+
+    private Boolean carteEtu;
 
     public Long getId() {
         return id;
@@ -177,5 +183,29 @@ public class AideHumaine {
 
     public void setAnnexe(Document annexe) {
         this.annexe = annexe;
+    }
+
+    public Boolean getRib() {
+        return rib;
+    }
+
+    public void setRib(Boolean rib) {
+        this.rib = rib;
+    }
+
+    public Boolean getCarteVitale() {
+        return carteVitale;
+    }
+
+    public void setCarteVitale(Boolean carteVitale) {
+        this.carteVitale = carteVitale;
+    }
+
+    public Boolean getCarteEtu() {
+        return carteEtu;
+    }
+
+    public void setCarteEtu(Boolean carteEtu) {
+        this.carteEtu = carteEtu;
     }
 }

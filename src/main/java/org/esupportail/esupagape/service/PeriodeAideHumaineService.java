@@ -169,4 +169,5 @@ public class PeriodeAideHumaineService {
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         return aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
     }
+
 }

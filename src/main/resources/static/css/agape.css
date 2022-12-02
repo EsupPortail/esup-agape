@@ -54,6 +54,8 @@ select[disabled] > option {
     margin-top: 56px;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-top: 5px;
+    padding-right: 10px;
 }
 
 .agape-amenagement-textarea {
@@ -75,4 +77,9 @@ select[disabled] > option {
     background-position: left 10px;
     width: 100% !important;
 
+}
+
+.breadcrumb {
+    background-color: #dee2e6;
+    padding: 2px !important;
 }

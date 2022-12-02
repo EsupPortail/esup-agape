@@ -142,7 +142,7 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-feuille-heures/{month}")
-    public String deleteFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) throws AgapeException {
+    public String deleteFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
         periodeAideHumaineService.deleteFeuilleHeures(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
@@ -161,7 +161,7 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-planning/{month}")
-    public String deletePlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) throws AgapeException {
+    public String deletePlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
         periodeAideHumaineService.deletePlanning(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
@@ -170,6 +170,69 @@ public class AideController {
     @ResponseBody
     public ResponseEntity<Void> getPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
         periodeAideHumaineService.getPlanningHttpResponse(aideHumaineId, month, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-fiche")
+    public String addFiche(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.addFiche(aideHumaineId, multipartFiles, dossier);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-fiche")
+    public String deleteFiche(@PathVariable Long aideHumaineId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        aideHumaineService.deleteFiche(aideHumaineId);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-fiche")
+    @ResponseBody
+    public ResponseEntity<Void> getFiche(@PathVariable Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.getFicheHttpResponse(aideHumaineId, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-annexe")
+    public String addAnnexe(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.addAnnexe(aideHumaineId, multipartFiles, dossier);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-annexe")
+    public String deleteAnnexe(@PathVariable Long aideHumaineId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        aideHumaineService.deleteAnnexe(aideHumaineId);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-annexe")
+    @ResponseBody
+    public ResponseEntity<Void> getAnnexe(@PathVariable Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+       aideHumaineService.getAnnexeHttpResponse(aideHumaineId, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-contrat")
+    public String addContrat(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.addContrat(aideHumaineId, multipartFiles, dossier);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-contrat")
+    public String deleteContrat(@PathVariable Long aideHumaineId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        aideHumaineService.deleteContrat(aideHumaineId);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-contrat")
+    @ResponseBody
+    public ResponseEntity<Void> getContrat(@PathVariable Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.getContratHttpResponse(aideHumaineId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
