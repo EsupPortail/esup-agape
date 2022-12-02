@@ -99,9 +99,9 @@
                                 <td th:text="#{'aides.statusAideHumaine.' + ${aideHumaine.statusAideHumaine}}"></td>
                                 <td th:text="${#temporals.format(aideHumaine.startDate, 'dd/MM/yyyy')}"></td>
                                 <td>
-                                   <ul th:each="fonctionAidant : ${aideHumaine.fonctionAidants}">
-                                       <li th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></li>
-                                   </ul>
+                                    <ul th:each="fonctionAidant : ${aideHumaine.fonctionAidants}">
+                                        <li th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></li>
+                                    </ul>
                                 </td>
                                 <td th:text="${aideHumaine.nameAidant}"></td>
                                 <td th:text="${aideHumaine.firstNameAidant}"></td>
