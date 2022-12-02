@@ -18,7 +18,7 @@
                 <div class="col-6">
                     <h4>Situation</h4>
                     <hr>
-                    <div class="row mb-1 align-items-baseline">
+                   <!-- <div class="row mb-1 align-items-baseline">
                         <div class="col-4" style="width: 250px;">
                         <label class="form-label" for="classification">Classification du handicap</label>
                         </div>
@@ -27,6 +27,21 @@
                             <option value="" disabled selected>Choisir</option>
                             <option th:selected="${currentDossier.classification == classification}" th:each="classification : ${classifications}" th:text="#{'dossier.classification.' +${classification}}" th:value="${classification}"></option>
                         </select>
+                        </div>
+                    </div>-->
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label select-label" th:for="classification">Classification du handicap</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select multiple disabled th:field="*{classification}" type="text" class="form-select" th:value="${currentDossier.classification}">
+                                <option value="" disabled selected>Choisir</option>
+                                <option type="text"
+                                        th:selected="${currentDossier.classification.contains(classification)}"
+                                        th:each="classification : ${classifications}"
+                                        th:text="#{'dossier.classification.' +${classification}}"
+                                        th:value="${classification}"></option>
+                            </select>
                         </div>
                     </div>
 <!--                    <div class="row mb-1 align-items-baseline">-->
