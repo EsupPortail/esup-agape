@@ -1,233 +1,285 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-<head th:replace="fragments/head :: head"></head>
-<body>
-<header th:replace="fragments/header :: header"></header>
-<main class="d-inline-flex">
-    <div th:replace="fragments/side :: side"></div>
-    <div class="agape-content agape-content-side">
-        <div class="mb-3">
-            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
-        </div>
-        <div th:replace="fragments/tabs-years :: tabs-years"></div>
-        <div th:replace="fragments/tabs-content :: tabs-content(active='dossier')"></div>
-        <div class="m-3">
-            <form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
-            <div class="row">
-                <div class="col-6">
-                    <h4>Situation</h4>
-                    <hr>
-                   <!-- <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="classification">Classification du handicap</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                        <select disabled id="classification" name="classification" type="text" class="form-select" th:value="${currentDossier.classification}">
-                            <option value="" disabled selected>Choisir</option>
-                            <option th:selected="${currentDossier.classification == classification}" th:each="classification : ${classifications}" th:text="#{'dossier.classification.' +${classification}}" th:value="${classification}"></option>
-                        </select>
-                        </div>
-                    </div>-->
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label select-label" th:for="classification">Classification du handicap</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select multiple disabled th:field="*{classification}" type="text" class="form-select" th:value="${currentDossier.classification}">
-                                <option value="" disabled selected>Choisir</option>
-                                <option type="text"
-                                        th:selected="${currentDossier.classification.contains(classification)}"
-                                        th:each="classification : ${classifications}"
-                                        th:text="#{'dossier.classification.' +${classification}}"
-                                        th:value="${classification}"></option>
-                            </select>
-                        </div>
-                    </div>
-<!--                    <div class="row mb-1 align-items-baseline">-->
-<!--                        <div class="col-4" style="width: 250px;">-->
-<!--                        <label class="form-label" for="etat">Etat</label>-->
-<!--                        </div>-->
-<!--                        <div class="col-12 col-xxl-8">-->
-<!--                        <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">-->
-<!--                            <option value="" disabled selected>Choisir</option>-->
-<!--                            <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>-->
-<!--                        </select>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="mdph">Suivi MDPH</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
-                                <option value="" disabled selected>Choisir</option>
-                                <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="taux">Taux</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select disabled id="taux" name="taux" type="text" class="form-select" th:value="${currentDossier.taux}">
-                                <option value="" disabled selected>Choisir</option>
-                                <option th:selected="${currentDossier.taux == taux}" th:each="taux : ${tauxs}" th:text="#{'dossier.taux.' +${taux}}" th:value="${taux}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="suiviHandisupOui">Suivi handisup</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <input disabled type="radio" class="form-check-input" id="suiviHandisupOui" name="suiviHandisup" value="true" th:checked="${currentDossier.suiviHandisup == true}">
-                            <label class="form-check-label" for="suiviHandisupOui">
-                                Oui
-                            </label>
-                            <input disabled type="radio" class="form-check-input" id="suiviHandisupNon" name="suiviHandisup" value="false" th:checked="${currentDossier.suiviHandisup == false}">
-                            <label class="form-check-label" for="suiviHandisupNon">
-                                Non
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline" th:classappend="${currentDossier.suiviHandisup == null    || currentDossier.suiviHandisup == false ? 'd-none' : ''}" id="typeSuiviHandisupDiv">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" th:for="${typeSuiviHandisup}">Types de suivi handisup</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <th:block th:each="typeSuiviHandisup : ${typeSuiviHandisups}">
-                                <div class="form-check">
-                                <input disabled type="checkbox" class="form-check-input" th:id="${typeSuiviHandisup}" name="typeSuiviHandisup" th:value="${typeSuiviHandisup}" th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
-                                <label class="form-check-label" th:for="${typeSuiviHandisup}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side :: side"></div>
+            <div class="agape-content agape-content-side">
+                <div class="mb-3">
+                    <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                </div>
+                <div th:replace="fragments/tabs-years :: tabs-years"></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='dossier')"></div>
+                <div class="m-3">
+                    <form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
+                        <div class="row">
+                            <div class="col-6">
+                                <h4>Situation</h4>
+                                <hr>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label select-label" th:for="classification">Classification du handicap</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select multiple id="multiple" disabled th:field="*{classification}" size="1" type="text" class="form-control" th:value="${currentDossier.classification}">
+                                            <option type="text"
+                                                    th:checked="${currentDossier.classification.contains(classification)}"
+                                                    th:each="classification : ${classifications}"
+                                                    th:text="#{'dossier.classification.' +${classification}}"
+                                                    th:value="${classification}"></option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </th:block>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="commentaire">Commentaire</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <textarea disabled id="commentaire" name="commentaire" type="text" class="form-control" th:value="${currentDossier.commentaire}" th:text="${currentDossier.commentaire}"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <h4>Parcours</h4>
-                    <hr>
-                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="typeFormation">Type de formation</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select disabled id="typeFormation" name="typeFormation" type="text" class="form-select" th:value="${currentDossier.taux}">
-                                <option value="" disabled selected>Choisir</option>
-                                <option th:selected="${currentDossier.typeFormation == typeFormation}" th:each="typeFormation : ${typeFormations}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="modeFormation">Modalités de formation</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select disabled id="modeFormation" name="modeFormation" type="text" class="form-select" th:value="${currentDossier.modeFormation}">
-                                <option value="" disabled selected>Choisir</option>
-                                <option th:selected="${currentDossier.modeFormation == modeFormation}" th:each="modeFormation : ${modeFormations}" th:text="#{'enquete.modFrmn.' +${modeFormation}}" th:value="${modeFormation}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="site">Établissement</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <div class="input-group">
-                                <input disabled id="site" name="site" type="text" class="form-control" th:value="${currentDossier.site}" th:readonly="${currentDossier.site != ''}">
-                                <a onclick="toggleInputLock('site');" role="button" id="siteEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                <!--                    <div class="row mb-1 align-items-baseline">-->
+                                <!--                        <div class="col-4" style="width: 250px;">-->
+                                <!--                        <label class="form-label" for="etat">Etat</label>-->
+                                <!--                        </div>-->
+                                <!--                        <div class="col-12 col-xxl-8">-->
+                                <!--                        <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">-->
+                                <!--                            <option value="" disabled selected>Choisir</option>-->
+                                <!--                            <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>-->
+                                <!--                        </select>-->
+                                <!--                        </div>-->
+                                <!--                    </div>-->
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="mdph">Suivi MDPH</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
+                                            <option value="" disabled selected>Choisir</option>
+                                            <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="taux">Taux</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select disabled id="taux" name="taux" type="text" class="form-select" th:value="${currentDossier.taux}">
+                                            <option value="" disabled selected>Choisir</option>
+                                            <option th:selected="${currentDossier.taux == taux}" th:each="taux : ${tauxs}" th:text="#{'dossier.taux.' +${taux}}" th:value="${taux}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="suiviHandisupOui">Suivi handisup</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <input disabled
+                                                type="radio"
+                                                class="form-check-input"
+                                                id="suiviHandisupOui"
+                                                name="suiviHandisup"
+                                                value="true"
+                                                th:checked="${currentDossier.suiviHandisup == true}">
+                                        <label class="form-check-label" for="suiviHandisupOui">
+                                            Oui
+                                        </label>
+                                        <input disabled
+                                                type="radio"
+                                                class="form-check-input"
+                                                id="suiviHandisupNon"
+                                                name="suiviHandisup"
+                                                value="false"
+                                                th:checked="${currentDossier.suiviHandisup == false}">
+                                        <label class="form-check-label" for="suiviHandisupNon">
+                                            Non
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline"
+                                        th:classappend="${currentDossier.suiviHandisup == null    || currentDossier.suiviHandisup == false ? 'd-none' : ''}"
+                                        id="typeSuiviHandisupDiv">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" th:for="${typeSuiviHandisup}">Types de suivi handisup</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <th:block th:each="typeSuiviHandisup : ${typeSuiviHandisups}">
+                                            <div class="form-check">
+                                                <input disabled
+                                                        type="checkbox"
+                                                        class="form-check-input"
+                                                        th:id="${typeSuiviHandisup}"
+                                                        name="typeSuiviHandisup"
+                                                        th:value="${typeSuiviHandisup}"
+                                                        th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
+                                                <label class="form-check-label" th:for="${typeSuiviHandisup}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="commentaire">Commentaire</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <textarea disabled
+                                                id="commentaire"
+                                                name="commentaire"
+                                                type="text"
+                                                class="form-control"
+                                                th:value="${currentDossier.commentaire}"
+                                                th:text="${currentDossier.commentaire}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h4>Parcours</h4>
+                                <hr>
+                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="typeFormation">Type de formation</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select disabled id="typeFormation" name="typeFormation" type="text" class="form-select" th:value="${currentDossier.taux}">
+                                            <option value="" disabled selected>Choisir</option>
+                                            <option th:selected="${currentDossier.typeFormation == typeFormation}"
+                                                    th:each="typeFormation : ${typeFormations}"
+                                                    th:text="#{'enquete.typeFrmn.' +${typeFormation}}"
+                                                    th:value="${typeFormation}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="modeFormation">Modalités de formation</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select disabled id="modeFormation" name="modeFormation" type="text" class="form-select" th:value="${currentDossier.modeFormation}">
+                                            <option value="" disabled selected>Choisir</option>
+                                            <option th:selected="${currentDossier.modeFormation == modeFormation}"
+                                                    th:each="modeFormation : ${modeFormations}"
+                                                    th:text="#{'enquete.modFrmn.' +${modeFormation}}"
+                                                    th:value="${modeFormation}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="site">Établissement</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <div class="input-group">
+                                            <input disabled id="site" name="site" type="text" class="form-control" th:value="${currentDossier.site}" th:readonly="${currentDossier.site != ''}">
+                                            <a onclick="toggleInputLock('site');"
+                                                    role="button"
+                                                    id="siteEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="libelleFormation">Formation</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <div class="input-group">
+                                            <textarea rows="3"
+                                                    disabled
+                                                    id="libelleFormation"
+                                                    name="libelleFormation"
+                                                    class="form-control"
+                                                    style="min-height:60px; resize: none;"
+                                                    th:text="${currentDossier.libelleFormation}"
+                                                    th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
+                                            <a onclick="toggleInputLock('libelleFormation');"
+                                                    role="button"
+                                                    id="libelleFormationEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="composante">Composante</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}" th:readonly="${currentDossier.composante != ''}">
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="formAddress">Adresse de formation</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <div class="input-group">
+                                            <input disabled
+                                                    id="formAddress"
+                                                    name="formAddress"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.formAddress}"
+                                                    th:readonly="${currentDossier.formAddress != ''}">
+                                            <a onclick="toggleInputLock('formAddress');"
+                                                    role="button"
+                                                    id="formAddressEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="rentreeProchaine">Filière envisagée</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
+                                            <option value="" disabled selected>Choisir</option>
+                                            <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}"
+                                                    th:each="rentreeProchaine : ${rentreeProchaines}"
+                                                    th:text="#{'dossier.rentree-prochaine.' +${rentreeProchaine}}"
+                                                    th:value="${rentreeProchaine}"></option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="libelleFormation">Formation</label>
+                        <hr>
+                        <div class="d-inline">
+                            <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                            <input id="submit-dossier" type="submit" value="Enregister" class="btn btn-success d-none">
                         </div>
-                        <div class="col-12 col-xxl-8">
-                            <div class="input-group">
-                                <textarea rows="3" disabled id="libelleFormation" name="libelleFormation" class="form-control" style="min-height:60px; resize: none;" th:text="${currentDossier.libelleFormation}" th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
-                                <a onclick="toggleInputLock('libelleFormation');" role="button" id="libelleFormationEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                        <script>new SlimSelect({
+                            select: '#multiple'
+                        })
+                        </script>
+                    </form>
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notes-modal">Voir les notes</button>
+                    <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Notes</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p th:text="${extendedInfos.noteS1}"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="composante">Composante</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}" th:readonly="${currentDossier.composante != ''}">
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="formAddress">Adresse de formation</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <div class="input-group">
-                                <input disabled id="formAddress" name="formAddress" type="text" class="form-control" th:value="${currentDossier.formAddress}" th:readonly="${currentDossier.formAddress != ''}">
-                                <a onclick="toggleInputLock('formAddress');" role="button" id="formAddressEdit" class="btn btn-light border-secondary border-opacity-25 d-none" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                        <div class="col-4" style="width: 250px;">
-                        <label class="form-label" for="rentreeProchaine">Filière envisagée</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                        <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
-                            <option value="" disabled selected>Choisir</option>
-                            <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}" th:each="rentreeProchaine : ${rentreeProchaines}" th:text="#{'dossier.rentree-prochaine.' +${rentreeProchaine}}" th:value="${rentreeProchaine}"></option>
-                        </select>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="d-inline">
-                <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
-                <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
-                <input id="submit-dossier" type="submit" value="Enregister" class="btn btn-success d-none">
-            </div>
-            </form>
-            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notes-modal">Voir les notes</button>
-            <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Notes</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p th:text="${extendedInfos.noteS1}"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-<footer th:replace="fragments/footer :: black"></footer>
-<div th:replace="fragments/flash :: flash"></div>
-<div th:replace="individus/modal-update :: update"></div>
-</body>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+        <div th:replace="individus/modal-update :: update"></div>
+    </body>
 </html>

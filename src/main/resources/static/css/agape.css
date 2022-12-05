@@ -83,3 +83,17 @@ select[disabled] > option {
     background-color: #dee2e6;
     padding: 2px !important;
 }
+
+ .ss-value-delete {
+    -webkit-box-sizing: initial;
+    -moz-box-sizing: initial;
+    box-sizing: initial;
+}
+.ss-arrow {
+    display: none;
+}
+
+.ss-main {
+    border-radius: 3px;
+    height: 40px;
+}
