@@ -89,11 +89,11 @@ select[disabled] > option {
     -moz-box-sizing: initial;
     box-sizing: initial;
 }
-.ss-arrow {
-    display: none;
-}
 
 .ss-main {
     border-radius: 3px;
-    height: 40px;
+}
+
+.ss-values {
+    word-break: break-word;
 }
