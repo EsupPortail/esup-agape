@@ -23,7 +23,7 @@
                                         <label class="form-label select-label" th:for="classification">Classification du handicap</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <select multiple id="multiple" disabled th:field="*{classification}" size="1" type="text" class="form-control" th:value="${currentDossier.classification}">
+                                        <select multiple id="multiple" disabled th:field="*{classification}" size="1" type="text" class="form-select" th:value="${currentDossier.classification}">
                                             <option type="text"
                                                     th:checked="${currentDossier.classification.contains(classification)}"
                                                     th:each="classification : ${classifications}"
