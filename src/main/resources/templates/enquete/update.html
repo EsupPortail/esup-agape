@@ -20,226 +20,246 @@
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='enquete')"></div>
                 <div class="m-3">
-                <h4>Enquête</h4>
-                <hr>
-                <form id="enquete"
-                        class="form-horizontal"
-                        th:method="put"
-                        th:action="@{/dossiers/{id}/enquete/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}"
-                        th:object="${enquete}">
-                    <input th:field="*{dossier}" type="hidden" readonly class="form-control">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div>
-                            <div>
-                                <label class="mt-3 form-label" th:for="an">Année de naissance</label>
+                    <h4>Enquête</h4>
+                    <hr>
+                    <form id="enquete"
+                            class="form-horizontal"
+                            th:method="put"
+                            th:action="@{/dossiers/{id}/enquete/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}"
+                            th:object="${enquete}">
+                        <input th:field="*{dossier}" type="hidden" readonly class="form-control">
+                        <div class="row">
+                            <div class="col-lg-6">
                                 <div>
-                                    <input disabled readonly id="an" name="an" class="form-control" type="text" th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}">
-                                </div>
-                            </div>
-                                <div>
-                                    <label class="mt-1 form-label" th:for="genders">Genre</label>
                                     <div>
-                                        <select name="gender" class="form-select" size="1" th:disabled="${enquete.gender != null}">
-                                            <option disabled selected value="nul">Choisir</option>
-                                            <option  th:selected="${gender == enquete.gender}" th:each="gender : ${genders}" th:value="${enquete.gender}" th:text="#{'individu.gender.' + ${gender}}"></option>
+                                        <label class="mt-3 form-label" th:for="an">Année de naissance</label>
+                                        <div>
+                                            <input disabled
+                                                    readonly
+                                                    id="an"
+                                                    name="an"
+                                                    class="form-control"
+                                                    type="text"
+                                                    th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="genders">Genre</label>
+                                        <div>
+                                            <select name="gender" class="form-select" size="1" th:disabled="${enquete.gender != null}">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${gender == enquete.gender}"
+                                                        th:each="gender : ${genders}"
+                                                        th:value="${enquete.gender}"
+                                                        th:text="#{'individu.gender.' + ${gender}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
+                                    <div>
+                                        <select id="typeFormation" name="typeFormation" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
+                                            <option disabled selected value="">Choisir</option>
+                                            <option th:selected="${enquete.typeFrmn == typeFormation}"
+                                                    th:each="typeFormation : ${typeFrmns}"
+                                                    th:text="#{'enquete.typeFrmn.' +${typeFormation}}"
+                                                    th:value="${typeFormation}"></option>
                                         </select>
                                     </div>
-                                </div>
-                                <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
-                                <div>
-                                    <select id="typeFormation" name="typeFormation" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${enquete.typeFrmn == typeFormation}" th:each="typeFormation : ${typeFrmns}" th:text="#{'enquete.typeFrmn.' +${typeFormation}}" th:value="${typeFormation}"></option>
-                                    </select>
-                                </div>
 
-                                <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
-                                <div>
-                                    <select id="modeFormation" name="modeFormation" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${enquete.modFrmn == modeFormation}" th:each="modeFormation : ${modFrmns}" th:text="#{'enquete.modFrmn.' +${modeFormation}}" th:value="${modeFormation}"></option>
-                                    </select>
-                                </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codFil">Discipline</label>
-                                <div>
-                                    <select id="_codFil_id" name="codFil" class="form-select" size="1">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${enumCodfil == enquete.codFil}"
-                                                th:each="enumCodfil : ${codFils}"
-                                                th:value="${enumCodfil}"
-                                                th:text="#{'enquete.codFil.' + ${enumCodfil}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codFmt">Formation</label>
-                                <div>
-                                    <select id="_codFmt_id" name="codFmt" class="form-select" size="1">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${enumCodFmt == enquete.codFmt}"
-                                                th:each="enumCodFmt : ${codFmts}"
-                                                th:value="${enumCodFmt}"
-                                                th:text="#{'enquete.codFmt.' + ${enumCodFmt}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codSco">Année d’études</label>
-                                <div>
-                                    <select id="_codSco_id" name="codSco" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumCodSco == enquete.codSco}"
-                                                th:each="enumCodSco : ${codScos}"
-                                                th:value="${enumCodSco}"
-                                                th:text="#{'enquete.codSco.' + ${enumCodSco}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codHd">Type de handicap</label>
-                                <div>
-                                    <select id="_codHd_id" name="codHd" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumCodHd == enquete.codHd}"
-                                                th:each="enumCodHd : ${codHds}"
-                                                th:value="${enumCodHd}"
-                                                th:text="#{'enquete.codHd.' + ${enumCodHd}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="form-label mt-1" th:for="hdTmp">Handicap temporaire:
-                                </label>
-                                <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}">
-                            </div>
-                            <div>
-                                <label th:for="com" class="mt-1 form-label">Commentaire</label>
-                                <div>
-                                    <textarea th:field="*{com}" class="form-control"></textarea>
-                                   </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codPfpp">Plan d’accompagnement</label>
-                                <div>
-                                    <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumCodpfpp == enquete.codPfpp}"
-                                                th:each="enumCodpfpp : ${codPfpps}"
-                                                th:value="${enumCodpfpp}"
-                                                th:text="#{'enquete.codPfpp.' + ${enumCodpfpp}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codPfas">Aménagement spécifique</label>
-                                <div>
-                                    <select id="_codPfas_id" name="codPfas" class="form-select" size="1"> 
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumCodPfas == enquete.codPfas}"
-                                                th:each="enumCodPfas : ${codPfass}"
-                                                th:value="${enumCodPfas}"
-                                                th:text="#{'enquete.codPfas.' + ${enumCodPfas}}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
-                                <div>
-                                    <th:block th:each="enumCodMeahF : ${codMeahFs}">
-                                        <div>
-                                            <input th:field="*{codMeahF}" size="1" type="checkbox" th:value="${enumCodMeahF}">
-                                            <label th:for="${enumCodMeahF}" th:text="#{'enquete.codMeahF.' + ${enumCodMeahF}}"></label>
-                                        </div>
-                                    </th:block>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div>
-                            <div>
-                                <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d'heures</label>
-                                <div>
-                                    <input th:field="*{interpH}" class="form-control" type="text" value="">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d'heures</label>
-                                <div>
-                                    <input th:field="*{codeurH}" class="form-control" type="text" value="">
-                                </div>
-                            </div>
-                            <div>
-                                <label th:for="aidHNat" class="mt-1 form-label">Autre aide humaine</label>
-                                <div>
-                                    <textarea th:field="*{aidHNat}" class="form-control"></textarea>
-                                  </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
-                                <div>
-                                    <th:block th:each="enumCodMeae : ${codMeaes}">
-                                        <div>
-                                            <input th:checked="${enquete.codMeae.contains(enumCodMeae)}" th:id="${enumCodMeae}" name="codMeae" size="1" type="checkbox" th:value="${enumCodMeae}">
-                                            <label th:for="${enumCodMeae}" th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></label>
-                                        </div>
-                                    </th:block>
-                                </div>
-                            </div>
-                            <div>
-                                <label th:for="autAE" class="mt-1 form-label">Autre aménagement des examens</label>
-                                <div>
-                                    <textarea th:field="*{autAE}" class="form-control"></textarea>
+                                    <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
+                                    <div>
+                                        <select id="modeFormation" name="modeFormation" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
+                                            <option disabled selected value="">Choisir</option>
+                                            <option th:selected="${enquete.modFrmn == modeFormation}"
+                                                    th:each="modeFormation : ${modFrmns}"
+                                                    th:text="#{'enquete.modFrmn.' +${modeFormation}}"
+                                                    th:value="${modeFormation}"></option>
+                                        </select>
                                     </div>
-                            </div>
-                            <div>
-                                <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
-                                <div>
-                                    <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
-                                        <option disabled selected value="nul">Choisir</option>
-                                        <option th:selected="${enumCodmeaa == enquete.codMeaa}"
-                                                th:each="enumCodmeaa : ${codMeaas}"
-                                                th:value="${enumCodmeaa}"
-                                                th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label th:for="autAA" class="mt-1 form-label">Aides autres</label>
                                     <div>
-                                        <textarea th:field="*{autAA}" class="form-control"></textarea>
-                                      </div>
-                                </div>
-                                <div>
-                                    <label class="mt-1 form-label" th:for="libelleCodAmL">Libellés autres mesures</label>
+                                        <label class="mt-1 form-label" th:for="codFil">Discipline</label>
+                                        <div>
+                                            <select id="_codFil_id" name="codFil" class="form-select" size="1">
+                                                <option disabled selected value="">Choisir</option>
+                                                <option th:selected="${enumCodfil == enquete.codFil}"
+                                                        th:each="enumCodfil : ${codFils}"
+                                                        th:value="${enumCodfil}"
+                                                        th:text="#{'enquete.codFil.' + ${enumCodfil}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div>
-                                        <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
-                                            <div>
-                                                <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
-                                                <br/>
-                                                <div class="d-inline">
-                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '0'">
-                                                    <label th:for="${enumLibelleCodAm}">Non</label>
-                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '1'">
-                                                    <label th:for="${enumLibelleCodAm}">Oui</label>
-                                                    <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + 'X'">
-                                                    <label th:for="${enumLibelleCodAm}">Ne sais pas</label>
+                                        <label class="mt-1 form-label" th:for="codFmt">Formation</label>
+                                        <div>
+                                            <select id="_codFmt_id" name="codFmt" class="form-select" size="1">
+                                                <option disabled selected value="">Choisir</option>
+                                                <option th:selected="${enumCodFmt == enquete.codFmt}"
+                                                        th:each="enumCodFmt : ${codFmts}"
+                                                        th:value="${enumCodFmt}"
+                                                        th:text="#{'enquete.codFmt.' + ${enumCodFmt}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codSco">Année d’études</label>
+                                        <div>
+                                            <select id="_codSco_id" name="codSco" class="form-select" size="1">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${enumCodSco == enquete.codSco}"
+                                                        th:each="enumCodSco : ${codScos}"
+                                                        th:value="${enumCodSco}"
+                                                        th:text="#{'enquete.codSco.' + ${enumCodSco}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codHd">Type de handicap</label>
+                                        <div>
+                                            <select id="_codHd_id" name="codHd" class="form-select" size="1">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${enumCodHd == enquete.codHd}"
+                                                        th:each="enumCodHd : ${codHds}"
+                                                        th:value="${enumCodHd}"
+                                                        th:text="#{'enquete.codHd.' + ${enumCodHd}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label mt-1" th:for="hdTmp">Handicap temporaire:
+                                        </label>
+                                        <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}">
+                                    </div>
+                                    <div>
+                                        <label th:for="com" class="mt-1 form-label">Commentaire</label>
+                                        <div>
+                                            <textarea th:field="*{com}" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codPfpp">Plan d’accompagnement</label>
+                                        <div>
+                                            <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${enumCodpfpp == enquete.codPfpp}"
+                                                        th:each="enumCodpfpp : ${codPfpps}"
+                                                        th:value="${enumCodpfpp}"
+                                                        th:text="#{'enquete.codPfpp.' + ${enumCodpfpp}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codPfas">Aménagement spécifique</label>
+                                        <div>
+                                            <select id="_codPfas_id" name="codPfas" class="form-select" size="1">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${enumCodPfas == enquete.codPfas}"
+                                                        th:each="enumCodPfas : ${codPfass}"
+                                                        th:value="${enumCodPfas}"
+                                                        th:text="#{'enquete.codPfas.' + ${enumCodPfas}}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
+                                        <div>
+                                            <th:block th:each="enumCodMeahF : ${codMeahFs}">
+                                                <div>
+                                                    <input th:field="*{codMeahF}" size="1" type="checkbox" th:value="${enumCodMeahF}">
+                                                    <label th:for="${enumCodMeahF}" th:text="#{'enquete.codMeahF.' + ${enumCodMeahF}}"></label>
                                                 </div>
-                                            </div>
-                                        </th:block>
+                                            </th:block>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="submit mb-3 mt-3">
-                                    <div class="btn-group"><span class="visible-lg-block visible-md-block visible-sm-block">
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <div>
+                                        <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d'heures</label>
+                                        <div>
+                                            <input th:field="*{interpH}" class="form-control" type="text" value="">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d'heures</label>
+                                        <div>
+                                            <input th:field="*{codeurH}" class="form-control" type="text" value="">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label th:for="aidHNat" class="mt-1 form-label">Autre aide humaine</label>
+                                        <div>
+                                            <textarea th:field="*{aidHNat}" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
+                                        <div>
+                                            <th:block th:each="enumCodMeae : ${codMeaes}">
+                                                <div>
+                                                    <input th:checked="${enquete.codMeae.contains(enumCodMeae)}"
+                                                            th:id="${enumCodMeae}"
+                                                            name="codMeae"
+                                                            size="1"
+                                                            type="checkbox"
+                                                            th:value="${enumCodMeae}">
+                                                    <label th:for="${enumCodMeae}" th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></label>
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label th:for="autAE" class="mt-1 form-label">Autre aménagement des examens</label>
+                                        <div>
+                                            <textarea th:field="*{autAE}" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
+                                        <div>
+                                            <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
+                                                <option disabled selected value="nul">Choisir</option>
+                                                <option th:selected="${enumCodmeaa == enquete.codMeaa}"
+                                                        th:each="enumCodmeaa : ${codMeaas}"
+                                                        th:value="${enumCodmeaa}"
+                                                        th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label th:for="autAA" class="mt-1 form-label">Aides autres</label>
+                                            <div>
+                                                <textarea th:field="*{autAA}" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="libelleCodAmL">Libellés autres mesures</label>
+                                            <div>
+                                                <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
+                                                    <div>
+                                                        <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
+                                                        <br />
+                                                        <div class="d-inline">
+                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '0'">
+                                                            <label th:for="${enumLibelleCodAmL}">Non</label>
+                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '1'">
+                                                            <label th:for="${enumLibelleCodAmL}">Oui</label>
+                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + 'X'">
+                                                            <label th:for="${enumLibelleCodAmL}">Ne sais pas</label>
+                                                        </div>
+                                                    </div>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                        <div class="submit mb-3 mt-3">
+                                            <div class="btn-group"><span class="visible-lg-block visible-md-block visible-sm-block">
                                         <input class="btn btn-success" value="Enregistrer" type="submit" id="proceed"></span><span class="visible-xs-block"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    </div>
-                </form>
+                    </form>
                 </div>
             </div>
         </main>
