@@ -91,7 +91,10 @@ select[disabled] > option {
 }
 
 .ss-main {
-    border-radius: 3px;
+    border:1px solid #ced4da!important;
+    border-radius: .375rem!important;
+    height: 38px;
+    background-color: #e9ecef!important;
 }
 
 .ss-values {
@@ -100,4 +103,8 @@ select[disabled] > option {
 
 .ss-arrow path {
     display: none;
+}
+
+.ss-placeholder {
+    color: rgb(0,0,0)!important;
 }
