@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="clearfix w-100">
-                        <h4 class="float-start">Aménagements d’examen</h4>
+                        <h4 class="float-start mt-3">Aménagements d’examen</h4>
                         <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i></a>
                     </div>
 
@@ -33,7 +33,7 @@
                         <tbody>
                         <th:block th:each="amenagement : ${amenagements}">
                             <tr>
-                                <td th:text="${amenagement.getCreateDate()}"></td>
+                                <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
                                 <td th:text="${amenagement.getTypeAmenagement()}"></td>
                                 <td><a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
                             </tr>
