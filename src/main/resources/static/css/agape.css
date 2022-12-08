@@ -91,10 +91,9 @@ select[disabled] > option {
 }
 
 .ss-main {
-    border:1px solid #ced4da!important;
-    border-radius: .375rem!important;
+    border: 1px solid #ced4da !important;
+    border-radius: .375rem !important;
     height: 38px;
-    background-color: #e9ecef!important;
 }
 
 .ss-values {
