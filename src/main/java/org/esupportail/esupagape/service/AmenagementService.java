@@ -35,4 +35,9 @@ public class AmenagementService {
     public void create(Amenagement amenagement) {
         amenagementRepository.save(amenagement);
     }
+
+    @Transactional
+    public void deleteAmenagement(Long amenagementId) {
+        amenagementRepository.deleteById(amenagementId);
+    }
 }

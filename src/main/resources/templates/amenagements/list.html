@@ -22,20 +22,53 @@
                         <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i></a>
                     </div>
 
-                    <table class="table table-striped">
+                    <table class="table table-striped" >
                         <thead class="text-start mt-2 mb-2 table-info">
                         <tr>
                             <th>Date create</th>
                             <th>Type</th>
-                            <th></th>
+                            <th style="width: 200px;">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <th:block th:each="amenagement : ${amenagements}">
                             <tr>
                                 <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                <td th:text="${amenagement.getTypeAmenagement()}"></td>
-                                <td><a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
+                                <td th:text="#{'amenagement.type-amenagement.' +${amenagement.getTypeAmenagement()}}"></td>
+                                <td><a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+                                    <a data-bs-toggle="modal"
+                                            href="#"
+                                            data-bs-target="#modal-warning"
+                                            th:attr="data-bs-target='#modal-warning'+${amenagement.id}"
+                                            class="btn btn-danger"><i class="bi bi-trash3"></i></a>
+                                    <div class="modal modal-warning fade in" th:id="modal-warning+${amenagement.id}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form th:action="@{/dossiers/{id}/amenagements/{amenagementId}/delete(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
+                                                        th:method="delete">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fs-5" th:id="'delete-amenagement-label' + ${amenagement.id}">Suppression d'un entretien</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-danger text-center">Confirmez-vous la suppression de
+                                                            cet aménagement?
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline pull-left"
+                                                                data-bs-dismiss="modal">
+                                                            Annuler
+                                                        </button>
+                                                        <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div></td>
+
                             </tr>
                         </th:block>
                         </tbody>
