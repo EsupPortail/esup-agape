@@ -195,17 +195,12 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
                                         <div>
-                                            <th:block th:each="enumCodMeae : ${codMeaes}">
-                                                <div>
-                                                    <input th:checked="${enquete.codMeae.contains(enumCodMeae)}"
-                                                            th:id="${enumCodMeae}"
-                                                            name="codMeae"
-                                                            size="1"
-                                                            type="checkbox"
-                                                            th:value="${enumCodMeae}">
-                                                    <label th:for="${enumCodMeae}" th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></label>
-                                                </div>
-                                            </th:block>
+                                            <select multiple id="multiple" th:field="*{codMeae}" class="form-select" size="1">
+                                                <option th:checked="${enquete.codMeae.contains(codMeaes)}"
+                                                        th:each="enumCodMeae : ${codMeaes}"
+                                                        th:value="${enumCodMeae}"
+                                                        th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div>
@@ -239,11 +234,11 @@
                                                         <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
                                                         <br />
                                                         <div class="d-inline">
-                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '0'">
+                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + '0'">
                                                             <label th:for="${enumLibelleCodAmL}">Non</label>
-                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + '1'">
+                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + '1'">
                                                             <label th:for="${enumLibelleCodAmL}">Oui</label>
-                                                            <input th:name="${enumLibelleCodAmL}" size="1" type="radio" th:value="${enumLibelleCodAmL} + 'X'">
+                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + 'X'">
                                                             <label th:for="${enumLibelleCodAmL}">Ne sais pas</label>
                                                         </div>
                                                     </div>
@@ -259,6 +254,14 @@
                                 </div>
                             </div>
                         </div>
+                        <script>new SlimSelect({
+                            select: '#multiple',
+                            settings: {
+                                placeholderText: 'Choisir',
+                            },
+                        })
+
+                        </script>
                     </form>
                 </div>
             </div>

@@ -84,7 +84,7 @@ select[disabled] > option {
     padding: 2px !important;
 }
 
- .ss-value-delete {
+.ss-value-delete {
     -webkit-box-sizing: initial;
     -moz-box-sizing: initial;
     box-sizing: initial;
@@ -93,7 +93,7 @@ select[disabled] > option {
 .ss-main {
     border: 1px solid #ced4da !important;
     border-radius: .375rem !important;
-    height: 38px;
+    min-height: 38px!important;
 }
 
 .ss-values {
