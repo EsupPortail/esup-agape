@@ -28,7 +28,7 @@
                                 <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement">
+                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement" th:field="*{typeAmenagement}" th:value="${typeAmenagement}">
                                     <option value="" disabled selected>Choisir</option>
                                     <option th:each="typeAmenagement : ${typeAmenagements}" th:text="#{'amenagement.type-amenagement.' +${typeAmenagement}}" th:value="${typeAmenagement}"></option>
                                 </select>
@@ -50,7 +50,7 @@
                             <div class="col-12 col-xxl-8">
                                 <th:block th:each="typeEpreuve : ${typeEpreuves}">
                                     <div class="form-check">
-                                        <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input">
+                                        <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input" th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
                                         <label class="form-check-label" th:for="${typeEpreuve}" th:text="#{'amenagement.type-epreuve.' +${typeEpreuve}}"></label>
                                     </div>
                                 </th:block>
