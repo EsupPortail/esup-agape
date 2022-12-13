@@ -27,7 +27,7 @@
                                     th:method="put"
                                     th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
                                     th:object="${amenagement}">
-                                <input type="hidden" name="id" value="">
+                                <input type="hidden" name="id" th:value="${currentDossier.getId()}">
                                 <div class="row">
                                     <div class="col-12 col-xl-6">
                                         <div class="row mb-1">
