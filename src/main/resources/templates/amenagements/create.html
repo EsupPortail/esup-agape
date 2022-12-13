@@ -20,9 +20,9 @@
             <h4>Ajout d’un aménagement d’examen</h4>
             <hr>
             <form th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
+                <input type="hidden" name="id" value="">
             <div class="row">
                 <div class="col-12 col-xl-6">
-                        <input type="hidden" th:field="*{dossier}">
                         <div class="row mb-1">
                             <div class="col-4" style="width: 250px;">
                                 <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
@@ -39,7 +39,7 @@
                                 <label th:for="end-date" class="form-label">Date de fin</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}" required>
+                                <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}">
                                 <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
                             </div>
                         </div>

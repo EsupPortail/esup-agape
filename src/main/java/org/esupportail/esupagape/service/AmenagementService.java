@@ -50,10 +50,9 @@ public class AmenagementService {
         amenagementRepository.deleteById(amenagementId);
     }
 
+    @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
-        amenagementToUpdate.setId(amenagement.getId());
-        amenagementToUpdate.setDossier(amenagement.getDossier());
         amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
         amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
         amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
@@ -61,7 +60,6 @@ public class AmenagementService {
         amenagementToUpdate.setTypeEpreuve(amenagement.getTypeEpreuve());
         amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
-        amenagementRepository.save(amenagementToUpdate);
     }
 }
 

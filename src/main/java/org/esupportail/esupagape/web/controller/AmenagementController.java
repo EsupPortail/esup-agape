@@ -49,10 +49,7 @@ public class AmenagementController {
     public String createSave(@Valid Amenagement amenagement, Dossier dossier, RedirectAttributes redirectAttributes) {
         amenagement.setDossier(dossier);
         amenagementService.create(amenagement);
-//        redirectAttributes.addAllAttributes("message", new Message("success", ))
-       /* return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";*/
-       return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" ;
-
+        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("/{amenagementId}/update")
