@@ -90,24 +90,32 @@
                         </div>
                     </div>
                 <div class="col-12 col-xl-6">
-                        <div class="row mb-1">
-                            <div class="col-4" style="width: 250px;">
-                                <label class="form-label" for="classification">Classification du handicap</label>
-                            </div>
-                            <div class="col-12 col-xxl-8">
-                                <th:block th:each="classification : ${classifications}">
-                                    <div class="form-check">
-                                        <input disabled id="classification" type="checkbox" th:value="${classification}">
-                                        <label class="form-check-label" th:for="${classification}" th:text="#{'dossier.classification.' +${classification}}"></label>
-                                    </div>
-                                </th:block>
-                            </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label select-label" th:for="classification">Classification du handicap</label>
                         </div>
+                    <div class="col-12 col-xxl-8">
+                        <select multiple id="classification"  th:field="*{classification}" size="1" type="text" class="form-select" th:value="${currentDossier.classification}">
+                            <option type="text"
+                                    th:checked="${currentDossier.classification.contains(classification)}"
+                                    th:each="classification : ${classifications}"
+                                    th:text="#{'dossier.classification.' +${classification}}"
+                                    th:value="${classification}"></option>
+                        </select>
                     </div>
+                </div>
                 </div>
                 <div class="col-12 col-xl-6">
                     <input type="submit" class="btn btn-success" value="Valider">
                 </div>
+                <script>new SlimSelect({
+                    select: '#classification',
+                    settings: {
+                        placeholderText: 'Choisir',
+                    },
+                })
+                </script>
+            </div>
             </form>
         </div>
     </div>
