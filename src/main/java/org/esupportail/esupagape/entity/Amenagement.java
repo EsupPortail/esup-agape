@@ -49,8 +49,9 @@ public class Amenagement {
     @Column(columnDefinition = "TEXT")
     private String amenagementText;
 
+    @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Classification classification;
+    private Set<Classification> classification;
 
     private String mailMedecin;
 
@@ -179,11 +180,11 @@ public class Amenagement {
         this.amenagementText = amenagement;
     }
 
-    public Classification getClassification() {
+    public Set<Classification> getClassification() {
         return classification;
     }
 
-    public void setClassification(Classification classification) {
+    public void setClassification(Set<Classification> classification) {
         this.classification = classification;
     }
 
