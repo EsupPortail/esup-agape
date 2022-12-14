@@ -124,7 +124,11 @@
             <artifactId>bootstrap-icons</artifactId>
             <version>1.9.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>slim-select</artifactId>
+            <version>2.3.3</version>
+        </dependency>
 
         <!-- Other dependencies -->
 
