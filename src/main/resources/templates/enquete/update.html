@@ -195,7 +195,7 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
                                         <div>
-                                            <select multiple id="multiple" th:field="*{codMeae}" class="form-select" size="1">
+                                            <select multiple id="codMeae" th:field="*{codMeae}" class="agape-slim-select">
                                                 <option th:checked="${enquete.codMeae.contains(codMeaes)}"
                                                         th:each="enumCodMeae : ${codMeaes}"
                                                         th:value="${enumCodMeae}"
@@ -254,14 +254,6 @@
                                 </div>
                             </div>
                         </div>
-                        <script>new SlimSelect({
-                            select: '#multiple',
-                            settings: {
-                                placeholderText: 'Choisir',
-                            },
-                        })
-
-                        </script>
                     </form>
                 </div>
             </div>

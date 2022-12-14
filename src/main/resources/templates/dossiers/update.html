@@ -23,7 +23,7 @@
                                         <label class="form-label select-label" th:for="classification">Classification du handicap</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <select multiple id="classification" disabled th:field="*{classification}" size="1" type="text" class="form-select" th:value="${currentDossier.classification}">
+                                        <select multiple id="classification" disabled th:field="*{classification}" size="1" type="text" class="agape-slim-select" th:value="${currentDossier.classification}">
                                             <option type="text"
                                                     th:checked="${currentDossier.classification.contains(classification)}"
                                                     th:each="classification : ${classifications}"
@@ -253,14 +253,6 @@
                             <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
                             <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
                         </div>
-                        <script>new SlimSelect({
-                            select: '#classification',
-                            settings: {
-                                placeholderText: 'Choisir',
-                            },
-                        })
-
-                        </script>
                     </form>
                     <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notes-modal">Voir les notes</button>
                     <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">

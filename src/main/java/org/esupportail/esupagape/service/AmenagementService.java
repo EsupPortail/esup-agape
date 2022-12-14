@@ -44,13 +44,14 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void create(Amenagement amenagement) {
-        if (amenagement.getDossier().getStatusDossier().equals(StatusDossier.IMPORTE)) {
-            amenagement.getDossier().setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+    public void create(Amenagement amenagement, Long idDossier) {
+        Dossier dossier = dossierService.getById(idDossier);
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
         }
-        amenagementRepository.save(amenagement);
+        amenagement.setDossier(dossier);
         updateClassification(amenagement);
-
+        amenagementRepository.save(amenagement);
     }
 
     @Transactional
@@ -68,8 +69,6 @@ public class AmenagementService {
         amenagementToUpdate.setTypeEpreuve(amenagement.getTypeEpreuve());
         amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
-        //if autorisation == OUI -> classification amenagement => classification dossier
-        //if autorisation == NC -> classification dossier = "non communiqué"
         updateClassification(amenagementToUpdate);
     }
 
@@ -77,6 +76,10 @@ public class AmenagementService {
         if (amenagement.getDossier().getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             if (amenagement.getAutorisation().equals(Autorisation.OUI)) {
                 amenagement.getDossier().setClassification(amenagement.getClassification());
+            }
+            if (amenagement.getAutorisation().equals(Autorisation.NON)) {
+                amenagement.getDossier().getClassification().clear();
+                amenagement.getDossier().getClassification().add(Classification.REFUS);
             }
             if (amenagement.getAutorisation().equals(Autorisation.NC)) {
                 amenagement.getDossier().getClassification().clear();

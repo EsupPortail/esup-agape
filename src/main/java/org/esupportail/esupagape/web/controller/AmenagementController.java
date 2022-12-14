@@ -46,8 +46,7 @@ public class AmenagementController {
     @PostMapping("/create")
     public String createSave(@Valid Amenagement amenagement, Dossier dossier, RedirectAttributes redirectAttributes) {
         amenagement.setId(null);
-        amenagement.setDossier(dossier);
-        amenagementService.create(amenagement);
+        amenagementService.create(amenagement, dossier.getId());
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
     }
 
