@@ -2,7 +2,10 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.Autorisation;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.springframework.data.domain.Page;
@@ -42,7 +45,12 @@ public class AmenagementService {
 
     @Transactional
     public void create(Amenagement amenagement) {
+        if (amenagement.getDossier().getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            amenagement.getDossier().setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+        }
         amenagementRepository.save(amenagement);
+        updateClassification(amenagement);
+
     }
 
     @Transactional
@@ -62,7 +70,19 @@ public class AmenagementService {
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
         //if autorisation == OUI -> classification amenagement => classification dossier
         //if autorisation == NC -> classification dossier = "non communiqué"
+        updateClassification(amenagementToUpdate);
+    }
 
+    private static void updateClassification(Amenagement amenagement) {
+        if (amenagement.getDossier().getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
+            if (amenagement.getAutorisation().equals(Autorisation.OUI)) {
+                amenagement.getDossier().setClassification(amenagement.getClassification());
+            }
+            if (amenagement.getAutorisation().equals(Autorisation.NC)) {
+                amenagement.getDossier().getClassification().clear();
+                amenagement.getDossier().getClassification().add(Classification.NON_COMMUNIQUE);
+            }
+        }
     }
 }
 
