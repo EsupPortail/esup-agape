@@ -53,12 +53,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion des aménagements
-    document.getElementById("typeAmenagement").addEventListener("change", function(e) {
-        if(this.value === "DATE") {
-            document.getElementById("amenagement-end-date").classList.remove("d-none");
-        } else {
-            document.getElementById("amenagement-end-date").classList.add("d-none");
-        }
+    let typeAmenagementInput = document.getElementById("typeAmenagement");
+    if(typeAmenagementInput != null) {
+        typeAmenagementInput.addEventListener("change", function (e) {
+            if (this.value === "DATE") {
+                document.getElementById("amenagement-end-date").classList.remove("d-none");
+            } else {
+                document.getElementById("amenagement-end-date").classList.add("d-none");
+            }
+        });
+    }
+
+    //Gestion automatique des slimselect
+    document.querySelectorAll(`[class*="agape-slim-select"]`).forEach(function (element) {
+        console.info("enable slimselect on : " + element.id);
+        new SlimSelect({
+            select: '#' + element.id,
+            settings: {
+                placeholderText: 'Choisir',
+                searchPlaceholder: 'Rechercher',
+            },
+        });
     });
 
 });

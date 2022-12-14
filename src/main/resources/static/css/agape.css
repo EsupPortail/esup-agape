@@ -79,31 +79,28 @@ select[disabled] > option {
 
 }
 
+.agape-slim-select {
+    /* Identifiant pour les slimselect */
+}
+
 .breadcrumb {
     background-color: #dee2e6;
     padding: 2px !important;
 }
 
-.ss-value-delete {
-    -webkit-box-sizing: initial;
-    -moz-box-sizing: initial;
-    box-sizing: initial;
+/* custom slimselect */
+
+:root {
+    --ss-disabled-color: #e9ecef;
+    --ss-spacing-l: 22px;
+}
+
+.ss-value-text {
+    font-size: 1rem !important;
 }
 
 .ss-main {
-    border: 1px solid #ced4da !important;
-    border-radius: .375rem !important;
-    min-height: 38px!important;
-}
-
-.ss-values {
-    word-break: break-word;
-}
-
-.ss-arrow path {
-    display: none;
-}
-
-.ss-placeholder {
-    color: rgb(0,0,0)!important;
+    border: 1px solid #ced4da;
+    border-radius: .375rem;
+    min-height: 38px;
 }
