@@ -37,16 +37,15 @@ public class AmenagementController {
     }
 
     @GetMapping("/create")
-    public String create(Dossier dossier, Model model) {
+    public String create(Model model) {
         setModel(model);
-        Amenagement amenagement = new Amenagement();
-        amenagement.setDossier(dossier);
-        model.addAttribute("amenagement", amenagement);
+        model.addAttribute("amenagement", new Amenagement());
         return "amenagements/create";
     }
 
     @PostMapping("/create")
     public String createSave(@Valid Amenagement amenagement, Dossier dossier, RedirectAttributes redirectAttributes) {
+        amenagement.setId(null);
         amenagement.setDossier(dossier);
         amenagementService.create(amenagement);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";

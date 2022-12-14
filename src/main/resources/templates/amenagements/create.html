@@ -20,7 +20,6 @@
             <h4>Ajout d’un aménagement d’examen</h4>
             <hr>
             <form th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
-                <input type="hidden" name="id" value="">
             <div class="row">
                 <div class="col-12 col-xl-6">
                         <div class="row mb-1">
@@ -28,7 +27,7 @@
                                 <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement" th:field="*{typeAmenagement}" th:value="${typeAmenagement}">
+                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement" th:value="${typeAmenagement}" required>
                                     <option value="" disabled selected>Choisir</option>
                                     <option th:each="typeAmenagement : ${typeAmenagements}" th:text="#{'amenagement.type-amenagement.' +${typeAmenagement}}" th:value="${typeAmenagement}"></option>
                                 </select>

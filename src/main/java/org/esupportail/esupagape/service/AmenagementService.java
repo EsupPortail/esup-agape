@@ -60,6 +60,8 @@ public class AmenagementService {
         amenagementToUpdate.setTypeEpreuve(amenagement.getTypeEpreuve());
         amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
+        //if autorisation == true -> classification dossier <= classification amenagement
+
     }
 }
 
