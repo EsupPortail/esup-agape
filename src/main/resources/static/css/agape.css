@@ -83,6 +83,14 @@ select[disabled] > option {
     /* Identifiant pour les slimselect */
 }
 
+.slim-select-hack {
+    opacity: 0;
+    height: 0;
+    margin-top: 36px;
+    display: block !important;
+    position: absolute;
+}
+
 .breadcrumb {
     background-color: #dee2e6;
     padding: 2px !important;

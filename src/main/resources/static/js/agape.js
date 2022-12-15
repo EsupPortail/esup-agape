@@ -63,19 +63,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
         });
     }
+
     //Gestion des aménagements autorisation classifications
 
-    let autorisationOui = document.getElementById("'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}");
-    if(autorisationOui != null) {
+    let autorisationOui = document.getElementById("autorisationOui");
+    let autorisationNon = document.getElementById("autorisationNon");
+    if(autorisationOui != null && autorisationNon != null) {
         autorisationOui.addEventListener("click", function () {
-            document.getElementById("classificationDiv").classList.remove("d-none");
+            unLockClassification();
         });
+        autorisationNon.addEventListener("click", function () {
+            unLockClassification();
+        });
+        if(autorisationOui.checked || autorisationNon.checked) {
+            unLockClassification();
+        }
     }
 
-    let autorisationNon = document.getElementById("'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}");
-    if(suiviHandisupNon != null) {
-        suiviHandisupNon.addEventListener("click", function () {
-            document.getElementById("typeSuiviHandisupDiv").classList.add("d-none");
+    let autorisationNc = document.getElementById("autorisationNc");
+    if(autorisationNc != null) {
+        autorisationNc.addEventListener("click", function () {
+            lockClassification();
         });
     }
 
@@ -87,11 +95,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
             settings: {
                 placeholderText: 'Choisir',
                 searchPlaceholder: 'Rechercher',
-            },
+            }
         });
+        //Hack slimselect required
+        element.style.display = "block";
+        element.style.position = "absolute";
+        element.style.marginTop = "15px";
+        element.style.opacity = 0;
     });
 
 });
+
+function unLockClassification() {
+    document.getElementById("classificationDiv").classList.remove("d-none");
+    document.getElementById("classification").required = true;
+}
+
+function lockClassification() {
+    document.getElementById("classificationDiv").classList.add("d-none");
+}
 
 function lockForm() {
     location.reload();
