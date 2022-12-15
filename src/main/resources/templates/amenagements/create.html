@@ -82,7 +82,7 @@
                         <div class="col-12 col-xxl-8">
                             <th:block th:each="autorisation : ${autorisations}">
                                 <div class="form-check">
-                                    <input th:id="${autorisation}" name="autorisation" type="radio" class="form-check-input" th:value="${autorisation}" required>
+                                    <input  th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}" name="autorisation" type="radio" class="form-check-input" th:value="${autorisation}" required>
                                     <label class="form-check-label" th:for="${autorisation}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
                                 </div>
                             </th:block>

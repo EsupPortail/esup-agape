@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     });
 
-    //Activation suiviHansiSup
+    //Activation suiviHandiSup
     let suiviHandisupOui = document.getElementById("suiviHandisupOui");
     if(suiviHandisupOui != null) {
         suiviHandisupOui.addEventListener("click", function () {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     });
 
-    //Gestion des aménagements
+    //Gestion des aménagements date
     let typeAmenagementInput = document.getElementById("typeAmenagement");
     if(typeAmenagementInput != null) {
         typeAmenagementInput.addEventListener("change", function (e) {
@@ -61,6 +61,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
             } else {
                 document.getElementById("amenagement-end-date").classList.add("d-none");
             }
+        });
+    }
+    //Gestion des aménagements autorisation classifications
+
+    let autorisationOui = document.getElementById("'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}");
+    if(autorisationOui != null) {
+        autorisationOui.addEventListener("click", function () {
+            document.getElementById("classificationDiv").classList.remove("d-none");
+        });
+    }
+
+    let autorisationNon = document.getElementById("'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}");
+    if(suiviHandisupNon != null) {
+        suiviHandisupNon.addEventListener("click", function () {
+            document.getElementById("typeSuiviHandisupDiv").classList.add("d-none");
         });
     }
 
