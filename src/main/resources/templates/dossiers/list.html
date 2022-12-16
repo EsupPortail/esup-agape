@@ -87,7 +87,7 @@
                     <tbody class="text-center">
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle text-start">
                             <td th:utext="${dossierIndividuDto.numEtu}" style="width: 100px;"></td>
-                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnue'" class="d-none d-lg-table-cell" style="width: 100px;"></td>
+                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none d-lg-table-cell" style="width: 100px;"></td>
                             <td th:utext="${#strings.toUpperCase(dossierIndividuDto.name)}" style="width: 100px;"></td>
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
