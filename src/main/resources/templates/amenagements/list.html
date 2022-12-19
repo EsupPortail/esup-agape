@@ -7,6 +7,9 @@
 <body>
 <header th:replace="fragments/header :: header"></header>
 <main class="d-inline-flex">
+    <div class="float-buttons">
+        <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary"><i class="bi bi-plus-lg" style="font-size: 1.1rem; color: white; line-height: 2.2rem;"></i></a>
+    </div>
     <div th:replace="fragments/side :: side"></div>
     <div class="agape-content agape-content-side">
         <div class="mb-3">
@@ -19,7 +22,6 @@
                 <div class="col-12">
                     <div class="clearfix w-100">
                         <h4 class="float-start mt-3">Aménagements d’examen</h4>
-                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary float-end"><i class="bi bi-plus-lg" style="font-size: 1.1rem; color: white;"></i></a>
                     </div>
 
                     <table class="table table-striped" >

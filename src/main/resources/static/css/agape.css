@@ -93,7 +93,7 @@ select[disabled] > option {
 }
 
 .breadcrumb {
-    background-color: #dee2e6;
+    /*background-color: #dee2e6;*/
     padding: 2px !important;
 }
 
@@ -108,8 +108,32 @@ select[disabled] > option {
     font-size: 1rem !important;
 }
 
+.ss-placeholder {
+    color: initial !important;
+}
+
 .ss-main {
     border: 1px solid #ced4da;
     border-radius: .375rem;
     min-height: 38px;
+}
+
+.float-buttons {
+    z-index: 1;
+    position: absolute;
+    display: inline;
+    right: 100px;
+    top: 75px;
+}
+
+.float-buttons > button, .float-buttons > a {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+
+.circle-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
 }

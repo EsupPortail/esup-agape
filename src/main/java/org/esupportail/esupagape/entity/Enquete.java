@@ -54,7 +54,7 @@ public class Enquete {
 
     @ElementCollection(targetClass=CodMeahF.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<CodMeahF> codMeahF;
+    private Set<CodMeahF> codMeahF = new HashSet<>();
 
     private Integer interpH;
 
@@ -78,7 +78,7 @@ public class Enquete {
 
     @ElementCollection(targetClass=CodAmL.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<CodAmL> codAmL;
+    private Set<CodAmL> codAmL = new HashSet<>();
 
     private String djaCop;
 

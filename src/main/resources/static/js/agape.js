@@ -132,6 +132,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    //Gestion des float button
+    let saveBtn = document.getElementById("save-btn");
+    if(saveBtn != null) {
+        console.log(saveBtn);
+        saveBtn.addEventListener("click", function (e) {
+            let formSubmitBtn = document.querySelectorAll(`[class*="form-submit-btn"]`)
+            if(formSubmitBtn != null) {
+                formSubmitBtn.click();
+            }
+        });
+    }
+
 });
 
 function unLockClassification() {
