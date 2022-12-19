@@ -162,10 +162,10 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
                                         <div>
-                                            <th:block th:each="enumCodMeahF : ${codMeahFs}">
+                                            <th:block th:each="enumLibelleCodMeahF : ${libelleCodMeahFs}">
                                                 <div>
-                                                    <input th:field="*{codMeahF}" size="1" type="checkbox" th:value="${enumCodMeahF}">
-                                                    <label th:for="${enumCodMeahF}" th:text="#{'enquete.codMeahF.' + ${enumCodMeahF}}"></label>
+                                                    <input th:name="${enumLibelleCodMeahF}" size="1" type="checkbox" th:value="${enumLibelleCodMeahF}">
+                                                    <label th:for="${enumLibelleCodMeahF}" th:text="#{'enquete.codMeahF.' + ${enumLibelleCodMeahF}}"></label>
                                                 </div>
                                             </th:block>
                                         </div>

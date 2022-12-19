@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.EnqueteRepository;
 import org.springframework.stereotype.Service;
@@ -56,14 +57,34 @@ public class EnqueteService {
         enqueteToUpdate.setCodHd(enqueteForm.getCodHd());
         enqueteToUpdate.setHdTmp(enqueteForm.getHdTmp());
         enqueteToUpdate.setCom(enqueteForm.getCom());
-        if(enqueteForm.getCodPfpp() != null) {
+        if (enqueteForm.getCodPfpp() != null) {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
         enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
-        enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
+        if (StringUtils.hasText(enqueteForm.getAHS0())) {
+            enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
+        } else {
+            if (StringUtils.hasText(enqueteForm.getAHS1())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS1()));
+            }
+
+            if (StringUtils.hasText(enqueteForm.getAHS2())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS2()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS3())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS4())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS4()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS5())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
+            }
+        }
+
         enqueteToUpdate.setInterpH(enqueteForm.getInterpH());
         enqueteToUpdate.getCodAmL().clear();
-        if(StringUtils.hasText(enqueteForm.getAM0())) {
+        if (StringUtils.hasText(enqueteForm.getAM0())) {
             enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM0()));
         } else {
             if (StringUtils.hasText(enqueteForm.getAM1())) {
@@ -92,7 +113,7 @@ public class EnqueteService {
             }
         }
 //        enqueteToUpdate.setCodAmL(enqueteForm.getCodAmL());
-        enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
+        // enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
         enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
@@ -120,7 +141,7 @@ public class EnqueteService {
         enquete.setGender(dossier.getIndividu().getGender());
         enquete.setTypeFrmn(dossier.getTypeFormation());
         enquete.setModFrmn(dossier.getModeFormation());
-        if(amenagementService.isAmenagementValid(id)) {
+        if (amenagementService.isAmenagementValid(id)) {
             enquete.getCodMeae().add(CodMeae.AE4);
         } else {
             enquete.getCodMeae().add(CodMeae.AE0);

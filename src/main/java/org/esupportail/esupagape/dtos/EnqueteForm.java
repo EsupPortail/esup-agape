@@ -38,7 +38,18 @@ public class EnqueteForm {
 
     private CodPfas codPfas = CodPfas.AS0;
 
-    private Set<CodMeahF> codMeahF;
+    // private Set<CodMeahF> codMeahF;
+    private String AHS0;
+    private String AHS1;
+
+    private String AHS2;
+
+    private String AHS3;
+
+    private String AHS4;
+
+    private String AHS5;
+
 
     private Integer interpH;
 
@@ -200,12 +211,52 @@ public class EnqueteForm {
         this.codPfas = codPfas;
     }
 
-    public Set<CodMeahF> getCodMeahF() {
-        return codMeahF;
+    public String getAHS0() {
+        return AHS0;
     }
 
-    public void setCodMeahF(Set<CodMeahF> codMeahF) {
-        this.codMeahF = codMeahF;
+    public void setAHS0(String AHS0) {
+        this.AHS0 = AHS0;
+    }
+
+    public String getAHS1() {
+        return AHS1;
+    }
+
+    public void setAHS1(String AHS1) {
+        this.AHS1 = AHS1;
+    }
+
+    public String getAHS2() {
+        return AHS2;
+    }
+
+    public void setAHS2(String AHS2) {
+        this.AHS2 = AHS2;
+    }
+
+    public String getAHS3() {
+        return AHS3;
+    }
+
+    public void setAHS3(String AHS3) {
+        this.AHS3 = AHS3;
+    }
+
+    public String getAHS4() {
+        return AHS4;
+    }
+
+    public void setAHS4(String AHS4) {
+        this.AHS4 = AHS4;
+    }
+
+    public String getAHS5() {
+        return AHS5;
+    }
+
+    public void setAHS5(String AHS5) {
+        this.AHS5 = AHS5;
     }
 
     public Integer getInterpH() {

@@ -56,6 +56,7 @@ public class EnqueteController {
         model.addAttribute("codPfpps", CodPfpp.values());
         model.addAttribute("codPfass", CodPfas.values());
         model.addAttribute("codMeahFs", CodMeahF.values());
+        model.addAttribute("libelleCodMeahFs", LibelleCodMeahF.values());
         model.addAttribute("codMeaes", CodMeae.values());
         model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
