@@ -119,6 +119,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let ahs0On = document.getElementById("AHS0On")
+    if(ahs0On != null) {
+        ahs0On.addEventListener("click", function (event) {
+            document.getElementById("codMeahFDiv").classList.remove("d-none");
+        });
+    }
+    let ahs0Off = document.getElementById("AHS0Off")
+    if(ahs0Off != null) {
+        ahs0Off.addEventListener("click", function (event) {
+            document.getElementById("codMeahFDiv").classList.add("d-none");
+        });
+    }
+
 });
 
 function unLockClassification() {

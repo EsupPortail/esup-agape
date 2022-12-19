@@ -61,21 +61,25 @@ public class EnqueteService {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
         enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
+        enqueteToUpdate.getCodMeahF().clear();
         if (StringUtils.hasText(enqueteForm.getAHS0())) {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
         } else {
-            if (StringUtils.hasText(enqueteForm.getAHS1())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS1()));
+            for(String AHS1 : enqueteForm.getAHS1()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
             }
-
-            if (StringUtils.hasText(enqueteForm.getAHS2())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS2()));
+            for(String AHS2 : enqueteForm.getAHS2()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
             }
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
             }
             if (StringUtils.hasText(enqueteForm.getAHS4())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS4()));
+                if (enqueteForm.getAHS4().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS4);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS4);
+                }
             }
             if (StringUtils.hasText(enqueteForm.getAHS5())) {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));

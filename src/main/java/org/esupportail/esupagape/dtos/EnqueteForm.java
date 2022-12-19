@@ -3,7 +3,9 @@ package org.esupportail.esupagape.dtos;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class EnqueteForm {
@@ -38,18 +40,17 @@ public class EnqueteForm {
 
     private CodPfas codPfas = CodPfas.AS0;
 
-    // private Set<CodMeahF> codMeahF;
     private String AHS0;
-    private String AHS1;
 
-    private String AHS2;
+    private List<String> AHS1 = new ArrayList<>();
+
+    private List<String> AHS2 = new ArrayList<>();
 
     private String AHS3;
 
     private String AHS4;
 
     private String AHS5;
-
 
     private Integer interpH;
 
@@ -64,8 +65,6 @@ public class EnqueteForm {
     private CodMeaa codMeaa;
 
     private String autAA;
-
-//    private Set<CodAmL> codAmL;
 
     private String AM0;
 
@@ -219,19 +218,19 @@ public class EnqueteForm {
         this.AHS0 = AHS0;
     }
 
-    public String getAHS1() {
+    public List<String> getAHS1() {
         return AHS1;
     }
 
-    public void setAHS1(String AHS1) {
+    public void setAHS1(List<String> AHS1) {
         this.AHS1 = AHS1;
     }
 
-    public String getAHS2() {
+    public List<String> getAHS2() {
         return AHS2;
     }
 
-    public void setAHS2(String AHS2) {
+    public void setAHS2(List<String> AHS2) {
         this.AHS2 = AHS2;
     }
 

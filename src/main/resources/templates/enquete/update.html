@@ -3,7 +3,8 @@
     <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
     <!--/*@thymesVar id="enquete" type="org.esupportail.esupagape.entity.Enquete"*/-->
-    <head th:replace="fragments/head :: head"></head>
+    <!--/*@thymesVar id="enumLibelleCodMeahFs" type="java.util.List<org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF>"*/-->
+        <head th:replace="fragments/head :: head"></head>
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
@@ -160,14 +161,37 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
+                                        <label class="mt-1 form-label" th:for="codMeahF">Aide humaine spécifique</label>
                                         <div>
-                                            <th:block th:each="enumLibelleCodMeahF : ${libelleCodMeahFs}">
-                                                <div>
-                                                    <input th:name="${enumLibelleCodMeahF}" size="1" type="checkbox" th:value="${enumLibelleCodMeahF}">
-                                                    <label th:for="${enumLibelleCodMeahF}" th:text="#{'enquete.codMeahF.' + ${enumLibelleCodMeahF}}"></label>
-                                                </div>
-                                            </th:block>
+                                            <div class="d-inline">
+                                                <input id="AHS0Off" name="AHS0" type="radio" th:value="AHS0" th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
+                                                <label for="AHS0Off">Aucune aide humaine spécifique</label>
+                                            </div>
+                                            <div class="d-inline">
+                                                <input id="AHS0On" name="AHS0" type="radio" value="" th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
+                                                <label for="AHS0On">L'étudiant bénéficie d’aide(s) humaine(s) spécifique(s)</label>
+                                            </div>
+                                            <div id="codMeahFDiv" th:classappend="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).valueOf('AHS0'))} ? 'd-none' : ''">
+                                                <th:block th:each="enumLibelleCodMeahF : ${libelleCodMeahFs}">
+                                                    <div>
+                                                        <label class="text-decoration-underline" th:for="${enumLibelleCodMeahF}" th:text="#{'enquete.libelleCodMeahF.' + ${enumLibelleCodMeahF}}"></label>
+                                                        <br />
+                                                        <th:block th:each="codMeahF : ${codMeahFs}" th:if="${!enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
+                                                            <input th:name="${enumLibelleCodMeahF}"
+                                                                   th:type="${codMeahF.name().startsWith('AHS1') || codMeahF.name().startsWith('AHS2')} ? 'checkbox' : 'radio'"
+                                                                   th:value="${codMeahF}" th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
+                                                                   th:checked="${enquete.codMeahF.contains(codMeahF)}">
+                                                            <label th:text="#{'enquete.codMeahF.' + ${codMeahF}}" th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
+                                                        </th:block>
+                                                        <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
+                                                            <input th:name="${enumLibelleCodMeahF}" type="radio" value="on" th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
+                                                            <label>Oui</label>
+                                                            <input th:name="${enumLibelleCodMeahF}" type="radio" value="off" th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
+                                                            <label>Non</label>
+                                                        </th:block>
+                                                    </div>
+                                                </th:block>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +264,7 @@
                                                 <div id="codAmLDiv" th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
                                                 <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
                                                     <div>
-                                                        <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
+                                                        <label class="text-decoration-underline" th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
                                                         <br />
                                                         <div class="d-inline">
                                                             <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + '0'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
