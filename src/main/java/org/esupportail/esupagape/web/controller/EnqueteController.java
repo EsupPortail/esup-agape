@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Gender;
@@ -40,8 +41,8 @@ public class EnqueteController {
     }
 
     @PutMapping("/{enqueteId}/update")
-    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid Enquete enquete) throws AgapeJpaException {
-        enqueteService.update(enqueteId, enquete);
+    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid EnqueteForm enqueteForm, Dossier dossier) throws AgapeJpaException {
+        enqueteService.update(enqueteId, enqueteForm, dossier);
         return "redirect:/dossiers/" + id + "/enquete";
     }
 

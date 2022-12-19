@@ -1,17 +1,13 @@
-package org.esupportail.esupagape.entity;
+package org.esupportail.esupagape.dtos;
 
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-public class Enquete {
+public class EnqueteForm {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String nfic;
@@ -20,74 +16,69 @@ public class Enquete {
 
     private String an;
 
-    @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Enumerated(EnumType.STRING)
     private TypeFrmn typeFrmn;
 
-    @Enumerated(EnumType.STRING)
     private ModFrmn modFrmn;
 
-    @Enumerated(EnumType.STRING)
     private CodSco codSco;
 
-    @Enumerated(EnumType.STRING)
     private CodFmt codFmt;
 
-    @Enumerated(EnumType.STRING)
     private CodFil codFil;
 
-    @Enumerated(EnumType.STRING)
     private CodHd codHd;
 
     private Boolean hdTmp;
 
-    @Column(columnDefinition = "TEXT")
     private String com;
 
-    @Enumerated(EnumType.STRING)
     private CodPfpp codPfpp;
 
-    @Enumerated(EnumType.STRING)
     private CodPfas codPfas = CodPfas.AS0;
 
-    @ElementCollection(targetClass=CodMeahF.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
     private Set<CodMeahF> codMeahF;
 
     private Integer interpH;
 
     private Integer codeurH;
 
-    @Column(columnDefinition = "TEXT")
     private String aidHNat;
 
-    @ElementCollection(targetClass=CodMeae.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
     private Set<CodMeae> codMeae = new HashSet<>();
 
-    @Column(columnDefinition = "TEXT")
     private String autAE;
 
-    @Enumerated(EnumType.STRING)
     private CodMeaa codMeaa;
 
-    @Column(columnDefinition = "TEXT")
     private String autAA;
 
-    @ElementCollection(targetClass=CodAmL.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private Set<CodAmL> codAmL;
+//    private Set<CodAmL> codAmL;
+
+    private String AM0;
+
+    private String AM1;
+
+    private String AM2;
+
+    private String AM3;
+
+    private String AM4;
+
+    private String AM5;
+
+    private String AM6;
+
+    private String AM7;
+
+    private String AM8;
 
     private String djaCop;
 
     private String newNum;
 
     private String newId;
-
-    @OneToOne
-    private Dossier dossier;
 
     public Long getId() {
         return id;
@@ -273,12 +264,76 @@ public class Enquete {
         this.autAA = autAA;
     }
 
-    public Set<CodAmL> getCodAmL() {
-        return codAmL;
+    public String getAM0() {
+        return AM0;
     }
 
-    public void setCodAmL(Set<CodAmL> codAmL) {
-        this.codAmL = codAmL;
+    public void setAM0(String AM0) {
+        this.AM0 = AM0;
+    }
+
+    public String getAM1() {
+        return AM1;
+    }
+
+    public void setAM1(String AM1) {
+        this.AM1 = AM1;
+    }
+
+    public String getAM2() {
+        return AM2;
+    }
+
+    public void setAM2(String AM2) {
+        this.AM2 = AM2;
+    }
+
+    public String getAM3() {
+        return AM3;
+    }
+
+    public void setAM3(String AM3) {
+        this.AM3 = AM3;
+    }
+
+    public String getAM4() {
+        return AM4;
+    }
+
+    public void setAM4(String AM4) {
+        this.AM4 = AM4;
+    }
+
+    public String getAM5() {
+        return AM5;
+    }
+
+    public void setAM5(String AM5) {
+        this.AM5 = AM5;
+    }
+
+    public String getAM6() {
+        return AM6;
+    }
+
+    public void setAM6(String AM6) {
+        this.AM6 = AM6;
+    }
+
+    public String getAM7() {
+        return AM7;
+    }
+
+    public void setAM7(String AM7) {
+        this.AM7 = AM7;
+    }
+
+    public String getAM8() {
+        return AM8;
+    }
+
+    public void setAM8(String AM8) {
+        this.AM8 = AM8;
     }
 
     public String getDjaCop() {
@@ -303,13 +358,5 @@ public class Enquete {
 
     public void setNewId(String newId) {
         this.newId = newId;
-    }
-
-    public Dossier getDossier() {
-        return dossier;
-    }
-
-    public void setDossier(Dossier dossier) {
-        this.dossier = dossier;
     }
 }

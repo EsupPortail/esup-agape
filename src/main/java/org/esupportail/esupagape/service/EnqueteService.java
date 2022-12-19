@@ -1,12 +1,15 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.EnqueteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -40,41 +43,66 @@ public class EnqueteService {
     }
 
     @Transactional
-    public void update(Long id, Enquete enquete) throws AgapeJpaException {
+    public void update(Long id, EnqueteForm enqueteForm, Dossier dossier) throws AgapeJpaException {
         Enquete enqueteToUpdate = getById(id);
-        enqueteToUpdate.setId(enqueteToUpdate.getId());
-        enqueteToUpdate.setNfic(enquete.getNfic());
-        enqueteToUpdate.setNumetu(enquete.getNumetu());
-        enqueteToUpdate.setAn(enqueteToUpdate.getAn());
-        enqueteToUpdate.setGender(enquete.getGender());
-        enqueteToUpdate.setTypeFrmn(enquete.getTypeFrmn());
-        enqueteToUpdate.setModFrmn(enquete.getModFrmn());
-        enqueteToUpdate.setCodSco(enquete.getCodSco());
-        enqueteToUpdate.setCodFmt(enquete.getCodFmt());
-        enqueteToUpdate.setCodFil(enquete.getCodFil());
-        enqueteToUpdate.setCodHd(enquete.getCodHd());
-        enqueteToUpdate.setHdTmp(enquete.getHdTmp());
-        enqueteToUpdate.setCom(enquete.getCom());
-        if(enquete.getCodPfpp() != null) {
-            enqueteToUpdate.setCodPfpp(enquete.getCodPfpp());
+        enqueteToUpdate.setNfic(enqueteForm.getNfic());
+        enqueteToUpdate.setNumetu(enqueteForm.getNumetu());
+        enqueteToUpdate.setGender(enqueteForm.getGender());
+        enqueteToUpdate.setTypeFrmn(enqueteForm.getTypeFrmn());
+        enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
+        enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
+        enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
+        enqueteToUpdate.setCodFil(enqueteForm.getCodFil());
+        enqueteToUpdate.setCodHd(enqueteForm.getCodHd());
+        enqueteToUpdate.setHdTmp(enqueteForm.getHdTmp());
+        enqueteToUpdate.setCom(enqueteForm.getCom());
+        if(enqueteForm.getCodPfpp() != null) {
+            enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
-        enqueteToUpdate.setCodPfas(enquete.getCodPfas());
-        enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
-        enqueteToUpdate.setInterpH(enquete.getInterpH());
-        enqueteToUpdate.setCodAmL(enquete.getCodAmL());
-        enqueteToUpdate.setLibelleCodAmL(enquete.getLibelleCodAmL());
-        enqueteToUpdate.setCodMeahF(enquete.getCodMeahF());
-        enqueteToUpdate.setCodeurH(enquete.getCodeurH());
-        enqueteToUpdate.setAidHNat(enquete.getAidHNat());
-        enqueteToUpdate.setCodMeae(enquete.getCodMeae());
-        enqueteToUpdate.setAutAE(enquete.getAutAE());
-        enqueteToUpdate.setCodMeaa(enquete.getCodMeaa());
-        enqueteToUpdate.setAutAA(enquete.getAutAA());
-        enqueteToUpdate.setCodAmL(enquete.getCodAmL());
-        enqueteToUpdate.setDjaCop(enquete.getDjaCop());
-        enqueteToUpdate.setNewNum(enquete.getNewNum());
-        enqueteToUpdate.setNewId(enquete.getNewId());
-        enqueteToUpdate.setDossier(enquete.getDossier());
+        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
+        enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
+        enqueteToUpdate.setInterpH(enqueteForm.getInterpH());
+        enqueteToUpdate.getCodAmL().clear();
+        if(StringUtils.hasText(enqueteForm.getAM0())) {
+            enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM0()));
+        } else {
+            if (StringUtils.hasText(enqueteForm.getAM1())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM1()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM2())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM2()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM3())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM3()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM4())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM4()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM5())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM5()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM6())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM6()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM7())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM7()));
+            }
+            if (StringUtils.hasText(enqueteForm.getAM8())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
+            }
+        }
+//        enqueteToUpdate.setCodAmL(enqueteForm.getCodAmL());
+        enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
+        enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
+        enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
+        enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
+        enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
+        enqueteToUpdate.setCodMeaa(enqueteForm.getCodMeaa());
+        enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
+        enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
+        enqueteToUpdate.setNewNum(enqueteForm.getNewNum());
+        enqueteToUpdate.setNewId(enqueteForm.getNewId());
+        enqueteToUpdate.setDossier(dossier);
     }
 
     private Enquete createByDossierId(Long id) {
@@ -88,6 +116,7 @@ public class EnqueteService {
     public Enquete getAndUpdateByDossierId(Long id) {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
+        enquete.setAn(String.valueOf(dossier.getYear()));
         enquete.setGender(dossier.getIndividu().getGender());
         enquete.setTypeFrmn(dossier.getTypeFormation());
         enquete.setModFrmn(dossier.getModeFormation());

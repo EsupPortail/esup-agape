@@ -85,6 +85,7 @@ select[disabled] > option {
 
 .slim-select-hack {
     opacity: 0;
+    z-index: -1;
     height: 0;
     margin-top: 36px;
     display: block !important;

@@ -102,7 +102,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
         element.style.position = "absolute";
         element.style.marginTop = "15px";
         element.style.opacity = 0;
+        element.style.zIndex = -1;
     });
+
+    //Gestion du formulaire enquete
+    let am0On = document.getElementById("AM0On")
+    if(am0On != null) {
+        am0On.addEventListener("click", function (event) {
+            document.getElementById("codAmLDiv").classList.add("d-none");
+        });
+    }
+    let am0Off = document.getElementById("AM0Off")
+    if(am0Off != null) {
+        am0Off.addEventListener("click", function (event) {
+            document.getElementById("codAmLDiv").classList.remove("d-none");
+        });
+    }
 
 });
 

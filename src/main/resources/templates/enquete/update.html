@@ -57,9 +57,9 @@
                                     </div>
                                     <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
                                     <div>
-                                        <select id="typeFormation" name="typeFormation" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
+                                        <select id="typeFormation" name="typeFrmn" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
                                             <option disabled selected value="">Choisir</option>
-                                            <option th:selected="${enquete.typeFrmn == typeFormation}"
+                                            <option th:selected="${enquete.typeFrmn == typeFrmn}"
                                                     th:each="typeFormation : ${typeFrmns}"
                                                     th:text="#{'enquete.typeFrmn.' +${typeFormation}}"
                                                     th:value="${typeFormation}"></option>
@@ -68,9 +68,9 @@
 
                                     <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
                                     <div>
-                                        <select id="modeFormation" name="modeFormation" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
+                                        <select id="modeFormation" name="modFrmn" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
                                             <option disabled selected value="">Choisir</option>
-                                            <option th:selected="${enquete.modFrmn == modeFormation}"
+                                            <option th:selected="${enquete.modFrmn == modFrmn}"
                                                     th:each="modeFormation : ${modFrmns}"
                                                     th:text="#{'enquete.modFrmn.' +${modeFormation}}"
                                                     th:value="${modeFormation}"></option>
@@ -227,22 +227,32 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="mt-1 form-label" th:for="libelleCodAmL">Libellés autres mesures</label>
+                                            <label class="mt-1 form-label" th:for="codAmL">Autres mesures relevant ou non de la compétence de la CDAPH</label>
                                             <div>
+                                                <div class="d-inline">
+                                                    <input id="AM0On" name="AM0" type="radio" th:value="AM00" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                    <label for="AM0On">Ne sais pas si l’étudiant en bénéficie</label>
+                                                </div>
+                                                <div class="d-inline">
+                                                    <input id="AM0Off" name="AM0" type="radio" value="" th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                    <label for="AM0Off">L'étudiant bénéficie de mesures</label>
+                                                </div>
+                                                <div id="codAmLDiv" th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
                                                 <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
                                                     <div>
                                                         <label th:for="${enumLibelleCodAmL}" th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
                                                         <br />
                                                         <div class="d-inline">
-                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + '0'">
+                                                            <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + '0'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
                                                             <label th:for="${enumLibelleCodAmL}">Non</label>
-                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + '1'">
+                                                            <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + '1'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1'))}">
                                                             <label th:for="${enumLibelleCodAmL}">Oui</label>
-                                                            <input th:field="*{codAmL}" th:name="${enumLibelleCodAmL}" size="1" type="checkbox" th:value="${enumLibelleCodAmL} + 'X'">
+                                                            <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + 'X'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
                                                             <label th:for="${enumLibelleCodAmL}">Ne sais pas</label>
                                                         </div>
                                                     </div>
                                                 </th:block>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="submit mb-3 mt-3">
