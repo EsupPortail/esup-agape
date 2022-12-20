@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,7 @@ public class Amenagement {
     private String autresTypeEpreuve;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TempMajore tempMajore;
 
     private String autresTempMajore;

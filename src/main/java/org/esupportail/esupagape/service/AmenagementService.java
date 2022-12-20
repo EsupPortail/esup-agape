@@ -68,6 +68,8 @@ public class AmenagementService {
         amenagementToUpdate.setTypeEpreuve(amenagement.getTypeEpreuve());
         amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
+        amenagementToUpdate.setTempMajore(amenagement.getTempMajore());
+        amenagementToUpdate.setAutresTempMajore(amenagement.getAutresTempMajore());
         updateClassification(amenagementToUpdate);
     }
 

@@ -19,96 +19,152 @@
         <div class="m-3">
             <h4>Ajout d’un aménagement d’examen</h4>
             <hr>
-            <form th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
-            <div class="row">
-                <div class="col-12 col-xl-6">
-                    <div class="row mb-1">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement" th:value="${typeAmenagement}" required>
-                                <option value="" disabled selected>Choisir</option>
-                                <option th:each="typeAmenagement : ${typeAmenagements}" th:text="#{'amenagement.type-amenagement.' +${typeAmenagement}}" th:value="${typeAmenagement}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="amenagement-end-date" class="row mb-1 align-items-baseline d-none">
-                        <div class="col-4" style="width: 250px;">
-                            <label th:for="end-date" class="form-label">Date de fin</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}">
-                            <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label">Types d’épreuves</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <th:block th:each="typeEpreuve : ${typeEpreuves}">
-                                <div class="form-check">
-                                    <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input" th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
-                                    <label class="form-check-label" th:for="${typeEpreuve}" th:text="#{'amenagement.type-epreuve.' +${typeEpreuve}}"></label>
-                                </div>
-                            </th:block>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-4" style="width: 250px;">
-                            <label th:for="autre-type-epreuve" class="form-label">Autre type d’épreuve</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <input id="autre-type-epreuve" type="text" class="form-control" th:field="*{autresTypeEpreuve}">
-                            <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error" th:errors="*{autresTypeEpreuve}"></p>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-4" style="width: 250px;">
-                            <label th:for="amenagementText" class="form-label">Aménagement</label>
-                        </div>
-                        <div class="col-12 col-xxl-8">
-                            <div class="agape-amenagement-textarea-wrapper">
-                            <textarea id="amenagementText" type="text" rows="7" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
+            <form th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}"
+                  th:object="${amenagement}">
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
                             </div>
-                            <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
+                            <div class="col-12 col-xxl-8">
+                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement"
+                                        th:value="${typeAmenagement}" required>
+                                    <option value="" disabled selected>Choisir</option>
+                                    <option th:each="typeAmenagement : ${typeAmenagements}"
+                                            th:text="#{'amenagement.type-amenagement.' +${typeAmenagement}}"
+                                            th:value="${typeAmenagement}"></option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label">Autorisation de transmission</label>
+                        <div id="amenagement-end-date" class="row mb-1 align-items-baseline d-none">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="end-date" class="form-label">Date de fin</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="end-date" type="date" class="form-control" th:name="endDate"
+                                       th:value="${now}">
+                                <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error"
+                                   th:errors="*{endDate}"></p>
+                            </div>
                         </div>
-                        <div class="col-12 col-xxl-8">
-                            <th:block th:each="autorisation : ${autorisations}">
-                                <div class="form-check">
-                                    <input  th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}" name="autorisation" type="radio" class="form-check-input" th:value="${autorisation}" required>
-                                    <label class="form-check-label" th:for="${autorisation}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Types d’épreuves</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <th:block th:each="typeEpreuve : ${typeEpreuves}">
+                                    <div class="form-check">
+                                        <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
+                                               th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
+                                        <label class="form-check-label" th:for="${typeEpreuve}"
+                                               th:text="#{'amenagement.type-epreuve.' +${typeEpreuve}}"></label>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="autre-type-epreuve" class="form-label">Autre type d’épreuve</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="autre-type-epreuve" type="text" class="form-control"
+                                       th:field="*{autresTypeEpreuve}">
+                                <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error"
+                                   th:errors="*{autresTypeEpreuve}"></p>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label" for="typeAmenagement">Temp majoré</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <select id="tempMajore" type="text" class="form-select" name="tempMajore"
+                                        th:value="${amenagement.tempMajore}">
+                                    <option value="" disabled selected>Choisir</option>
+                                    <option th:each="tempMajore : ${tempMajores}"
+                                            th:text="#{'amenagement.tempMajore.' +${tempMajore}}"
+                                            th:value="${tempMajore}"
+                                            th:selected="${tempMajore.equals(amenagement.tempMajore)}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="autre-type-epreuve" class="form-label">Autres temp majoré</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="autres-temp-majore" type="text" class="form-control"
+                                       th:field="*{autresTempMajore}">
+                                <p th:if="${#fields.hasErrors('autresTempMajore')}" th:errorclass="error"
+                                   th:errors="*{autresTempMajore}"></p>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="amenagementText" class="form-label">Aménagement</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <div class="agape-amenagement-textarea-wrapper">
+                                    <textarea id="amenagementText" type="text" rows="7"
+                                              class="form-control agape-amenagement-textarea"
+                                              th:field="*{amenagementText}"></textarea>
                                 </div>
-                            </th:block>
+                                <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error"
+                                   th:errors="*{amenagementText}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-6">
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Autorisation de transmission</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <th:block th:each="autorisation : ${autorisations}">
+                                    <div class="form-check">
+                                        <input th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}"
+                                               name="autorisation" type="radio" class="form-check-input"
+                                               th:value="${autorisation}" required>
+                                        <label class="form-check-label" th:for="${autorisation}"
+                                               th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div id="classificationDiv" class="d-none">
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label select-label" th:for="classification">Classification du
+                                        handicap</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <select multiple id="classification" th:field="*{classification}" size="1"
+                                            type="text" class="agape-slim-select"
+                                            th:value="${currentDossier.classification}">
+                                        <option type="text"
+                                                th:checked="${currentDossier.classification.contains(classification)}"
+                                                th:each="classification : ${classifications}"
+                                                th:text="#{'dossier.classification.' +${classification}}"
+                                                th:value="${classification}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="float-buttons">
+                            <button type="submit" class="btn btn-success">
+                                <svg style="color: white; width: 20px; margin-bottom: 3px; margin-left: 1px;"
+                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M433.1 129.1l-83.9-83.9C342.3 38.32 327.1 32 316.1 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h320c35.35 0 64-28.65 64-64V163.9C448 152.9 441.7 137.7 433.1 129.1zM224 416c-35.34 0-64-28.66-64-64s28.66-64 64-64s64 28.66 64 64S259.3 416 224 416zM320 208C320 216.8 312.8 224 304 224h-224C71.16 224 64 216.8 64 208v-96C64 103.2 71.16 96 80 96h224C312.8 96 320 103.2 320 112V208z"
+                                          fill="white"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div id="classificationDiv" class="col-12 col-xl-6 d-none">
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-4" style="width: 250px;">
-                            <label class="form-label select-label" th:for="classification">Classification du handicap</label>
-                        </div>
-                    <div class="col-12 col-xxl-8">
-                        <select multiple id="classification"  th:field="*{classification}" size="1" type="text" class="agape-slim-select" th:value="${currentDossier.classification}">
-                            <option type="text"
-                                    th:checked="${currentDossier.classification.contains(classification)}"
-                                    th:each="classification : ${classifications}"
-                                    th:text="#{'dossier.classification.' +${classification}}"
-                                    th:value="${classification}"></option>
-                        </select>
-                    </div>
-                </div>
-                </div>
-                <div class="col-12">
-                    <input type="submit" class="btn btn-success" value="Valider">
-                </div>
-            </div>
             </form>
         </div>
     </div>

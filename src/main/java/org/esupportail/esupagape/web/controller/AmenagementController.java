@@ -2,10 +2,7 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.Autorisation;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.TypeAmenagement;
-import org.esupportail.esupagape.entity.enums.TypeEpreuve;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.springframework.stereotype.Controller;
@@ -66,6 +63,7 @@ public class AmenagementController {
 
     private void setModel(Model model) {
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
+        model.addAttribute("tempMajores" , TempMajore.values());
         model.addAttribute("typeEpreuves" , TypeEpreuve.values());
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("autorisations", Autorisation.values());
