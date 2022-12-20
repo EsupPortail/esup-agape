@@ -28,7 +28,7 @@
                             <th:block th:each="amenagement : ${amenagements}">
                                 <tr>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.type-amenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td th:text="${amenagement.dossier.individu.name + ' ' + amenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempMajore.' +${amenagement.getTempMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
