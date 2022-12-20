@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class AmenagementService {
 
@@ -26,13 +24,8 @@ public class AmenagementService {
         this.dossierService = dossierService;
     }
 
-    public Amenagement getById(Long id) throws AgapeJpaException {
-        Optional<Amenagement> optionalAmenagement = amenagementRepository.findById(id);
-        if (optionalAmenagement.isPresent()) {
-            return optionalAmenagement.get();
-        } else {
-            throw new AgapeJpaException("Je n'ai pas trouvé cet aménagement");
-        }
+    public Amenagement getById(Long id) {
+        return amenagementRepository.findById(id).orElseThrow();
     }
 
     public Page<Amenagement> findByDossier(Dossier dossier) {
@@ -57,6 +50,12 @@ public class AmenagementService {
     @Transactional
     public void deleteAmenagement(Long amenagementId) {
         amenagementRepository.deleteById(amenagementId);
+    }
+
+    @Transactional
+    public void softDeleteAmenagement(Long amenagementId) {
+        Amenagement amenagement = getById(amenagementId);
+        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
     }
 
     @Transactional
@@ -86,6 +85,10 @@ public class AmenagementService {
                 amenagement.getDossier().getClassification().add(Classification.NON_COMMUNIQUE);
             }
         }
+    }
+
+    public Page<Amenagement> findAllPaged(Pageable pageable) {
+        return amenagementRepository.findAll(pageable);
     }
 }
 

@@ -107,7 +107,8 @@ public class WebSecurityConfig {
                 .antMatchers("/dossiers/*/entretiens", "/dossiers/*/entretiens/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .antMatchers("/dossiers/*/aides", "/dossiers/*/aides/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .antMatchers("/dossiers/*/enquete", "/dossiers/*/enquete/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
-                .antMatchers("/dossiers/*/amenagements", "/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MEDECIN");
+                .antMatchers("/dossiers/*/amenagements", "/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MEDECIN")
+                .antMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF");
         return http.build();
     }
 

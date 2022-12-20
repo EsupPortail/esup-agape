@@ -72,7 +72,7 @@ public class AmenagementController {
     }
     @DeleteMapping(value = "/{amenagementId}/delete")
     public String deleteAmenagement(@PathVariable Long amenagementId, Dossier dossier) {
-        amenagementService.deleteAmenagement(amenagementId);
+        amenagementService.softDeleteAmenagement(amenagementId);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements";
     }
 }
