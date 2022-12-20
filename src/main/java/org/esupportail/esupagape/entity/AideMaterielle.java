@@ -29,7 +29,7 @@ public class AideMaterielle {
     @Column(columnDefinition = "TEXT")
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Dossier dossier;
 
     public Long getId() {

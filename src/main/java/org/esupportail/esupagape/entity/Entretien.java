@@ -31,7 +31,7 @@ public class Entretien
     @NotNull
     private TypeContact typeContact;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Dossier dossier;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

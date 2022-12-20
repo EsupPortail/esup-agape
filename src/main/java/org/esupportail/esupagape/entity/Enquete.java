@@ -86,7 +86,7 @@ public class Enquete {
 
     private String newId;
 
-    @OneToOne
+    @OneToOne(optional = false)
     private Dossier dossier;
 
     public Long getId() {

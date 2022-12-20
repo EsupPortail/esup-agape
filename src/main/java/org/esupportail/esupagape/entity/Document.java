@@ -42,7 +42,7 @@ public class Document {
 
     private String parentType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Dossier dossier;
 
     @JsonIgnore
