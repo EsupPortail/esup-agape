@@ -35,7 +35,7 @@
                                 <tr>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')}"></td>
-                                    <td th:text="${currentDossier?.individu?.name}"></td>
+                                    <td th:text="${amenagement.dossier.individu.name + ' ' + amenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempMajore.' +${amenagement.getTempMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.status-amenagement.' +${amenagement.getStatusAmenagement()}}"></td>
