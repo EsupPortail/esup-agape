@@ -28,16 +28,18 @@ public class LdapDossierInfosService implements DossierInfosService {
 
     @Override
     public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, DossierInfos dossierInfos) {
-        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(individu.getNumEtu());
-        if(personLdaps.size() > 0) {
-            PersonLdap personLdap = personLdaps.get(0);
-            try {
-                OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getScol(personLdap.getSupannEntiteAffectationPrincipale());
-                dossierInfos.setComposante(organizationalUnitLdap.getDescription());
-                dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
-                dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
-            } catch (AgapeJpaException e) {
-                logger.debug(e.getMessage());
+        if(individu.getNumEtu() != null) {
+            List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(individu.getNumEtu());
+            if (personLdaps.size() > 0) {
+                PersonLdap personLdap = personLdaps.get(0);
+                try {
+                    OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getScol(personLdap.getSupannEntiteAffectationPrincipale());
+                    dossierInfos.setComposante(organizationalUnitLdap.getDescription());
+                    dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
+                    dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
+                } catch (AgapeJpaException e) {
+                    logger.debug(e.getMessage());
+                }
             }
         }
         return dossierInfos;

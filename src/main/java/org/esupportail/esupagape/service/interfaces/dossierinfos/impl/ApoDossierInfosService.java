@@ -34,7 +34,6 @@ public class ApoDossierInfosService implements DossierInfosService {
     }
 
     public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, DossierInfos dossierInfos) {
-
         try {
             List<InsAdmEtpDTO3> ieEtapes = wsApogeeServiceAdministratif.recupererIAEtapes(individu.getNumEtu(), annee.toString());
             if(ieEtapes != null) {
