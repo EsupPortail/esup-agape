@@ -82,7 +82,7 @@
                                 <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
                             </th>
                             <th scope="col" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="statusDossier">Statut aménagement</a>
+                                <a class="sorted" sd:pagination-sort="statusAmenagement">Statut aménagement</a>
                             </th>
                             <th scope="col" style="width: 100px;">Actions</th>
                         </tr>
@@ -104,7 +104,7 @@
                                 <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
                             </th:block>
-                            <td th:text="${dossierIndividuDto.statusAmenagement}">
+                            <td th:text="${dossierIndividuDto.statusAmenagement != null} ? #{'amenagement.status-amenagement.' + ${dossierIndividuDto.statusAmenagement}} : 'Non renseigné'">
                             </td>
                             <td style="width: 100px;">
                                 <ul class="list-group list-group-horizontal">
