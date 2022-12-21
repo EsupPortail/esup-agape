@@ -92,6 +92,11 @@ public class AmenagementService {
     public Page<Amenagement> findAllPaged(Pageable pageable) {
         return amenagementRepository.findAll(pageable);
     }
+
+    public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearch(statusAmenagement, pageable);
+    }
+
 }
 
 

@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -36,6 +38,7 @@ public class DossierService {
 
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository) {
         this.utilsService = utilsService;
+        Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
     }
@@ -148,7 +151,7 @@ public class DossierService {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }
                 if(dossierInfos.getComposante() != null && !dossierInfos.getComposante().isEmpty()) {
-                    dossier.setComposante(dossierInfos.getComposante());
+                    dossier.setComposante(dossierInfos.getComposante().trim());
                 }
                 if(dossierInfos.getLibelleFormation() != null && !dossierInfos.getLibelleFormation().isEmpty()) {
                     dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
@@ -169,5 +172,9 @@ public class DossierService {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
         }
         dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
+    }
+
+    public List<ComposanteDto> getAllComposantes() {
+        return dossierRepository.findAllComposantes();
     }
 }

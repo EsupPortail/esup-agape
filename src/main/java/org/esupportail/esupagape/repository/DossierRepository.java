@@ -1,9 +1,10 @@
 package org.esupportail.esupagape.repository;
 
+import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,5 +37,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     List<Dossier> findAllByIndividuId(Long id);
 
+    @Query("select distinct d.codComposante as cod, trim(d.composante) as libelle from Dossier d order by cod")
+    List<ComposanteDto> findAllComposantes();
 
 }

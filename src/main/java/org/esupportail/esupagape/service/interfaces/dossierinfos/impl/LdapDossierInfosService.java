@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Order(2)
+@Order(1)
 public class LdapDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(LdapDossierInfosService.class);
@@ -34,6 +34,7 @@ public class LdapDossierInfosService implements DossierInfosService {
                 PersonLdap personLdap = personLdaps.get(0);
                 try {
                     OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getScol(personLdap.getSupannEntiteAffectationPrincipale());
+                    dossierInfos.setCodComposante(organizationalUnitLdap.getSupannCodeEntite());
                     dossierInfos.setComposante(organizationalUnitLdap.getDescription());
                     dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
                     dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());

@@ -60,7 +60,7 @@ public class DossierController {
     @GetMapping("/{id}")
     public String update(@PathVariable Long id, Model model) {
         //TODO supprimer synchro dossier ?
-//        dossierService.syncDossier(id);
+        dossierService.syncDossier(id);
         Dossier dossier = dossierService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());

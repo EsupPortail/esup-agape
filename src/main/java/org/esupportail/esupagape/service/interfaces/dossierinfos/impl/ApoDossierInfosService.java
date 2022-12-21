@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Order(1)
+@Order(2)
 @ConditionalOnBean(value = {WsApogeeServicePedago.class, WsApogeeServiceAdministratif.class})
 public class ApoDossierInfosService implements DossierInfosService {
 

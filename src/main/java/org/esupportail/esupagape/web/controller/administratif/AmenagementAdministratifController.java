@@ -1,7 +1,9 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
+import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.service.AmenagementService;
+import org.esupportail.esupagape.service.DossierService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -11,25 +13,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/administratif/amenagements")
 public class AmenagementAdministratifController {
 
     private final AmenagementService amenagementService;
 
-    public AmenagementAdministratifController(AmenagementService amenagementService) {
+    private final DossierService dossierService;
+
+    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService) {
         this.amenagementService = amenagementService;
+        this.dossierService = dossierService;
     }
 
     @GetMapping
     public String list(@RequestParam(required = false) StatusAmenagement statusAmenagement,
+                       @RequestParam(required = false) String composanteFilter,
                        @PageableDefault(size = 10,
             sort = "createDate",
             direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        model.addAttribute("amenagements", amenagementService.findAllPaged(pageable));
+        model.addAttribute("amenagements", amenagementService.getFullTextSearch(statusAmenagement, pageable));
         model.addAttribute("statusAmenagement", statusAmenagement);
-        model.addAttribute("statusAmenagements", StatusAmenagement.values());
+        model.addAttribute("composanteFilter", composanteFilter);
+        setModel(model);
         return "administratif/amenagements/list";
+    }
+
+    private void setModel(Model model) {
+        model.addAttribute("statusAmenagements", StatusAmenagement.values());
+        List<ComposanteDto> toto = dossierService.getAllComposantes();
+        model.addAttribute("composantes", toto);
     }
 
 }
