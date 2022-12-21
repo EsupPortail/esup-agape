@@ -31,12 +31,14 @@ public class AmenagementAdministratifController {
     @GetMapping
     public String list(@RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @RequestParam(required = false) String composanteFilter,
+                       @RequestParam(required = false) String codComposante,
                        @PageableDefault(size = 10,
             sort = "createDate",
             direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        model.addAttribute("amenagements", amenagementService.getFullTextSearch(statusAmenagement, pageable));
+        model.addAttribute("amenagements", amenagementService.getFullTextSearch(statusAmenagement, codComposante, pageable));
         model.addAttribute("statusAmenagement", statusAmenagement);
         model.addAttribute("composanteFilter", composanteFilter);
+        model.addAttribute("codComposante", codComposante);
         setModel(model);
         return "administratif/amenagements/list";
     }

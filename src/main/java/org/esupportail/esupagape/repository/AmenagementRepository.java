@@ -15,8 +15,10 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
 
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
 
-    @Query("select a from Amenagement a " +
+    @Query(value = "select a from Amenagement a " +
             "where " +
-            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement)")
-    Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, Pageable pageable);
+            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
+            "and (:codComposante is null or a.dossier.codComposante  = :codComposante)")
+
+    Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
 }

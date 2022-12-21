@@ -93,8 +93,8 @@ public class AmenagementService {
         return amenagementRepository.findAll(pageable);
     }
 
-    public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearch(statusAmenagement, pageable);
+    public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, pageable);
     }
 
 }

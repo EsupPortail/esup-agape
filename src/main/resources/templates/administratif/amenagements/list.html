@@ -15,10 +15,10 @@
                         <div class="row mt-1 mb-2 g-1">
                             <div class="col-2" style="min-width: 500px;">
                                 <div class="input-group">
-                                    <label class="input-group-text" th:for="composanteFilter">Composante</label>
-                                    <select id="composanteFilter" class="form-select" name="composanteFilter">
+                                    <label class="input-group-text" th:for="codComposante">Composante</label>
+                                    <select id="codComposante" class="form-select" name="codComposante">
                                         <option value="">Choisir</option>
-                                        <option th:selected="${composanteFilter == composante.cod}"
+                                        <option th:selected="${codComposante == composante.cod}"
                                                 th:each="composante: ${composantes}"
                                                 th:if="${composante.cod != null && !composante.cod.isEmpty()}"
                                                 th:value="${composante.cod}"
