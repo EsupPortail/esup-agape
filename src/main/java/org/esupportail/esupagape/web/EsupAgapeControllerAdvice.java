@@ -2,6 +2,7 @@ package org.esupportail.esupagape.web;
 
 
 import org.esupportail.esupagape.config.ApplicationProperties;
+import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +25,17 @@ public class EsupAgapeControllerAdvice {
 
     private final UtilsService utilsService;
 
+    private final UserService userService;
+
     private final Environment environment;
 
     private final BuildProperties buildProperties;
 
     private final ApplicationProperties applicationProperties;
 
-    public EsupAgapeControllerAdvice(UtilsService utilsService, Environment environment, @Autowired(required = false) BuildProperties buildProperties, ApplicationProperties applicationProperties) {
+    public EsupAgapeControllerAdvice(UtilsService utilsService, UserService userService, Environment environment, @Autowired(required = false) BuildProperties buildProperties, ApplicationProperties applicationProperties) {
         this.utilsService = utilsService;
+        this.userService = userService;
         this.environment = environment;
         this.buildProperties = buildProperties;
         this.applicationProperties = applicationProperties;
@@ -39,7 +43,8 @@ public class EsupAgapeControllerAdvice {
 
     @ModelAttribute
     public void globalAttributes(Model model) {
-
+        model.addAttribute("userName", userService.getUserName());
+        model.addAttribute("personLdap", userService.getPersonLdap());
         if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("dev")) {
             model.addAttribute("profile", environment.getActiveProfiles()[0]);
         }

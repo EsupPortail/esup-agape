@@ -24,6 +24,10 @@ public class PersonLdapAttributesMapper implements AttributesMapper<PersonLdap> 
         if (givenName != null){
             person.setGivenName(givenName.get().toString());
         }
+        Attribute displayName = attrs.get("displayName");
+        if (displayName != null){
+            person.setDisplayName(displayName.get().toString());
+        }
         Attribute mail = attrs.get("mail");
         if (mail != null){
             person.setMail(mail.get().toString());
@@ -31,6 +35,14 @@ public class PersonLdapAttributesMapper implements AttributesMapper<PersonLdap> 
         Attribute eduPersonPrincipalName = attrs.get("eduPersonPrincipalName");
         if (eduPersonPrincipalName != null){
             person.setEduPersonPrincipalName(eduPersonPrincipalName.get().toString());
+        }
+        Attribute supannEntiteAffectationPrincipale = attrs.get("supannEntiteAffectationPrincipale");
+        if (supannEntiteAffectationPrincipale != null){
+            person.setSupannEntiteAffectationPrincipale(supannEntiteAffectationPrincipale.get().toString());
+        }
+        Attribute supannEntiteAffectation = attrs.get("supannEntiteAffectation");
+        if (supannEntiteAffectation != null){
+            person.setSupannEntiteAffectation(supannEntiteAffectation.get().toString());
         }
         return person;
     }

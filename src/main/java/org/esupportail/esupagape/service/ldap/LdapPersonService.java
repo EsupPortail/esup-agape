@@ -47,7 +47,7 @@ public class LdapPersonService {
 
     public String getPersonLdapAttribute(String authName, String attribute) throws AgapeException {
         if(attribute != null) {
-            String formattedFilter = MessageFormat.format("(uid={0})", (Object[]) new String[]{authName});
+            String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[]{authName});
             return ldapTemplate.search(ldapProperties.getSearchBase(),
                     formattedFilter,
                     SearchControls.SUBTREE_SCOPE,
@@ -58,18 +58,28 @@ public class LdapPersonService {
         }
     }
 
+    public PersonLdap getPersonLdap(String userName) {
+        String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[] { userName });
+        List<PersonLdap> personLdaps = ldapTemplate.search(ldapProperties.getSearchBase(), formattedFilter, new PersonLdapAttributesMapper());
+        PersonLdap personLdap = null;
+        if(personLdaps.size() > 0) {
+            personLdap = personLdaps.get(0);
+        }
+        return personLdap;
+    }
+
     public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String dateOfBirthString = dateOfBirth.format(dateTimeFormatter);
         return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
     }
 
-    public OrganizationalUnitLdap getScol(String scol) throws AgapeJpaException {
-        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannCodeEntite(scol);
+    public OrganizationalUnitLdap getOrganizationalUnitLdap(String supannCodeEntite) throws AgapeJpaException {
+        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannCodeEntite(supannCodeEntite);
         if(organizationalUnitLdaps.size() > 0) {
             return organizationalUnitLdaps.get(0);
         } else {
-            throw new AgapeJpaException(scol + " not fount in OU");
+            throw new AgapeJpaException(supannCodeEntite + " not fount in OU");
         }
     }
 

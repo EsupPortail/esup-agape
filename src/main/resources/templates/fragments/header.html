@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!--/*@thymesVar id="personLdap" type="org.esupportail.esupagape.service.ldap.PersonLdap"*/-->
     <header th:fragment="header">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container-fluid">
@@ -46,7 +47,19 @@
                             <a class="nav-link active text-light" aria-current="page" th:href="@{/admin/}">Admin</a>
                         </li>
                     </ul>
-                    <a class="nav-link active text-light" aria-current="page" th:href="@{/logout}">Déconnexion</a>
+                    <ul class="navbar-nav mb-2 mb-lg-0 text-light">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownUserLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="text-white" th:text="${personLdap.displayName} + '(' + ${personLdap.getSupannEntiteAffectation()} + ')'"></span>
+                            </a>
+                            <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownUserLink">
+                                <li>
+                                    <a class="nav-link active text-light" aria-current="page" th:href="@{/logout}">Déconnexion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </nav>
