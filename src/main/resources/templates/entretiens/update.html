@@ -34,7 +34,7 @@
                         <th:block th:each="typeContact : ${typeContacts}">
                             <div class="form-check">
                                 <input disabled type="radio" class="form-check-input" th:id="${typeContact}" name="typeContact" th:value="${typeContact}" th:checked="${entretien.typeContact == typeContact}">
-                                <label class="form-check-label" th:for="${typeContact}" th:text="#{'entretien.type-contact.' +${typeContact}}"></label>
+                                <label class="form-check-label" th:for="${typeContact}" th:text="#{'entretien.typeContact.' +${typeContact}}"></label>
                             </div>
                         </th:block>
                         <div class="mt-3">

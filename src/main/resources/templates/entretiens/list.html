@@ -42,7 +42,7 @@
                             <td class="align-middle"
                                 th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
                             <td class="align-middle"
-                                th:utext="${entretien.typeContact != null} ? #{'entretien.type-contact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
+                                th:utext="${entretien.typeContact != null} ? #{'entretien.typeContact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
                             <td class="align-middle"
                                 th:utext="${entretien.interlocuteur != null} ? ${entretien.interlocuteur} : 'Non renseigné'"></td>
                             <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell align-middle"

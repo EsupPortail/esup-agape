@@ -35,7 +35,7 @@
                                         th:value="${typeAmenagement}">
                                     <option value="" disabled selected>Choisir</option>
                                     <option th:each="typeAmenagement : ${typeAmenagements}"
-                                            th:text="#{'amenagement.type-amenagement.' +${typeAmenagement}}"
+                                            th:text="#{'amenagement.typeAmenagement.' +${typeAmenagement}}"
                                             th:value="${typeAmenagement}"
                                             th:selected="${typeAmenagement.equals(amenagement.typeAmenagement)}"></option>
                                 </select>
@@ -62,17 +62,17 @@
                                         <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
                                                th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
                                         <label class="form-check-label" th:for="${typeEpreuve}"
-                                               th:text="#{'amenagement.type-epreuve.' +${typeEpreuve}}"></label>
+                                               th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
                                     </div>
                                 </th:block>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-4" style="width: 250px;">
-                                <label th:for="autre-type-epreuve" class="form-label">Autre type d’épreuve</label>
+                                <label th:for="autre-typeEpreuve" class="form-label">Autre type d’épreuve</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="autre-type-epreuve" type="text" class="form-control"
+                                <input id="autre-typeEpreuve" type="text" class="form-control"
                                        th:field="*{autresTypeEpreuve}">
                                 <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error"
                                    th:errors="*{autresTypeEpreuve}"></p>
@@ -83,25 +83,25 @@
                                 <label class="form-label" for="typeAmenagement">Temp majoré</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <select id="tempMajore" type="text" class="form-select" name="tempMajore"
-                                        th:value="${amenagement.tempMajore}">
+                                <select id="tempsMajore" type="text" class="form-select" name="tempsMajore"
+                                        th:value="${amenagement.tempsMajore}">
                                     <option value="" disabled selected>Choisir</option>
-                                    <option th:each="tempMajore : ${tempMajores}"
-                                            th:text="#{'amenagement.tempMajore.' +${tempMajore}}"
-                                            th:value="${tempMajore}"
-                                            th:selected="${tempMajore.equals(amenagement.tempMajore)}"></option>
+                                    <option th:each="tempsMajore : ${tempsMajores}"
+                                            th:text="#{'amenagement.tempsMajore.' +${tempsMajore}}"
+                                            th:value="${tempsMajore}"
+                                            th:selected="${tempsMajore.equals(amenagement.tempsMajore)}"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-4" style="width: 250px;">
-                                <label th:for="autre-type-epreuve" class="form-label">Autres temp majoré</label>
+                                <label th:for="autre-typeEpreuve" class="form-label">Autres temps majorés</label>
                             </div>
                             <div class="col-12 col-xxl-8">
                                 <input id="autres-temp-majore" type="text" class="form-control"
-                                       th:field="*{autresTempMajore}">
-                                <p th:if="${#fields.hasErrors('autresTempMajore')}" th:errorclass="error"
-                                   th:errors="*{autresTempMajore}"></p>
+                                       th:field="*{autresTempsMajores}">
+                                <p th:if="${#fields.hasErrors('autresTempsMajores')}" th:errorclass="error"
+                                   th:errors="*{autresTempsMajores}"></p>
                             </div>
                         </div>
                         <div class="row mb-1">

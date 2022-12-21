@@ -27,24 +27,24 @@
                 <dt class="col-sm-6">Date de naissance</dt>
                 <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
                 <dt class="col-sm-6">Type d'individu</dt>
-                <dd class="col-sm-6" th:utext="#{'dossier.type-individu.' + ${currentDossier.type}}"></dd>
+                <dd class="col-sm-6" th:utext="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
                 <dt class="col-sm-6">Statut du dossier</dt>
                 <th:block th:switch="${currentDossier.statusDossier}">
-                    <dd th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
-                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPORTE}}"
+                    <dd th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
+                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}"
                             class="badge text-bg-danger"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
+                    <dd th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
                             class="badge text-bg-info"></span></dd>
                     <dd th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}">
-                        <span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></dd>
+                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></dd>
                     <dd th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}">
-                        <span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}"
+                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}"
                                 class="badge text-bg"
                                 style="background-color:#d3d3d3;"></span></dd>
                     <dd th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}">
-                        <span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
+                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
                     <dd th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
-                        <span th:text="#{'dossier.status-dossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
+                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
                 </th:block>
                 <dt class="col-sm-6">Genre</dt>
                 <dd class="col-sm-6" th:utext="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>

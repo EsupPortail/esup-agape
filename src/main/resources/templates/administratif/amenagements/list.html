@@ -21,7 +21,7 @@
                                         <option th:selected="${enumStatusAmenagement == statusAmenagement}"
                                                 th:each="enumStatusAmenagement: ${statusAmenagements}"
                                                 th:value="${enumStatusAmenagement}"
-                                                th:text="#{'amenagement.status-amenagement.' + ${enumStatusAmenagement}}"></option>
+                                                th:text="#{'amenagement.statusAmenagement.' + ${enumStatusAmenagement}}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -54,11 +54,11 @@
                             <th:block th:each="amenagement : ${amenagements}">
                                 <tr>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.type-amenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                    <td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td th:text="${amenagement.dossier.individu.name + ' ' + amenagement.dossier.individu.firstName}"></td>
-                                    <td th:text="#{'amenagement.tempMajore.' +${amenagement.getTempMajore()}}"></td>
+                                    <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
-                                    <td th:text="#{'amenagement.status-amenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                    <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
                                     <td th:text="${amenagement.mailIndividu}"></td>
                                     <td></td>
                                 </tr>

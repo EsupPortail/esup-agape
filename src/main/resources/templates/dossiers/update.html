@@ -112,7 +112,7 @@
                                                         name="typeSuiviHandisup"
                                                         th:value="${typeSuiviHandisup}"
                                                         th:checked="${currentDossier.typeSuiviHandisup.contains(typeSuiviHandisup)}">
-                                                <label class="form-check-label" th:for="${typeSuiviHandisup}" th:text="#{'dossier.type-suivi-handisup.' +${typeSuiviHandisup}}"></label>
+                                                <label class="form-check-label" th:for="${typeSuiviHandisup}" th:text="#{'dossier.typeSuiviHandisup.' +${typeSuiviHandisup}}"></label>
                                             </div>
                                         </th:block>
                                     </div>
@@ -244,7 +244,7 @@
                                             <option value="" disabled selected>Choisir</option>
                                             <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}"
                                                     th:each="rentreeProchaine : ${rentreeProchaines}"
-                                                    th:text="#{'dossier.rentree-prochaine.' +${rentreeProchaine}}"
+                                                    th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}"
                                                     th:value="${rentreeProchaine}"></option>
                                         </select>
                                     </div>

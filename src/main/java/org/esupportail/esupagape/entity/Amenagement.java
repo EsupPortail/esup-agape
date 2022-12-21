@@ -44,9 +44,9 @@ public class Amenagement {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private TempMajore tempMajore;
+    private TempsMajore tempsMajore;
 
-    private String autresTempMajore;
+    private String autresTempsMajores;
 
     @Column(columnDefinition = "TEXT")
     private String amenagementText;
@@ -158,20 +158,20 @@ public class Amenagement {
         this.autresTypeEpreuve = autresTypeEpreuve;
     }
 
-    public TempMajore getTempMajore() {
-        return tempMajore;
+    public TempsMajore getTempsMajore() {
+        return tempsMajore;
     }
 
-    public void setTempMajore(TempMajore tempMajore) {
-        this.tempMajore = tempMajore;
+    public void setTempsMajore(TempsMajore tempsMajore) {
+        this.tempsMajore = tempsMajore;
     }
 
-    public String getAutresTempMajore() {
-        return autresTempMajore;
+    public String getAutresTempsMajores() {
+        return autresTempsMajores;
     }
 
-    public void setAutresTempMajore(String autresTempMajore) {
-        this.autresTempMajore = autresTempMajore;
+    public void setAutresTempsMajores(String autresTempsMajores) {
+        this.autresTempsMajores = autresTempsMajores;
     }
 
     public String getAmenagementText() {

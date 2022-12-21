@@ -25,7 +25,7 @@
                                         <option th:selected="${typeIndividu == enumType}"
                                                 th:each="enumType : ${typeIndividuList}"
                                                 th:value="${enumType}"
-                                                th:text="#{'dossier.type-individu.' + ${enumType}}"></option>
+                                                th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                                         <option th:selected="${statusDossier == enumStatus}"
                                                 th:each="enumStatus : ${statusDossierList}"
                                                 th:value="${enumStatus}"
-                                                th:text="#{'dossier.status-dossier.' + ${enumStatus}}"></option>
+                                                th:text="#{'dossier.statusDossier.' + ${enumStatus}}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -94,17 +94,17 @@
                             <td th:utext="${#strings.toUpperCase(dossierIndividuDto.name)}" style="width: 100px;"></td>
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
-                            <td th:utext="#{'dossier.type-individu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell" style="width: 100px;"></td>
+                            <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell" style="width: 100px;"></td>
                             <th:block th:switch="${dossierIndividuDto.statusDossier}" style="width: 200px;">
-                                <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.status-dossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-danger"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
                             </th:block>
-                            <td th:text="${dossierIndividuDto.statusAmenagement != null} ? #{'amenagement.status-amenagement.' + ${dossierIndividuDto.statusAmenagement}} : 'Non renseigné'" class="d-none d-sm-none d-md-table-cell"  style="width: 300px;">
+                            <td th:text="${dossierIndividuDto.statusAmenagement != null} ? #{'amenagement.statusAmenagement.' + ${dossierIndividuDto.statusAmenagement}} : 'Non renseigné'" class="d-none d-sm-none d-md-table-cell"  style="width: 300px;">
                             </td>
                             <td style="width: 100px;">
                                 <ul class="list-group list-group-horizontal">

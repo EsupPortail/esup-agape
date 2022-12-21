@@ -38,8 +38,8 @@
                                     <th:block th:each="amenagement : ${amenagements}">
                                         <tr>
                                             <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="#{'amenagement.type-amenagement.' +${amenagement.getTypeAmenagement()}}"></td>
-                                            <td th:text="#{'amenagement.status-amenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                            <td th:text="#{'amenagement.typeAmenagement.' +${amenagement.getTypeAmenagement()}}"></td>
+                                            <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
                                             <td>
                                                 <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i>
                                                 </a>

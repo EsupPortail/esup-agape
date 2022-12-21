@@ -17,7 +17,7 @@
                 <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
             </div>
             <div class="ms-3">
-                <label class="form-label" th:for="type-contact">Type Contact</label>
+                <label class="form-label" th:for="typeContact">Type Contact</label>
                 <div>
                     <th:block th:each="enumTypeContact : ${typeContacts}">
                         <div>
@@ -27,7 +27,7 @@
                                     size="1"
                                     type="radio"
                                     th:value="${enumTypeContact}" required>
-                            <label th:for="${enumTypeContact}" th:text="#{'entretien.type-contact.' + ${enumTypeContact}}"></label>
+                            <label th:for="${enumTypeContact}" th:text="#{'entretien.typeContact.' + ${enumTypeContact}}"></label>
                         </div>
                     </th:block>
                 </div>

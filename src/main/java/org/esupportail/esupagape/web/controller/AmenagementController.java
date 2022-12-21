@@ -63,7 +63,7 @@ public class AmenagementController {
 
     private void setModel(Model model) {
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
-        model.addAttribute("tempMajores" , TempMajore.values());
+        model.addAttribute("tempsMajores" , TempsMajore.values());
         model.addAttribute("typeEpreuves" , TypeEpreuve.values());
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("autorisations", Autorisation.values());
