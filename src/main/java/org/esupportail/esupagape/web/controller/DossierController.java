@@ -8,6 +8,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Comparator;
@@ -59,8 +61,6 @@ public class DossierController {
 
     @GetMapping("/{id}")
     public String update(@PathVariable Long id, Model model) {
-        //TODO supprimer synchro dossier ?
-        dossierService.syncDossier(id);
         Dossier dossier = dossierService.getById(id);
         List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -80,6 +80,13 @@ public class DossierController {
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
         return "dossiers/update";
+    }
+
+    @GetMapping("/{id}/sync")
+    public String sync(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        dossierService.syncDossier(id);
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Synchonisation effectuée"));
+        return "redirect:/dossiers/" + id;
     }
 
     @PutMapping("/{id}")
