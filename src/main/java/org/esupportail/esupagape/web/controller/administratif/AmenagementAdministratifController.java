@@ -1,6 +1,8 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.entity.Amenagement;
+import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
@@ -33,8 +35,8 @@ public class AmenagementAdministratifController {
                        @RequestParam(required = false) String composanteFilter,
                        @RequestParam(required = false) String codComposante,
                        @PageableDefault(size = 10,
-            sort = "createDate",
-            direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+                               sort = "createDate",
+                               direction = Sort.Direction.DESC) Pageable pageable, Model model) {
         model.addAttribute("amenagements", amenagementService.getFullTextSearch(statusAmenagement, codComposante, pageable));
         model.addAttribute("statusAmenagement", statusAmenagement);
         model.addAttribute("composanteFilter", composanteFilter);
@@ -47,6 +49,14 @@ public class AmenagementAdministratifController {
         model.addAttribute("statusAmenagements", StatusAmenagement.values());
         List<ComposanteDto> toto = dossierService.getAllComposantes();
         model.addAttribute("composantes", toto);
+    }
+
+    @GetMapping("/{amenagementId}")
+    public String show(Amenagement amenagement, Dossier dossier, Model model) {
+        setModel(model);
+        model.addAttribute("dossiers", dossier);
+        model.addAttribute("amenagement", amenagement);
+        return "administratif/amenagements/show";
     }
 
 }

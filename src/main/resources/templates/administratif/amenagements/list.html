@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
 <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
 <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
@@ -75,7 +75,14 @@
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
                                     <td th:text="${amenagement.mailIndividu}"></td>
-                                    <td></td>
+                                    <td style="width: 100px;">
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item border-0 p-1 bg-transparent">
+                                                <a class="btn btn-info" th:href="@{/administratif/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="bi bi-eye"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
                                 </tr>
                             </th:block>
                         </tbody>
