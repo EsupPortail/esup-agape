@@ -1,9 +1,13 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
-import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.Autorisation;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
+import org.esupportail.esupagape.entity.enums.TempsMajore;
+import org.esupportail.esupagape.entity.enums.TypeAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeEpreuve;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,13 +54,18 @@ public class AmenagementAdministratifController {
         model.addAttribute("statusAmenagements", StatusAmenagement.values());
         List<ComposanteDto> toto = dossierService.getAllComposantes();
         model.addAttribute("composantes", toto);
+        model.addAttribute("typeAmenagements" , TypeAmenagement.values());
+        model.addAttribute("tempsMajores" , TempsMajore.values());
+        model.addAttribute("typeEpreuves" , TypeEpreuve.values());
+        model.addAttribute("classifications", Classification.values());
+        model.addAttribute("autorisations", Autorisation.values());
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(Amenagement amenagement, Dossier dossier, Model model) {
+    public String show(@PathVariable Long amenagementId, Dossier dossier, Model model) {
         setModel(model);
         model.addAttribute("dossiers", dossier);
-        model.addAttribute("amenagement", amenagement);
+        model.addAttribute("amenagement",amenagementService.getById(amenagementId));
         return "administratif/amenagements/show";
     }
 
