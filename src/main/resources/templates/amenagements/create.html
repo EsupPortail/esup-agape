@@ -56,7 +56,7 @@
                                 <th:block th:each="typeEpreuve : ${typeEpreuves}">
                                     <div class="form-check">
                                         <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
-                                               th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
+                                               th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
                                         <label class="form-check-label" th:for="${typeEpreuve}"
                                                th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
                                     </div>

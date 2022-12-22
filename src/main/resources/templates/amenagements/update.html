@@ -14,6 +14,9 @@
                 <li class="breadcrumb-item">
                     <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
                 </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/dossiers/{id}/amenagements(id=${dossier.id})}" class="text-center ">Liste des aménagements</a>
+                </li>
             </ol>
         </nav>
         <div th:replace="fragments/tabs-years :: tabs-years"></div>
@@ -60,7 +63,7 @@
                                 <th:block th:each="typeEpreuve : ${typeEpreuves}">
                                     <div class="form-check">
                                         <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
-                                               th:field="*{typeEpreuve}" th:value="${typeEpreuve}">
+                                               th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
                                         <label class="form-check-label" th:for="${typeEpreuve}"
                                                th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
                                     </div>
@@ -158,7 +161,7 @@
                     </div>
                     <div class="col-12">
                         <div class="float-buttons">
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <i class="bi bi-send-fill"></i>
                             </button>
                             <button type="submit" class="btn btn-success">
@@ -176,6 +179,27 @@
         </div>
     </div>
 </main>
+<div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="validationModalLabel">Envoi à l'administration</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:method="post"
+                  th:action="@{/dossiers/{id}/amenagements/{amenagementId}/validation-medecin(id=${currentDossier.id},amenagementId=${amenagement.id})}">
+                <div class="modal-body">
+                    Merci de confirmer l’envoi de l’aménagement à l’administration
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <footer th:replace="fragments/footer :: black"></footer>
 <div th:replace="fragments/flash :: flash"></div>
 </body>

@@ -18,7 +18,14 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
     @Query(value = "select a from Amenagement a " +
             "where " +
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
-            "and (:codComposante is null or a.dossier.codComposante  = :codComposante)")
-
+            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
+            "and a.statusAmenagement != 'BROUILLON' and a.statusAmenagement != 'SUPPRIME'")
     Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
+
+    @Query(value = "select a from Amenagement a " +
+            "where " +
+            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
+            "and (:codComposante is null or a.dossier.codComposante  = :codComposante)")
+    Page<Amenagement> findByFullTextSearchAdmin(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
+
 }

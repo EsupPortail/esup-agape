@@ -6,12 +6,15 @@ import org.esupportail.esupagape.entity.enums.Autorisation;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AmenagementService {
@@ -53,19 +56,25 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void softDeleteAmenagement(Long amenagementId) {
+    public void softDeleteAmenagement(Long amenagementId) throws AgapeException {
         Amenagement amenagement = getById(amenagementId);
-        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+            amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+        } else {
+            throw new AgapeException("Impossible de supprimer un aménagement qui n'est pas au statut brouillon");
+        }
     }
 
     @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
+        amenagementToUpdate.setMailMedecin(amenagement.getMailMedecin());
+        amenagementToUpdate.setNomMedecin(amenagement.getNomMedecin());
         amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
         amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
         amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
         amenagementToUpdate.setClassification(amenagement.getClassification());
-        amenagementToUpdate.setTypeEpreuve(amenagement.getTypeEpreuve());
+        amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
         amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
         amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
@@ -95,6 +104,28 @@ public class AmenagementService {
 
     public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable) {
         return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, pageable);
+    }
+
+    @Transactional
+    public void validationMedecin(Long id) throws AgapeException {
+        Amenagement amenagement = getById(id);
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+            amenagement.setValideMedecinDate(LocalDateTime.now());
+            amenagement.setStatusAmenagement(StatusAmenagement.VALIDER_MEDECIN);
+        } else {
+            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
+        }
+    }
+
+    @Transactional
+    public void viserAdministration(Long id) throws AgapeException {
+        Amenagement amenagement = getById(id);
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN)) {
+            amenagement.setAdministrationDate(LocalDateTime.now());
+            amenagement.setStatusAmenagement(StatusAmenagement.VISER_ADMINISTRATION);
+        } else {
+            throw new AgapeException("Impossible de viser un aménagement qui n'est pas au statut validé par le medecin");
+        }
     }
 
 }

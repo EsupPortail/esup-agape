@@ -38,7 +38,7 @@ public class Amenagement {
 
     @ElementCollection(targetClass = TypeEpreuve.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<TypeEpreuve> typeEpreuve = new HashSet<>();
+    private Set<TypeEpreuve> typeEpreuves = new HashSet<>();
 
     private String autresTypeEpreuve;
 
@@ -142,12 +142,12 @@ public class Amenagement {
         this.typeAmenagement = typeAmenagement;
     }
 
-    public Set<TypeEpreuve> getTypeEpreuve() {
-        return typeEpreuve;
+    public Set<TypeEpreuve> getTypeEpreuves() {
+        return typeEpreuves;
     }
 
-    public void setTypeEpreuve(Set<TypeEpreuve> typeEpreuve) {
-        this.typeEpreuve = typeEpreuve;
+    public void setTypeEpreuves(Set<TypeEpreuve> typeEpreuves) {
+        this.typeEpreuves = typeEpreuves;
     }
 
     public String getAutresTypeEpreuve() {

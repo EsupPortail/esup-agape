@@ -60,11 +60,21 @@
                                             <dd class="col-sm-8"
                                                     th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
                                             <dt class="col-sm-4">Types d'épreuves concernés:</dt>
-                                            <dd class="col-sm-8"  th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></dd>
+                                            <dd class="col-sm-8">
+                                                <ul class="list-group" th:each="typeEpreuve : ${amenagement.getTypeEpreuves()}">
+                                                    <li th:text="#{'amenagement.typeEpreuve.' + ${typeEpreuve}}"></li>
+                                                </ul>
+                                            </dd>
                                             <dt class="col-sm-4">Temps majoré:</dt>
                                             <dd class="col-sm-8" th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></dd>
                                             <dt class="col-sm-4">Aménagements:</dt>
-                                            <dd class="col-sm-8" th:text="${amenagement.amenagementText}"></dd>
+                                            <dd class="col-sm-8">
+                                                <ul class="list-group">
+                                                <th:block th:each="textAmenagement, iterator : ${amenagement.amenagementText.split('\r\n')}">
+                                                    <li th:text="${iterator.index + 1} + ' - ' + ${textAmenagement}"></li>
+                                                </th:block>
+                                                </ul>
+                                            </dd>
                                         </dl>
                                 </div>
                                     <div class="mt-4 row text-center">

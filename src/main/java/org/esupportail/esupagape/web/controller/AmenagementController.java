@@ -3,16 +3,14 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -55,11 +53,12 @@ public class AmenagementController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, Dossier dossier) throws AgapeJpaException {
+    public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, Dossier dossier) throws AgapeJpaException {
+        amenagement.setMailMedecin(personLdap.getMail());
+        amenagement.setNomMedecin(personLdap.getDisplayName());
         amenagementService.update(amenagementId, amenagement);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
     }
-
 
     private void setModel(Model model) {
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
@@ -69,8 +68,25 @@ public class AmenagementController {
         model.addAttribute("autorisations", Autorisation.values());
     }
     @DeleteMapping(value = "/{amenagementId}/delete")
-    public String deleteAmenagement(@PathVariable Long amenagementId, Dossier dossier) {
-        amenagementService.softDeleteAmenagement(amenagementId);
+    public String deleteAmenagement(@PathVariable Long amenagementId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        try {
+            amenagementService.softDeleteAmenagement(amenagementId);
+            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été supprimé"));
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements";
+    }
+
+    @PostMapping("/{amenagementId}/validation-medecin")
+    public String validationMedecin(@PathVariable Long amenagementId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        try {
+            amenagementService.validationMedecin(amenagementId);
+            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
+
+        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
     }
 }
