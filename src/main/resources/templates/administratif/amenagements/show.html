@@ -40,7 +40,7 @@
                                         <dt class="col-sm-4">N° Étudiant:</dt>
                                         <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.numEtu}"></dd>
                                         <dt class="col-sm-4">Nom:</dt>
-                                        <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.name}"></dd>
+                                        <dd class="col-sm-8" th:utext="${#strings.toUpperCase(amenagement.dossier.individu.name)}"></dd>
                                         <dt class="col-sm-4">Prénom:</dt>
                                         <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.firstName}"></dd>
                                         <dt class="col-sm-4">Née le:</dt>

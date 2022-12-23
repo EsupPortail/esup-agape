@@ -70,7 +70,7 @@
                                     <td th:text="${amenagement.dossier.composante}"></td>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
-                                    <td th:text="${amenagement.dossier.individu.name + ' ' + amenagement.dossier.individu.firstName}"></td>
+                                    <td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + amenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
