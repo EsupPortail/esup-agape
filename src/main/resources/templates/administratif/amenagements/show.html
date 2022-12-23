@@ -65,34 +65,35 @@
                                     <span>MEDECIN DESIGNE PAR LA C.D.A.P.H DU DEPARTEMENT 76 </span>
                                 </div>
                                 <div class="col-12 col-xxl-6 mt-4">
-                                        <dl class="row">
-                                            <dt class="col-sm-4">Date de fin de l'aménagement:</dt>
-                                            <dd class="col-sm-8"
-                                                    th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
-                                            <dt class="col-sm-4">Types d'épreuves concernés:</dt>
-                                            <dd class="col-sm-8">
-                                                <ul class="list-group" th:each="typeEpreuve : ${amenagement.getTypeEpreuves()}">
-                                                    <li th:text="#{'amenagement.typeEpreuve.' + ${typeEpreuve}}"></li>
-                                                </ul>
-                                            </dd>
-                                            <dt class="col-sm-4">Temps majoré:</dt>
-                                            <dd class="col-sm-8" th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></dd>
-                                            <dt class="col-sm-4">Autres temps majorés:</dt>
-                                            <dd class="col-sm-8" th:text="${amenagement.autresTempsMajores}"></dd>
-                                            <dt class="col-sm-4">Aménagements:</dt>
-                                            <dd class="col-sm-8">
-                                                <ul class="list-group">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Date de fin de l'aménagement:</dt>
+                                        <dd class="col-sm-8" th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
+                                        <dt class="col-sm-4">Types d'épreuves concernés:</dt>
+                                        <dd class="col-sm-8">
+                                            <ul class="list-group" th:each="typeEpreuve : ${amenagement.getTypeEpreuves()}">
+                                                <li th:text="#{'amenagement.typeEpreuve.' + ${typeEpreuve}}"></li>
+                                            </ul>
+                                        </dd>
+                                        <dt class="col-sm-4">Autres types d'épreuves:</dt>
+                                        <dd class="col-sm-8"  th:text="${amenagement.autresTypeEpreuve}">
+                                        </dd>
+                                        <dt class="col-sm-4">Temps majoré:</dt>
+                                        <dd class="col-sm-8" th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></dd>
+                                        <dt class="col-sm-4">Autres temps majorés:</dt>
+                                        <dd class="col-sm-8" th:text="${amenagement.autresTempsMajores}"></dd>
+                                        <dt class="col-sm-4">Aménagements:</dt>
+                                        <dd class="col-sm-8">
+                                            <ul class="list-group">
                                                 <th:block th:each="textAmenagement, iterator : ${amenagement.amenagementText.split('\r\n')}">
                                                     <li th:text="${iterator.index + 1} + ' - ' + ${textAmenagement}"></li>
                                                 </th:block>
-                                                </ul>
-                                            </dd>
-                                        </dl>
+                                            </ul>
+                                        </dd>
+                                    </dl>
                                 </div>
-                                    <div class="mt-4 row text-center">
-                                    <div class="col-6" >
-                                        <p th:text="' Avis établi à Mont Saint Aignan le :' + ' ' +${#temporals.format(amenagement.valideMedecinDate, 'dd/MM/yyyy')}">
-                                        </p>
+                                <div class="mt-4 row text-center" th:if="${{amenagement.nomMedecin != null || amenagement.nomValideur != null}}">
+                                    <div class="col-6">
+                                        <p th:text="' Avis établi à Mont Saint Aignan le :' + ' ' +${#temporals.format(amenagement.valideMedecinDate, 'dd/MM/yyyy')}"></p>
                                         <h5 th:text="'Nom du médecin:' +' '+${amenagement.nomMedecin}"></h5>
                                     </div>
                                     <div class="col-6">
@@ -101,9 +102,9 @@
                                         </p>
                                         <h5 th:text="'Nom du valideur:' +' '+${amenagement.nomValideur}"></h5>
                                     </div>
-                                    </div>
                                 </div>
                             </div>
+                        </div>
                         <div class="mt-4 text-center">
                             <p style="font-size: 14px;">Ce document est un avis transmis à l’autorité administrative pour décision.</p>
                             <p style="font-size: 14px;">Les recours suivants contre cette décision peuvent être intentés dans un délai de deux mois:</p>
