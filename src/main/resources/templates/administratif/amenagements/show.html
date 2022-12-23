@@ -26,7 +26,7 @@
                                 <h5 th:text="'Statut administratif:' + ' ' + #{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></h5>
                             </div>
                             <div class="col-12 col-xxl-6">
-                                <h5 th:text="'Statut mail de l\'individu:' + ' ' +${amenagement.mailIndividu}"></h5>
+                                <h5 th:text="${amenagement.mailIndividu} == false ? 'Statut mail de l\'individu: Envoyé': 'Statut mail de l\'individu: Non envoyé'"></h5>
                             </div>
                         </div>
                     </div>
