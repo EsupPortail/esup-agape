@@ -134,7 +134,7 @@
                             <th>Rendu le</th>
                             <th>Nombre d’heures</th>
                             <th>Mois de paye</th>
-                            <th>Coût</th>
+                            <th>Coût (€)</th>
                             <th>Feuille</th>
                             <th>Planning</th>
                         </tr>
@@ -153,13 +153,12 @@
                                                 <form th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-periode/' + ${periodeAideHumaineEntry.key}"
                                                       th:method="delete">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title fs-5" th:id="'delete-entretien-label' + ${periodeAideHumaineEntry.key}">Suppression d'un entretien</h5>
+                                                        <h5 class="modal-title fs-5" th:id="'delete-entretien-label' + ${periodeAideHumaineEntry.key}">Suppression des informations</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <div class="alert alert-danger text-center">Confirmez-vous la suppression de
-                                                            cet entretien?
+                                                        <div class="alert alert-danger text-center">Confirmez-vous la suppression des informations du mois sélectionné ?
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
