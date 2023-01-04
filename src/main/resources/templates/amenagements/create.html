@@ -56,9 +56,9 @@
                                     <div class="col-4" style="width: 250px;">
                                         <label class="form-label">Types d’épreuves</label>
                                     </div>
-                                    <div class="col-12 col-xxl-8">
+                                    <div id="typeEpreuves" class="col-12 col-xxl-8 agape-at-least-one-checkbox">
                                         <th:block th:each="typeEpreuve : ${typeEpreuves}">
-                                            <div id="typeEpreuves" class="form-check agape-at-least-one-checkbox">
+                                            <div class="form-check">
                                                 <input id="typeEpreuve" type="checkbox" class="form-check-input" th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
                                                 <label class="form-check-label" th:for="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
                                             </div>
@@ -139,7 +139,7 @@
                                                     th:field="*{classification}"
                                                     size="1"
                                                     type="text"
-                                                    class="agape-slim-select"
+                                                    class="agape-slim-select-search"
                                                     th:value="${currentDossier.classification}">
                                                 <option type="text"
                                                         th:checked="${currentDossier.classification.contains(classification)}"

@@ -83,6 +83,10 @@ select[disabled] > option {
     /* Identifiant pour les slimselect */
 }
 
+.agape-slim-select-search {
+    /* Identifiant pour les slimselect */
+}
+
 .agape-at-least-one-checkbox {
     /* Identifiant pour checkbox at least one required */
 }

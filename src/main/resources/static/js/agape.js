@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    //Gestion automatique des slimselect
-    document.querySelectorAll(`[class*="agape-slim-select"]`).forEach(function (element) {
+    //Gestion automatique des slimselect avec search
+    document.querySelectorAll(".agape-slim-select-search").forEach(function (element) {
         if(element.id !== '') {
             console.info("enable slimselect on : " + element.id);
             new SlimSelect({
@@ -95,6 +95,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 settings: {
                     placeholderText: 'Choisir',
                     searchPlaceholder: 'Rechercher',
+                }
+            });
+            //Hack slimselect required
+            element.style.display = "block";
+            element.style.position = "absolute";
+            element.style.marginTop = "15px";
+            element.style.opacity = 0;
+            element.style.zIndex = -1;
+        }
+    });
+
+    //Gestion automatique des slimselect
+    document.querySelectorAll(".agape-slim-select").forEach(function (element) {
+        if(element.id !== '') {
+            console.info("enable slimselect on : " + element.id);
+            new SlimSelect({
+                select: '#' + element.id,
+                settings: {
+                    showSearch: false,
+                    placeholderText: 'Choisir',
                 }
             });
             //Hack slimselect required
@@ -145,12 +165,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    // Check at least one checkbox is selected
-    document.querySelectorAll(`[class*="agape-at-least-one-checkbox"]`).forEach(function (element) {
-        console.info("Enable at least one checkbox for : " + element.id);
-        atLeastOneCheckbox(element.id)
-    });
-
 });
 
 function unLockClassification() {
@@ -199,35 +213,4 @@ function textAreaAdjust(element, lineHeight) {
     let lines = text.split(/\r|\r\n|\n/);
     let count = lines.length;
     element.style.height = (lineHeight * count) + "px";
-}
-
-function atLeastOneCheckbox (checkboxName) {
-    const divCheckboxes = document.querySelector('#' + checkboxName);
-    const checkboxes = divCheckboxes.querySelectorAll('input[type=checkbox]');
-    const checkboxLength = checkboxes.length;
-    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
-
-    function init() {
-        if (firstCheckbox) {
-            for (let i = 0; i < checkboxLength; i++) {
-                checkboxes[i].addEventListener('change', checkValidity);
-            }
-
-            checkValidity();
-        }
-    }
-
-    function isChecked() {
-        for (let i = 0; i < checkboxLength; i++) {
-            if(checkboxes[i].checked) return true;
-        }
-        return false;
-    }
-
-    function checkValidity() {
-        const errorMessage = !isChecked() ? 'Au moins un choix doit être sélectionné pour poursuivre.' : '';
-        firstCheckbox.setCustomValidity(errorMessage)
-    }
-
-    init();
 }

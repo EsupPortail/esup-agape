@@ -223,7 +223,7 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
                                         <div>
-                                            <select multiple id="codMeae" th:field="*{codMeae}" class="agape-slim-select">
+                                            <select multiple id="codMeae" th:field="*{codMeae}" class="agape-slim-select-search">
                                                 <option th:checked="${enquete.codMeae.contains(codMeaes)}"
                                                         th:each="enumCodMeae : ${codMeaes}"
                                                         th:value="${enumCodMeae}"

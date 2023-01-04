@@ -34,7 +34,7 @@
                                 <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <select id="typeAmenagement" type="text" class="form-select" th:name="typeAmenagement"
+                                <select id="typeAmenagement" type="text" class="form-select" name="typeAmenagement"
                                         th:value="${typeAmenagement}">
                                     <option value="" disabled selected>Choisir</option>
                                     <option th:each="typeAmenagement : ${typeAmenagements}"
@@ -59,15 +59,22 @@
                             <div class="col-4" style="width: 250px;">
                                 <label class="form-label">Types d’épreuves</label>
                             </div>
+<!--                            <div class="col-12 col-xxl-8 agape-at-least-one-checkbox" id="typeEpreuves">-->
+<!--                            <th:block th:each="typeEpreuve : ${typeEpreuves}">-->
+<!--                                    <div class="form-check">-->
+<!--                                        <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"-->
+<!--                                               th:field="*{typeEpreuves}" th:value="${typeEpreuve}">-->
+<!--                                        <label class="form-check-label" th:for="${typeEpreuve}"-->
+<!--                                               th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>-->
+<!--                                    </div>-->
+<!--                                </th:block>-->
+<!--                            </div>-->
                             <div class="col-12 col-xxl-8">
+                            <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
                                 <th:block th:each="typeEpreuve : ${typeEpreuves}">
-                                    <div id="typeEpreuves" class="form-check agape-at-least-one-checkbox">
-                                        <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
-                                               th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
-                                        <label class="form-check-label" th:for="${typeEpreuve}"
-                                               th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
-                                    </div>
+                                    <option th:id="${typeEpreuve}" th:value="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></option>
                                 </th:block>
+                            </select>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -147,7 +154,7 @@
                                 </div>
                                 <div class="col-12 col-xxl-8">
                                     <select multiple id="classification" th:field="*{classification}" size="1"
-                                            type="text" class="agape-slim-select"
+                                            type="text" class="agape-slim-select-search"
                                             th:value="${currentDossier.classification}">
                                         <option type="text"
                                                 th:checked="${currentDossier.classification.contains(classification)}"
