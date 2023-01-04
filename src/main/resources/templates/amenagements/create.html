@@ -56,13 +56,12 @@
                                     <div class="col-4" style="width: 250px;">
                                         <label class="form-label">Types d’épreuves</label>
                                     </div>
-                                    <div id="typeEpreuves" class="col-12 col-xxl-8 agape-at-least-one-checkbox">
-                                        <th:block th:each="typeEpreuve : ${typeEpreuves}">
-                                            <div class="form-check">
-                                                <input id="typeEpreuve" type="checkbox" class="form-check-input" th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
-                                                <label class="form-check-label" th:for="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></label>
-                                            </div>
-                                        </th:block>
+                                    <div class="col-12 col-xxl-8">
+                                        <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
+                                            <th:block th:each="typeEpreuve : ${typeEpreuves}">
+                                                <option th:id="${typeEpreuve}" th:value="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></option>
+                                            </th:block>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -131,15 +130,12 @@
                                 <div id="classificationDiv" class="d-none">
                                     <div class="row mb-1 align-items-baseline">
                                         <div class="col-4" style="width: 250px;">
-                                            <label class="form-label select-label" th:for="classification">Classification du handicap</label>
+                                            <label class="form-label select-label" th:for="classification">Classification du
+                                                handicap</label>
                                         </div>
                                         <div class="col-12 col-xxl-8">
-                                            <select multiple
-                                                    id="classification"
-                                                    th:field="*{classification}"
-                                                    size="1"
-                                                    type="text"
-                                                    class="agape-slim-select-search"
+                                            <select multiple id="classification" th:field="*{classification}" size="1"
+                                                    type="text" class="agape-slim-select-search"
                                                     th:value="${currentDossier.classification}">
                                                 <option type="text"
                                                         th:checked="${currentDossier.classification.contains(classification)}"
@@ -169,6 +165,5 @@
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
-        <script th:src="@{js/agape.js}"></script>
     </body>
 </html>

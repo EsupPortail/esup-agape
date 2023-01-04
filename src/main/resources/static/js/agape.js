@@ -174,6 +174,7 @@ function unLockClassification() {
 
 function lockClassification() {
     document.getElementById("classificationDiv").classList.add("d-none");
+    document.getElementById("classification").required = false;
 }
 
 function lockForm() {

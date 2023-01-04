@@ -272,11 +272,11 @@
                                                         <br />
                                                         <div class="d-inline">
                                                             <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + '0'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
-                                                            <label th:for="${enumLibelleCodAmL}">Non</label>
+                                                            <label th:for="${enumLibelleCodAmL}" class="me-2">Non</label>
                                                             <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + '1'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1'))}">
-                                                            <label th:for="${enumLibelleCodAmL}">Oui</label>
+                                                            <label th:for="${enumLibelleCodAmL}" class="me-2">Oui</label>
                                                             <input th:name="${enumLibelleCodAmL}" type="radio" th:value="${enumLibelleCodAmL} + 'X'" th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
-                                                            <label th:for="${enumLibelleCodAmL}">Ne sais pas</label>
+                                                            <label th:for="${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
                                                         </div>
                                                     </div>
                                                 </th:block>
