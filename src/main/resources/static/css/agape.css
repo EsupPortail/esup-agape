@@ -87,6 +87,11 @@ select[disabled] > option {
     /* Identifiant pour checkbox at least one required */
 }
 
+.text-bg-import {
+    color: #fff !important;
+    background-color:RGBA(125,125,218,var(--bs-bg-opacity,1)) !important
+}
+
 .slim-select-hack {
     opacity: 0;
     z-index: -1;

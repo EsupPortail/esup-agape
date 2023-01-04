@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
@@ -90,9 +91,14 @@ public class IndividuService {
     }
 
     @Transactional
-    public void syncIndividu(Long id) {
+    public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
+        Dossier dossier = dossierService.getCurrent(id);
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
+        if(dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
+            dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
+            return;
+        }
         if(individuInfos.getEppn() != null && !individuInfos.getEppn().isEmpty()) {
             individu.setEppn(individuInfos.getEppn());
         }
@@ -141,7 +147,11 @@ public class IndividuService {
     public void syncAllIndividus() {
         List<Individu> individus = individuRepository.findAll();
         for (Individu individu : individus) {
-            syncIndividu(individu.getId());
+            try {
+                syncIndividu(individu.getId());
+            } catch (AgapeException e) {
+                logger.warn(e.getMessage());
+            }
         }
         logger.info("Sync individus done");
     }
