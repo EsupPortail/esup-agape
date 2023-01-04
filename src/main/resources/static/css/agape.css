@@ -83,6 +83,10 @@ select[disabled] > option {
     /* Identifiant pour les slimselect */
 }
 
+.agape-at-least-one-checkbox {
+    /* Identifiant pour checkbox at least one required */
+}
+
 .slim-select-hack {
     opacity: 0;
     z-index: -1;

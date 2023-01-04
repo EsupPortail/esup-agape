@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     //Gestion des aménagements autorisation classifications
-
     let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");
     if(autorisationOui != null && autorisationNon != null) {
@@ -89,20 +88,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //Gestion automatique des slimselect
     document.querySelectorAll(`[class*="agape-slim-select"]`).forEach(function (element) {
-        console.info("enable slimselect on : " + element.id);
-        new SlimSelect({
-            select: '#' + element.id,
-            settings: {
-                placeholderText: 'Choisir',
-                searchPlaceholder: 'Rechercher',
-            }
-        });
-        //Hack slimselect required
-        element.style.display = "block";
-        element.style.position = "absolute";
-        element.style.marginTop = "15px";
-        element.style.opacity = 0;
-        element.style.zIndex = -1;
+        if(element.id !== '') {
+            console.info("enable slimselect on : " + element.id);
+            new SlimSelect({
+                select: '#' + element.id,
+                settings: {
+                    placeholderText: 'Choisir',
+                    searchPlaceholder: 'Rechercher',
+                }
+            });
+            //Hack slimselect required
+            element.style.display = "block";
+            element.style.position = "absolute";
+            element.style.marginTop = "15px";
+            element.style.opacity = 0;
+            element.style.zIndex = -1;
+        }
     });
 
     //Gestion du formulaire enquete
@@ -143,6 +144,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
         });
     }
+
+    // Check at least one checkbox is selected
+    document.querySelectorAll(`[class*="agape-at-least-one-checkbox"]`).forEach(function (element) {
+        console.info("Enable at least one checkbox for : " + element.id);
+        atLeastOneCheckbox(element.id)
+    });
 
 });
 
@@ -194,34 +201,33 @@ function textAreaAdjust(element, lineHeight) {
     element.style.height = (lineHeight * count) + "px";
 }
 
-// Check at least one checkbox is selected
+function atLeastOneCheckbox (checkboxName) {
+    const divCheckboxes = document.querySelector('#' + checkboxName);
+    const checkboxes = divCheckboxes.querySelectorAll('input[type=checkbox]');
+    const checkboxLength = checkboxes.length;
+    const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
 
-(function () {
-    const form = document.querySelector('#amenagementForm');
-const checkboxes = form.querySelectorAll('input[type=checkbox]');
-const checkboxLength = checkboxes.length;
-const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+    function init() {
+        if (firstCheckbox) {
+            for (let i = 0; i < checkboxLength; i++) {
+                checkboxes[i].addEventListener('change', checkValidity);
+            }
 
-function init() {
-    if (firstCheckbox) {
-        for (let i = 0; i < checkboxLength; i++) {
-            checkboxes[i].addEventListener('change', checkValidity);
+            checkValidity();
         }
-
-        checkValidity();
     }
-}
 
-function isChecked() {
-    for (let i = 0; i < checkboxLength; i++) {
-        if(checkboxes[i].checked) return true;
+    function isChecked() {
+        for (let i = 0; i < checkboxLength; i++) {
+            if(checkboxes[i].checked) return true;
+        }
+        return false;
     }
-    return false;
-}
 
-function checkValidity() {
-    const errorMessage = !isChecked() ? 'Au moins une épreuve doit être sélectionnée pour poursuivre.' : '';
-    firstCheckbox.setCustomValidity(errorMessage)
+    function checkValidity() {
+        const errorMessage = !isChecked() ? 'Au moins un choix doit être sélectionné pour poursuivre.' : '';
+        firstCheckbox.setCustomValidity(errorMessage)
+    }
+
+    init();
 }
-init();
-})();

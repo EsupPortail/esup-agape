@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-12 col-xxl-8">
                                 <th:block th:each="typeEpreuve : ${typeEpreuves}">
-                                    <div class="form-check">
+                                    <div id="typeEpreuves" class="form-check agape-at-least-one-checkbox">
                                         <input th:id="${typeEpreuve}" type="checkbox" class="form-check-input"
                                                th:field="*{typeEpreuves}" th:value="${typeEpreuve}">
                                         <label class="form-check-label" th:for="${typeEpreuve}"
