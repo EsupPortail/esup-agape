@@ -18,7 +18,7 @@
                     <div class="mb-3">
                         <label class="form-label">Fonction de l’aidant</label>
                         <th:block th:each="fonctionAidant : ${fonctionAidants}">
-                            <div class="form-check">
+                            <div id="fonctionAidant" class="form-check agape-at-least-one-checkbox">
                                 <input class="form-check-input" type="checkbox" name="fonctionAidants" th:value="${fonctionAidant}">
                                 <label class="form-check-label" th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></label>
                             </div>
