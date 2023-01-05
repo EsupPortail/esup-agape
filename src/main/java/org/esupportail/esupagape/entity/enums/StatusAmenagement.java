@@ -3,8 +3,9 @@ package org.esupportail.esupagape.entity.enums;
 public enum StatusAmenagement {
 
     BROUILLON,
-    SUPPRIME,
+    ENVOYE,
     VALIDER_MEDECIN,
     VISER_ADMINISTRATION,
-    REFUSER_ADMINISTRATION
+    REFUSER_ADMINISTRATION,
+    SUPPRIME
 }

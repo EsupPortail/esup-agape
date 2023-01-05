@@ -13,13 +13,11 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.esupportail.esupagape.dtos.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.Autorisation;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.StatusAmenagement;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +29,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AmenagementService {
@@ -40,11 +41,14 @@ public class AmenagementService {
     private final AmenagementRepository amenagementRepository;
     private final DossierService dossierService;
     private final ObjectMapper objectMapper;
+    private final MessageSource messageSource;
 
-    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper) {
+
+    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource) {
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
         this.objectMapper = objectMapper;
+        this.messageSource = messageSource;
     }
 
     public Amenagement getById(Long id) {
@@ -150,22 +154,53 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void getCertificat(Long id, HttpServletResponse httpServletResponse) throws IOException {
-        httpServletResponse.getOutputStream().write(generateCertificat(id));
-    }
-
-    private byte[] generateAvis(Long id) throws IOException {
-        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-         return generatePdf(null, modelBytes);
-    }
-
-    private byte[] generateCertificat(Long id) throws IOException {
-        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+    public void getCertificat(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
+        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+            throw new AgapeException("Le certificat ne peux pas être émis");
+        }
+        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+        httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
+    }
+
+    @Transactional
+    public void getAvis(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        Amenagement amenagement = getById(id);
+        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN) && !amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+            throw new AgapeException("L'avis ne peux pas être émis");
+        }
+        byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+        httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
+    }
+
+    private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes) throws IOException {
         CertificatPdf certificatPdf = new CertificatPdf();
         certificatPdf.setName(amenagement.getDossier().getIndividu().getName());
         certificatPdf.setFirstname(amenagement.getDossier().getIndividu().getFirstName());
+        certificatPdf.setDateOfBirth(amenagement.getDossier().getIndividu().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        certificatPdf.setLibelleFormation(amenagement.getDossier().getLibelleFormation());
+        certificatPdf.setSite(amenagement.getDossier().getSite());
         certificatPdf.setAddress(amenagement.getDossier().getIndividu().getCurrentAddress());
+        certificatPdf.setNumEtu(amenagement.getDossier().getIndividu().getNumEtu());
+        if(amenagement.getTypeAmenagement().equals(TypeAmenagement.CURSUS)) {
+            certificatPdf.setEndDate("Jusqu'à la fin du cursus");
+        } else {
+            certificatPdf.setEndDate(amenagement.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        }
+        certificatPdf.setTypeEpreuves(amenagement.getTypeEpreuves().stream().map(typeEpreuve -> messageSource.getMessage("amenagement.typeEpreuve." + typeEpreuve.name(), null, Locale.getDefault())).collect(Collectors.joining(", ")));
+        certificatPdf.setTempsMajore(messageSource.getMessage("amenagement.tempsMajore." + amenagement.getTempsMajore().name(), null, Locale.getDefault()));
+        String amenagementsWithNumbers = "";
+        int i = 1;
+        for(String line : amenagement.getAmenagementText().split("\r\n")) {
+            amenagementsWithNumbers += i + " - " + line + "\r\n";
+            i++;
+        }
+        certificatPdf.setAmenagementText(amenagementsWithNumbers);
+        certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        certificatPdf.setNomMedecin(amenagement.getNomMedecin());
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+            //ajouter des données du visa
+        }
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
         return generatePdf(objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
     }

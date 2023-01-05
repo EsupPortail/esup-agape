@@ -161,7 +161,7 @@
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <i class="bi bi-send-fill"></i>
                             </button>
-                            <button type="submit" class="btn btn-success" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                            <button type="submit" class="btn btn-success" th:if="${true || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <svg style="color: white; width: 20px; margin-bottom: 3px; margin-left: 1px;"
                                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                     <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
@@ -169,8 +169,11 @@
                                           fill="white"></path>
                                 </svg>
                             </button>
-                            <a th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${dossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary">
-                                <i class="bi bi-download"></i>
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${dossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
+                                <i class="bi bi-file-earmark-medical-fill" style="font-size: 22px"></i>
+                            </a>
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${dossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                                <i class="bi bi-file-earmark-lock-fill" style="font-size: 22px"></i>
                             </a>
                         </div>
                     </div>

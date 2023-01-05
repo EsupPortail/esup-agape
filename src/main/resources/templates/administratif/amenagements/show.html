@@ -14,10 +14,14 @@
                             <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a th:href="@{/administratif/amenagements(id=${amenagement.id})}" class="text-center">Liste des aménagements</a>
+                            <a th:href="@{/administratif/amenagements}" class="text-center">Liste des aménagements</a>
                         </li>
                     </ol>
                 </nav>
+                <div class="col-12 text-center" style="height: 90%">
+                <embed th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="50%" height="100%" aria-expanded="false"/>
+                </div>
+                <div class="d-none">
                 <div class="ms-4 me-4 mt-4">
                     <div class="row text-center" style="border: 2px solid black; background: cadetblue;">
                         <h4 th:text="'Aménagements d\'examen de ' +${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + #strings.capitalize(#strings.toLowerCase(amenagement.dossier.individu.firstName))}"></h4>
@@ -116,6 +120,7 @@
 
 
                     </form>
+                </div>
                 </div>
             </div>
         </main>

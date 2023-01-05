@@ -11,7 +11,7 @@ public class CertificatPdf {
     String address;
     String endDate;
     String typeEpreuves;
-    String tempMajore;
+    String tempsMajore;
     String amenagementText;
     String valideMedecinDate;
     String nomMedecin;
@@ -90,12 +90,12 @@ public class CertificatPdf {
         this.typeEpreuves = typeEpreuves;
     }
 
-    public String getTempMajore() {
-        return tempMajore;
+    public String getTempsMajore() {
+        return tempsMajore;
     }
 
-    public void setTempMajore(String tempMajore) {
-        this.tempMajore = tempMajore;
+    public void setTempsMajore(String tempsMajore) {
+        this.tempsMajore = tempsMajore;
     }
 
     public String getAmenagementText() {

@@ -96,11 +96,22 @@ public class AmenagementController {
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getLastFiles(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException {
+    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"certificat_" + amenagementId + ".pdf\"");
         amenagementService.getCertificat(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"certificat_" + amenagementId + ".pdf\"");
+        amenagementService.getAvis(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);
     }

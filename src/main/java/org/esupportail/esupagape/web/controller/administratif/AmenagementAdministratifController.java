@@ -3,19 +3,21 @@ package org.esupportail.esupagape.web.controller.administratif;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,28 @@ public class AmenagementAdministratifController {
         model.addAttribute("dossiers", dossier);
         model.addAttribute("amenagement",amenagementService.getById(amenagementId));
         return "administratif/amenagements/show";
+    }
+
+    @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_" + amenagementId + ".pdf\"");
+        amenagementService.getAvis(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_" + amenagementId + ".pdf\"");
+        amenagementService.getCertificat(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

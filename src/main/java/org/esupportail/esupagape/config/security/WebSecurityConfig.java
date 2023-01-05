@@ -110,6 +110,7 @@ public class WebSecurityConfig {
                 .antMatchers("/dossiers/*/amenagements", "/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MEDECIN")
                 .antMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")
                 .antMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE");
+        http.headers().frameOptions().sameOrigin();
         return http.build();
     }
 
