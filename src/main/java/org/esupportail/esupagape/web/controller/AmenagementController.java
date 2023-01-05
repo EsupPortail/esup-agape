@@ -8,12 +8,16 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/dossiers/{id}/amenagements")
@@ -89,4 +93,16 @@ public class AmenagementController {
 
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
     }
+
+    @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getLastFiles(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"certificat_" + amenagementId + ".pdf\"");
+        amenagementService.getCertificat(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,16 @@
 package org.esupportail.esupagape.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
+import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.esupportail.esupagape.dtos.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.Autorisation;
@@ -9,22 +20,31 @@ import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AmenagementService {
 
     private final AmenagementRepository amenagementRepository;
     private final DossierService dossierService;
+    private final ObjectMapper objectMapper;
 
-    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService) {
+    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper) {
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
+        this.objectMapper = objectMapper;
     }
 
     public Amenagement getById(Long id) {
@@ -127,6 +147,49 @@ public class AmenagementService {
         } else {
             throw new AgapeException("Impossible de viser un aménagement qui n'est pas au statut validé par le medecin");
         }
+    }
+
+    @Transactional
+    public void getCertificat(Long id, HttpServletResponse httpServletResponse) throws IOException {
+        httpServletResponse.getOutputStream().write(generateCertificat(id));
+    }
+
+    private byte[] generateAvis(Long id) throws IOException {
+        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+         return generatePdf(null, modelBytes);
+    }
+
+    private byte[] generateCertificat(Long id) throws IOException {
+        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+        Amenagement amenagement = getById(id);
+        CertificatPdf certificatPdf = new CertificatPdf();
+        certificatPdf.setName(amenagement.getDossier().getIndividu().getName());
+        certificatPdf.setFirstname(amenagement.getDossier().getIndividu().getFirstName());
+        certificatPdf.setAddress(amenagement.getDossier().getIndividu().getCurrentAddress());
+        TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
+        return generatePdf(objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
+    }
+
+    private byte[] generatePdf(Map<String, String> datas, byte[] model) throws IOException {
+        PDDocument pdDocument = PDDocument.load(model);
+        PDAcroForm pdAcroForm = pdDocument.getDocumentCatalog().getAcroForm();
+        byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
+        PDFont pdFont = PDTrueTypeFont.load(pdDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
+        PDResources resources = pdAcroForm.getDefaultResources();
+        resources.put(COSName.getPDFName("LiberationSans"), pdFont);
+        pdAcroForm.setDefaultResources(resources);
+        List<PDField> fields = pdAcroForm.getFields();
+        for(PDField pdField : fields) {
+            pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
+            String fieldName = pdField.getPartialName();
+            if(datas.containsKey(fieldName)) {
+                pdField.setValue(datas.get(fieldName));
+            }
+        }
+        pdAcroForm.flatten();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        pdDocument.save(out);
+        return out.toByteArray();
     }
 
 }
