@@ -156,9 +156,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                         <div class="float-buttons">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal">
                                 <i class="bi bi-send-fill"></i>
                             </button>
                             <button type="submit" class="btn btn-success">

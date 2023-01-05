@@ -68,6 +68,7 @@ public class AmenagementService {
     @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
+        if(amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)){
         amenagementToUpdate.setMailMedecin(amenagement.getMailMedecin());
         amenagementToUpdate.setNomMedecin(amenagement.getNomMedecin());
         amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
@@ -79,7 +80,7 @@ public class AmenagementService {
         amenagementToUpdate.setEndDate(amenagement.getEndDate());
         amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
         amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
-        updateClassification(amenagementToUpdate);
+        updateClassification(amenagementToUpdate);}
     }
 
     private static void updateClassification(Amenagement amenagement) {
