@@ -93,16 +93,14 @@
                             <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                         </div>
                         <div class="row">
-                            <div id="fonctionAidant" class="col-6 mb-3 agape-at-least-one-checkbox">
-                                <label class="form-label">Fonction de l’aidant</label>
-                                <th:block th:each="fonctionAidant : ${fonctionAidants}">
-                                    <div class="form-check">
-                                        <input disabled class="form-check-input" type="checkbox" name="fonctionAidants" th:value="${fonctionAidant}" th:checked="${aideHumaine.fonctionAidants.contains(fonctionAidant)}">
-                                        <label class="form-check-label" th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></label>
-                                    </div>
-                                </th:block>
+                            <div class="col-12 mb-3">
+                                <select id="fonctionAidants" class="mb-3 agape-slim-select" name="fonctionAidants" th:field="*{fonctionAidants}" size="1" multiple required>
+                                    <th:block th:each="fonctionAidant : ${fonctionAidants}">
+                                        <option th:id="${fonctionAidant}" th:value="${fonctionAidant}" th:text="#{'aides.fonctionAidant.' +${fonctionAidant}}"></option>
+                                    </th:block>
+                                </select>
                             </div>
-                            <div class=" col-6 mb-3">
+                            <div class=" col-12 mb-3">
                                 <label class="form-label">Pieces justificatives</label>
                                 <div class="form-check">
                                     <input disabled class="form-check-input" type="checkbox" name="rib" th:checked="${aideHumaine.rib}">
