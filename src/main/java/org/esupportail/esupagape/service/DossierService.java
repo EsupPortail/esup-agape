@@ -1,13 +1,18 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
+import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
@@ -19,7 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,8 +43,14 @@ public class DossierService {
 
     private final DossierRepository dossierRepository;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository) {
+    private final DocumentRepository documentRepository;
+
+    private final DocumentService documentService;
+
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService) {
         this.utilsService = utilsService;
+        this.documentRepository = documentRepository;
+        this.documentService = documentService;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
@@ -177,4 +190,31 @@ public class DossierService {
     public List<ComposanteDto> getAllComposantes() {
         return dossierRepository.findAllComposantes();
     }
+
+    @Transactional
+    public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
+        Dossier dossier = getById(id);
+        try {
+            for(MultipartFile multipartFile : multipartFiles) {
+                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Document.class.getTypeName(), dossier);
+                dossier.getAttachments().add(attachment);
+            }
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public List<DocumentDto> getAttachements(Long id) {
+        return documentRepository.findByParentId(id);
+    }
+
+    @Transactional
+    public void deleteAttachment(Long id, Long attachmentId) throws AgapeException {
+        Dossier dossier = getById(id);
+        Document attachment = documentService.getById(attachmentId);
+        dossier.getAttachments().remove(attachment);
+        documentService.delete(attachment);
+    }
+
 }

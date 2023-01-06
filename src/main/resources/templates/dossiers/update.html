@@ -267,6 +267,33 @@
 <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
                     </form>
+                    <div class="col-12 col-xl-6">
+                        <label th:for="date" class="form-label">Pièces jointes</label>
+                        <table class="table table-striped" th:if="${attachments.size() > 0}">
+                            <tr>
+                                <th>Nom</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="attachment : ${attachments}">
+                                <tr>
+                                    <td class="align-middle">
+                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <form th:action="'/dossiers/' + ${currentDossier.id}  + '/delete-attachment/' + ${attachment.id}"
+                                                th:method="delete"
+                                                enctype="multipart/form-data">
+                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </table>
+                        <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id}  + '/add-attachments'" th:method="post" enctype="multipart/form-data">
+                            <label class="form-label">Ajouter un fichier</label>
+                            <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
+                            <input type="submit" class="btn btn-primary" value="Ajouter">
+                        </form>
                     <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -284,6 +311,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
