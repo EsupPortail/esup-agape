@@ -127,7 +127,7 @@ public class DossierController {
     @PostMapping("/{id}/add-attachments")
     public String addAttachments(@PathVariable Long id, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
         dossierService.addAttachment(id, multipartFiles);
-        return "redirect:/dossiers/" + dossier.getId()  + "/update";
+        return "redirect:/dossiers/" + dossier.getId();
     }
     @GetMapping(value = "/{id}/get-attachment/{attachmentId}")
     @ResponseBody
@@ -139,6 +139,6 @@ public class DossierController {
     @DeleteMapping(value = "/{id}/delete-attachment/{attachmentId}")
     public String getLastFileFromSignRequest(@PathVariable("id") Long dossierId, @PathVariable("attachmentId") Long attachmentId, Dossier dossier) throws AgapeException {
         dossierService.deleteAttachment(dossierId, attachmentId);
-        return "redirect:/dossiers/" + dossier.getId() + "/entretiens/" + dossierId + "/update";
+        return "redirect:/dossiers/" + dossier.getId();
     }
 }

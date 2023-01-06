@@ -196,7 +196,7 @@ public class DossierService {
         Dossier dossier = getById(id);
         try {
             for(MultipartFile multipartFile : multipartFiles) {
-                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Document.class.getTypeName(), dossier);
+                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getTypeName(), dossier);
                 dossier.getAttachments().add(attachment);
             }
         } catch (IOException e) {
