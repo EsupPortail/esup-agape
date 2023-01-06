@@ -2,70 +2,63 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div th:fragment="side" class="agape-side bg-light position-sticky me-2">
         <div class="p-2">
-            <span class="fs-6 card text-bg-primary"><span class="ms-3">Fiche </span></span>
-            <hr>
+            <span class="fs-6 card text-bg-primary mb-3 ps-3">Fiche</span>
             <div class="container">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-6">
                         <a href="#" class="d-flex align-items-center link-dark text-decoration-none">
                             <img th:src="'/dossiers/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="90" height="100">
                         </a>
                     </div>
-                    <div class="col">
-                        <dt class="col-sm-6">Nom</dt>
-                        <dd class="col-sm-6" th:utext="${currentDossier.individu.name}"></dd>
-                        <dt class="col-sm-6">Prénom</dt>
-                        <dd class="col-sm-6" th:utext="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>
+                    <div class="col-6">
+                        <dt>Nom</dt>
+                        <dd th:text="${currentDossier.individu.name}"></dd>
+                        <dt>Prénom</dt>
+                        <dd th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>
                     </div>
                 </div>
+                <dl class="row">
+                    <dt class="col-sm-5">N° Étudiant</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.numEtu}"></dd>
+                    <dt class="col-sm-5">Login</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.eppn}"></dd>
+                    <dt class="col-sm-5">Date de naissance</dt>
+                    <dd class="col-sm-7" th:text="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
+                    <dt class="col-sm-5">Type d'individu</dt>
+                    <dd class="col-sm-7" th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
+                    <dt>Statut du dossier</dt>
+                    <dd>
+                        <th:block th:switch="${currentDossier.statusDossier}">
+                            <span th:case="${currentDossier.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span>
+                            <span th:case="${currentDossier.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-import"></span>
+                            <span th:case="${currentDossier.statusDossier.AJOUT_MANUEL}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span>
+                            <span th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span>
+                            <span th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg" style="background-color:#d3d3d3;"></span>
+                            <span th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span>
+                            <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span>
+                            <span th:case="${currentDossier.statusDossier.DESINSCRIT}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span>
+                        </th:block>
+                    </dd>
+                    <dt class="col-sm-5">Genre</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>
+                    <dt class="col-sm-5">Nationalité</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.nationalite}"></dd>
+                </dl>
             </div>
-            <dl class="row">
-                <dt class="col-sm-6">N° Étudiant</dt>
-                <dd class="col-sm-6" th:utext="${currentDossier.individu.numEtu}"></dd>
-                <dt>Login</dt>
-                <dd th:utext="${currentDossier.individu.eppn}"></dd>
-                <dt class="col-sm-6">Date de naissance</dt>
-                <dd class="col-sm-6" th:utext="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
-                <dt class="col-sm-6">Type d'individu</dt>
-                <dd class="col-sm-6" th:utext="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
-                <dt class="col-sm-6">Statut du dossier</dt>
-                <th:block th:switch="${currentDossier.statusDossier}">
-                    <dd th:case="${currentDossier.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span></dd>
-                    <dd class="col-sm-6" th:case="${currentDossier.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}"
-                            class="badge text-bg-import"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
-                            class="badge text-bg-info"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}">
-                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}">
-                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}"
-                                class="badge text-bg" style="background-color:#d3d3d3;"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}">
-                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
-                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></dd>
-                    <dd th:case="${currentDossier.statusDossier.DESINSCRIT}">
-                        <span th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span></dd>
-                </th:block>
-                <dt class="col-sm-6">Genre</dt>
-                <dd class="col-sm-6" th:utext="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>
-                <dt class="col-sm-6">Nationalité</dt>
-                <dd class="col-sm-6" th:utext="${currentDossier.individu.nationalite}"></dd>
-            </dl>
-            <span class="fs-6 card text-bg-primary"><span class="ms-3">Contacts</span></span>
-            <hr>
-            <dl class="row">
-                <dt>Email universitaire</dt>
-                <dd th:utext="${currentDossier.individu.emailEtu}"></dd>
-                <dt>Email personnel</dt>
-                <dd th:utext="${currentDossier.individu.emailPerso}"></dd>
-                <dt class="col-sm-6">Téléphone portable</dt>
-                <dd class="col-sm-6" th:utext="${currentDossier.individu.mobilPhone}"></dd>
-                <dt class="col-sm-6">Téléphone fixe</dt>
-                <dd class="col-sm-6" th:utext="${currentDossier.individu.fixPhone}"></dd>
-            </dl>
-            <span class="fs-6 card text-bg-primary"><span class="ms-3">Adresses</span></span>
-            <hr>
+            <span class="fs-6 card text-bg-primary mt-3 mb-3 ps-3">Contacts</span>
+            <div class="container">
+                <dl>
+                    <dt>Email universitaire</dt>
+                    <dd th:text="${currentDossier.individu.emailEtu}"></dd>
+                    <dt>Email personnel</dt>
+                    <dd th:text="${currentDossier.individu.emailPerso}"></dd>
+                    <dt class="col-sm-5">Téléphone portable</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.mobilPhone}"></dd>
+                    <dt class="col-sm-5">Téléphone fixe</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixPhone}"></dd>
+                </dl>
+            </div>
+            <span class="fs-6 card text-bg-primary mb-3 ps-3">Adresses</span>
             <div class="accordion" id="accordionAddress">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
