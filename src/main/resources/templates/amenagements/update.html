@@ -15,7 +15,7 @@
                     <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a th:href="@{/dossiers/{id}/amenagements(id=${dossier.id})}" class="text-center ">Liste des aménagements</a>
+                    <a th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" class="text-center ">Liste des aménagements</a>
                 </li>
             </ol>
         </nav>
@@ -169,10 +169,10 @@
                                           fill="white"></path>
                                 </svg>
                             </button>
-                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${dossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
                                 <i class="bi bi-file-earmark-medical-fill" style="font-size: 22px"></i>
                             </a>
-                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${dossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
                                 <i class="bi bi-file-earmark-lock-fill" style="font-size: 22px"></i>
                             </a>
                         </div>
@@ -186,7 +186,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="validationModalLabel">Envoi à l'administration</h1>
+                <h1 class="modal-title fs-5" id="validationModalLabel">Envoi à l’administration</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:method="post"

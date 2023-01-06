@@ -17,6 +17,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -64,12 +65,13 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void create(Amenagement amenagement, Long idDossier) {
+    public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) {
         Dossier dossier = dossierService.getById(idDossier);
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
         }
         amenagement.setDossier(dossier);
+        amenagement.setNomMedecin(personLdap.getDisplayName());
         updateClassification(amenagement);
         amenagementRepository.save(amenagement);
     }
@@ -143,13 +145,27 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void viserAdministration(Long id) throws AgapeException {
+    public void validationAdministration(Long id, PersonLdap personLdap) throws AgapeException {
         Amenagement amenagement = getById(id);
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN)) {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VISER_ADMINISTRATION);
+            amenagement.setNomValideur(personLdap.getDisplayName());
         } else {
-            throw new AgapeException("Impossible de viser un aménagement qui n'est pas au statut validé par le medecin");
+            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le medecin");
+        }
+    }
+
+    @Transactional
+    public void refusAdministration(Long id, PersonLdap personLdap, String motif) throws AgapeException {
+        Amenagement amenagement = getById(id);
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN)) {
+            amenagement.setAdministrationDate(LocalDateTime.now());
+            amenagement.setStatusAmenagement(StatusAmenagement.REFUSER_ADMINISTRATION);
+            amenagement.setNomValideur(personLdap.getDisplayName());
+            amenagement.setMotifRefus(motif);
+        } else {
+            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le medecin");
         }
     }
 
@@ -200,6 +216,8 @@ public class AmenagementService {
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
             //ajouter des données du visa
+            certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
         return generatePdf(objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
@@ -226,7 +244,4 @@ public class AmenagementService {
         pdDocument.save(out);
         return out.toByteArray();
     }
-
 }
-
-

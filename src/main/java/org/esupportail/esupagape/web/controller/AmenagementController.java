@@ -43,14 +43,14 @@ public class AmenagementController {
     }
 
     @PostMapping("/create")
-    public String createSave(@Valid Amenagement amenagement, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String createSave(@Valid Amenagement amenagement, Dossier dossier, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         amenagement.setId(null);
-        amenagementService.create(amenagement, dossier.getId());
+        amenagementService.create(amenagement, dossier.getId(), personLdap);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("/{amenagementId}/update")
-    public String update(@PathVariable Long amenagementId, Dossier dossier, Model model) throws AgapeJpaException {
+    public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         setModel(model);
         return "amenagements/update";

@@ -7,6 +7,18 @@
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
+            <div th:replace="fragments/side-administratif :: side"></div>
+            <div class="float-buttons">
+                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+                    <i class="bi bi-check-lg"></i>
+                </button>
+                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                    <i class="bi bi-file-earmark-lock-fill" style="font-size: 22px"></i>
+                </a>
+            </div>
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -18,112 +30,58 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="col-12 text-center" style="height: 90%">
-                <embed th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="50%" height="100%" aria-expanded="false"/>
-                </div>
-                <div class="d-none">
-                <div class="ms-4 me-4 mt-4">
-                    <div class="row text-center" style="border: 2px solid black; background: cadetblue;">
-                        <h4 th:text="'Aménagements d\'examen de ' +${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + #strings.capitalize(#strings.toLowerCase(amenagement.dossier.individu.firstName))}"></h4>
-                        <div class="row">
-                            <div class="col-12 col-xxl-6">
-                                <h5 th:text="'Statut administratif:' + ' ' + #{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></h5>
-                            </div>
-                            <div class="col-12 col-xxl-6">
-                                <h5 th:text="${amenagement.mailIndividu} == false ? 'Statut mail de l\'individu: Envoyé': 'Statut mail de l\'individu: Non envoyé'"></h5>
-                            </div>
-                        </div>
+                <div class="col-12 text-center" style="margin-top: 50px; height: calc(100vh - 200px);">
+                <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="90%" height="100%" aria-expanded="false"/>
+                <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="90%" height="100%" aria-expanded="false"/>
+                    <div class="alert alert-danger" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSER_ADMINISTRATION)}">
+                        <p>Cet aménagement a été refusé par l’administration avec le motif suivant</p>
+                        <p th:text="${amenagement.motifRefus}"></p>
                     </div>
-                </div>
-                <div class="ms-4 me-4">
-                    <div class="row mt-2 text-center" style="border: 2px solid black;">
-                        <span>CERTIFICAT D'AMENAGEMENT PRECISANT LES MESURES PARTICULIERES DES EXAMENS ET CONCOURS PACES POUR LES ETUDIANTS DE L'UNIVERSITE DE ROUEN</span>
-                    </div>
-                </div>
-                <div class="mt-2 text-center">
-                    <p style="font-size: 10pt;"> Loi n°2005-102 du 11 fevrier 2005<br> Pour l’egalité des droits et des chances, la participation et la citoyenneté des personnes handicapées.<br> Décret n°2005-1617 du 21 Decembre 2005 (B.O. n°3 du 09 Janvier 2006)<br> Circulaire n°2011-220 du 27 Decembre 2011(B.O. n°2 du 12 janvier 2012)
-                    </p>
-                </div>
-
-                <div class="mt-2 ms-4 me-4">
-                    <form id="amenagement" th:method="put" th:action="@{/administratif/amenagements/{amenagementId}/show(amenagementId=${amenagement.id})}" th:object="${amenagement}">
-                        <div class="m-3">
-                            <div class="row">
-                                <div class="col-12 col-xxl-6">
-                                    <dl class="row">
-                                        <dt class="col-sm-4">N° Étudiant:</dt>
-                                        <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.numEtu}"></dd>
-                                        <dt class="col-sm-4">Nom:</dt>
-                                        <dd class="col-sm-8" th:utext="${#strings.toUpperCase(amenagement.dossier.individu.name)}"></dd>
-                                        <dt class="col-sm-4">Prénom:</dt>
-                                        <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.firstName}"></dd>
-                                        <dt class="col-sm-4">Née le:</dt>
-                                        <dd class="col-sm-8" th:utext="${#temporals.format(amenagement.dossier.individu.dateOfBirth, 'dd/MM/yyyy')}"></dd>
-                                        <dt class="col-sm-4">Adresse:</dt>
-                                        <dd class="col-sm-8" th:utext="${amenagement.dossier.individu.currentAddress}"></dd>
-                                        <dt class="col-sm-4">Etablissement:</dt>
-                                        <dd class="col-sm-8" th:utext="${amenagement.dossier.site}"></dd>
-                                    </dl>
-                                </div>
-                                <div class="row mt-2 text-center" style="border: 2px solid black;">
-                                    <span>MEDECIN DESIGNE PAR LA C.D.A.P.H DU DEPARTEMENT 76 </span>
-                                </div>
-                                <div class="col-12 col-xxl-6 mt-4">
-                                    <dl class="row">
-                                        <dt class="col-sm-4">Date de fin de l'aménagement:</dt>
-                                        <dd class="col-sm-8" th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
-                                        <dt class="col-sm-4">Types d'épreuves concernés:</dt>
-                                        <dd class="col-sm-8">
-                                            <ul class="list-group" th:each="typeEpreuve : ${amenagement.getTypeEpreuves()}">
-                                                <li th:text="#{'amenagement.typeEpreuve.' + ${typeEpreuve}}"></li>
-                                            </ul>
-                                        </dd>
-                                        <dt class="col-sm-4">Autres types d'épreuves:</dt>
-                                        <dd class="col-sm-8"  th:text="${amenagement.autresTypeEpreuve}">
-                                        </dd>
-                                        <dt class="col-sm-4">Temps majoré:</dt>
-                                        <dd class="col-sm-8" th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></dd>
-                                        <dt class="col-sm-4">Autres temps majorés:</dt>
-                                        <dd class="col-sm-8" th:text="${amenagement.autresTempsMajores}"></dd>
-                                        <dt class="col-sm-4">Aménagements:</dt>
-                                        <dd class="col-sm-8">
-                                            <ul class="list-group">
-                                                <th:block th:each="textAmenagement, iterator : ${amenagement.amenagementText.split('\r\n')}">
-                                                    <li th:text="${iterator.index + 1} + ' - ' + ${textAmenagement}"></li>
-                                                </th:block>
-                                            </ul>
-                                        </dd>
-                                    </dl>
-                                </div>
-                                <div class="mt-4 row text-center" th:if="${{amenagement.nomMedecin != null || amenagement.nomValideur != null}}">
-                                    <div class="col-6">
-                                        <p th:text="' Avis établi à Mont Saint Aignan le :' + ' ' +${#temporals.format(amenagement.valideMedecinDate, 'dd/MM/yyyy')}"></p>
-                                        <h5 th:text="'Nom du médecin:' +' '+${amenagement.nomMedecin}"></h5>
-                                    </div>
-                                    <div class="col-6">
-                                        <p th:text="'Avis validé par l\'administration à Mont Saint Aignan le :' + ' ' +${#temporals.format(amenagement.administrationDate, 'dd/MM/yyyy')}">
-                                            Avis validé par l'administration à Mont Saint Aignan le :
-                                        </p>
-                                        <h5 th:text="'Nom du valideur:' +' '+${amenagement.nomValideur}"></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <p style="font-size: 14px;">Ce document est un avis transmis à l’autorité administrative pour décision.</p>
-                            <p style="font-size: 14px;">Les recours suivants contre cette décision peuvent être intentés dans un délai de deux mois:</p>
-                            <ul style="font-style: italic;font-size: 14px;">
-                                <li>Le recours gracieux ou hierarchique devant le président de l’Université</li>
-                                <li>Le recours contentieux devant le tribunal administratif de Rouen</li>
-                            </ul>
-                        </div>
-
-
-                    </form>
-                </div>
                 </div>
             </div>
         </main>
+        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="validationModalLabel">Valider l’aménagement d’examen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post"
+                          th:action="@{/administratif/amenagements/{amenagementId}/validation(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer la validation de l’aménagement
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="refusModalLabel">Refuser l’aménagement d’examen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post"
+                          th:action="@{/administratif/amenagements/{amenagementId}/refus(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer le refus de l’aménagement et de préciser un motif
+                            <textarea name="motif" required class="form-control"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-danger">Refuser</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <footer th:replace="fragments/footer :: black"></footer>
     </body>
 </html>

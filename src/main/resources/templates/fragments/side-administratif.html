@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="amenagement" type="org.esupportail.esupagape.entity.Amenagement"*/-->
+    <div th:fragment="side" class="agape-side bg-light position-sticky me-2">
+        <div class="p-2">
+            <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Aménagement</span></span>
+            <div class="container">
+                <dt class="col-sm-6">Composante</dt>
+                <dd class="col-sm-6" th:text="${amenagement.dossier.composante}"></dd>
+                <dt class="col-sm-6">Statut</dt>
+                <dd class="col-sm-6" th:text="${amenagement.statusAmenagement}"></dd>
+                <dt class="col-sm-6">Nom du médecin</dt>
+                <dd class="col-sm-6" th:text="${amenagement.nomMedecin}"></dd>
+                <dt class="col-sm-6">Date de fin</dt>
+                <dd class="col-sm-6" th:text="${amenagement.typeAmenagement}"></dd>
+            </div>
+            <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Information sur l'individu</span></span>
+            <div class="container">
+                <dt class="col-sm-6">Type d’individu</dt>
+                <dd class="col-sm-6" th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
+                <dt class="col-sm-6">N° Étudiant</dt>
+                <dd class="col-sm-6" th:text="${currentDossier.individu.numEtu}"></dd>
+                <dt class="col-sm-6">Nom</dt>
+                <dd class="col-sm-6" th:text="${currentDossier.individu.name}"></dd>
+                <dt class="col-sm-6">Prénom</dt>
+                <dd class="col-sm-6" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>
+                <dt class="col-sm-6">Date de naissance</dt>
+                <dd class="col-sm-6" th:text="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}"></dd>
+                <dt>Email universitaire</dt>
+                <dd th:text="${currentDossier.individu.emailEtu}"></dd>
+                <dt>Email personnel</dt>
+                <dd th:text="${currentDossier.individu.emailPerso}"></dd>
+                <dt class="col-sm-6">Téléphone portable</dt>
+                <dd class="col-sm-6" th:text="${currentDossier.individu.mobilPhone}"></dd>
+                <dt class="col-sm-6">Téléphone fixe</dt>
+                <dd class="col-sm-6" th:text="${currentDossier.individu.fixPhone}"></dd>
+            </div>
+        </div>
+    </div>
+</html>
