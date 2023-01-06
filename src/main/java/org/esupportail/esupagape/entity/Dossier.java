@@ -103,6 +103,9 @@ public class Dossier {
     @OneToOne(cascade = CascadeType.REMOVE)
     private Enquete enquete;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> attachments;
+
     public Long getId() {
         return id;
     }
@@ -366,4 +369,13 @@ public class Dossier {
     public void setEnquete(Enquete enquete) {
         this.enquete = enquete;
     }
+
+    public List<Document> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Document> attachments) {
+        this.attachments = attachments;
+    }
+
 }
