@@ -206,11 +206,12 @@ public class DossierService {
 
     @Transactional
     public List<DocumentDto> getAttachements(Long id) {
-        return documentRepository.findByParentId(id);
+        return documentRepository.findByDossierId(id);
     }
 
     @Transactional
-    public void deleteAttachment(Long id, Long attachmentId) throws AgapeException {
+    public void deleteAttachment(Long id, Long attachmentId) {
+        //if parentType == org.esupportail.esupagape.entity.Dossier
         Dossier dossier = getById(id);
         Document attachment = documentService.getById(attachmentId);
         dossier.getAttachments().remove(attachment);

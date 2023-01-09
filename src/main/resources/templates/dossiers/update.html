@@ -255,7 +255,8 @@
                         <div class="d-inline">
                             <div class="float-buttons">
                                 <button title="Modifier les informations de l'individu" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="bi bi-person-fill-gear" style="font-size: 20px;"></i></button>
-                                <button title="Voir les notes" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notes-modal" type="button"><i class="bi bi-music-note-list"></i></button>
+                                <button title="Voir les notes" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="bi bi-music-note-list"></i></button>
+                                <button title="Voir les notes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="bi bi-paperclip"></i></button>
                                 <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning"><i class="bi bi-pencil"></i></button>
                                 <button onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none"><i class="bi bi-x-lg"></i></button>
                                 <button id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
@@ -267,53 +268,70 @@
 <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
                     </form>
-                    <div class="col-12 col-xl-6">
-                        <label th:for="date" class="form-label">Pièces jointes</label>
-                        <table class="table table-striped" th:if="${attachments.size() > 0}">
-                            <tr>
-                                <th>Nom</th>
-                                <th></th>
-                            </tr>
-                            <th:block th:each="attachment : ${attachments}">
-                                <tr>
-                                    <td class="align-middle">
-                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
-                                    </td>
-                                    <td class="align-middle">
-                                        <form th:action="'/dossiers/' + ${currentDossier.id}  + '/delete-attachment/' + ${attachment.id}"
-                                                th:method="delete"
-                                                enctype="multipart/form-data">
-                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </th:block>
-                        </table>
-                        <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id}  + '/add-attachments'" th:method="post" enctype="multipart/form-data">
-                            <label class="form-label">Ajouter un fichier</label>
-                            <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
-                            <input type="submit" class="btn btn-primary" value="Ajouter">
-                        </form>
-                    <div class="modal fade" id="notes-modal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Notes</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p th:text="${extendedInfos.noteS1}"></p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             </div>
         </main>
+        <div class="modal fade" id="notesModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Notes</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p th:text="${extendedInfos.noteS1}"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="pjModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="pjModalLabel">Pièces jointes</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                            <label th:for="date" class="form-label">Pièces jointes</label>
+                            <table class="table table-striped" th:if="${attachments.size() > 0}">
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Type</th>
+                                    <th></th>
+                                </tr>
+                                <th:block th:each="attachment : ${attachments}">
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
+                                        </td>
+                                        <td th:text="${attachment.parentType}">
+
+                                        </td>
+                                        <td class="align-middle">
+                                            <form th:action="'/dossiers/' + ${currentDossier.id}  + '/delete-attachment/' + ${attachment.id}"
+                                                  th:method="delete"
+                                                  enctype="multipart/form-data">
+                                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </table>
+                            <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id}  + '/add-attachments'" th:method="post" enctype="multipart/form-data">
+                                <label class="form-label">Ajouter un fichier</label>
+                                <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
+                                <input type="submit" class="btn btn-primary" value="Ajouter">
+                            </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
         <div th:replace="individus/modal-update :: update"></div>

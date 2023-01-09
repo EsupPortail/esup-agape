@@ -11,4 +11,5 @@ import java.util.List;
 public interface DocumentRepository extends CrudRepository<Document, Long>  {
     List<DocumentDto> findByParentId(Long parentId);
     List<DocumentDto> findByDossier(Dossier dossier);
+    List<DocumentDto> findByDossierId(Long id);
 }
