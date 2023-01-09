@@ -332,6 +332,11 @@
                 </div>
             </div>
         </div>
+        <script th:if="${returnModPJ}">
+            document.getElementById('pjModal').classList.toggle("fade");
+            new bootstrap.Modal(document.getElementById('pjModal')).show();
+            document.getElementById('pjModal').classList.toggle("fade");
+        </script>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
         <div th:replace="individus/modal-update :: update"></div>
