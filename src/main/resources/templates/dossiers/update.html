@@ -256,7 +256,7 @@
                             <div class="float-buttons">
                                 <button title="Modifier les informations de l'individu" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="bi bi-person-fill-gear" style="font-size: 20px;"></i></button>
                                 <button title="Voir les notes" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="bi bi-music-note-list"></i></button>
-                                <button title="Voir les notes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="bi bi-paperclip"></i></button>
+                                <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="bi bi-paperclip"></i></button>
                                 <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning"><i class="bi bi-pencil"></i></button>
                                 <button onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none"><i class="bi bi-x-lg"></i></button>
                                 <button id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
@@ -282,7 +282,7 @@
                         <p th:text="${extendedInfos.noteS1}"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -327,7 +327,7 @@
                             </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
