@@ -254,6 +254,7 @@
                         <hr>
                         <div class="d-inline">
                             <div class="float-buttons">
+
                                 <button title="Modifier les informations de l'individu" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="bi bi-person-fill-gear" style="font-size: 20px;"></i></button>
                                 <button title="Voir les notes" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="bi bi-music-note-list"></i></button>
                                 <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="bi bi-paperclip"></i></button>
@@ -267,7 +268,9 @@
 <!--                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">-->
 <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
+
                     </form>
+
             </div>
             </div>
         </main>
@@ -311,11 +314,15 @@
 
                                         </td>
                                         <td class="align-middle">
-                                            <form th:action="'/dossiers/' + ${currentDossier.id}  + '/delete-attachment/' + ${attachment.id}"
-                                                  th:method="delete"
-                                                  enctype="multipart/form-data">
-                                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
                                             </form>
+                                                <button th:attr="id=${attachment.id}"
+                                                        data-bs-toggle="modal"
+                                                        href="#"
+                                                        data-bs-target="#modal-warning"
+                                                        class="btn btn-danger"
+                                                        th:data-bs-whatever="${currentDossier.id}"
+                                                        th:data-bs-attachment="${attachment.fileName}"
+                                                        th:disabled="${!#strings.equals(attachment.parentType, 'org.esupportail.esupagape.entity.Dossier')}"><i class="bi bi-trash3"></i></button>
                                         </td>
                                     </tr>
                                 </th:block>
@@ -332,6 +339,54 @@
                 </div>
             </div>
         </div>
+        <div class="modal modal-warning fade" id="modal-warning" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="form-modal-warning" th:action="|/dossiers/dossierId/delete-attachment/attachmentId|"
+                            th:method="delete">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5"
+                                    th:id="'delete-attachment-label'">
+                                Suppression d'une pièce jointe</h5>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger text-center">Confirmez-vous
+                                la suppression de
+                                cette pièce jointe <br><span id="attachmentFileName"></span> ?
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline pull-left"
+                                    data-bs-dismiss="modal">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                    class="btn btn-outline pull-left btn-danger">
+                                Supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const modalWarning = document.getElementById('modal-warning')
+            const formModalWarning = document.getElementById('form-modal-warning')
+            const spanAttachmentFileName = document.getElementById('attachmentFileName')
+
+            modalWarning.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                const currentDossier = button.getAttribute('data-bs-whatever')
+                const attachmentFileName = button.getAttribute('data-bs-attachment')
+                formModalWarning.action = '/dossiers/'+currentDossier+'/delete-attachment/'+button.id
+                spanAttachmentFileName.textContent = attachmentFileName
+            })
+        </script>
+
         <script th:if="${returnModPJ}">
             document.getElementById('pjModal').classList.toggle("fade");
             new bootstrap.Modal(document.getElementById('pjModal')).show();

@@ -61,7 +61,7 @@ public class DossierService {
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(statusDossier);
-        if(individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
+        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
             dossier.setType(TypeIndividu.ETUDIANT);
         }
         dossierRepository.save(dossier);
@@ -105,8 +105,8 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year,Pageable pageable) {
-        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu,statusDossier,year, pageable);
+    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year, Pageable pageable) {
+        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, year, pageable);
     }
 
     @Transactional
@@ -123,20 +123,20 @@ public class DossierService {
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
         dossierToUpdate.setTypeFormation(dossier.getTypeFormation());
         dossierToUpdate.setModeFormation(dossier.getModeFormation());
-        if(StringUtils.hasText(dossier.getSite())) {
+        if (StringUtils.hasText(dossier.getSite())) {
             dossierToUpdate.setSite(dossier.getSite());
         }
-        if(StringUtils.hasText(dossier.getLibelleFormation())) {
+        if (StringUtils.hasText(dossier.getLibelleFormation())) {
             dossierToUpdate.setLibelleFormation(dossier.getLibelleFormation());
         }
-        if(StringUtils.hasText(dossier.getFormAddress())) {
+        if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
     }
 
     public DossierInfos getInfos(Dossier dossier) {
         DossierInfos infos = new DossierInfos();
-        for(DossierInfosService dossierInfosService : dossierInfosServices) {
+        for (DossierInfosService dossierInfosService : dossierInfosServices) {
             dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, infos);
         }
         return infos;
@@ -156,20 +156,20 @@ public class DossierService {
         Dossier dossier = getById(id);
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
-            if(dossierInfos != null) {
-                if(dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
+            if (dossierInfos != null) {
+                if (dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
                     dossier.setSite(dossierInfos.getEtablissement());
                 }
-                if(dossierInfos.getCodComposante() != null && !dossierInfos.getCodComposante().isEmpty()) {
+                if (dossierInfos.getCodComposante() != null && !dossierInfos.getCodComposante().isEmpty()) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }
-                if(dossierInfos.getComposante() != null && !dossierInfos.getComposante().isEmpty()) {
+                if (dossierInfos.getComposante() != null && !dossierInfos.getComposante().isEmpty()) {
                     dossier.setComposante(dossierInfos.getComposante().trim());
                 }
-                if(dossierInfos.getLibelleFormation() != null && !dossierInfos.getLibelleFormation().isEmpty()) {
+                if (dossierInfos.getLibelleFormation() != null && !dossierInfos.getLibelleFormation().isEmpty()) {
                     dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
                 }
-                if(dossierInfos.getFormAddress() != null && !dossierInfos.getFormAddress().isEmpty()) {
+                if (dossierInfos.getFormAddress() != null && !dossierInfos.getFormAddress().isEmpty()) {
                     dossier.setFormAddress(dossierInfos.getFormAddress());
                 }
             }
@@ -181,7 +181,7 @@ public class DossierService {
         Dossier dossierToUpdate = getById(id);
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
         dossierToUpdate.setType(dossierIndividuForm.getType());
-        if(StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
+        if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
         }
         dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
@@ -195,7 +195,7 @@ public class DossierService {
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
         try {
-            for(MultipartFile multipartFile : multipartFiles) {
+            for (MultipartFile multipartFile : multipartFiles) {
                 Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getTypeName(), dossier);
                 dossier.getAttachments().add(attachment);
             }
@@ -214,8 +214,9 @@ public class DossierService {
         //if parentType == org.esupportail.esupagape.entity.Dossier
         Dossier dossier = getById(id);
         Document attachment = documentService.getById(attachmentId);
-        dossier.getAttachments().remove(attachment);
-        documentService.delete(attachment);
+        if ("org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())) {
+            dossier.getAttachments().remove(attachment);
+            documentService.delete(attachment);
+        }
     }
-
 }
