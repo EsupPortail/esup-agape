@@ -31,7 +31,7 @@
                             <label class="form-label" for="name">Numéro d’étudiant</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <input id="numEtu" name="numEtu" type="text" class="form-control" th:value="${currentDossier.individu.numEtu}">
+                            <input disabled id="numEtu" name="numEtu" type="text" class="form-control" th:value="${currentDossier.individu.numEtu}">
                         </div>
                     </div>
                     <div class="row mb-1 align-items-baseline">
@@ -39,9 +39,9 @@
                             <label class="form-label" for="type">Type d’individu</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <select id="type" name="type" type="text" class="form-select" th:value="${currentDossier.type}">
+                            <select th:disabled="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}" id="type" name="type" type="text" class="form-select" th:value="${currentDossier.type}">
                                 <option value="" disabled selected>Choisir</option>
-                                <option th:selected="${currentDossier.type == typeIndividu}" th:each="typeIndividu : ${typeIndividus}" th:text="#{'dossier.typeIndividu.' +${typeIndividu}}" th:value="${typeIndividu}"></option>
+                                <option  th:selected="${currentDossier.type == typeIndividu}" th:each="typeIndividu : ${typeIndividus}" th:text="#{'dossier.typeIndividu.' +${typeIndividu}}" th:value="${typeIndividu}"></option>
                             </select>
                         </div>
                     </div>
