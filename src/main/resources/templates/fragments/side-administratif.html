@@ -8,11 +8,12 @@
                 <dt class="col-sm-6">Composante</dt>
                 <dd class="col-sm-6" th:text="${amenagement.dossier.composante}"></dd>
                 <dt class="col-sm-6">Statut</dt>
-                <dd class="col-sm-6" th:text="${amenagement.statusAmenagement}"></dd>
+                <dd class="col-sm-6" th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></dd>
                 <dt class="col-sm-6">Nom du médecin</dt>
                 <dd class="col-sm-6" th:text="${amenagement.nomMedecin}"></dd>
                 <dt class="col-sm-6">Date de fin</dt>
-                <dd class="col-sm-6" th:text="${amenagement.typeAmenagement}"></dd>
+                <!--<dd class="col-sm-6" th:text="#{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement}}"></dd>-->
+                <dd class="col-sm-6" th:text="${amenagement.endDate} != null ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
             </div>
             <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Information sur l'individu</span></span>
             <div class="container">
@@ -21,7 +22,7 @@
                 <dt class="col-sm-6">N° Étudiant</dt>
                 <dd class="col-sm-6" th:text="${currentDossier.individu.numEtu}"></dd>
                 <dt class="col-sm-6">Nom</dt>
-                <dd class="col-sm-6" th:text="${currentDossier.individu.name}"></dd>
+                <dd class="col-sm-6" th:text="${#strings.toUpperCase(currentDossier.individu.name)}"></dd>
                 <dt class="col-sm-6">Prénom</dt>
                 <dd class="col-sm-6" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>
                 <dt class="col-sm-6">Date de naissance</dt>
