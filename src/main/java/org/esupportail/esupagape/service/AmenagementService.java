@@ -152,7 +152,7 @@ public class AmenagementService {
             amenagement.setStatusAmenagement(StatusAmenagement.VISER_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
         } else {
-            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le medecin");
+            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
     }
 
@@ -165,7 +165,7 @@ public class AmenagementService {
             amenagement.setNomValideur(personLdap.getDisplayName());
             amenagement.setMotifRefus(motif);
         } else {
-            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le medecin");
+            throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
     }
 
@@ -173,7 +173,7 @@ public class AmenagementService {
     public void getCertificat(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
         if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
-            throw new AgapeException("Le certificat ne peux pas être émis");
+            throw new AgapeException("Le certificat ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
         httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
@@ -183,7 +183,7 @@ public class AmenagementService {
     public void getAvis(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
         if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN) && !amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
-            throw new AgapeException("L'avis ne peux pas être émis");
+            throw new AgapeException("L'avis ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
         httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
@@ -199,9 +199,9 @@ public class AmenagementService {
         certificatPdf.setAddress(amenagement.getDossier().getIndividu().getCurrentAddress());
         certificatPdf.setNumEtu(amenagement.getDossier().getIndividu().getNumEtu());
         if(amenagement.getTypeAmenagement().equals(TypeAmenagement.CURSUS)) {
-            certificatPdf.setEndDate("Jusqu'à la fin du cursus");
+            certificatPdf.setEndDate(messageSource.getMessage("amenagement.typeAmenagement.CURSUS", null, Locale.getDefault()));
         } else {
-            certificatPdf.setEndDate(amenagement.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            certificatPdf.setEndDate("Jusqu’à la date de fin : " + amenagement.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }
         certificatPdf.setTypeEpreuves(amenagement.getTypeEpreuves().stream().map(typeEpreuve -> messageSource.getMessage("amenagement.typeEpreuve." + typeEpreuve.name(), null, Locale.getDefault())).collect(Collectors.joining(", ")));
         certificatPdf.setTempsMajore(messageSource.getMessage("amenagement.tempsMajore." + amenagement.getTempsMajore().name(), null, Locale.getDefault()));

@@ -41,7 +41,7 @@
                                     <th:block th:each="amenagement : ${amenagements}">
                                         <tr>
                                             <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="#{'amenagement.typeAmenagement.' +${amenagement.getTypeAmenagement()}}"></td>
+                                            <td th:text="${amenagement.endDate != null} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                             <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}" class=" d-none d-lg-table-cell d-xl-table-cell"></td>
                                             <td th:text="${amenagement.amenagementText}" class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;"></td>
                                             <td th:text="${amenagement.nomMedecin}"></td>
@@ -81,7 +81,6 @@
                                     </th:block>
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
