@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/scolarite/amenagements")
@@ -25,12 +24,10 @@ public class AmenagementScolariteController {
     }
 
     @GetMapping
-    public String list(@RequestParam(required = false) String codComposante,
-                       @PageableDefault(size = 10,
+    public String list(@PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, PersonLdap personLdap, Model model) {
-        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISER_ADMINISTRATION, personLdap.getSupannEntiteAffectationPrincipale(), pageable));
-        model.addAttribute("codComposante", codComposante);
+        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISER_ADMINISTRATION, "IUR", pageable));
         setModel(model);
         return "scolarite/amenagements/list";
     }
