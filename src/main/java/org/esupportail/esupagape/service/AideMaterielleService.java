@@ -57,4 +57,12 @@ public class AideMaterielleService {
         toUpdateAideMaterielle.setComment(aideMaterielle.getComment());
         aideMaterielleRepository.save(aideMaterielle);
     }
+
+    public double additionCostAideMaterielle(Page<AideMaterielle> aideMaterielles) {
+        double sum = 0;
+        for (AideMaterielle aideMaterielle : aideMaterielles) {
+            sum = sum + aideMaterielle.getCost();
+        }
+        return sum;
+    }
 }

@@ -54,6 +54,7 @@ public class AideController {
         model.addAttribute("aideHumaine", new AideHumaine());
         model.addAttribute("aideMaterielles", aideMaterielleService.findByDossier(dossier));
         model.addAttribute("aideHumaines", aideHumaineService.findByDossier(dossier));
+        model.addAttribute("total", aideMaterielleService.additionCostAideMaterielle(aideMaterielleService.findByDossier(dossier)));
 
         return "aides/list";
     }
