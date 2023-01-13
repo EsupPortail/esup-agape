@@ -21,17 +21,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,13 +57,16 @@ public class IndividuService {
 
     private final DossierService dossierService;
 
-    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService) {
+    private final EnqueteService enqueteService;
+
+    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService) {
         this.individuSourceServices = individuSourceServices;
         this.applicationProperties = applicationProperties;
         this.individuRepository = individuRepository;
         this.utilsService = utilsService;
         this.excludeIndividuRepository = excludeIndividuRepository;
         this.dossierService = dossierService;
+        this.enqueteService = enqueteService;
     }
 
     public Individu getIndividu(String numEtu) {
@@ -185,7 +184,7 @@ public class IndividuService {
 
     public void save(Individu individuToAdd, String force) throws AgapeJpaException {
         ExcludeIndividu excludeIndividu = null;
-        if(individuToAdd.getNumEtu() != null && individuToAdd.getNumEtu().isEmpty()) {
+        if(StringUtils.hasText(individuToAdd.getNumEtu())) {
              excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
             if (force == null && excludeIndividu != null) {
                 throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
@@ -288,10 +287,14 @@ public class IndividuService {
     @Transactional
     public void deleteIndividu(long id) {
         Individu individu = getById(id);
-        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
-            ExcludeIndividu excludeIndividu = new ExcludeIndividu();
-            excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
-            excludeIndividuRepository.save(excludeIndividu);
+        enqueteService.deleteByIndividu(id);
+        if (StringUtils.hasText(individu.getNumEtu())) {
+            ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+            if(excludeIndividu == null) {
+                excludeIndividu = new ExcludeIndividu();
+                excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+                excludeIndividuRepository.save(excludeIndividu);
+            }
         }
         this.individuRepository.delete(individu);
     }

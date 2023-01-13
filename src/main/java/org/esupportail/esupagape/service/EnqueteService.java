@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -151,5 +152,15 @@ public class EnqueteService {
             enquete.getCodMeae().add(CodMeae.AE0);
         }
         return enquete;
+    }
+
+    public void deleteByIndividu(long id) {
+        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
+        for(Dossier dossier : dossiers) {
+            Enquete enquete = enqueteRepository.findByDossierId(dossier.getId()).orElse(null);
+            if(enquete != null) {
+                enqueteRepository.delete(enquete);
+            }
+        }
     }
 }
