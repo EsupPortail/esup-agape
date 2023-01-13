@@ -166,6 +166,7 @@ public class IndividuService {
 
     @Transactional
     public void importIndividus() {
+        logger.info("Import individus started");
         List<Individu> individus = individuRepository.findAll();
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
