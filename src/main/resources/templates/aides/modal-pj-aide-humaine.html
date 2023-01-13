@@ -41,7 +41,7 @@
                         <td th:text="${aideHumaine.contrat.getFileName()}"></td>
                         <td><a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-contrat'"><i class="bi bi-download"></i></a></td>
                         <td>
-                            <form onsubmit="return confirm('Confirmez la suppression de la fiche');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'" th:method="delete">
+                            <form onsubmit="return confirm('Confirmez la suppression du contrat');" th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'" th:method="delete">
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
                             </form>
                         </td>
