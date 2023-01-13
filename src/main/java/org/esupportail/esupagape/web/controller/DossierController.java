@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -95,6 +96,11 @@ public class DossierController {
     @GetMapping("/{id}/sync")
     public String sync(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         dossierService.syncDossier(id);
+        try {
+            individuService.syncIndividu(dossierService.getById(id).getIndividu().getId());
+        } catch (AgapeJpaException e) {
+            throw new RuntimeException(e);
+        }
         redirectAttributes.addFlashAttribute("message", new Message("success", "Synchonisation effectuée"));
         return "redirect:/dossiers/" + id;
     }

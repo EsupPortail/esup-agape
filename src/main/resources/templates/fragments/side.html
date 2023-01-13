@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <div th:fragment="side" class="agape-side bg-light position-sticky me-2">
         <div class="p-2">
             <span class="fs-6 card text-bg-primary mb-3 ps-3">Fiche</span>
@@ -47,13 +48,13 @@
             </div>
             <span class="fs-6 card text-bg-primary mt-3 mb-3 ps-3">Contacts</span>
             <div class="container">
-                <dl>
+                <dl class="row">
                     <dt>Email universitaire</dt>
                     <dd th:text="${currentDossier.individu.emailEtu}"></dd>
                     <dt>Email personnel</dt>
                     <dd th:text="${currentDossier.individu.emailPerso}"></dd>
                     <dt class="col-sm-5">Téléphone portable</dt>
-                    <dd class="col-sm-7" th:text="${currentDossier.individu.mobilPhone}"></dd>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.contactPhone}"></dd>
                     <dt class="col-sm-5">Téléphone fixe</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.fixPhone}"></dd>
                 </dl>

@@ -1,5 +1,7 @@
 package org.esupportail.esupagape.service.interfaces.importindividu;
 
+import org.esupportail.esupagape.entity.enums.Classification;
+
 import java.time.LocalDate;
 
 public class IndividuInfos {
@@ -9,6 +11,7 @@ public class IndividuInfos {
     String firstName;
     String genre;
     LocalDate dateOfBirth;
+    String nationalite;
     String emailEtu;
     String emailPerso;
     String fixPhone;
@@ -18,6 +21,7 @@ public class IndividuInfos {
     String fixCity;
     String fixCountry;
     String photoId;
+    Classification handicap;
 
     public String getEppn() {
         return eppn;
@@ -57,6 +61,14 @@ public class IndividuInfos {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getNationalite() {
+        return nationalite;
+    }
+
+    public void setNationalite(String nationalite) {
+        this.nationalite = nationalite;
     }
 
     public String getEmailEtu() {
@@ -129,5 +141,13 @@ public class IndividuInfos {
 
     public void setPhotoId(String photoId) {
         this.photoId = photoId;
+    }
+
+    public Classification getHandicap() {
+        return handicap;
+    }
+
+    public void setHandicap(Classification handicap) {
+        this.handicap = handicap;
     }
 }

@@ -144,6 +144,7 @@ public class DossierService {
 
     @Transactional
     public void syncAllDossiers() {
+        logger.info("Sync dossiers started");
         List<Dossier> dossiers = dossierRepository.findAll();
         for (Dossier dossier : dossiers) {
             syncDossier(dossier.getId());

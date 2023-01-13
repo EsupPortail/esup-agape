@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
@@ -43,7 +44,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos) {
+    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos, int annee) {
         List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(numEtu);
         if(personLdaps.size() > 0) {
             PersonLdap personLdap = personLdaps.get(0);
@@ -105,5 +106,10 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     @Override
     public List<Individu> getAllIndividuNums() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public Map<String, Classification> getClassificationMap() {
+        return null;
     }
 }
