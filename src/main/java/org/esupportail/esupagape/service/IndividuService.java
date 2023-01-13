@@ -84,7 +84,7 @@ public class IndividuService {
     public IndividuInfos getIndividuInfosByNumEtu(String numEtu) {
         IndividuInfos individuInfos = new IndividuInfos();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuInfos = individuSourceService.getIndividuProperties(numEtu, individuInfos);
+            individuInfos = individuSourceService.getIndividuProperties(numEtu, individuInfos, utilsService.getCurrentYear());
         }
         return individuInfos;
     }
@@ -98,52 +98,61 @@ public class IndividuService {
             dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
             return;
         }
-        if(individuInfos.getEppn() != null && !individuInfos.getEppn().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getEppn())) {
             individu.setEppn(individuInfos.getEppn());
         }
-        if(individuInfos.getName() != null && !individuInfos.getName().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getName())) {
             individu.setName(individuInfos.getName());
         }
-        if(individuInfos.getFirstName() != null && !individuInfos.getFirstName().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFirstName())) {
             individu.setFirstName(individuInfos.getFirstName());
         }
-        if(individuInfos.getGenre() != null && !individuInfos.getGenre().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getGenre())) {
             individu.setSex(individuInfos.getGenre());
         }
-        if(individuInfos.getGenre() != null && !individuInfos.getGenre().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getGenre())) {
             individu.setGender(Gender.valueOf(individuInfos.getGenre()));
         }
-        if(individuInfos.getEmailEtu() != null && !individuInfos.getEmailEtu().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getNationalite())) {
+            individu.setNationalite(individuInfos.getNationalite());
+        }
+        if(StringUtils.hasText(individuInfos.getEmailEtu())) {
             individu.setEmailEtu(individuInfos.getEmailEtu());
         }
-        if(individuInfos.getEmailPerso() != null && !individuInfos.getEmailPerso().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getEmailPerso())) {
             individu.setEmailPerso(individuInfos.getEmailPerso());
         }
-        if(individuInfos.getFixAddress() != null && !individuInfos.getFixAddress().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFixAddress())) {
             individu.setFixAddress(individuInfos.getFixAddress());
         }
-        if(individuInfos.getFixCP() != null && !individuInfos.getFixCP().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFixCP())) {
             individu.setFixCP(individuInfos.getFixCP());
         }
-        if(individuInfos.getFixCity() != null && !individuInfos.getFixCity().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFixCity())) {
             individu.setFixCity(individuInfos.getFixCity());
         }
-        if(individuInfos.getFixCountry() != null && !individuInfos.getFixCountry().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFixCountry())) {
             individu.setFixCountry(individuInfos.getFixCountry());
         }
-        if(individuInfos.getFixPhone() != null && !individuInfos.getFixPhone().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }
-        if(individuInfos.getContactPhone() != null && !individuInfos.getContactPhone().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getContactPhone())) {
             individu.setContactPhone(individuInfos.getContactPhone());
         }
-        if(individuInfos.getPhotoId() != null && !individuInfos.getPhotoId().isEmpty()) {
+        if(StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
+        }
+        if(individuInfos.getHandicap() != null) {
+            if(dossier.getClassification().size() == 0) {
+                dossier.getClassification().add(individuInfos.getHandicap());
+            }
         }
     }
 
     @Transactional
     public void syncAllIndividus() {
+        logger.info("Sync individus started");
         List<Individu> individus = individuRepository.findAll();
         for (Individu individu : individus) {
             try {

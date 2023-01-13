@@ -68,8 +68,6 @@ public class Individu {
 
     private String fixCountry;
 
-    private String mobilPhone;
-
     private String fixPhone;
 
     private String contactPhone;
@@ -234,14 +232,6 @@ public class Individu {
 
     public void setFixCountry(String fixCountry) {
         this.fixCountry = fixCountry;
-    }
-
-    public String getMobilPhone() {
-        return mobilPhone;
-    }
-
-    public void setMobilPhone(String mobilPhone) {
-        this.mobilPhone = mobilPhone;
     }
 
     public String getFixPhone() {

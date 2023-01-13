@@ -1,7 +1,11 @@
 package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
+import gouv.education.apogee.commun.client.ws.EtudiantMetier.CoordonneesDTO2;
+import gouv.education.apogee.commun.client.ws.EtudiantMetier.InfoAdmEtuDTO4;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
+import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceEtudiant;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
@@ -10,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -18,23 +23,58 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Order(3)
-@ConditionalOnProperty(value = "individu-source.data-sources.APO.name")
+@ConditionalOnProperty(value = {"individu-source.data-sources.APO.name", "apogee.etu-url"})
 public class ApoIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoIndividuSourceService.class);
 
     DataSource dataSource;
 
-    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService) {
+    private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
+
+    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APO");
+        this.wsApogeeServiceEtudiant = wsApogeeServiceEtudiant;
     }
 
     @Override
-    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos) {
+    public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos, int annee) {
+        CoordonneesDTO2 coordonneesDTO2 = wsApogeeServiceEtudiant.recupererAdressesEtudiant(numEtu, String.valueOf(annee));
+        if(coordonneesDTO2 != null) {
+            if (StringUtils.hasText(coordonneesDTO2.getNumTelPortable())) {
+                individuInfos.setContactPhone(coordonneesDTO2.getNumTelPortable());
+            }
+            if (coordonneesDTO2.getAdresseAnnuelle() != null) {
+                if(coordonneesDTO2.getAdresseAnnuelle().getCommune() != null) {
+                    individuInfos.setFixCity(coordonneesDTO2.getAdresseAnnuelle().getCommune().getNomCommune());
+                    individuInfos.setFixCP(coordonneesDTO2.getAdresseAnnuelle().getCommune().getCodePostal());
+                    if(StringUtils.hasText(coordonneesDTO2.getAdresseAnnuelle().getLibAd1())) {
+                        individuInfos.setFixAddress(coordonneesDTO2.getAdresseAnnuelle().getLibAd1());
+                    }
+                }
+            }
+            if (StringUtils.hasText(coordonneesDTO2.getEmail())) {
+                individuInfos.setEmailPerso(coordonneesDTO2.getEmail());
+            }
+        }
+        InfoAdmEtuDTO4  infoAdmEtuDTO4 = wsApogeeServiceEtudiant.recupererInfosAdmEtu(numEtu);
+        if(infoAdmEtuDTO4 != null) {
+            if(infoAdmEtuDTO4.getHandicap() != null) {
+                if(getClassificationMap().containsKey(infoAdmEtuDTO4.getHandicap().getCodeHandicap())) {
+                    individuInfos.setHandicap(getClassificationMap().get(infoAdmEtuDTO4.getHandicap().getCodeHandicap()));
+                }
+            }
+            if(infoAdmEtuDTO4.getNationaliteDTO() != null) {
+                individuInfos.setNationalite(infoAdmEtuDTO4.getNationaliteDTO().getLibNationalite());
+            }
+
+        }
         return individuInfos;
     }
 
@@ -76,5 +116,20 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             logger.warn("unable to close APO connection");
         }
         return numEtus;
+    }
+
+    @Override
+    public Map<String, Classification> getClassificationMap() {
+        Map<String, Classification> classificationMap = new HashMap<>();
+        classificationMap.put("A", Classification.SURDITE_SEVERE_ET_PROFONDE);
+        classificationMap.put("M", Classification.MOTEUR);
+        classificationMap.put("V", Classification.CECITE);
+        classificationMap.put("B", Classification.DEFICIENCE_AUDTIVE_AUTRE);
+        classificationMap.put("W", Classification.DEFICIENCE_VISUELLE_AUTRE);
+        classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
+        classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_ET_DE_LA_PAROLE);
+        classificationMap.put("H", Classification.AUTISME);
+        classificationMap.put("I", Classification.SURDITE_SEVERE_ET_PROFONDE);
+        return classificationMap;
     }
 }

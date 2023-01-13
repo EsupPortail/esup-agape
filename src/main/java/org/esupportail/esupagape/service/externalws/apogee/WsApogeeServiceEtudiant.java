@@ -46,30 +46,30 @@ public class WsApogeeServiceEtudiant {
 
 	}
 	
-	public InfoAdmEtuDTO4 recupererInfosAdmEtu(String codEtu) {
-		logger.debug("recup infos administratives dans apogee.");
+	public InfoAdmEtuDTO4 recupererInfosAdmEtu(String numEtu) {
+		logger.debug("recup infos administratives dans apogee : " + numEtu);
 		InfoAdmEtuDTO4 infoEtudiant = null;
 		try {
-			infoEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererInfosAdmEtuV4(codEtu);
+			infoEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererInfosAdmEtuV4(numEtu);
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos", e);
+			logger.warn("Erreur lors de la recup des infos : "  + e.getMessage());
 		}
 		return infoEtudiant;
 	}
 
-	public CoordonneesDTO2 recupererAdressesEtudiant(String codEtu, String annee) {
-		logger.debug("recup infos adresse dans apogee.");
+	public CoordonneesDTO2 recupererAdressesEtudiant(String numEtu, String annee) {
+		logger.debug("Recup infos adresse dans apogee : " + numEtu);
 		CoordonneesDTO2 adresseEtudiant = null;
 		try {
-			adresseEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererAdressesEtudiantV2(codEtu, annee, "O");
+			adresseEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererAdressesEtudiantV2(numEtu, annee, "O");
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos", e);
+			logger.warn("Erreur lors de la recup des infos : " + e.getMessage());
 		}
 		return adresseEtudiant;
 	}
 	
 	public String recupererLogin(String nom, String prenom, String dateNaiss) {
-		logger.debug("recup login dans apogee.");
+		logger.debug("Recup login dans apogee.");
 		String login = "";
 		try {
 		if(!dateNaiss.equals("%")) {
