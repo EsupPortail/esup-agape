@@ -203,4 +203,35 @@ public class AideHumaineService {
         }
     }
 
+    @Transactional
+    public void addRib(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            for(MultipartFile multipartFile : multipartFiles) {
+                Document rib = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                aideHumaine.setRib(rib);
+            }
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteRib(Long aideHumaineId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        Document document = aideHumaine.getRib();
+        aideHumaine.setRib(null);
+        documentService.delete(document);
+    }
+
+    @Transactional
+    public void getRibHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            Document document = aideHumaine.getRib();
+            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
 }

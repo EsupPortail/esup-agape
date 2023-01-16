@@ -59,7 +59,8 @@ public class AideHumaine {
     @OneToOne
     private Document annexe;
 
-    private Boolean rib;
+    @OneToOne
+    private Document rib;
 
     private Boolean carteVitale;
 
@@ -185,11 +186,11 @@ public class AideHumaine {
         this.annexe = annexe;
     }
 
-    public Boolean getRib() {
+    public Document getRib() {
         return rib;
     }
 
-    public void setRib(Boolean rib) {
+    public void setRib(Document rib) {
         this.rib = rib;
     }
 

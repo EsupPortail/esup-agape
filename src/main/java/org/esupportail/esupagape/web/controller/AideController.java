@@ -237,6 +237,27 @@ public class AideController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/aides-humaines/{aideHumaineId}/add-rib")
+    public String addRib(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.addRib(aideHumaineId, multipartFiles, dossier);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-rib")
+    public String deleteRib(@PathVariable Long aideHumaineId, Dossier dossier, RedirectAttributes redirectAttributes) {
+        aideHumaineService.deleteRib(aideHumaineId);
+        redirectAttributes.addFlashAttribute("returnModPJ", true);
+        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    }
+
+    @GetMapping("/aides-humaines/{aideHumaineId}/get-rib")
+    @ResponseBody
+    public ResponseEntity<Void> getRib(@PathVariable Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.getRibHttpResponse(aideHumaineId, httpServletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     private void setModel(Model model) {
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
