@@ -48,7 +48,6 @@ public class ApoDossierInfosService implements DossierInfosService {
                             .recupererResultatsElpEprDTO(individu.getNumEtu(), annee.toString(), insAdmEtpDTO.getEtape().getCodeEtp(),
                                     insAdmEtpDTO.getEtape().getVersionEtp());
                     for (ContratPedagogiqueResultatElpEprDTO5 resultatElpEprDTO : resultatElpEprDTOs) {
-
                         if (resultatElpEprDTO.getElp().getNatureElp().getCodNel().equals("SEM")
                                 && resultatElpEprDTO.getElp().getNatureElp().getTemFictif().equals("N")
                                 && resultatElpEprDTO.getElp().getNatureElp().getTemSemestre().equals("O")
@@ -60,7 +59,6 @@ public class ApoDossierInfosService implements DossierInfosService {
                                 dossierInfos.setNoteS1(resultat[0].getNotElp());
                                 dossierInfos.setResultatS1(resultat[0].getTypResultat().getLibTre());
                             }
-
                         }
 
                         if (resultatElpEprDTO.getElp().getNatureElp().getCodNel().equals("SEM")
