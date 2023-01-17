@@ -106,8 +106,8 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer year, Pageable pageable) {
-        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, year, pageable);
+    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable) {
+        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable);
     }
 
     @Transactional
@@ -146,7 +146,7 @@ public class DossierService {
     @Transactional
     public void syncAllDossiers() {
         logger.info("Sync dossiers started");
-        List<Dossier> dossiers = dossierRepository.findAll();
+        List<Dossier> dossiers = dossierRepository.findAllByYear(utilsService.getCurrentYear(), Pageable.unpaged()).getContent();
         for (Dossier dossier : dossiers) {
             syncDossier(dossier.getId());
         }

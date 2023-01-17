@@ -1,12 +1,15 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -30,32 +33,52 @@ public class AmenagementAdministratifController {
     private final AmenagementService amenagementService;
 
     private final DossierService dossierService;
+    private final UtilsService utilsService;
 
-    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService) {
+    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService) {
         this.amenagementService = amenagementService;
         this.dossierService = dossierService;
+        this.utilsService = utilsService;
     }
 
     @GetMapping
     public String list(@RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @RequestParam(required = false) String codComposante,
+                       @RequestParam(required = false) Integer yearFilter,
+                       @RequestParam(required = false) Boolean porte,
                        @PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+        if(porte == null) porte = false;
+        if (yearFilter == null) {
+            yearFilter = utilsService.getCurrentYear();
+        }
         if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDER_MEDECIN;
         if(!StringUtils.hasText(codComposante)) codComposante = null;
-        model.addAttribute("amenagements", amenagementService.getFullTextSearch(statusAmenagement, codComposante, pageable));
+
+        Page<Amenagement> amenagements = null;
+        List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
+        statusAmenagements.remove(StatusAmenagement.BROUILLON);
+        statusAmenagements.remove(StatusAmenagement.SUPPRIME);
+        if(porte) {
+            amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+            statusAmenagements.clear();
+            statusAmenagements.add(StatusAmenagement.VISER_ADMINISTRATION);
+        } else {
+            amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
+        }
+        model.addAttribute("amenagements", amenagements);
+        model.addAttribute("statusAmenagements", statusAmenagements);
+
         model.addAttribute("statusAmenagement", statusAmenagement);
         model.addAttribute("codComposante", codComposante);
+        model.addAttribute("porte", porte);
+        model.addAttribute("yearFilter", yearFilter);
         setModel(model);
         return "administratif/amenagements/list";
     }
 
     private void setModel(Model model) {
-        List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
-        statusAmenagements.remove(StatusAmenagement.BROUILLON);
-        statusAmenagements.remove(StatusAmenagement.SUPPRIME);
-        model.addAttribute("statusAmenagements", statusAmenagements);
         List<ComposanteDto> toto = dossierService.getAllComposantes();
         model.addAttribute("composantes", toto);
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
@@ -63,6 +86,7 @@ public class AmenagementAdministratifController {
         model.addAttribute("typeEpreuves" , TypeEpreuve.values());
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("autorisations", Autorisation.values());
+        model.addAttribute("years", utilsService.getYears());
     }
 
     @GetMapping("/{amenagementId}")

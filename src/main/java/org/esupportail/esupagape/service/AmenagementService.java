@@ -129,8 +129,12 @@ public class AmenagementService {
         return amenagementRepository.findAll(pageable);
     }
 
-    public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, pageable);
+    public Page<Amenagement> getFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
+    }
+
+    public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearchPorte(codComposante, yearFilter, pageable);
     }
 
     @Transactional

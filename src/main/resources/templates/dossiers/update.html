@@ -205,6 +205,30 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mb-1 align-items-baseline">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="libelleFormation">Formation année précédente</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <div class="input-group">
+                                            <textarea rows="3"
+                                                      disabled
+                                                      id="libelleFormationPrec"
+                                                      name="libelleFormationPrec"
+                                                      class="form-control"
+                                                      style="min-height:60px; resize: none;"
+                                                      th:text="${currentDossier.libelleFormationPrec}"
+                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
+                                            <a onclick="toggleInputLock('libelleFormation');"
+                                               role="button"
+                                               id="libelleFormationPrecEdit"
+                                               class="btn btn-light border-secondary border-opacity-25 d-none"
+                                               th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                     <div class="col-4" style="width: 250px;">
                                         <label class="form-label" for="composante">Composante</label>

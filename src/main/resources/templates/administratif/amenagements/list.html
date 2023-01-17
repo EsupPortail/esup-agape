@@ -13,6 +13,32 @@
                 <div class="col-12">
                     <form th:action="@{/administratif/amenagements}" method="get">
                         <div class="row mt-1 mb-2 g-1">
+                            <div class="col-2" style="width: 350px;">
+                                <div class="input-group">
+                                    <label class="input-group-text">À renouveler</label>
+                                    <select class="form-select" name="porte">
+                                        <option disabled selected value="">Choisir</option>
+                                        <option th:selected="${!porte}"
+                                                th:value="0"
+                                                >Non</option>
+                                        <option th:selected="${porte}"
+                                                th:value="1"
+                                        >Oui</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2" style="width: 350px;">
+                                <div class="input-group">
+                                    <label class="input-group-text">Année universitaire</label>
+                                    <select class="form-select" name="yearFilter">
+                                        <option disabled selected value="">Choisir</option>
+                                        <option th:selected="${yearFilter == year.number}"
+                                                th:each="year : ${years}"
+                                                th:value="${year.number}"
+                                                th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-2" style="min-width: 500px;">
                                 <div class="input-group">
                                     <label class="input-group-text" th:for="codComposante">Composante</label>

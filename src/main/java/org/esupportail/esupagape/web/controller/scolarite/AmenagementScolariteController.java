@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,16 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AmenagementScolariteController {
 
     private final AmenagementService amenagementService;
+    private final UtilsService utilsService;
 
-    public AmenagementScolariteController(AmenagementService amenagementService) {
+    public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService) {
         this.amenagementService = amenagementService;
+        this.utilsService = utilsService;
     }
 
     @GetMapping
     public String list(@PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, PersonLdap personLdap, Model model) {
-        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISER_ADMINISTRATION, "IUR", pageable));
+        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISER_ADMINISTRATION, "IUR", utilsService.getCurrentYear(), pageable));
         setModel(model);
         return "scolarite/amenagements/list";
     }

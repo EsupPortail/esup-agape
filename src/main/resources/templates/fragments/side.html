@@ -48,6 +48,8 @@
                                 class="badge text-bg-danger"></span>
                         </th:block>
                     </dd>
+                    <dt>Statut aménagement</dt>
+                    <dd th:text="#{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}}"></dd>
                     <dt class="col-sm-5">Genre</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>
                     <dt class="col-sm-5">Nationalité</dt>

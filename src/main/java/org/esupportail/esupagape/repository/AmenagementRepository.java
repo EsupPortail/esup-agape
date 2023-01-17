@@ -15,12 +15,20 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
 
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
 
-    @Query(value = "select a from Amenagement a " +
+    @Query(value = "select a from Amenagement a join Dossier d on a.dossier = d " +
             "where " +
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
             "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
-            "and a.statusAmenagement != 'BROUILLON' and a.statusAmenagement != 'SUPPRIME'")
-    Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
+            "and a.statusAmenagement != 'BROUILLON' and a.statusAmenagement != 'SUPPRIME'" +
+            "and (:yearFilter is null or d.year = :yearFilter)")
+    Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
+
+    @Query(value = "select a from Amenagement a join Dossier d on a.dossier = d " +
+            "where " +
+            "(:codComposante is null or a.dossier.codComposante  = :codComposante) " +
+            "and a.statusAmenagement = 'VISER_ADMINISTRATION' " +
+            "and (d.year != :yearFilter)")
+    Page<Amenagement> findByFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query(value = "select a from Amenagement a " +
             "where " +
