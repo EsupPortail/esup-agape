@@ -139,6 +139,7 @@ public class AmenagementService {
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagement.setValideMedecinDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VALIDER_MEDECIN);
+            amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
         }
@@ -151,6 +152,7 @@ public class AmenagementService {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VISER_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
+            amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }

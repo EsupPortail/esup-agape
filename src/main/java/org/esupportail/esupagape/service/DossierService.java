@@ -156,6 +156,9 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
+        if(dossier.getAmenagements().size() == 0) {
+            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+        }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
             if (dossierInfos != null) {
