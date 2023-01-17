@@ -53,6 +53,7 @@ public class DossierController {
     public String list(@RequestParam(required = false) String fullTextSearch,
                        @RequestParam(required = false) TypeIndividu typeIndividu,
                        @RequestParam(required = false) StatusDossier statusDossier,
+                       @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
                        @RequestParam(required = false) Integer yearFilter,
                        @PageableDefault(sort = "name") Pageable pageable, Model model) {
         if (yearFilter == null) {
@@ -61,10 +62,12 @@ public class DossierController {
         model.addAttribute("fullTextSearch", fullTextSearch);
         model.addAttribute("typeIndividu", typeIndividu);
         model.addAttribute("statusDossier", statusDossier);
-        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, yearFilter, pageable));
+        model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
+        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());
         model.addAttribute("statusDossierList", StatusDossier.values());
+        model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
         return "dossiers/list";
     }
@@ -84,6 +87,7 @@ public class DossierController {
         model.addAttribute("etats", Etat.values());
         model.addAttribute("typeIndividus", TypeIndividu.values());
         model.addAttribute("statusDossiers", StatusDossier.values());
+        model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeFormations", TypeFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
         model.addAttribute("currentDossier", dossierService.getById(id));
