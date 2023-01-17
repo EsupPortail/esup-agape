@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.dtos;
 
 import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
@@ -31,7 +30,5 @@ public interface DossierIndividuDto {
     Long getIndividuId();
 
     Gender getGender();
-
-    StatusAmenagement getStatusAmenagement();
 
 }
