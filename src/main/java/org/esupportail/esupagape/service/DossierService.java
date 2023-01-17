@@ -8,6 +8,7 @@ import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
@@ -105,8 +106,8 @@ public class DossierService {
         dossierRepository.saveAll(dossiers);
     }
 
-    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer year, Pageable pageable) {
-        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, year, pageable);
+    public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer year, Pageable pageable) {
+        return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, year, pageable);
     }
 
     @Transactional
@@ -181,6 +182,7 @@ public class DossierService {
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
         Dossier dossierToUpdate = getById(id);
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
+        dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
         dossierToUpdate.setType(dossierIndividuForm.getType());
         if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());

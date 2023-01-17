@@ -56,6 +56,9 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private ModFrmn modeFormation;
 
+    @Enumerated(EnumType.STRING)
+    StatusDossierAmenagement statusDossierAmenagement;
+
     private String commentaire;
 
     private String libelleFormation;
@@ -208,6 +211,14 @@ public class Dossier {
 
     public void setModeFormation(ModFrmn modeFormation) {
         this.modeFormation = modeFormation;
+    }
+
+    public StatusDossierAmenagement getStatusDossierAmenagement() {
+        return statusDossierAmenagement;
+    }
+
+    public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {
+        this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
     public String getCommentaire() {

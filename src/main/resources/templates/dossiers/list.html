@@ -5,84 +5,81 @@
         <header th:replace="fragments/header :: header"></header>
         <main>
             <div class="agape-content">
-<!--                    <h1 class="" th:text="'Liste des dossiers ' + ${yearFilter}"></h1>-->
+                <!--                    <h1 class="" th:text="'Liste des dossiers ' + ${yearFilter}"></h1>-->
                 <form th:action="@{/dossiers}" method="get">
-                        <div class="row mt-1 g-1">
-                            <div class="col-2" style="width: 350px;">
-                                <div class="input-group">
-                                    <label class="input-group-text">Année universitaire</label>
-                                    <select class="form-select" name="yearFilter">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${yearFilter == year.number}" th:each="year : ${years}" th:value="${year.number}" th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-                                    </select>
-                                </div>
+                    <div class="row mt-1 g-1">
+                        <div class="col-2" style="width: 350px;">
+                            <div class="input-group">
+                                <label class="input-group-text">Année universitaire</label>
+                                <select class="form-select" name="yearFilter">
+                                    <option disabled selected value="">Choisir</option>
+                                    <option th:selected="${yearFilter == year.number}"
+                                            th:each="year : ${years}"
+                                            th:value="${year.number}"
+                                            th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                                </select>
                             </div>
-                            <div class="col-2"  style="width: 350px;">
-                                <div class="input-group">
-                                    <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
-                                    <select id="typeIndividu" class="form-select" name="typeIndividu">
-                                        <option disabled selected value="">Choisir</option>
-                                        <option th:selected="${typeIndividu == enumType}"
-                                                th:each="enumType : ${typeIndividuList}"
-                                                th:value="${enumType}"
-                                                th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="col-2" style="width: 350px;">
+                            <div class="input-group">
+                                <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
+                                <select id="typeIndividu" class="form-select" name="typeIndividu">
+                                    <option disabled selected value="">Choisir</option>
+                                    <option th:selected="${typeIndividu == enumType}"
+                                            th:each="enumType : ${typeIndividuList}"
+                                            th:value="${enumType}"
+                                            th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                </select>
                             </div>
-                            <div class="col-2"  style="width: 350px;">
-                                <div class="input-group">
-                                    <label class="input-group-text" th:for="statusDossier">Statut</label>
-                                    <select id="statusDossier" class="form-select" name="statusDossier">
-                                        <option value="">Choisir</option>
-                                        <option th:selected="${statusDossier == enumStatus}"
-                                                th:each="enumStatus : ${statusDossierList}"
-                                                th:value="${enumStatus}"
-                                                th:text="#{'dossier.statusDossier.' + ${enumStatus}}"></option>
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="col-2" style="width: 350px;">
+                            <div class="input-group">
+                                <label class="input-group-text" th:for="statusDossier">Statut</label>
+                                <select id="statusDossier" class="form-select" name="statusDossier">
+                                    <option value="">Choisir</option>
+                                    <option th:selected="${statusDossier == enumStatus}"
+                                            th:each="enumStatus : ${statusDossierList}"
+                                            th:value="${enumStatus}"
+                                            th:text="#{'dossier.statusDossier.' + ${enumStatus}}"></option>
+                                </select>
                             </div>
-                            <div class="col-2"  style="width: 350px;">
-                                <input class="form-control"
-                                        type="text"
-                                        placeholder="nom, prénom, numéro étudiant"
-                                        name="fullTextSearch"
-                                        id="fullTextSearch"
-                                        size="50"
-                                        th:value="${fullTextSearch}"> &nbsp;
-                            </div>
-                            <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+                        </div>
+                        <div class="col-2" style="width: 350px;">
+                            <input class="form-control" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}"> &nbsp;
+                        </div>
+                        <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
                             <input class="btn btn-success" type="submit" value="Rechercher">
                             <a class="btn btn-secondary" id="btnClear" th:href="@{/dossiers}">Effacer</a>
                             <a class="btn btn-primary" th:href="@{/individus/create}">Ajouter un individu</a>
-                            </div>
                         </div>
+                    </div>
                 </form>
                 <table class="table table-sm table-striped table-responsive mt-1">
                     <thead class="text-center  table-secondary">
                         <tr class="text-start">
                             <th scope="col" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="individu.numEtu">Numéro étudiant</a>
+                                <a class="sorted" sd:pagination-sort="numEtu">Numéro étudiant</a>
                             </th>
                             <th scope="col" class="d-none d-lg-table-cell" style="width: 100px;">
                                 <a class="sorted" sd:pagination-sort="gender">Genre</a>
                             </th>
                             <th scope="col" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="individu.name">Nom</a>
+                                <a class="sorted" sd:pagination-sort="name">Nom</a>
                             </th>
                             <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="individu.firstName">Prénom</a>
+                                <a class="sorted" sd:pagination-sort="firstName">Prénom</a>
                             </th>
                             <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="individu.dateOfBirth">Date de naissance</a>
+                                <a class="sorted" sd:pagination-sort="dateOfBirth">Date de naissance</a>
                             </th>
                             <th scope="col" class=" d-none d-lg-table-cell" style="width: 100px;">
                                 <a class="sorted" sd:pagination-sort="type">Type Individu</a>
                             </th>
-                            <th scope="col" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
-                            </th>
+                            <!-- <th scope="col" style="width: 100px;">
+                                 <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
+                             </th>-->
                             <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="statusAmenagement">Statut aménagement</a>
+                                <a class="sorted" sd:pagination-sort="statusDossierAmenagement">Statut de l'aménagement du dossier</a>
                             </th>
                             <th scope="col" style="width: 100px;">Actions</th>
                         </tr>
@@ -90,23 +87,26 @@
                     <tbody class="text-center">
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle text-start">
                             <td th:utext="${dossierIndividuDto.numEtu}" style="width: 100px;"></td>
-                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none d-lg-table-cell" style="width: 100px;"></td>
+                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'"
+                                    class="d-none d-lg-table-cell"
+                                    style="width: 100px;"></td>
                             <td th:utext="${#strings.toUpperCase(dossierIndividuDto.name)}" style="width: 100px;"></td>
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell" style="width: 100px;"></td>
-                            <th:block th:switch="${dossierIndividuDto.statusDossier}" style="width: 200px;">
-                                <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.DESINSCRIT}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span></td>
-                            </th:block>
-                            <td th:text="${dossierIndividuDto.statusAmenagement != null} ? #{'amenagement.statusAmenagement.' + ${dossierIndividuDto.statusAmenagement}} : 'Non renseigné'" class="d-none d-sm-none d-md-table-cell"  style="width: 300px;">
-                            </td>
+                            <!-- <th:block th:switch="${dossierIndividuDto.statusDossier}" style="width: 200px;">
+                                 <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
+                                 <td th:case="${dossierIndividuDto.statusDossier.DESINSCRIT}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span></td>
+                             </th:block>-->
+                            <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
+                                    class="d-none d-sm-none d-md-table-cell"
+                                    style="width: 300px;"></td>
                             <td style="width: 100px;">
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
@@ -114,10 +114,8 @@
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN')">
-                                        <a data-bs-toggle="modal"
-                                                href="#"
-                                                th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}"
-                                                class="btn btn-danger"><i class="bi bi-person-x"></i></a>
+                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-danger">
+                                            <i class="bi bi-person-x"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-individu-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -145,10 +143,8 @@
                                         </div>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                        <a data-bs-toggle="modal"
-                                                href="#"
-                                                th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}"
-                                                class="btn btn-danger"><i class="bi bi-folder-x"></i></a>
+                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-danger">
+                                            <i class="bi bi-folder-x"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-dossier-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">

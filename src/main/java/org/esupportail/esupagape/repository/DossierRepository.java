@@ -4,6 +4,7 @@ import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     @Query("select distinct d.id as id, i.numEtu as numEtu, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.gender as gender, " +
-                "d.type as type, d.statusDossier as statusDossier, i.id as individuId, a.statusAmenagement as statusAmenagement " +
+                "d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId, a.statusAmenagement as statusAmenagement " +
             "from Dossier d join Individu i on i.id = d.individu.id left join Amenagement a on a.dossier = d " +
             "where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%')) " +
             "or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch)) " +
@@ -25,8 +26,9 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             "or upper(d.individu.numEtu) = :fullTextSearch) " +
             "and (:typeIndividu is null or d.type = : typeIndividu) " +
             "and (:statusDossier is null or d.statusDossier = :statusDossier) " +
+            "and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)" +
             "and (:yearFilter is null or d.year = :yearFilter)")
-    Page<DossierIndividuDto> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, Integer yearFilter, Pageable pageable);
+    Page<DossierIndividuDto> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable);
 
     Page<Dossier> findAllByYear(Integer year, Pageable pageable);
 
