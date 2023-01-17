@@ -75,11 +75,11 @@
                             <th scope="col" class=" d-none d-lg-table-cell" style="width: 100px;">
                                 <a class="sorted" sd:pagination-sort="type">Type Individu</a>
                             </th>
-                            <!-- <th scope="col" style="width: 100px;">
+                            <th scope="col" style="width: 100px;">
                                  <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
-                             </th>-->
+                             </th>
                             <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
-                                <a class="sorted" sd:pagination-sort="statusDossierAmenagement">Statut de l'aménagement du dossier</a>
+                                <a class="sorted" sd:pagination-sort="statusDossierAmenagement">Statut des aménagements</a>
                             </th>
                             <th scope="col" style="width: 100px;">Actions</th>
                         </tr>
@@ -94,7 +94,7 @@
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell" style="width: 100px;"></td>
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell" style="width: 100px;"></td>
-                            <!-- <th:block th:switch="${dossierIndividuDto.statusDossier}" style="width: 200px;">
+                            <th:block th:switch="${dossierIndividuDto.statusDossier}" style="width: 200px;">
                                  <td th:case="${dossierIndividuDto.statusDossier.SUIVI}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
                                  <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span></td>
                                  <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
@@ -103,7 +103,7 @@
                                  <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
                                  <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
                                  <td th:case="${dossierIndividuDto.statusDossier.DESINSCRIT}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span></td>
-                             </th:block>-->
+                             </th:block>
                             <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
                                     class="d-none d-sm-none d-md-table-cell"
                                     style="width: 300px;"></td>
