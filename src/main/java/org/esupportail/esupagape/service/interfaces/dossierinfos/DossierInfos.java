@@ -5,6 +5,7 @@ public class DossierInfos {
     String codComposante;
     String composante;
     String libelleFormation;
+    String libelleFormationPrec;
     String etablissement;
     String formAddress;
     String noteS1;
@@ -36,6 +37,14 @@ public class DossierInfos {
 
     public void setLibelleFormation(String libelleFormation) {
         this.libelleFormation = libelleFormation;
+    }
+
+    public String getLibelleFormationPrec() {
+        return libelleFormationPrec;
+    }
+
+    public void setLibelleFormationPrec(String libelleFormationPrec) {
+        this.libelleFormationPrec = libelleFormationPrec;
     }
 
     public String getEtablissement() {

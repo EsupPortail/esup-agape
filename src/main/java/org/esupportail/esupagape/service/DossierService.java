@@ -138,7 +138,7 @@ public class DossierService {
     public DossierInfos getInfos(Dossier dossier) {
         DossierInfos infos = new DossierInfos();
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, infos);
+            dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, infos);
         }
         return infos;
     }
@@ -160,21 +160,24 @@ public class DossierService {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, new DossierInfos());
+            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, new DossierInfos());
             if (dossierInfos != null) {
-                if (dossierInfos.getEtablissement() != null && !dossierInfos.getEtablissement().isEmpty()) {
+                if (StringUtils.hasText(dossierInfos.getEtablissement())) {
                     dossier.setSite(dossierInfos.getEtablissement());
                 }
-                if (dossierInfos.getCodComposante() != null && !dossierInfos.getCodComposante().isEmpty()) {
+                if (StringUtils.hasText(dossierInfos.getCodComposante())) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }
-                if (dossierInfos.getComposante() != null && !dossierInfos.getComposante().isEmpty()) {
+                if (StringUtils.hasText(dossierInfos.getComposante())) {
                     dossier.setComposante(dossierInfos.getComposante().trim());
                 }
-                if (dossierInfos.getLibelleFormation() != null && !dossierInfos.getLibelleFormation().isEmpty()) {
+                if (StringUtils.hasText(dossierInfos.getLibelleFormation())) {
                     dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
                 }
-                if (dossierInfos.getFormAddress() != null && !dossierInfos.getFormAddress().isEmpty()) {
+                if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
+                    dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());
+                }
+                if (StringUtils.hasText(dossierInfos.getFormAddress())) {
                     dossier.setFormAddress(dossierInfos.getFormAddress());
                 }
             }

@@ -90,7 +90,19 @@ public class ApoDossierInfosService implements DossierInfosService {
         } catch (AgapeApogeeException e) {
             logger.warn(e.getMessage());
         }
-
+        try {
+            List<InsAdmEtpDTO3> ieEtapes = wsApogeeServiceAdministratif.recupererIAEtapes(individu.getNumEtu(), String.valueOf(annee - 1));
+            if(ieEtapes != null) {
+                for (InsAdmEtpDTO3 insAdmEtpDTO : ieEtapes) {
+                    if (!insAdmEtpDTO.getEtapePremiere().equals("oui") && !getAllSteps) {
+                        continue;
+                    }
+                    dossierInfos.setLibelleFormationPrec(insAdmEtpDTO.getEtape().getLibWebVet());
+                }
+            }
+        } catch (AgapeApogeeException e) {
+            logger.warn(e.getMessage());
+        }
         return dossierInfos;
     }
 }
