@@ -49,6 +49,13 @@ public class AmenagementController {
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
     }
 
+    @GetMapping("{amenagementId}/show")
+    public String show(@PathVariable Long amenagementId, Model model) {
+        setModel(model);
+        model.addAttribute("amenagement",amenagementService.getById(amenagementId));
+        model.addAttribute("currentDossier",amenagementService.getById(amenagementId).getDossier());
+        return "amenagements/show";
+    }
     @GetMapping("/{amenagementId}/update")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));

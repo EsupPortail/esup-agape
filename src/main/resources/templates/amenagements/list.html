@@ -47,10 +47,19 @@
                                             <td th:text="${amenagement.nomMedecin}"></td>
                                             <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
                                             <td>
-                                                <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'" class="btn btn-warning"><i class="bi bi-pencil"></i>
+                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}"
+                                                        th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
+                                                        class="btn btn-info"><i class="bi bi-eye"></i></a>
+                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
+                                                        th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'"
+                                                        class="btn btn-warning"><i class="bi bi-pencil"></i>
                                                 </a>
-                                                <a data-bs-toggle="modal" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${amenagement.id}" class="btn btn-danger"><i
-                                                        class="bi bi-trash3"></i></a>
+                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
+                                                        data-bs-toggle="modal"
+                                                        href="#"
+                                                        data-bs-target="#modal-warning"
+                                                        th:attr="data-bs-target='#modal-warning'+${amenagement.id}"
+                                                        class="btn btn-danger"><i class="bi bi-trash3"></i></a>
                                                 <div class="modal modal-warning fade in" th:id="modal-warning+${amenagement.id}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">

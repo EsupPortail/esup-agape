@@ -59,11 +59,14 @@ public class AideHumaine {
     @OneToOne
     private Document annexe;
 
-    private Boolean rib;
+    @OneToOne
+    private Document rib;
 
-    private Boolean carteVitale;
+    @OneToOne
+    private Document carteVitale;
 
-    private Boolean carteEtu;
+    @OneToOne
+    private Document carteEtu;
 
     public Long getId() {
         return id;
@@ -185,27 +188,27 @@ public class AideHumaine {
         this.annexe = annexe;
     }
 
-    public Boolean getRib() {
+    public Document getRib() {
         return rib;
     }
 
-    public void setRib(Boolean rib) {
+    public void setRib(Document rib) {
         this.rib = rib;
     }
 
-    public Boolean getCarteVitale() {
+    public Document getCarteVitale() {
         return carteVitale;
     }
 
-    public void setCarteVitale(Boolean carteVitale) {
+    public void setCarteVitale(Document carteVitale) {
         this.carteVitale = carteVitale;
     }
 
-    public Boolean getCarteEtu() {
+    public Document getCarteEtu() {
         return carteEtu;
     }
 
-    public void setCarteEtu(Boolean carteEtu) {
+    public void setCarteEtu(Document carteEtu) {
         this.carteEtu = carteEtu;
     }
 }

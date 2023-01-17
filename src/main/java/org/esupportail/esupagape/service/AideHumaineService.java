@@ -47,6 +47,7 @@ public class AideHumaineService {
     public AideHumaine getById(Long aideHumaineId) {
         return aideHumaineRepository.findById(aideHumaineId).orElseThrow();
     }
+
     @Transactional
     public void delete(Long aideHumaineId) {
         aideHumaineRepository.deleteById(aideHumaineId);
@@ -60,22 +61,22 @@ public class AideHumaineService {
         aideHumaineToUpdate.setRib(aideHumaine.getRib());
         aideHumaineToUpdate.setCarteVitale(aideHumaine.getCarteVitale());
         aideHumaineToUpdate.setCarteEtu(aideHumaine.getCarteEtu());
-        if(StringUtils.hasText(aideHumaine.getNumEtuAidant())) {
+        if (StringUtils.hasText(aideHumaine.getNumEtuAidant())) {
             if (!aideHumaine.getNumEtuAidant().equals(aideHumaineToUpdate.getNumEtuAidant())) {
                 recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaineToUpdate);
             }
         } else {
             aideHumaineToUpdate.setNumEtuAidant("");
-            if(StringUtils.hasText(aideHumaine.getNameAidant())) {
+            if (StringUtils.hasText(aideHumaine.getNameAidant())) {
                 aideHumaineToUpdate.setNameAidant(aideHumaine.getNameAidant());
             }
-            if(StringUtils.hasText(aideHumaine.getFirstNameAidant())) {
+            if (StringUtils.hasText(aideHumaine.getFirstNameAidant())) {
                 aideHumaineToUpdate.setFirstNameAidant(aideHumaine.getFirstNameAidant());
             }
-            if(StringUtils.hasText(aideHumaine.getPhoneAidant())) {
+            if (StringUtils.hasText(aideHumaine.getPhoneAidant())) {
                 aideHumaineToUpdate.setPhoneAidant(aideHumaine.getPhoneAidant());
             }
-            if(StringUtils.hasText(aideHumaine.getEmailAidant())) {
+            if (StringUtils.hasText(aideHumaine.getEmailAidant())) {
                 aideHumaineToUpdate.setEmailAidant(aideHumaine.getEmailAidant());
             }
         }
@@ -83,25 +84,25 @@ public class AideHumaineService {
 
     private void recupAidantWithNumEtu(String numEtu, AideHumaine aideHumaineToUpdate) {
         IndividuInfos individuInfos = individuService.getIndividuInfosByNumEtu(numEtu);
-        if(StringUtils.hasText(individuInfos.getName())) {
+        if (StringUtils.hasText(individuInfos.getName())) {
             aideHumaineToUpdate.setNameAidant(individuInfos.getName());
         }
-        if(StringUtils.hasText(individuInfos.getFirstName())) {
+        if (StringUtils.hasText(individuInfos.getFirstName())) {
             aideHumaineToUpdate.setFirstNameAidant(individuInfos.getFirstName());
         }
-        if(StringUtils.hasText(individuInfos.getEmailEtu())) {
+        if (StringUtils.hasText(individuInfos.getEmailEtu())) {
             aideHumaineToUpdate.setEmailAidant(individuInfos.getEmailEtu());
         }
-        if(StringUtils.hasText(individuInfos.getEmailPerso())) {
+        if (StringUtils.hasText(individuInfos.getEmailPerso())) {
             aideHumaineToUpdate.setEmailAidant(individuInfos.getEmailPerso());
         }
-        if(individuInfos.getDateOfBirth() != null) {
+        if (individuInfos.getDateOfBirth() != null) {
             aideHumaineToUpdate.setDateOfBirthAidant(individuInfos.getDateOfBirth());
         }
-        if(StringUtils.hasText(individuInfos.getFixPhone())) {
+        if (StringUtils.hasText(individuInfos.getFixPhone())) {
             aideHumaineToUpdate.setPhoneAidant(individuInfos.getFixPhone());
         }
-        if(StringUtils.hasText(individuInfos.getContactPhone())) {
+        if (StringUtils.hasText(individuInfos.getContactPhone())) {
             aideHumaineToUpdate.setPhoneAidant(individuInfos.getContactPhone());
         }
         aideHumaineToUpdate.setNumEtuAidant(numEtu);
@@ -111,7 +112,7 @@ public class AideHumaineService {
     public void addFiche(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         try {
-            for(MultipartFile multipartFile : multipartFiles) {
+            for (MultipartFile multipartFile : multipartFiles) {
                 Document ficheRenseignement = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
                 aideHumaine.setFicheRenseignement(ficheRenseignement);
             }
@@ -143,7 +144,7 @@ public class AideHumaineService {
     public void addAnnexe(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         try {
-            for(MultipartFile multipartFile : multipartFiles) {
+            for (MultipartFile multipartFile : multipartFiles) {
                 Document annexe = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
                 aideHumaine.setAnnexe(annexe);
             }
@@ -175,7 +176,7 @@ public class AideHumaineService {
     public void addContrat(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         try {
-            for(MultipartFile multipartFile : multipartFiles) {
+            for (MultipartFile multipartFile : multipartFiles) {
                 Document contrat = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
                 aideHumaine.setContrat(contrat);
             }
@@ -203,4 +204,99 @@ public class AideHumaineService {
         }
     }
 
+    @Transactional
+    public void addRib(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            for (MultipartFile multipartFile : multipartFiles) {
+                Document rib = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                aideHumaine.setRib(rib);
+            }
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteRib(Long aideHumaineId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        Document document = aideHumaine.getRib();
+        aideHumaine.setRib(null);
+        documentService.delete(document);
+    }
+
+    @Transactional
+    public void getRibHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            Document document = aideHumaine.getRib();
+            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void addCarteVitale(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            for (MultipartFile multipartFile : multipartFiles) {
+                Document carteVitale = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                aideHumaine.setCarteVitale(carteVitale);
+            }
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteCarteVitale(Long aideHumaineId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        Document document = aideHumaine.getCarteVitale();
+        aideHumaine.setCarteVitale(null);
+        documentService.delete(document);
+    }
+
+    @Transactional
+    public void getCarteVitaleHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            Document document = aideHumaine.getCarteVitale();
+            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void addCarteEtu(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            for (MultipartFile multipartFile : multipartFiles) {
+                Document carteEtu = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                aideHumaine.setCarteEtu(carteEtu);
+            }
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteCarteEtu(Long aideHumaineId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        Document document = aideHumaine.getCarteEtu();
+        aideHumaine.setCarteEtu(null);
+        documentService.delete(document);
+    }
+
+    @Transactional
+    public void getCarteEtuHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        try {
+            Document document = aideHumaine.getCarteEtu();
+            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+        } catch (IOException e) {
+            throw new AgapeIOException(e.getMessage());
+        }
+    }
 }
