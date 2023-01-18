@@ -35,14 +35,9 @@
                         </div>
                     </div>
                     <p th:if="${#fields.hasErrors('typeContact')}" th:errorclass="error" th:errors="*{typeContact}"></p>
-                    <!--<div class="modal-body mt-3">
-                        <label th:for="interlocuteur" class="form-label">Interlocuteur</label>
-                        <input type="text" class="form-control"  th:field="*{interlocuteur}" required>
-                        <p th:if="${#fields.hasErrors('interlocuteur')}" th:errorclass="error" th:errors="*{interlocuteur}"></p>
-                    </div>-->
-                    <div class="modal-body mt-3 d-grid">
-                        <label th:for="displayName" class="form-label">Interlocuteur</label>
-                        <td th:text="${personLdap.displayName}"></td>
+                    <div class="modal-body mt-3 mb-3">
+                        <label for="displayName" class="form-label">Interlocuteur</label>
+                        <input type="text" class="form-control" id="displayName" th:value="${personLdap.displayName}" name="displayName">
                     </div>
                     <div class="modal-body mt-3 mb-3">
                         <label for="compteRendu" class="form-label">Compte rendu</label>
