@@ -228,4 +228,5 @@ public class DossierService {
             documentService.delete(attachment);
         }
     }
+
 }

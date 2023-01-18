@@ -219,13 +219,6 @@
                                                       style="min-height:60px; resize: none;"
                                                       th:text="${currentDossier.libelleFormationPrec}"
                                                       th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
-                                            <a onclick="toggleInputLock('libelleFormation');"
-                                               role="button"
-                                               id="libelleFormationPrecEdit"
-                                               class="btn btn-light border-secondary border-opacity-25 d-none"
-                                               th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
                                         </div>
                                     </div>
                                 </div>

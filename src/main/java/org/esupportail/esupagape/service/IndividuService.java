@@ -171,7 +171,6 @@ public class IndividuService {
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
-            logger.info("{}", individusFromSource.size());
             List<Individu> individusToCreate = individusFromSource.stream().filter(
                     individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
                     &&

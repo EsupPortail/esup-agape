@@ -4,6 +4,7 @@ import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -33,6 +34,7 @@ public class AmenagementAdministratifController {
     private final AmenagementService amenagementService;
 
     private final DossierService dossierService;
+
     private final UtilsService utilsService;
 
     public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService) {
@@ -90,11 +92,25 @@ public class AmenagementAdministratifController {
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(@PathVariable Long amenagementId, Model model) {
+    public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
         setModel(model);
-        model.addAttribute("amenagement",amenagementService.getById(amenagementId));
-        model.addAttribute("currentDossier",amenagementService.getById(amenagementId).getDossier());
+        Amenagement amenagement = amenagementService.getById(amenagementId);
+        model.addAttribute("amenagement", amenagement);
+        model.addAttribute("currentDossier", dossierService.getCurrent(amenagement.getDossier().getIndividu().getId()));
+        model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));
         return "administratif/amenagements/show";
+    }
+
+    @PostMapping("/{amenagementId}/porte")
+    public String porte(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+        try {
+            amenagementService.porteAdministration(amenagementId, personLdap);
+            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été porté pour l'année courante"));
+        } catch (AgapeJpaException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Portabilité impossible"));
+
+        }
+        return "redirect:/administratif/amenagements/" + amenagementId;
     }
 
     @PostMapping("/{amenagementId}/validation")
