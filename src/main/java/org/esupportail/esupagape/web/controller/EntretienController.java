@@ -9,6 +9,7 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.EntretienService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,7 +44,7 @@ public class EntretienController {
     public String list(Dossier dossier, @PageableDefault(
             sort = "date",
             direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        Page<EntretienAttachement> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossier.getId(), pageable);
+        Page<EntretienAttachement> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossier.getId(),pageable);
         model.addAttribute("entretiens", entretiens);
         model.addAttribute("entretien", new Entretien());
         model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
@@ -59,14 +60,14 @@ public class EntretienController {
     }
 
     @PostMapping("/create-entretien")
-    public String create(@Valid Entretien entretien, BindingResult bindingResult, Dossier dossier, Model model) {
+    public String create(@Valid Entretien entretien, BindingResult bindingResult, Dossier dossier, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model, dossier);
             model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
             return "entretiens/list";
         }
         entretien.setDossier(dossier);
-        entretienService.create(entretien);
+        entretienService.create(entretien, dossier.getId(), personLdap);
         return "redirect:/dossiers/" + dossier.getId() + "/entretiens";
     }
 
@@ -82,10 +83,9 @@ public class EntretienController {
         model.addAttribute("typeContacts", TypeContact.values());
         return "entretiens/update";
     }
-
     @PutMapping("/{entretienId}/update")
-    public String update(@PathVariable Long entretienId, @Valid Entretien entretien, Dossier dossier) throws AgapeJpaException {
-        entretienService.update(entretienId, entretien);
+    public String update(@PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap,  Dossier dossier) throws AgapeJpaException {
+        entretienService.update(entretienId, entretien, personLdap);
         return "redirect:/dossiers/" + dossier.getId() + "/entretiens/" + entretienId + "/update";
     }
 

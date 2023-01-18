@@ -11,6 +11,7 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,10 @@ public class EntretienService {
     }
 
     @Transactional
-    public void create (Entretien entretien) {
+    public void create (Entretien entretien, Long idDossier, PersonLdap personLdap) {
+       Dossier dossier = dossierService.getById(idDossier);
+       entretien.setDossier(dossier);
+       entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
     }
 
@@ -96,11 +100,11 @@ public class EntretienService {
     }
 
     @Transactional
-    public void update(Long entretienId, Entretien entretien) throws AgapeJpaException {
+    public void update(Long entretienId, Entretien entretien, PersonLdap personLdap) throws AgapeJpaException {
         Entretien entretienToUpdate = getById(entretienId);
         entretienToUpdate.setDate(entretien.getDate());
         entretienToUpdate.setTypeContact(entretien.getTypeContact());
-        entretienToUpdate.setInterlocuteur(entretien.getInterlocuteur());
+        entretienToUpdate.setInterlocuteur(personLdap.getDisplayName());
         entretienToUpdate.setCompteRendu(entretien.getCompteRendu());
         entretienRepository.save(entretienToUpdate);
     }
@@ -109,7 +113,7 @@ public class EntretienService {
         return entretienRepository.findEntretiensByDossierId(dossier.getId(), pageable);
     }
 
-    public Page<EntretienAttachement> findEntretiensWithAttachementsByDossierId(Long dossierId, Pageable pageable) {
+    public Page<EntretienAttachement> findEntretiensWithAttachementsByDossierId(Long dossierId,  Pageable pageable) {
         return entretienRepository.findEntretiensWithAttachementsByDossierId(dossierId, pageable);
     }
 }

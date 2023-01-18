@@ -20,7 +20,7 @@ public class Entretien
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
-    @NotEmpty(message = "Ce champ doit être renseigné")
+    //@NotEmpty(message = "Ce champ doit être renseigné")
     private String interlocuteur;
 
     @NotEmpty(message = "Ce champ doit être renseigné")
