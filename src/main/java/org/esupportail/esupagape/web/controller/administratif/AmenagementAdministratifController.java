@@ -57,21 +57,23 @@ public class AmenagementAdministratifController {
         }
         if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDER_MEDECIN;
         if(!StringUtils.hasText(codComposante)) codComposante = null;
-
+        Page<Amenagement> amenagementsToValidate = amenagementService.getFullTextSearch(StatusAmenagement.VALIDER_MEDECIN, null, yearFilter, pageable);
+        Page<Amenagement> amenagementsToPorte = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
         Page<Amenagement> amenagements = null;
         List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
         statusAmenagements.remove(StatusAmenagement.BROUILLON);
         statusAmenagements.remove(StatusAmenagement.SUPPRIME);
         if(porte) {
-            amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+            amenagements = amenagementsToPorte;
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISER_ADMINISTRATION);
         } else {
-            amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
+            amenagements = amenagementsToValidate;
         }
         model.addAttribute("amenagements", amenagements);
         model.addAttribute("statusAmenagements", statusAmenagements);
-
+        model.addAttribute("nbAmenagementsToValidate", amenagementsToValidate.getTotalElements());
+        model.addAttribute("nbAmenagementsToPorte", amenagementsToPorte.getTotalElements());
         model.addAttribute("statusAmenagement", statusAmenagement);
         model.addAttribute("codComposante", codComposante);
         model.addAttribute("porte", porte);

@@ -7,7 +7,20 @@
 <body>
 <header th:replace="fragments/header :: header"></header>
 <main class="d-inline-flex">
+    <div class="agape-side bg-light position-sticky me-2">
+        <a href="/administratif/amenagements?porte=0" class="btn  ms-3 mt-3" th:classappend="${!porte ? 'btn-secondary' : 'btn-light'}">Aménagements à valider <div class="badge bg-danger" th:text="${nbAmenagementsToValidate}"></div></a>
+        <a href="/administratif/amenagements?porte=1" class="btn  ms-3 mt-3" th:classappend="${porte ? 'btn-secondary' : 'btn-light'}">Aménagements portables <div class="badge bg-danger" th:text="${nbAmenagementsToPorte}"></div></a>
+    </div>
     <div class="agape-content agape-content-side">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <span th:if="${porte}">Aménagements pouvants beneficier d'une portabilitée</span>
+                    <span th:if="${!porte}" th:text="'Liste des aménagement' + ${currentYear}'"></span>
+
+                </li>
+            </ol>
+        </nav>
         <div class="m-3">
             <div class="row">
                 <div class="col-12">
