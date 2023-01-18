@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.esupportail.esupagape.dtos.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -134,7 +135,7 @@ public class AmenagementService {
     }
 
     public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearchPorte(codComposante, yearFilter, pageable);
+        return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
     }
 
     @Transactional
@@ -250,4 +251,24 @@ public class AmenagementService {
         pdDocument.save(out);
         return out.toByteArray();
     }
+
+    @Transactional
+    public Amenagement getAmenagementPrec(Long amenagementId, Integer year) {
+        Amenagement amenagement = getById(amenagementId);
+        Individu individu = amenagement.getDossier().getIndividu();
+        List<Amenagement> amenagements = amenagementRepository.findAmenagementPrec(individu, year);
+        if(amenagements.size() > 0) {
+            return amenagementRepository.findAmenagementPrec(individu, year).get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void porteAdministration(Long id, PersonLdap personLdap) throws AgapeJpaException {
+        Amenagement amenagement = getById(id);
+        Dossier currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+    }
+
 }

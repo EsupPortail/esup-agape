@@ -9,6 +9,9 @@
         <main class="d-inline-flex">
             <div th:replace="fragments/side-administratif :: side"></div>
             <div class="float-buttons">
+                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null}">
+                    <i class="bi bi-arrow-repeat"></i>
+                </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
                     <i class="bi bi-check-lg"></i>
                 </button>
@@ -30,9 +33,43 @@
                         </li>
                     </ol>
                 </nav>
+                <div class="col-12 text-center">
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-2" style="width: 100px;">
+                            <label class="form-label" for="libelleFormation">Formation</label>
+                        </div>
+                        <div class="col-4">
+                            <div class="input-group">
+                                            <textarea rows="3"
+                                                      disabled
+                                                      id="libelleFormation"
+                                                      name="libelleFormation"
+                                                      class="form-control"
+                                                      style="min-height:60px; resize: none;"
+                                                      th:text="${currentDossier.libelleFormation}"
+                                                      th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-2" style="width: 250px;">
+                            <label class="form-label" for="libelleFormation">Formation année précédente</label>
+                        </div>
+                        <div class="col-4">
+                            <div class="input-group">
+                                            <textarea rows="3"
+                                                      disabled
+                                                      id="libelleFormationPrec"
+                                                      name="libelleFormationPrec"
+                                                      class="form-control"
+                                                      style="min-height:60px; resize: none;"
+                                                      th:text="${currentDossier.libelleFormationPrec}"
+                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 text-center" style="height: 90%">
-                <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                 </div>
                 <div class="d-none">
                 <div class="ms-4 me-4 mt-4">
@@ -51,6 +88,27 @@
             </div>
             </div>
         </main>
+        <div class="modal fade" id="porteModal" tabindex="-1" aria-labelledby="porteModalLabel" aria-hidden="true" th:if="${amenagementPrec != null}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="porteModalLabel">Porté un aménagement d’examen d’une année antérieure</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post"
+                          th:action="@{/administratif/amenagements/{amenagementId}/porte(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer la portabilité de l’aménagement
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
             <div class="modal-dialog">
                 <div class="modal-content">
