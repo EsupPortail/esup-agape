@@ -33,48 +33,12 @@
                         </li>
                     </ol>
                 </nav>
-
-                    <dl class="row">
-                        <dt class="col-sm-2">Formation</dt>
-                        <dd class="col-sm-10" th:text="${currentDossier.libelleFormation}"></dd>
-                        <dt class="col-sm-2">Formation précédente</dt>
-                        <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
-                    </dl>
-
-                <div class="col-12 text-center">
-                    <div class="row mb-1 align-items-baseline">
-                        <div class="col-2" style="width: 100px;">
-                            <label class="form-label" for="libelleFormation">Formation</label>
-                        </div>
-                        <div class="col-4">
-                            <div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormation"
-                                                      name="libelleFormation"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormation}"
-                                                      th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-2" style="width: 250px;">
-                            <label class="form-label" for="libelleFormation">Formation année précédente</label>
-                        </div>
-                        <div class="col-4">
-                            <div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormationPrec"
-                                                      name="libelleFormationPrec"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormationPrec}"
-                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <dl class="row">
+                    <dt class="col-sm-2">Formation</dt>
+                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormation}"></dd>
+                    <dt class="col-sm-2">Formation précédente</dt>
+                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
+                </dl>
                 <div class="col-12 text-center" style="height: 90%">
                     <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                     <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
