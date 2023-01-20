@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +51,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             PersonLdap personLdap = personLdaps.get(0);
             individuInfos.setEppn(personLdap.getEduPersonPrincipalName());
             String address = personLdap.getPostalAddress();
-            if (address != null && !address.isEmpty()) {
+            if (StringUtils.hasText(address)) {
                 individuInfos.setFixAddress(address.split("\\$")[0].trim());
                 if(address.split("\\$")[1].split(" ").length > 0) {
                     individuInfos.setFixCP(address.split("\\$")[1].split(" ")[0].trim());

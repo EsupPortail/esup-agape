@@ -62,7 +62,7 @@ public class DossierService {
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(statusDossier);
-        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
+        if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
         }
         dossierRepository.save(dossier);

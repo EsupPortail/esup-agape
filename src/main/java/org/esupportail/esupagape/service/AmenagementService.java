@@ -19,6 +19,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -44,13 +45,15 @@ public class AmenagementService {
     private final DossierService dossierService;
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
+    private final UtilsService utilsService;
 
 
-    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource) {
+    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService) {
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
         this.objectMapper = objectMapper;
         this.messageSource = messageSource;
+        this.utilsService = utilsService;
     }
 
     public Amenagement getById(Long id) {
@@ -62,7 +65,7 @@ public class AmenagementService {
     }
 
     public boolean isAmenagementValid(Long dossierId) {
-        return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISER_ADMINISTRATION).size() > 0;
+        return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION).size() > 0;
     }
 
     @Transactional
@@ -138,12 +141,20 @@ public class AmenagementService {
         return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
     }
 
+    public Long countToValidate() {
+        return amenagementRepository.countToValidate(utilsService.getCurrentYear());
+    }
+
+    public Long countToPorte() {
+        return amenagementRepository.countToPorte(utilsService.getCurrentYear());
+    }
+
     @Transactional
     public void validationMedecin(Long id) throws AgapeException {
         Amenagement amenagement = getById(id);
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagement.setValideMedecinDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.VALIDER_MEDECIN);
+            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
@@ -153,9 +164,9 @@ public class AmenagementService {
     @Transactional
     public void validationAdministration(Long id, PersonLdap personLdap) throws AgapeException {
         Amenagement amenagement = getById(id);
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN)) {
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
             amenagement.setAdministrationDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.VISER_ADMINISTRATION);
+            amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
         } else {
@@ -166,9 +177,9 @@ public class AmenagementService {
     @Transactional
     public void refusAdministration(Long id, PersonLdap personLdap, String motif) throws AgapeException {
         Amenagement amenagement = getById(id);
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN)) {
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
             amenagement.setAdministrationDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.REFUSER_ADMINISTRATION);
+            amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
             amenagement.setMotifRefus(motif);
         } else {
@@ -179,7 +190,7 @@ public class AmenagementService {
     @Transactional
     public void getCertificat(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
-        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             throw new AgapeException("Le certificat ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
@@ -189,7 +200,7 @@ public class AmenagementService {
     @Transactional
     public void getAvis(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
-        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDER_MEDECIN) && !amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) && !amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             throw new AgapeException("L'avis ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
@@ -221,7 +232,7 @@ public class AmenagementService {
         certificatPdf.setAmenagementText(amenagementsWithNumbers);
         certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISER_ADMINISTRATION)) {
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             //ajouter des données du visa
             certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             certificatPdf.setNomValideur(amenagement.getNomValideur());

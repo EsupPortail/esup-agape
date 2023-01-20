@@ -12,13 +12,13 @@
                 <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null}">
                     <i class="bi bi-arrow-repeat"></i>
                 </button>
-                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
                     <i class="bi bi-check-lg"></i>
                 </button>
-                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
                     <i class="bi bi-x-lg"></i>
                 </button>
-                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
                     <i class="bi bi-file-earmark-lock-fill" style="font-size: 22px"></i>
                 </a>
             </div>
@@ -40,23 +40,8 @@
                     <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
                 </dl>
                 <div class="col-12 text-center" style="height: 90%">
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISER_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                </div>
-                <div class="d-none">
-                    <div class="ms-4 me-4 mt-4">
-                        <div class="row text-center" style="border: 2px solid black; background: cadetblue;">
-                            <h4 th:text="'Aménagements d\'examen de ' +${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + #strings.capitalize(#strings.toLowerCase(amenagement.dossier.individu.firstName))}"></h4>
-                            <div class="row">
-                                <div class="col-12 col-xxl-6">
-                                    <h5 th:text="'Statut administratif:' + ' ' + #{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></h5>
-                                </div>
-                                <div class="col-12 col-xxl-6">
-                                    <h5 th:text="${amenagement.mailIndividu} == false ? 'Statut mail de l\'individu: Envoyé': 'Statut mail de l\'individu: Non envoyé'"></h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                 </div>
             </div>
         </main>
@@ -81,7 +66,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -101,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDER_MEDECIN)}">
+        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

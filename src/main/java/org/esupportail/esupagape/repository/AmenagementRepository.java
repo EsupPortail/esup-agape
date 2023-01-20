@@ -24,21 +24,35 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "and (:yearFilter is null or d.year = :yearFilter)")
     Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
 
+    @Query(value = "select count(a) from Amenagement a join Dossier d on a.dossier = d " +
+            "where " +
+            "a.statusAmenagement = 'VALIDE_MEDECIN' " +
+            "and (:yearFilter is null or d.year = :yearFilter)")
+    Long countToValidate(Integer yearFilter);
+
     @Query(value = "select a from Amenagement a " +
             "join Dossier d on a.dossier = d " +
             "where " +
             "(:codComposante is null or a.dossier.codComposante  = :codComposante) " +
-            "and a.statusAmenagement = 'VISER_ADMINISTRATION' " +
+            "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and (d.year < :yearFilter) " +
             "and (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1")
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
+
+    @Query(value = "select count(a) from Amenagement a " +
+            "join Dossier d on a.dossier = d " +
+            "where " +
+            "a.statusAmenagement = 'VISE_ADMINISTRATION' " +
+            "and (d.year < :yearFilter) " +
+            "and (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1")
+    Long countToPorte(Integer yearFilter);
 
     @Query(value = "select a from Amenagement a " +
             "join Dossier d on a.dossier = d " +
             "join Individu i on d.individu = i " +
             "where " +
             "i = :individu " +
-            "and a.statusAmenagement = 'VISER_ADMINISTRATION' " +
+            "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and (d.year < :yearFilter)")
     List<Amenagement> findAmenagementPrec(Individu individu, Integer yearFilter);
 

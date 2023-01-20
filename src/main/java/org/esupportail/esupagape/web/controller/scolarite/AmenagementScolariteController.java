@@ -30,7 +30,7 @@ public class AmenagementScolariteController {
     public String list(@PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, PersonLdap personLdap, Model model) {
-        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISER_ADMINISTRATION, "IUR", utilsService.getCurrentYear(), pageable));
+        model.addAttribute("amenagements", amenagementService.getFullTextSearch(StatusAmenagement.VISE_ADMINISTRATION, "IUR", utilsService.getCurrentYear(), pageable));
         setModel(model);
         return "scolarite/amenagements/list";
     }

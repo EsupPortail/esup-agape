@@ -200,7 +200,7 @@ public class IndividuService {
             }
         }
         Individu foundIndividu = null;
-        if (individuToAdd.getNumEtu() != null && !individuToAdd.getNumEtu().isEmpty()) {
+        if (StringUtils.hasText(individuToAdd.getNumEtu())) {
             foundIndividu = individuRepository.findByNumEtu(individuToAdd.getNumEtu());
         } else {
             //numEtu à null pour éviter la contrainte d’unicité
@@ -236,12 +236,12 @@ public class IndividuService {
         Individu individuTestIsExist = null;
 //        individu.setName(StringUtils.capitalize(individu.getName()));
 //        individu.setFirstName(StringUtils.capitalize(individu.getFirstName()));
-        if (individu.getNumEtu() != null && !individu.getNumEtu().isEmpty()) {
+        if (StringUtils.hasText(individu.getNumEtu())) {
             individuTestIsExist = getIndividu(individu.getNumEtu());
             if (individuTestIsExist == null) {
                 return createFromSources(individu.getNumEtu(), force);
             }
-        } else if (!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null) {
+        } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if (individuTestIsExist == null) {
                 Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
@@ -255,7 +255,7 @@ public class IndividuService {
         }
         if (individuTestIsExist != null) {
             return individuTestIsExist;
-        } else if (!individu.getName().isEmpty() && !individu.getFirstName().isEmpty() && individu.getDateOfBirth() != null && !individu.getSex().isEmpty()) {
+        } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(individu, force);
         }
         return individu;
@@ -319,7 +319,7 @@ public class IndividuService {
         MultiValueMap<String, Object> multipartMap = new LinkedMultiValueMap<>();
         HttpEntity<Object> request = new HttpEntity<>(multipartMap, headers);
         Individu individu = getById(id);
-        if(!applicationProperties.getDisplayPhotoUriPattern().isEmpty() && individu != null && individu.getPhotoId() != null && !individu.getPhotoId().isEmpty()) {
+        if(StringUtils.hasText(applicationProperties.getDisplayPhotoUriPattern()) && individu != null && individu.getPhotoId() != null && !individu.getPhotoId().isEmpty()) {
             String uri = MessageFormat.format(applicationProperties.getDisplayPhotoUriPattern(), individu.getPhotoId());
             try {
                 httpResponse = template.exchange(uri, HttpMethod.GET, request, byte[].class);

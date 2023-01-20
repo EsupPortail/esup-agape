@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
-import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -37,10 +37,13 @@ public class AmenagementAdministratifController {
 
     private final UtilsService utilsService;
 
-    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService) {
+    private final ApplicationProperties applicationProperties;
+
+    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService, ApplicationProperties applicationProperties) {
         this.amenagementService = amenagementService;
         this.dossierService = dossierService;
         this.utilsService = utilsService;
+        this.applicationProperties = applicationProperties;
     }
 
     @GetMapping
@@ -55,25 +58,24 @@ public class AmenagementAdministratifController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
-        if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDER_MEDECIN;
+        if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDE_MEDECIN;
         if(!StringUtils.hasText(codComposante)) codComposante = null;
-        Page<Amenagement> amenagementsToValidate = amenagementService.getFullTextSearch(StatusAmenagement.VALIDER_MEDECIN, null, yearFilter, pageable);
-        Page<Amenagement> amenagementsToPorte = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
-        Page<Amenagement> amenagements = null;
+        Page<Amenagement> amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
         List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
         statusAmenagements.remove(StatusAmenagement.BROUILLON);
         statusAmenagements.remove(StatusAmenagement.SUPPRIME);
-        if(porte) {
-            amenagements = amenagementsToPorte;
-            statusAmenagements.clear();
-            statusAmenagements.add(StatusAmenagement.VISER_ADMINISTRATION);
-        } else {
-            amenagements = amenagementsToValidate;
+        if(!StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+            statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
-        model.addAttribute("amenagements", amenagements);
+        if(porte) {
+            amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+            statusAmenagements.clear();
+            statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
+        }
         model.addAttribute("statusAmenagements", statusAmenagements);
-        model.addAttribute("nbAmenagementsToValidate", amenagementsToValidate.getTotalElements());
-        model.addAttribute("nbAmenagementsToPorte", amenagementsToPorte.getTotalElements());
+        model.addAttribute("amenagements", amenagements);
+        model.addAttribute("nbAmenagementsToValidate", amenagementService.countToValidate());
+        model.addAttribute("nbAmenagementsToPorte", amenagementService.countToPorte());
         model.addAttribute("statusAmenagement", statusAmenagement);
         model.addAttribute("codComposante", codComposante);
         model.addAttribute("porte", porte);
@@ -83,8 +85,7 @@ public class AmenagementAdministratifController {
     }
 
     private void setModel(Model model) {
-        List<ComposanteDto> toto = dossierService.getAllComposantes();
-        model.addAttribute("composantes", toto);
+        model.addAttribute("composantes", dossierService.getAllComposantes());
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
         model.addAttribute("tempsMajores" , TempsMajore.values());
         model.addAttribute("typeEpreuves" , TypeEpreuve.values());

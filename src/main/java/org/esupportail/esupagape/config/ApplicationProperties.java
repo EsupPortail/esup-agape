@@ -25,6 +25,12 @@ public class ApplicationProperties {
     @AgapeLdapAttributExist
     private String mappingPhotoIdToLdapField;
 
+    /**
+     * Adresse de l'instance esup-signature
+     * Ex : https://esup-signature.univ-ville.fr
+     */
+    private String esupSignatureUrl = "";
+
     public String getApplicationEmail() {
         return applicationEmail;
     }
@@ -47,5 +53,13 @@ public class ApplicationProperties {
 
     public void setMappingPhotoIdToLdapField(String mappingPhotoIdToLdapField) {
         this.mappingPhotoIdToLdapField = mappingPhotoIdToLdapField;
+    }
+
+    public String getEsupSignatureUrl() {
+        return esupSignatureUrl;
+    }
+
+    public void setEsupSignatureUrl(String esupSignatureUrl) {
+        this.esupSignatureUrl = esupSignatureUrl;
     }
 }

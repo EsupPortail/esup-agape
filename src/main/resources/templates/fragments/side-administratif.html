@@ -14,6 +14,8 @@
                 <dt class="col-sm-6">Date de fin</dt>
                 <!--<dd class="col-sm-6" th:text="#{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement}}"></dd>-->
                 <dd class="col-sm-6" th:text="${amenagement.endDate} != null ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></dd>
+                <dt class="col-sm-6">Statut de l’envoi de mail individu</dt>
+                <dd th:text="${amenagement.mailIndividu} == true ? 'Envoyé': 'Non envoyé'"></dd>
             </div>
             <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Information sur l'individu</span></span>
             <div class="container">
