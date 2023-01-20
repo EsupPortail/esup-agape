@@ -189,7 +189,9 @@ public class DossierService {
         Dossier dossierToUpdate = getById(id);
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
-        dossierToUpdate.setType(dossierIndividuForm.getType());
+        if(!StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
+            dossierToUpdate.setType(dossierIndividuForm.getType());
+        }
         if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
         }
