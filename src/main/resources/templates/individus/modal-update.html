@@ -50,7 +50,7 @@
                             <label class="form-label" for="nationalite">Nationalité</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <select id="nationalite" name="nationalite" class="form-control">
+                            <select id="nationalite" name="nationalite" class="form-select">
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Åland Islands">Åland Islands</option>
                                 <option value="Albania">Albania</option>
@@ -303,7 +303,7 @@
                             <label class="form-label" for="statusDossier">Statut du dossier</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <select id="statusDossier" name="statusDossier" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
+                            <select id="statusDossier" name="statusDossier" type="text" class="form-select">
                                 <option value="" disabled selected>Choisir</option>
                                 <option th:selected="${currentDossier.statusDossier == statusDossier}" th:each="statusDossier : ${statusDossiers}" th:text="#{'dossier.statusDossier.' +${statusDossier}}" th:value="${statusDossier}"></option>
                             </select>

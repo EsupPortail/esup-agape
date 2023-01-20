@@ -26,8 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.List;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -75,9 +73,6 @@ public class DossierController {
     @GetMapping("/{id}")
     public String update(@PathVariable Long id, Model model) {
         Dossier dossier = dossierService.getById(id);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
-        dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
-        model.addAttribute("dossiers", dossiers);
         model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
@@ -85,12 +80,10 @@ public class DossierController {
         model.addAttribute("tauxs", Taux.values());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("etats", Etat.values());
-        model.addAttribute("typeIndividus", TypeIndividu.values());
-        model.addAttribute("statusDossiers", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeFormations", TypeFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
-        model.addAttribute("currentDossier", dossierService.getById(id));
+//        model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
         model.addAttribute("attachments", dossierService.getAttachements(dossier.getId()));
@@ -126,12 +119,6 @@ public class DossierController {
     public String deleteDossier(@PathVariable("id") long id) {
         dossierService.deleteDossier(id);
         return "redirect:/dossiers";
-    }
-
-    @RequestMapping(value = "/photo/{id}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getPhoto(@PathVariable("id") Long id) {
-        return individuService.getPhoto(id);
     }
 
     @PostMapping("/{id}/add-attachments")
