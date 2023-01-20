@@ -13,12 +13,6 @@
                 <div class="col-12">
                     <form th:action="@{/scolarite/amenagements}" method="get">
                         <div class="row mt-1 mb-2 g-1">
-                            <div class="col-2" style="width: 350px;">
-                                <div class="input-group">
-                                    <label class="input-group-text">Date de création</label>
-                                    <input id="createDate" type="date" class="form-control" th:name="createDate" value="">
-                                </div>
-                            </div>
                             <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
                                 <input class="btn btn-success" type="submit" value="Rechercher">
                                 <a class="btn btn-secondary" id="btnClear" th:href="@{/scolarite/amenagements}">Effacer</a>
