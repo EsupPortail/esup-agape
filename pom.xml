@@ -120,9 +120,9 @@
             <version>5.2.3</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>bootstrap-icons</artifactId>
-            <version>1.10.2</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>6.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>

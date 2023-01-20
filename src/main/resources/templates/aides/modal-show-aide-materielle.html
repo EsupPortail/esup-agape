@@ -63,7 +63,7 @@
                     <div class="d-inline">
                         <button th:id="'close-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                         <button role="button" onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-warning">
-                            <i class="bi bi-pencil"></i>
+                            <i class="fa-solid fa-pen"></i>
                         </button>
                         <input onclick="lockForm();" th:id="'lock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Annuler" class="btn btn-danger d-none">
                         <input th:id="'submit-aide-materielle-' + ${aideMaterielle.id}" type="submit" value="Enregister" class="btn btn-success d-none">

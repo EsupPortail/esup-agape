@@ -110,12 +110,12 @@
                             <td style="width: 100px;">
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
-                                        <a class="btn btn-info" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="bi bi-eye"></i>
+                                        <a class="btn btn-info" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="fa-solid fa-eye"></i>
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-danger">
-                                            <i class="bi bi-person-x"></i></a>
+                                            <i class="fa-solid fa-user-xmark"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-individu-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -144,7 +144,7 @@
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                                         <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-danger">
-                                            <i class="bi bi-folder-x"></i></a>
+                                            <i class="fa-solid fa-trash"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-dossier-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">

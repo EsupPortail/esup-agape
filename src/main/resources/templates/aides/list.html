@@ -26,7 +26,7 @@
                             <div class="clearfix w-100">
                                 <h4 class="float-start">Aides matérielles</h4>
                                 <button title="Ajouter une aide materielle" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal">
-                                    <i class="bi bi-plus-lg" style="font-size: 1.1rem;"></i></button>
+                                    <i class="fa-solid fa-plus"></i></button>
                             </div>
                             <hr>
                             <table class="table table-striped table-responsive mx-auto mt-4">
@@ -46,12 +46,12 @@
                                             <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
                                             <td th:text="${aideMaterielle.cost}"></td>
                                             <td>
-                                                <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-eye"></i>
+                                                <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-eye"></i>
                                                 </button>
                                                 <div th:replace="aides/modal-show-aide-materielle :: show"></div>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="bi bi-trash3"></i>
+                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'delete-aide-materielle-' + ${aideMaterielle.id}"
@@ -97,7 +97,7 @@
                             <div class="clearfix w-100">
                                 <h4 class="float-start">Aides humaines</h4>
                                 <button title="Ajouter une aide humaine" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-humaine-modal">
-                                    <i class="bi bi-plus-lg" style="font-size: 1.1rem;"></i></button>
+                                    <i class="fa-solid fa-plus"></i></button>
                             </div>
                             <hr>
 
@@ -125,10 +125,10 @@
                                             <td th:text="${aideHumaine.nameAidant}"></td>
                                             <td th:text="${aideHumaine.firstNameAidant}"></td>
                                             <td>
-                                                <a class="btn btn-info" th:href="'/dossiers/' + ${dossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="bi bi-eye"></i></a>
+                                                <a class="btn btn-info" th:href="'/dossiers/' + ${dossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="fa-solid fa-eye"></i></a>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="bi bi-trash3"></i>
+                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'delete-aide-humaine-' + ${aideHumaine.id}"

@@ -75,8 +75,8 @@
                                     <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
                                 </div>
                                 <div class="float-buttons">
-                                    <button onclick="unlockForm(this);" id="unlock-entretien" type="button" value="Modifier" class="btn btn-warning"><i class="bi bi-pencil"></i></button>
-                                    <button onclick="lockForm(this);" id="lock-entretien" type="button" value="Annuler" class="btn btn-danger d-none"><i class="bi bi-x-lg"></i></button>
+                                    <button onclick="unlockForm(this);" id="unlock-entretien" type="button" value="Modifier" class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="lockForm(this);" id="lock-entretien" type="button" value="Annuler" class="btn btn-danger d-none"><i class="fa-solid fa-xmark"></i></button>
                                     <button type="submit" id="submit-entretien" class="btn btn-success d-none">
                                         <svg style="color: white; width: 20px; margin-bottom: 3px; margin-left: 1px;"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@
                                             <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}"
                                                     th:method="delete"
                                                     enctype="multipart/form-data">
-                                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                             </form>
                                         </td>
                                     </tr>

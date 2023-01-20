@@ -25,13 +25,13 @@
                             <td th:text="${aideHumaine.ficheRenseignement.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-fiche'">
-                                    <i class="bi bi-download"></i></a>
+                                    <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-fiche/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -40,13 +40,13 @@
                             <td th:text="${aideHumaine.annexe.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-annexe'">
-                                    <i class="bi bi-download"></i></a>
+                                    <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de l’annexe ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-annexe/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -55,13 +55,13 @@
                             <td th:text="${aideHumaine.contrat.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-contrat'">
-                                    <i class="bi bi-download"></i></a>
+                                    <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression du contrat ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -69,14 +69,14 @@
                             <td>Rib</td>
                             <td th:text="${aideHumaine.rib.getFileName()}"></td>
                             <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-rib'"><i class="bi bi-download"></i>
+                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-rib'"><i class="fa-solid fa-download"></i>
                                 </a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression du rib ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-rib/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -85,13 +85,13 @@
                             <td th:text="${aideHumaine.carteVitale.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteVitale'">
-                                    <i class="bi bi-download"></i></a>
+                                    <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la carte Vitale ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteVitale/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -100,13 +100,13 @@
                             <td th:text="${aideHumaine.carteEtu.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteEtu'">
-                                    <i class="bi bi-download"></i></a>
+                                    <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la carte étudiante ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteEtu/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

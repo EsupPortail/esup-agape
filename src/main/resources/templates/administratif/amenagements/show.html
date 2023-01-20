@@ -10,16 +10,16 @@
             <div th:replace="fragments/side-administratif :: side"></div>
             <div class="float-buttons">
                 <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null}">
-                    <i class="bi bi-arrow-repeat"></i>
+                    <i class="fa-solid fa-refresh"></i>
                 </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
-                    <i class="bi bi-check-lg"></i>
+                    <i class="fa-solid fa-check"></i>
                 </button>
                 <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
-                    <i class="bi bi-x-lg"></i>
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
-                    <i class="bi bi-file-earmark-lock-fill" style="font-size: 22px"></i>
+                    <i class="fa-solid fa-file-download" style="font-size: 22px"></i>
                 </a>
             </div>
             <div class="agape-content agape-content-side">

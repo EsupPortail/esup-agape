@@ -130,11 +130,11 @@
                                 <!-- <input onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2">
                                  <input onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none">
                                  <button type="submit" id="submit-aide-humaine" class="btn btn-success mt-2 d-none">Enregistrer</button>
-                                 <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="bi bi-paperclip"></i></button>-->
+                                 <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="fa-solid fa-paperclip"></i></button>-->
                                 <div class="d-inline">
                                     <div class="float-buttons">
-                                        <button onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="bi bi-pencil"></i></button>
-                                        <button onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none"><i class="bi bi-x-lg"></i></button>
+                                        <button onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="fa-solid fa-pen"></i></button>
+                                        <button onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none"><i class="fa-solid fa-xmark"></i></button>
                                         <button type="submit" id="submit-aide-humaine" class="btn btn-success mt-2 d-none">
                                             <svg style="color: white; width: 20px; margin-bottom: 3px; margin-left: 1px;"
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +143,7 @@
                                                         fill="white"></path>
                                             </svg>
                                         </button>
-                                        <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="bi bi-paperclip"></i></button>
+                                        <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="fa-solid fa-paperclip"></i></button>
                                     </div>
                                 </div>
                             </form>
@@ -170,7 +170,7 @@
                                                         href="#"
                                                         data-bs-target="#modal-warning"
                                                         th:attr="data-bs-target='#modal-warning'+${periodeAideHumaineEntry.key}"
-                                                        class="btn btn-sm btn-danger d-none"><i class="bi bi-trash3"></i></a>
+                                                        class="btn btn-sm btn-danger d-none"><i class="fa-solid fa-trash"></i></a>
                                                 <div class="modal modal-warning fade in" th:id="modal-warning+${periodeAideHumaineEntry.key}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -198,14 +198,14 @@
                                             </th:block>
                                             <th:block th:if="${periodeAideHumaineEntry.value.id == null}">
                                                 <button onclick="lockForm()" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-delete'" type="button" class="btn btn-sm btn-danger d-none">
-                                                    <i class="bi bi-x"></i></button>
+                                                    <i class="fa-solid fa-xmark"></i></button>
                                             </th:block>
                                         </td>
                                         <form th:method="put"
                                                 th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update-periode/' + ${periodeAideHumaineEntry.key}">
                                             <td>
-                                                <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="bi bi-lock"></i></button>
-                                                <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-submit'" type="submit" class="btn btn-sm btn-success d-none"><i class="bi bi-unlock"></i>
+                                                <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="fa-solid fa-lock"></i></button>
+                                                <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-submit'" type="submit" class="btn btn-sm btn-success d-none"><i class="fa-solid fa-unlock"></i>
                                                 </button>
                                             </td>
                                             <td th:text="${#strings.capitalize(T(java.time.Month).of(periodeAideHumaineEntry.key).getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"></td>
@@ -256,8 +256,8 @@
                                                         th:classappend="${periodeAideHumaineEntry.value.feuilleHeures != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
                                                         th:data-bs-target="'#feuilleModal-' + ${periodeAideHumaineEntry.key}">
-                                                    <i th:if="${periodeAideHumaineEntry.value.feuilleHeures == null}" class="bi bi-file-earmark-plus"></i>
-                                                    <i th:if="${periodeAideHumaineEntry.value.feuilleHeures != null}" class="bi bi-file-earmark-text"></i>
+                                                    <i th:if="${periodeAideHumaineEntry.value.feuilleHeures == null}" class="fa-solid fa-file-circle-plus"></i>
+                                                    <i th:if="${periodeAideHumaineEntry.value.feuilleHeures != null}" class="fa-solid fa-file-text"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'feuilleModal-' + ${periodeAideHumaineEntry.key}"
@@ -293,7 +293,7 @@
                                                                             <td>
                                                                                 <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-feuille-heures/' + ${periodeAideHumaineEntry.key}"
                                                                                         type="button"
-                                                                                        class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                                                                        class="btn btn-sm btn-info"><i class="fa-solid fa-download"></i></a>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -304,7 +304,7 @@
                                                                                 <form onsubmit="return confirm('Confirmez la suppression de la feuille heure');"
                                                                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-feuille-heures/' + ${periodeAideHumaineEntry.key}"
                                                                                         th:method="delete">
-                                                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                                                                 </form>
                                                                             </td>
                                                                         </tr>
@@ -323,8 +323,8 @@
                                                         th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
                                                         th:data-bs-target="'#planningModal-' + ${periodeAideHumaineEntry.key}">
-                                                    <i th:if="${periodeAideHumaineEntry.value.planning == null}" class="bi bi-calendar2-plus"></i>
-                                                    <i th:if="${periodeAideHumaineEntry.value.planning != null}" class="bi bi-calendar2-week"></i>
+                                                    <i th:if="${periodeAideHumaineEntry.value.planning == null}" class="fa-solid fa-calendar-plus"></i>
+                                                    <i th:if="${periodeAideHumaineEntry.value.planning != null}" class="fa-solid fa-calendar-week"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'planningModal-' + ${periodeAideHumaineEntry.key}"
@@ -360,7 +360,7 @@
                                                                             <td>
                                                                                 <a th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-planning/' + ${periodeAideHumaineEntry.key}"
                                                                                         type="button"
-                                                                                        class="btn btn-sm btn-info"><i class="bi bi-download"></i></a>
+                                                                                        class="btn btn-sm btn-info"><i class="fa-solid fa-download"></i></a>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -371,7 +371,7 @@
                                                                                 <form onsubmit="return confirm('Confirmez la suppression du planning');"
                                                                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-planning/' + ${periodeAideHumaineEntry.key}"
                                                                                         th:method="delete">
-                                                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+                                                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                                                                 </form>
                                                                             </td>
                                                                         </tr>
