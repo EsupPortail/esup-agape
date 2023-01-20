@@ -56,8 +56,7 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="genders">Genre</label>
                                         <div>
-                                            <select name="gender" class="form-select" size="1" th:disabled="${enquete.gender != null}">
-                                                <option disabled selected value="nul">Choisir</option>
+                                            <select name="gender" class="form-control" size="1" th:disabled="${enquete.gender != null}">
                                                 <option th:selected="${gender == enquete.gender}"
                                                         th:each="gender : ${genders}"
                                                         th:value="${enquete.gender}"
@@ -65,26 +64,29 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <label class="mt-1 form-label" th:for="typeFrmn">Type formation</label>
                                     <div>
-                                        <select id="typeFormation" name="typeFrmn" type="text" class="form-select" th:disabled="${enquete.typeFrmn != null}">
-                                            <option disabled selected value="">Choisir</option>
-                                            <option th:selected="${enquete.typeFrmn == typeFrmn}"
-                                                    th:each="typeFormation : ${typeFrmns}"
-                                                    th:text="#{'enquete.typeFrmn.' +${typeFormation}}"
-                                                    th:value="${typeFormation}"></option>
-                                        </select>
+                                        <label class="mt-1 form-label" th:for="typeFrmns">Type formation</label>
+                                        <div>
+                                            <select id="typeFormation" name="typeFrmn" type="text" class="form-control" disabled>
+                                                <option value="" disabled selected>Choisir</option>
+                                                <option th:selected="${currentDossier.typeFormation == typeFormation}"
+                                                        th:each="typeFormation : ${typeFrmns}"
+                                                        th:value="${typeFormation}"
+                                                        th:text="#{'enquete.typeFrmn.' +${typeFormation}}"></option>
+                                            </select>
+                                        </div>
                                     </div>
-
-                                    <label class="mt-1 form-label" th:for="modFrmn">Modalité formation</label>
                                     <div>
-                                        <select id="modeFormation" name="modFrmn" type="text" class="form-select" th:disabled="${enquete.modFrmn != null}">
-                                            <option disabled selected value="">Choisir</option>
-                                            <option th:selected="${enquete.modFrmn == modFrmn}"
-                                                    th:each="modeFormation : ${modFrmns}"
-                                                    th:text="#{'enquete.modFrmn.' +${modeFormation}}"
-                                                    th:value="${modeFormation}"></option>
-                                        </select>
+                                        <label class="mt-1 form-label" th:for="modFrmns">Modalité formation</label>
+                                        <div>
+                                            <select id="modeFormation" name="modFrmn" type="text" class="form-control" disabled>
+                                                <option value="" disabled selected>Choisir</option>
+                                                <option th:selected="${currentDossier.modeFormation == modeFormation}"
+                                                        th:each="modeFormation : ${modFrmns}"
+                                                        th:value="${modeFormation}"
+                                                        th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div>
                                         <label class="mt-1 form-label" th:for="codFil">Discipline</label>
@@ -203,7 +205,9 @@
                                                                     th:value="${codMeahF}"
                                                                     th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
                                                                     th:checked="${enquete.codMeahF.contains(codMeahF)}">
-                                                            <label class="me-2" th:text="#{'enquete.codMeahF.' + ${codMeahF}}" th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
+                                                            <label class="me-2"
+                                                                    th:text="#{'enquete.codMeahF.' + ${codMeahF}}"
+                                                                    th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
                                                         </th:block>
                                                         <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
                                                             <input th:name="${enumLibelleCodMeahF}"
