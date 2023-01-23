@@ -132,4 +132,5 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         classificationMap.put("I", Classification.SURDITE_SEVERE_ET_PROFONDE);
         return classificationMap;
     }
+
 }

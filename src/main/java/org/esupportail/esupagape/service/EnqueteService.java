@@ -3,7 +3,9 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
+import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -151,6 +155,32 @@ public class EnqueteService {
         } else {
             enquete.getCodMeae().add(CodMeae.AE0);
         }
+
+        enquete.setHdTmp(false);
+        enquete.setCodHd(null);
+        if(dossier.getClassification().size() > 2) {
+            enquete.setCodHd(CodHd.PTA);
+            if(dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+                enquete.setHdTmp(true);
+            }
+        } else if(dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+            for(Classification classification : dossier.getClassification()) {
+                if(classification.equals(Classification.TEMPORAIRE)) {
+                    enquete.setHdTmp(true);
+                } else {
+                    enquete.setCodHd(getClassificationEnqueteMap().get(classification));
+                }
+            }
+        } else if (dossier.getClassification().size() == 2) {
+            enquete.setCodHd(CodHd.PTA);
+        } else if(dossier.getClassification().size() == 1) {
+            if(dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
+                enquete.setHdTmp(true);
+            } else {
+                enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassification().stream().toList().get(0)));
+            }
+        }
+
         return enquete;
     }
 
@@ -162,5 +192,24 @@ public class EnqueteService {
                 enqueteRepository.delete(enquete);
             }
         }
+    }
+
+    public Map<Classification, CodHd> getClassificationEnqueteMap() {
+        Map< Classification, CodHd> classificationMap = new HashMap<>();
+        classificationMap.put(Classification.SURDITE_SEVERE_ET_PROFONDE, CodHd.AUD);
+        classificationMap.put(Classification.MOTEUR, CodHd.MOT);
+        classificationMap.put(Classification.CECITE, CodHd.VUE);
+        classificationMap.put(Classification.DEFICIENCE_AUDTIVE_AUTRE, CodHd.AUA);
+        classificationMap.put(Classification.DEFICIENCE_VISUELLE_AUTRE, CodHd.VUA);
+        classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
+        classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
+        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_ET_DE_LA_PAROLE, CodHd.LNG);
+        classificationMap.put(Classification.AUTISME, CodHd.TSA);
+        classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
+        classificationMap.put(Classification.REFUS, CodHd.TND);
+        classificationMap.put(Classification.AUTRES_TROUBLES, CodHd.AUT);
+        classificationMap.put(Classification.TROUBLES_INTELLECTUELS_ET_COGNITIFS, CodHd.COG);
+        classificationMap.put(Classification.TROUBLES_PSYCHIQUES, CodHd.PSY);
+        return classificationMap;
     }
 }
