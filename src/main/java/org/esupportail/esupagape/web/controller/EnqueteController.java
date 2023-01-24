@@ -21,7 +21,6 @@ import java.lang.invoke.MethodHandles;
 
 @Controller
 @RequestMapping("/dossiers/{id}/enquete")
-
 public class EnqueteController {
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -46,12 +45,10 @@ public class EnqueteController {
         return "redirect:/dossiers/" + id + "/enquete";
     }
 
-    private static void setModel(Model model) {
+    private void setModel(Model model) {
         model.addAttribute("typeFrmns", TypeFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
-        model.addAttribute("codFils", CodFil.values());
-        model.addAttribute("codFmts", CodFmt.values());
-        model.addAttribute("codScos", CodSco.values());
+        model.addAttribute("codFils", enqueteService.getCodFils());
         model.addAttribute("codHds", CodHd.values());
         model.addAttribute("codPfpps", CodPfpp.values());
         model.addAttribute("codPfass", CodPfas.values());
@@ -63,4 +60,6 @@ public class EnqueteController {
         model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());
     }
+
+
 }

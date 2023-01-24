@@ -29,14 +29,11 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private ModFrmn modFrmn;
 
-    @Enumerated(EnumType.STRING)
-    private CodSco codSco;
+    private String codSco;
 
-    @Enumerated(EnumType.STRING)
-    private CodFmt codFmt;
+    private String codFmt;
 
-    @Enumerated(EnumType.STRING)
-    private CodFil codFil;
+    private String codFil;
 
     @Enumerated(EnumType.STRING)
     private CodHd codHd;
@@ -145,27 +142,27 @@ public class Enquete {
         this.modFrmn = modFrmn;
     }
 
-    public CodSco getCodSco() {
+    public String getCodSco() {
         return codSco;
     }
 
-    public void setCodSco(CodSco codSco) {
+    public void setCodSco(String codSco) {
         this.codSco = codSco;
     }
 
-    public CodFmt getCodFmt() {
+    public String getCodFmt() {
         return codFmt;
     }
 
-    public void setCodFmt(CodFmt codFmt) {
+    public void setCodFmt(String codFmt) {
         this.codFmt = codFmt;
     }
 
-    public CodFil getCodFil() {
+    public String getCodFil() {
         return codFil;
     }
 
-    public void setCodFil(CodFil codFil) {
+    public void setCodFil(String codFil) {
         this.codFil = codFil;
     }
 

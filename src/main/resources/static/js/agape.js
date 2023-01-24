@@ -127,6 +127,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion du formulaire enquete
+    let codFil = document.getElementById("codFil")
+    if(codFil != null) {
+        let codFmt = new SlimSelect({
+           select: '#codFmt',
+            settings: {
+                showSearch: false,
+                placeholderText: 'Choisir',
+                searchText: '',
+                searchPlaceholder: 'Rechercher'
+            },
+            events: {
+                afterChange: (newVal) => {
+                    console.log(newVal[0].value);
+                    fetch('/ws-secure/enquete/cod-sco/?codFmt=' + newVal[0].value)
+                        .then((response) => response.json())
+                        .then(function (data) {
+                            console.log(data);
+                            if(data.length >  0) {
+                                codSco.setData(data);
+                                codSco.enable();
+                            }
+                        });
+                }
+            }
+        });
+        codFmt.disable();
+        let codSco = new SlimSelect({
+            select: '#codSco',
+            settings: {
+                showSearch: false,
+                placeholderText: 'Choisir',
+                searchText: '',
+                searchPlaceholder: 'Rechercher'
+            }
+        });
+        codSco.disable();
+        codFil.addEventListener("change", function (event) {
+            fetch('/ws-secure/enquete/cod-fmt/?codFil=' + codFil.value)
+                .then((response) => response.json())
+                .then(function(data){
+                    codFmt.setData(data);
+                    codFmt.enable();
+                });
+        });
+
+    }
+
     let am0On = document.getElementById("AM0On")
     if(am0On != null) {
         am0On.addEventListener("click", function (event) {
@@ -156,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Gestion des float button
     let saveBtn = document.getElementById("save-btn");
     if(saveBtn != null) {
-        console.log(saveBtn);
         saveBtn.addEventListener("click", function (e) {
             let formSubmitBtn = document.querySelectorAll(`[class*="form-submit-btn"]`)
             if(formSubmitBtn != null) {

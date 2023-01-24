@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.EnqueteForm;
+import org.esupportail.esupagape.dtos.SlimSelectDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Classification;
@@ -9,28 +10,37 @@ import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
+import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EnqueteService {
 
     private final EnqueteRepository enqueteRepository;
 
+    private final EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository;
+
+    private final EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository;
+
     private final DossierService dossierService;
+
+    private final MessageSource messageSource;
 
     private final AmenagementService amenagementService;
 
-    public EnqueteService(EnqueteRepository enqueteRepository, DossierService dossierService, AmenagementService amenagementService) {
+    public EnqueteService(EnqueteRepository enqueteRepository, EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository, EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository, DossierService dossierService, MessageSource messageSource, AmenagementService amenagementService) {
         this.enqueteRepository = enqueteRepository;
+        this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
+        this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
+        this.messageSource = messageSource;
         this.amenagementService = amenagementService;
     }
 
@@ -212,4 +222,42 @@ public class EnqueteService {
         classificationMap.put(Classification.TROUBLES_PSYCHIQUES, CodHd.PSY);
         return classificationMap;
     }
+
+    public List<String> getCodFils() {
+        return enqueteEnumFilFmtScoRepository.findDistinctByCodScoIsNull();
+    }
+
+    public List<String> getCodFmtByCodFil(String codFil) {
+        return enqueteEnumFilFmtScoRepository.findDistinctByCodFil(codFil);
+    }
+
+    public List<String> getCodScoByCodFmt(String codFmt) {
+        return enqueteEnumFilFmtScoRepository.findDistinctByCodFmt(codFmt);
+    }
+
+    public List<SlimSelectDto> getSlimSelectDtosOfCodFmts(String codFil) {
+        List<String> codFmts = getCodFmtByCodFil(codFil);
+        List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
+        if(codFmts.size() > 0) {
+            slimSelectDtos.add(new SlimSelectDto("", ""));
+            for (String codFmt : codFmts) {
+                slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
+            }
+        }
+        return slimSelectDtos;
+    }
+
+    public List<SlimSelectDto> getSlimSelectDtosOfCodScos(String codFmt) {
+        List<String> codScos = getCodScoByCodFmt(codFmt);
+        List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
+        if(codScos.size() > 0) {
+            slimSelectDtos.add(new SlimSelectDto("", ""));
+            for (String codSco : codScos) {
+                slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco));
+            }
+        }
+        return slimSelectDtos;
+    }
+
+
 }

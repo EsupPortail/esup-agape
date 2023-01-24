@@ -24,11 +24,11 @@ public class EnqueteForm {
 
     private ModFrmn modFrmn;
 
-    private CodSco codSco;
+    private String codSco;
 
-    private CodFmt codFmt;
+    private String codFmt;
 
-    private CodFil codFil;
+    private String codFil;
 
     private CodHd codHd;
 
@@ -146,27 +146,27 @@ public class EnqueteForm {
         this.modFrmn = modFrmn;
     }
 
-    public CodSco getCodSco() {
+    public String getCodSco() {
         return codSco;
     }
 
-    public void setCodSco(CodSco codSco) {
+    public void setCodSco(String codSco) {
         this.codSco = codSco;
     }
 
-    public CodFmt getCodFmt() {
+    public String getCodFmt() {
         return codFmt;
     }
 
-    public void setCodFmt(CodFmt codFmt) {
+    public void setCodFmt(String codFmt) {
         this.codFmt = codFmt;
     }
 
-    public CodFil getCodFil() {
+    public String getCodFil() {
         return codFil;
     }
 
-    public void setCodFil(CodFil codFil) {
+    public void setCodFil(String codFil) {
         this.codFil = codFil;
     }
 
