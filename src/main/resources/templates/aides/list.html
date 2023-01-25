@@ -25,7 +25,7 @@
                         <div class="col-xl-6">
                             <div class="clearfix w-100">
                                 <h4 class="float-start">Aides matérielles</h4>
-                                <button title="Ajouter une aide materielle" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal">
+                                <button th:if="${currentYear == currentDossier.year}" title="Ajouter une aide materielle" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal">
                                     <i class="fa-solid fa-plus"></i></button>
                             </div>
                             <hr>
@@ -51,7 +51,7 @@
                                                 <div th:replace="aides/modal-show-aide-materielle :: show"></div>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
+                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'delete-aide-materielle-' + ${aideMaterielle.id}"
@@ -96,7 +96,7 @@
                         <div class="col-xl-6">
                             <div class="clearfix w-100">
                                 <h4 class="float-start">Aides humaines</h4>
-                                <button title="Ajouter une aide humaine" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-humaine-modal">
+                                <button th:if="${currentYear == currentDossier.year}" title="Ajouter une aide humaine" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-humaine-modal">
                                     <i class="fa-solid fa-plus"></i></button>
                             </div>
                             <hr>
@@ -128,7 +128,7 @@
                                                 <a class="btn btn-info" th:href="'/dossiers/' + ${dossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="fa-solid fa-eye"></i></a>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
+                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade"
                                                         th:id="'delete-aide-humaine-' + ${aideHumaine.id}"

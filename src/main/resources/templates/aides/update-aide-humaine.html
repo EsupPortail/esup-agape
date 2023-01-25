@@ -133,7 +133,7 @@
                                  <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="fa-solid fa-paperclip"></i></button>-->
                                 <div class="d-inline">
                                     <div class="float-buttons">
-                                        <button onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="fa-solid fa-pen"></i></button>
+                                        <button th:if="${currentYear == currentDossier.year}" onclick="unlockForm(this);" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="fa-solid fa-pen"></i></button>
                                         <button onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none"><i class="fa-solid fa-xmark"></i></button>
                                         <button type="submit" id="submit-aide-humaine" class="btn btn-success mt-2 d-none">
                                             <i class="fa-solid fa-save"></i>
@@ -199,7 +199,7 @@
                                         <form th:method="put"
                                                 th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update-periode/' + ${periodeAideHumaineEntry.key}">
                                             <td>
-                                                <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="fa-solid fa-lock"></i></button>
+                                                <button th:if="${currentYear == currentDossier.year}" th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-edit'" type="button" class="btn btn-sm btn-warning"><i class="fa-solid fa-lock"></i></button>
                                                 <button th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-submit'" type="submit" class="btn btn-sm btn-success d-none"><i class="fa-solid fa-unlock"></i>
                                                 </button>
                                             </td>
@@ -246,7 +246,7 @@
                                         </form>
                                         <td>
                                             <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
-                                                <button type="button"
+                                                <button th:if="${currentYear == currentDossier.year}" type="button"
                                                         class="btn btn-sm btn-outline-dark"
                                                         th:classappend="${periodeAideHumaineEntry.value.feuilleHeures != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
@@ -314,6 +314,7 @@
                                         <td>
                                             <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
                                                 <button type="button"
+                                                        th:if="${currentYear == currentDossier.year}"
                                                         class="btn btn-sm btn-outline-dark"
                                                         th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
