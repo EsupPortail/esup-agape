@@ -27,7 +27,7 @@ public class LdapDossierInfosService implements DossierInfosService {
     }
 
     @Override
-    public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, DossierInfos dossierInfos) {
+    public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, boolean getNotes, DossierInfos dossierInfos) {
         if(individu.getNumEtu() != null) {
             List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(individu.getNumEtu());
             if (personLdaps.size() > 0) {

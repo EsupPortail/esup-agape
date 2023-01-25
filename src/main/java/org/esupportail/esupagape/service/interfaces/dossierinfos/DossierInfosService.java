@@ -4,6 +4,6 @@ import org.esupportail.esupagape.entity.Individu;
 
 public interface DossierInfosService {
 
-    DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, DossierInfos dossierInfos);
+    DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, boolean getNotes, DossierInfos dossierInfos);
 
 }
