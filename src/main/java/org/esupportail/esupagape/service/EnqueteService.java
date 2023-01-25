@@ -167,6 +167,11 @@ public class EnqueteService {
         } else {
             enquete.getCodMeae().add(CodMeae.AE0);
         }
+        if(StringUtils.hasText(enquete.getAutAE())){
+            enquete.getCodMeae().add(CodMeae.AEo);
+        } else {
+            enquete.getCodMeae().remove(CodMeae.AEo);
+        }
 
         enquete.setHdTmp(false);
         enquete.setCodHd(null);
