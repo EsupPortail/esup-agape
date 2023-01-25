@@ -223,7 +223,7 @@ public class AmenagementService {
         certificatPdf.setDateOfBirth(amenagement.getDossier().getIndividu().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         certificatPdf.setLibelleFormation(amenagement.getDossier().getLibelleFormation());
         certificatPdf.setSite(amenagement.getDossier().getSite());
-        certificatPdf.setAddress(amenagement.getDossier().getIndividu().getCurrentAddress());
+        certificatPdf.setAddress(amenagement.getDossier().getIndividu().getFixAddress());
         certificatPdf.setNumEtu(amenagement.getDossier().getIndividu().getNumEtu());
         if(amenagement.getTypeAmenagement().equals(TypeAmenagement.CURSUS)) {
             certificatPdf.setEndDate(messageSource.getMessage("amenagement.typeAmenagement.CURSUS", null, Locale.getDefault()));
