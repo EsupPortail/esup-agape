@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.dtos.SlimSelectDto;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Classification;
@@ -160,8 +161,13 @@ public class EnqueteService {
         enquete.setGender(dossier.getIndividu().getGender());
         enquete.setTypeFrmn(dossier.getTypeFormation());
         enquete.setModFrmn(dossier.getModeFormation());
-        if (amenagementService.isAmenagementValid(id)) {
+        Amenagement amenagement = amenagementService.isAmenagementValid(id);
+        if (amenagement != null) {
             enquete.getCodMeae().add(CodMeae.AE4);
+            enquete.getCodMeae().remove(CodMeae.AE0);
+            if(amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
+                enquete.getCodMeae().add(CodMeae.AE7);
+            }
         } else {
             enquete.getCodMeae().add(CodMeae.AE0);
         }

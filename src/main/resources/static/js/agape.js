@@ -205,8 +205,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if(saveBtn != null) {
         saveBtn.addEventListener("click", function (e) {
             let formSubmitBtn = document.querySelectorAll(`[class*="form-submit-btn"]`)
-            if(formSubmitBtn != null) {
-                formSubmitBtn.click();
+            if(formSubmitBtn.length > 0) {
+                formSubmitBtn[0].click();
             }
         });
     }

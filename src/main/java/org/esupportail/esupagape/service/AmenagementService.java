@@ -64,8 +64,12 @@ public class AmenagementService {
         return amenagementRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
     }
 
-    public boolean isAmenagementValid(Long dossierId) {
-        return amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION).size() > 0;
+    public Amenagement isAmenagementValid(Long dossierId) {
+        List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
+        if(amenagements.size() > 0 && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
+            return amenagements.get(0);
+        }
+        return null;
     }
 
     @Transactional
