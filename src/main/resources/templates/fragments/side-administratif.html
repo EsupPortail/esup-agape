@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--/*@thymesVar id="amenagement" type="org.esupportail.esupagape.entity.Amenagement"*/-->
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <div th:fragment="side" class="agape-side bg-light position-sticky me-2">
         <div class="p-2">
             <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Aménagement</span></span>
             <div class="container">
+                <dt class="col-sm-6">Année du dossier courant</dt>
+                <dd class="col-sm-6" th:text="${currentDossier.year} + '-' + ${currentDossier.year + 1}"></dd>
+                <dt class="col-sm-6">Année de validation de l’aménagement</dt>
+                <dd class="col-sm-6" th:text="${amenagement.dossier.year} + '-' + ${amenagement.dossier.year + 1}"></dd>
                 <dt class="col-sm-6">Composante</dt>
                 <dd class="col-sm-6" th:text="${amenagement.dossier.composante}"></dd>
                 <dt class="col-sm-6">Statut</dt>
                 <dd class="col-sm-6" th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></dd>
+                <dt class="col-sm-6" th:if="${currentDossier.amenagementPorte != null}">Portabilité effectuée par</dt>
+                <dd class="col-sm-6" th:if="${currentDossier.amenagementPorte != null}" th:text="${currentDossier.nomValideurPortabilite}"></dd>
                 <dt class="col-sm-6">Nom du médecin</dt>
                 <dd class="col-sm-6" th:text="${amenagement.nomMedecin}"></dd>
                 <dt class="col-sm-6">Date de fin</dt>

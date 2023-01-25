@@ -9,7 +9,7 @@
         <main class="d-inline-flex">
             <div th:replace="fragments/side-administratif :: side"></div>
             <div class="float-buttons">
-                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null}">
+                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">

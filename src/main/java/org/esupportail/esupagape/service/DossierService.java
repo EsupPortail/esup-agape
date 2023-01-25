@@ -231,4 +231,21 @@ public class DossierService {
         }
     }
 
+    public boolean isDossierOfThisYear(Dossier dossier) {
+        return isDossierOfThisYear(dossier.getId());
+    }
+
+    public boolean isDossierOfThisYear(Long id) {
+        Dossier dossier = getById(id);
+        try {
+            Dossier thisYearDossier = getCurrent(dossier.getIndividu().getId());
+            if(thisYearDossier.getId().equals(dossier.getId())) {
+                return true;
+            }
+        } catch (AgapeJpaException e) {
+            logger.warn(e.getMessage());
+        }
+        return false;
+    }
+
 }

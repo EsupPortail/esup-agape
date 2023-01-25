@@ -65,6 +65,10 @@ public class AmenagementService {
     }
 
     public Amenagement isAmenagementValid(Long dossierId) {
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossier.getAmenagementPorte() != null) {
+            return dossier.getAmenagementPorte();
+        }
         List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
         if(amenagements.size() > 0 && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
             return amenagements.get(0);
@@ -80,6 +84,7 @@ public class AmenagementService {
         }
         amenagement.setDossier(dossier);
         amenagement.setNomMedecin(personLdap.getDisplayName());
+        amenagement.setMailMedecin(personLdap.getMail());
         updateClassification(amenagement);
         amenagementRepository.save(amenagement);
     }
@@ -103,8 +108,6 @@ public class AmenagementService {
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
         if(amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)){
-        amenagementToUpdate.setMailMedecin(amenagement.getMailMedecin());
-        amenagementToUpdate.setNomMedecin(amenagement.getNomMedecin());
         amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
         amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
         amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
@@ -172,6 +175,7 @@ public class AmenagementService {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
+            amenagement.setMailValideur(personLdap.getMail());
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -185,6 +189,7 @@ public class AmenagementService {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
+            amenagement.setMailValideur(personLdap.getMail());
             amenagement.setMotifRefus(motif);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -284,6 +289,9 @@ public class AmenagementService {
         Amenagement amenagement = getById(id);
         Dossier currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+        currentDossier.setAmenagementPorte(amenagement);
+        currentDossier.setMailValideurPortabilite(personLdap.getMail());
+        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
 }

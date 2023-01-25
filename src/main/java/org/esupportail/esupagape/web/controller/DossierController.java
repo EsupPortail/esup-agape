@@ -103,6 +103,7 @@ public class DossierController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@dossierService.isDossierOfThisYear(#id)")
     public String update(@PathVariable Long id, @Valid Dossier dossier) {
         dossierService.update(id, dossier);
         return "redirect:/dossiers/" + id;

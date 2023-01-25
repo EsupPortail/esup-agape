@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,6 +61,7 @@ public class EntretienController {
     }
 
     @PostMapping("/create-entretien")
+    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String create(@Valid Entretien entretien, BindingResult bindingResult, Dossier dossier, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model, dossier);
@@ -83,13 +85,16 @@ public class EntretienController {
         model.addAttribute("typeContacts", TypeContact.values());
         return "entretiens/update";
     }
+
     @PutMapping("/{entretienId}/update")
+    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String update(@PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap,  Dossier dossier) throws AgapeJpaException {
         entretienService.update(entretienId, entretien, personLdap);
         return "redirect:/dossiers/" + dossier.getId() + "/entretiens/" + entretienId + "/update";
     }
 
     @DeleteMapping(value = "/{entretienId}/delete")
+    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteDossier(@PathVariable Long entretienId, Dossier dossier) {
         entretienService.deleteEntretien(entretienId);
         return "redirect:/dossiers/" + dossier.getId() + "/entretiens";

@@ -102,6 +102,13 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Amenagement> amenagements = new ArrayList<>();
 
+    @ManyToOne
+    private Amenagement amenagementPorte;
+
+    private String mailValideurPortabilite;
+
+    private String nomValideurPortabilite;
+
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
@@ -373,6 +380,30 @@ public class Dossier {
 
     public void setAmenagements(List<Amenagement> amenagements) {
         this.amenagements = amenagements;
+    }
+
+    public Amenagement getAmenagementPorte() {
+        return amenagementPorte;
+    }
+
+    public void setAmenagementPorte(Amenagement amenagementPorte) {
+        this.amenagementPorte = amenagementPorte;
+    }
+
+    public String getMailValideurPortabilite() {
+        return mailValideurPortabilite;
+    }
+
+    public void setMailValideurPortabilite(String mailValideurPortabilite) {
+        this.mailValideurPortabilite = mailValideurPortabilite;
+    }
+
+    public String getNomValideurPortabilite() {
+        return nomValideurPortabilite;
+    }
+
+    public void setNomValideurPortabilite(String nomValideurPortabilite) {
+        this.nomValideurPortabilite = nomValideurPortabilite;
     }
 
     public List<Document> getDocuments() {

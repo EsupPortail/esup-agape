@@ -64,9 +64,7 @@ public class AmenagementController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, Dossier dossier) throws AgapeJpaException {
-        amenagement.setMailMedecin(personLdap.getMail());
-        amenagement.setNomMedecin(personLdap.getDisplayName());
+    public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, Dossier dossier) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
     }

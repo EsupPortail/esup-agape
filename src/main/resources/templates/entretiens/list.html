@@ -9,7 +9,7 @@
         <main class="d-inline-flex">
             <div class="float-buttons">
                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
-                <button title="Ajouter un entretien" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-entretien-modal" type="button"><i class="fa-solid fa-plus"></i></button>
+                <button th:if="${currentYear == currentDossier.year}" title="Ajouter un entretien" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-entretien-modal" type="button"><i class="fa-solid fa-plus"></i></button>
             </div>
             <div th:replace="fragments/side :: side"></div>
             <div class="agape-content agape-content-side">
