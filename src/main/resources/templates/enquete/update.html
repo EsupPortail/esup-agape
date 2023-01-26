@@ -9,7 +9,6 @@
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
                 <button th:if="${currentYear == currentDossier.year}" id="save-btn" class="btn btn-success">
                     <i class="fa-solid fa-save"></i>
                 </button>
@@ -331,6 +330,5 @@
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
-        <div th:replace="individus/modal-update :: update"></div>
     </body>
 </html>
