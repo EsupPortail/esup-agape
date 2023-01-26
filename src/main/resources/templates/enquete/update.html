@@ -252,12 +252,12 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
                                         <div>
-                                            <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
-                                                <option disabled selected value="nul">Choisir</option>
-                                                <option th:selected="${enumCodmeaa == enquete.codMeaa}"
-                                                        th:each="enumCodmeaa : ${codMeaas}"
-                                                        th:value="${enumCodmeaa}"
-                                                        th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
+                                            <select multiple id="codMeaa" th:field="*{codMeaa}" class="agape-slim-select">
+
+                                                <option th:checked="${enquete.codMeaa.contains(codMeaas)}"
+                                                        th:each="enumCodMeaa : ${codMeaas}"
+                                                        th:value="${enumCodMeaa}"
+                                                        th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
                                             </select>
                                         </div>
                                         <div>

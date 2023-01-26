@@ -67,8 +67,9 @@ public class Enquete {
     @Column(columnDefinition = "TEXT")
     private String autAE;
 
+    @ElementCollection(targetClass=CodMeaa.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private CodMeaa codMeaa;
+    private Set<CodMeaa> codMeaa = new HashSet<>();
 
     @Column(columnDefinition = "TEXT")
     private String autAA;
@@ -254,11 +255,11 @@ public class Enquete {
         this.autAE = autAE;
     }
 
-    public CodMeaa getCodMeaa() {
+    public Set<CodMeaa> getCodMeaa() {
         return codMeaa;
     }
 
-    public void setCodMeaa(CodMeaa codMeaa) {
+    public void setCodMeaa(Set<CodMeaa> codMeaa) {
         this.codMeaa = codMeaa;
     }
 
