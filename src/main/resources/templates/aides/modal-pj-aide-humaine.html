@@ -31,7 +31,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-fiche/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -46,7 +46,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de l’annexe ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-annexe/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -61,7 +61,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression du contrat ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -76,7 +76,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression du rib ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-rib/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -91,7 +91,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la carte Vitale ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteVitale/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -106,7 +106,7 @@
                                 <form onsubmit="return confirm('Confirmez-vous la suppression de la carte étudiante ?');"
                                         th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteEtu/'"
                                         th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    <button th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -119,7 +119,7 @@
                         <label class="form-label">Ajouter la fiche de renseignements</label>
                         <div class="input-group mb-2">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}"  type="submit" class="btn btn-success " value="Ajouter">
                         </div>
                     </form>
                     <form th:if="${aideHumaine.annexe == null}"
@@ -130,7 +130,7 @@
                         <label class="form-label">Ajouter l’annexe</label>
                         <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success" value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-success" value="Ajouter">
                         </div>
                     </form>
                     <form th:if="${aideHumaine.contrat == null}"
@@ -141,7 +141,7 @@
                         <label class="form-label">Ajouter le contrat</label>
                         <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-success " value="Ajouter">
                         </div>
                     </form>
                     <form th:if="${aideHumaine.rib == null}"
@@ -152,7 +152,7 @@
                         <label class="form-label">Ajouter le rib</label>
                         <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-success " value="Ajouter">
                         </div>
                     </form>
                     <form th:if="${aideHumaine.carteVitale == null}"
@@ -163,7 +163,7 @@
                         <label class="form-label">Ajouter la carte Vitale</label>
                         <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-success " value="Ajouter">
                         </div>
                     </form>
                     <form th:if="${aideHumaine.carteEtu == null}"
@@ -174,7 +174,7 @@
                         <label class="form-label">Ajouter la carte étudiante</label>
                         <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
+                            <input th:if="${currentYear == currentDossier.year}" type="submit" class="btn btn-success " value="Ajouter">
                         </div>
                     </form>
                 </div>

@@ -62,7 +62,7 @@ public class EnqueteForm {
 
     private String autAE;
 
-    private CodMeaa codMeaa;
+    private Set<CodMeaa> codMeaa = new HashSet<>();
 
     private String autAA;
 
@@ -298,11 +298,11 @@ public class EnqueteForm {
         this.autAE = autAE;
     }
 
-    public CodMeaa getCodMeaa() {
+    public Set<CodMeaa> getCodMeaa() {
         return codMeaa;
     }
 
-    public void setCodMeaa(CodMeaa codMeaa) {
+    public void setCodMeaa(Set<CodMeaa> codMeaa) {
         this.codMeaa = codMeaa;
     }
 

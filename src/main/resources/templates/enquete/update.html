@@ -9,8 +9,7 @@
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
-                <button id="save-btn" class="btn btn-success">
+                <button th:if="${currentYear == currentDossier.year}" id="save-btn" class="btn btn-success">
                     <i class="fa-solid fa-save"></i>
                 </button>
             </div>
@@ -253,12 +252,12 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
                                         <div>
-                                            <select id="_codMeaa_id" name="codMeaa" class="form-select" size="1">
-                                                <option disabled selected value="nul">Choisir</option>
-                                                <option th:selected="${enumCodmeaa == enquete.codMeaa}"
-                                                        th:each="enumCodmeaa : ${codMeaas}"
-                                                        th:value="${enumCodmeaa}"
-                                                        th:text="#{'enquete.codMeaa.' + ${enumCodmeaa}}"></option>
+                                            <select multiple id="codMeaa" th:field="*{codMeaa}" class="agape-slim-select">
+
+                                                <option th:checked="${enquete.codMeaa.contains(codMeaas)}"
+                                                        th:each="enumCodMeaa : ${codMeaas}"
+                                                        th:value="${enumCodMeaa}"
+                                                        th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
                                             </select>
                                         </div>
                                         <div>
@@ -331,6 +330,5 @@
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
-        <div th:replace="individus/modal-update :: update"></div>
     </body>
 </html>

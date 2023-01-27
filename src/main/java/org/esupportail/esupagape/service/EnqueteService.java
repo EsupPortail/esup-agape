@@ -8,6 +8,7 @@ import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -18,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EnqueteService {
@@ -77,10 +82,10 @@ public class EnqueteService {
         if (StringUtils.hasText(enqueteForm.getAHS0())) {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
         } else {
-            for(String AHS1 : enqueteForm.getAHS1()) {
+            for (String AHS1 : enqueteForm.getAHS1()) {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
             }
-            for(String AHS2 : enqueteForm.getAHS2()) {
+            for (String AHS2 : enqueteForm.getAHS2()) {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
             }
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
@@ -161,23 +166,33 @@ public class EnqueteService {
         if (amenagement != null) {
             enquete.getCodMeae().add(CodMeae.AE4);
             enquete.getCodMeae().remove(CodMeae.AE0);
-            if(amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
+            if (amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
                 enquete.getCodMeae().add(CodMeae.AE7);
             }
         } else {
             enquete.getCodMeae().add(CodMeae.AE0);
         }
+        if (StringUtils.hasText(enquete.getAutAE())) {
+            enquete.getCodMeae().add(CodMeae.AEo);
+        } else {
+            enquete.getCodMeae().remove(CodMeae.AEo);
+        }
+        if (StringUtils.hasText(enquete.getAutAA())) {
+            enquete.getCodMeaa().add(CodMeaa.AAo);
+        } else {
+            enquete.getCodMeaa().remove(CodMeaa.AAo);
+        }
 
         enquete.setHdTmp(false);
         enquete.setCodHd(null);
-        if(dossier.getClassification().size() > 2) {
+        if (dossier.getClassification().size() > 2) {
             enquete.setCodHd(CodHd.PTA);
-            if(dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+            if (dossier.getClassification().contains(Classification.TEMPORAIRE)) {
                 enquete.setHdTmp(true);
             }
-        } else if(dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
-            for(Classification classification : dossier.getClassification()) {
-                if(classification.equals(Classification.TEMPORAIRE)) {
+        } else if (dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+            for (Classification classification : dossier.getClassification()) {
+                if (classification.equals(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 } else {
                     enquete.setCodHd(getClassificationEnqueteMap().get(classification));
@@ -185,8 +200,8 @@ public class EnqueteService {
             }
         } else if (dossier.getClassification().size() == 2) {
             enquete.setCodHd(CodHd.PTA);
-        } else if(dossier.getClassification().size() == 1) {
-            if(dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
+        } else if (dossier.getClassification().size() == 1) {
+            if (dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
                 enquete.setHdTmp(true);
             } else {
                 enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassification().stream().toList().get(0)));
@@ -198,16 +213,16 @@ public class EnqueteService {
 
     public void deleteByIndividu(long id) {
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
-        for(Dossier dossier : dossiers) {
+        for (Dossier dossier : dossiers) {
             Enquete enquete = enqueteRepository.findByDossierId(dossier.getId()).orElse(null);
-            if(enquete != null) {
+            if (enquete != null) {
                 enqueteRepository.delete(enquete);
             }
         }
     }
 
     public Map<Classification, CodHd> getClassificationEnqueteMap() {
-        Map< Classification, CodHd> classificationMap = new HashMap<>();
+        Map<Classification, CodHd> classificationMap = new HashMap<>();
         classificationMap.put(Classification.SURDITE_SEVERE_ET_PROFONDE, CodHd.AUD);
         classificationMap.put(Classification.MOTEUR, CodHd.MOT);
         classificationMap.put(Classification.CECITE, CodHd.VUE);
@@ -240,7 +255,7 @@ public class EnqueteService {
     public List<SlimSelectDto> getSlimSelectDtosOfCodFmts(String codFil) {
         List<String> codFmts = getCodFmtByCodFil(codFil);
         List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
-        if(codFmts.size() > 0) {
+        if (codFmts.size() > 0) {
             slimSelectDtos.add(new SlimSelectDto("", ""));
             for (String codFmt : codFmts) {
                 slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
@@ -252,7 +267,7 @@ public class EnqueteService {
     public List<SlimSelectDto> getSlimSelectDtosOfCodScos(String codFmt) {
         List<String> codScos = getCodScoByCodFmt(codFmt);
         List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
-        if(codScos.size() > 0) {
+        if (codScos.size() > 0) {
             slimSelectDtos.add(new SlimSelectDto("", ""));
             for (String codSco : codScos) {
                 slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco));

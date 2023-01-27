@@ -62,11 +62,11 @@
                 <div class="modal-footer">
                     <div class="d-inline">
                         <button th:id="'close-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button role="button" onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-warning">
+                        <button th:if="${currentYear == currentDossier.year}" role="button" onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-warning">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                         <input onclick="lockForm();" th:id="'lock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Annuler" class="btn btn-danger d-none">
-                        <input th:id="'submit-aide-materielle-' + ${aideMaterielle.id}" type="submit" value="Enregister" class="btn btn-success d-none">
+                        <input  th:if="${currentYear == currentDossier.year}" th:id="'submit-aide-materielle-' + ${aideMaterielle.id}" type="submit" value="Enregister" class="btn btn-success d-none">
                     </div>
                 </div>
                 <script th:if="${lastEdit == aideMaterielle.id}">

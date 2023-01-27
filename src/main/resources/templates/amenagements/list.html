@@ -7,7 +7,7 @@
     <body>
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
-            <div class="float-buttons">
+            <div th:if="${currentYear == currentDossier.year}" class="float-buttons">
                 <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary">
                     <i class="fa-solid fa-plus"></i></a>
             </div>
@@ -50,11 +50,11 @@
                                                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
                                                         th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
                                                         class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
-                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
+                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) && currentYear == currentDossier.year}"
                                                         th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'"
                                                         class="btn btn-warning"><i class="fa-solid fa-pen"></i>
                                                 </a>
-                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
+                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) && currentYear == currentDossier.year}"
                                                         data-bs-toggle="modal"
                                                         href="#"
                                                         data-bs-target="#modal-warning"

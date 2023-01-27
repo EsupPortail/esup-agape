@@ -10,5 +10,5 @@ public enum CodMeae {
     AE6,
     AE7,
     AE8,
-    AEO
+    AEo
 }
