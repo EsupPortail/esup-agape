@@ -2,8 +2,10 @@ package org.esupportail.esupagape.web;
 
 
 import org.esupportail.esupagape.config.ApplicationProperties;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +14,18 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @ControllerAdvice(basePackages = "org.esupportail.esupagape.web.controller")
 @EnableConfigurationProperties(ApplicationProperties.class)
-public class EsupAgapeControllerAdvice {
+public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(EsupAgapeControllerAdvice.class);
 
@@ -56,6 +62,13 @@ public class EsupAgapeControllerAdvice {
         model.addAttribute("applicationEmail", applicationProperties.getApplicationEmail());
         model.addAttribute("currentYear", utilsService.getCurrentYear());
         model.addAttribute("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+    }
+
+    @ExceptionHandler(value = { AgapeException.class })
+    protected String handleConflict(
+            AgapeException ex, WebRequest request, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("danger", ex.getMessage()));
+        return "redirect:" + request.getHeader("referer");
     }
 
 }

@@ -110,9 +110,11 @@ public class DossierService {
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable);
     }
 
-    @Transactional
-    public void update(Long id, Dossier dossier) {
+    public void update(Long id, Dossier dossier) throws AgapeException {
         Dossier dossierToUpdate = getById(id);
+        if(dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeException("c'est mal");
+        }
         dossierToUpdate.setClassification(dossier.getClassification());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdph(dossier.getMdph());
@@ -146,7 +148,7 @@ public class DossierService {
     @Transactional
     public void syncAllDossiers() {
         logger.info("Sync dossiers started");
-        List<Dossier> dossiers = dossierRepository.findAllByYear(utilsService.getCurrentYear(), Pageable.unpaged()).getContent();
+        List<Dossier> dossiers = dossierRepository.findAllByYear(2021, Pageable.unpaged()).getContent();
         for (Dossier dossier : dossiers) {
             syncDossier(dossier.getId());
         }
@@ -160,7 +162,7 @@ public class DossierService {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, false, new DossierInfos());
+            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), 2021, false, false, new DossierInfos());
             if (dossierInfos != null) {
                 if (StringUtils.hasText(dossierInfos.getEtablissement())) {
                     dossier.setSite(dossierInfos.getEtablissement());

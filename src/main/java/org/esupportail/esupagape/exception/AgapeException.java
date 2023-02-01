@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.exception;
 
-public class AgapeException extends Exception {
+public class AgapeException extends RuntimeException {
 
     String message;
 

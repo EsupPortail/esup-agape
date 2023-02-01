@@ -103,9 +103,12 @@ public class DossierController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#id)")
-    public String update(@PathVariable Long id, @Valid Dossier dossier) {
-        dossierService.update(id, dossier);
+    public String update(@PathVariable Long id, @Valid Dossier dossier, RedirectAttributes redirectAttributes) {
+        try {
+            dossierService.update(id, dossier);
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
         return "redirect:/dossiers/" + id;
     }
 

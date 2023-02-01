@@ -139,7 +139,9 @@ public class EnqueteService {
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
-        enqueteToUpdate.setCodMeaa(enqueteForm.getCodMeaa());
+        enqueteToUpdate.getCodMeaa().clear();
+        enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
+        enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
         enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
         enqueteToUpdate.setNewNum(enqueteForm.getNewNum());
@@ -177,12 +179,6 @@ public class EnqueteService {
         } else {
             enquete.getCodMeae().remove(CodMeae.AEo);
         }
-        if (StringUtils.hasText(enquete.getAutAA())) {
-            enquete.getCodMeaa().add(CodMeaa.AAo);
-        } else {
-            enquete.getCodMeaa().remove(CodMeaa.AAo);
-        }
-
         enquete.setHdTmp(false);
         enquete.setCodHd(null);
         if (dossier.getClassification().size() > 2) {

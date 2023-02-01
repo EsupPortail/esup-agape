@@ -127,7 +127,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion du formulaire enquete
-    let codFil = document.getElementById("codFil")
+    let codMeaa = document.getElementById("codMeaa")
+    if(codMeaa != null) {
+        new SlimSelect({
+            select: '#codMeaa',
+            settings: {
+                showSearch: false,
+                placeholderText: 'Choisir',
+            },
+            events: {
+                afterChange: (newVal) => {
+                    console.log(newVal);
+                    if(newVal.filter((v) => v.value === "AAo").length > 0) {
+                        document.getElementById("autAADiv").classList.remove("d-none");
+                    } else {
+                        document.getElementById("autAADiv").classList.add("d-none");
+                        document.getElementById("autAA").value = "";
+                    }
+                }
+            }
+        });
+        //Hack slimselect required
+        codMeaa.style.display = "block";
+        codMeaa.style.position = "absolute";
+        codMeaa.style.marginTop = "15px";
+        codMeaa.style.opacity = 0;
+        codMeaa.style.zIndex = -1;
+    }
+
+    let codFil = document.getElementById("codFil");
     if(codFil != null) {
         let codFmt = new SlimSelect({
            select: '#codFmt',

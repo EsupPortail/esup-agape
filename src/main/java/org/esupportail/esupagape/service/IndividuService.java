@@ -179,7 +179,7 @@ public class IndividuService {
             individuRepository.saveAll(individusToCreate);
             List<Individu> individusWithoutDossier = new ArrayList<>();
             individusWithoutDossier.addAll(individusToCreate);
-            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
+            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == 2021)).toList());
             List<Dossier> dossiers = new ArrayList<>();
             for(Individu individu : individusWithoutDossier) {
                 Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);

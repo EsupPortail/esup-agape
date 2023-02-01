@@ -215,13 +215,13 @@
                             <div class="col-lg-6">
                                 <div>
                                     <div>
-                                        <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d'heures</label>
+                                        <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d’heures</label>
                                         <div>
                                             <input th:field="*{interpH}" class="form-control" type="text" value="">
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d'heures</label>
+                                        <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d’heures</label>
                                         <div>
                                             <input th:field="*{codeurH}" class="form-control" type="text" value="">
                                         </div>
@@ -251,17 +251,23 @@
                                     </div>
                                     <div>
                                         <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
+                                        <div class="form-check">
+                                            <th:block th:each="enumCodMeaa : ${codMeaaStructures}">
+                                                <input th:id="${enumCodMeaa}" name="codMeaaStructure" type="radio" th:value="${enumCodMeaa}"
+                                                        th:checked="${enquete.codMeaa.contains(enumCodMeaa)}">
+                                                <label th:for="${enumCodMeaa}" th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></label>
+                                            </th:block>
+                                        </div>
                                         <div>
-                                            <select multiple id="codMeaa" th:field="*{codMeaa}" class="agape-slim-select">
-
+                                            <select multiple id="codMeaa" th:field="*{codMeaa}" class="">
                                                 <option th:checked="${enquete.codMeaa.contains(codMeaas)}"
                                                         th:each="enumCodMeaa : ${codMeaas}"
                                                         th:value="${enumCodMeaa}"
                                                         th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
                                             </select>
                                         </div>
-                                        <div>
-                                            <label th:for="autAA" class="mt-1 form-label">Aides autres</label>
+                                        <div id="autAADiv" th:class="${enquete.codMeaa.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).AAo) ? '' : 'd-none'}">
+                                            <label th:for="autAA" class="mt-1 form-label">Autres (à préciser)</label>
                                             <div>
                                                 <textarea th:field="*{autAA}" class="form-control"></textarea>
                                             </div>
@@ -275,7 +281,7 @@
                                                             type="radio"
                                                             th:value="AM00"
                                                             th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
-                                                    <label for="AM0On">Ne sais pas si l’étudiant en bénéficie</label>
+                                                    <label for="AM0On" th:text="#{'enquete.codAmL.AM00'}"></label>
                                                 </div>
                                                 <div class="d-inline">
                                                     <input id="AM0Off"
@@ -283,7 +289,7 @@
                                                             type="radio"
                                                             value=""
                                                             th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
-                                                    <label for="AM0Off">L'étudiant bénéficie de mesures</label>
+                                                    <label for="AM0Off" th:text="#{'enquete.label.NoAM00'}"></label>
                                                 </div>
                                                 <div id="codAmLDiv"
                                                         th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
@@ -294,21 +300,21 @@
                                                                     th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
                                                             <br />
                                                             <div class="d-inline">
-                                                                <input th:name="${enumLibelleCodAmL}"
+                                                                <input th:id="'0' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
                                                                         type="radio"
                                                                         th:value="${enumLibelleCodAmL} + '0'"
                                                                         th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
-                                                                <label th:for="${enumLibelleCodAmL}" class="me-2">Non</label>
-                                                                <input th:name="${enumLibelleCodAmL}"
+                                                                <label th:for="'0' + ${enumLibelleCodAmL}" class="me-2">Non</label>
+                                                                <input th:id="'1' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
                                                                         type="radio"
                                                                         th:value="${enumLibelleCodAmL} + '1'"
                                                                         th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1'))}">
-                                                                <label th:for="${enumLibelleCodAmL}" class="me-2">Oui</label>
-                                                                <input th:name="${enumLibelleCodAmL}"
+                                                                <label th:for="'1' + ${enumLibelleCodAmL}" class="me-2">Oui</label>
+                                                                <input th:id="'X' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
                                                                         type="radio"
                                                                         th:value="${enumLibelleCodAmL} + 'X'"
                                                                         th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
-                                                                <label th:for="${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
+                                                                <label th:for="'X' + ${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
                                                             </div>
                                                         </div>
                                                     </th:block>

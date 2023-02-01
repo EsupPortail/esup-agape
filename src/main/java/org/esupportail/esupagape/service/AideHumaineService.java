@@ -3,8 +3,10 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.repository.AideHumaineRepository;
+import org.esupportail.esupagape.repository.AideMaterielleRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
@@ -27,12 +29,15 @@ public class AideHumaineService {
     private final DocumentService documentService;
 
     private final UtilsService utilsService;
+    private final AideMaterielleRepository aideMaterielleRepository;
 
-    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService) {
+    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService,
+                              AideMaterielleRepository aideMaterielleRepository) {
         this.aideHumaineRepository = aideHumaineRepository;
         this.individuService = individuService;
         this.documentService = documentService;
         this.utilsService = utilsService;
+        this.aideMaterielleRepository = aideMaterielleRepository;
     }
 
     public AideHumaine create(AideHumaine aideHumaine) {
@@ -50,11 +55,15 @@ public class AideHumaineService {
 
     @Transactional
     public void delete(Long aideHumaineId) {
+        AideHumaine aideHumaineToUpdate = getById(aideHumaineId);
+        if(aideHumaineToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeException("c'est mal");
+        }
         aideHumaineRepository.deleteById(aideHumaineId);
     }
 
     @Transactional
-    public void save(Long aideHumaineId, AideHumaine aideHumaine) {
+    public void save(Long aideHumaineId, AideHumaine aideHumaine) throws AgapeException {
         AideHumaine aideHumaineToUpdate = getById(aideHumaineId);
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
         aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());

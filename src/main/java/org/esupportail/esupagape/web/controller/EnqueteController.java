@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{id}/enquete")
@@ -57,7 +59,8 @@ public class EnqueteController {
         model.addAttribute("codMeahFs", CodMeahF.values());
         model.addAttribute("libelleCodMeahFs", LibelleCodMeahF.values());
         model.addAttribute("codMeaes", CodMeae.values());
-        model.addAttribute("codMeaas", CodMeaa.values());
+        model.addAttribute("codMeaaStructures", Arrays.stream(CodMeaa.values()).filter(codMeaa -> codMeaa.equals(CodMeaa.AA1) || codMeaa.equals(CodMeaa.AA2)).collect(Collectors.toList()));
+        model.addAttribute("codMeaas", Arrays.stream(CodMeaa.values()).filter(codMeaa -> !codMeaa.equals(CodMeaa.AA1) && !codMeaa.equals(CodMeaa.AA2)).collect(Collectors.toList()));
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());

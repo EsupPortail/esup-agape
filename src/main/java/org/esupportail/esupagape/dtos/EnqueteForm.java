@@ -62,6 +62,8 @@ public class EnqueteForm {
 
     private String autAE;
 
+    private CodMeaa codMeaaStructure;
+
     private Set<CodMeaa> codMeaa = new HashSet<>();
 
     private String autAA;
@@ -296,6 +298,14 @@ public class EnqueteForm {
 
     public void setAutAE(String autAE) {
         this.autAE = autAE;
+    }
+
+    public CodMeaa getCodMeaaStructure() {
+        return codMeaaStructure;
+    }
+
+    public void setCodMeaaStructure(CodMeaa codMeaaStructure) {
+        this.codMeaaStructure = codMeaaStructure;
     }
 
     public Set<CodMeaa> getCodMeaa() {

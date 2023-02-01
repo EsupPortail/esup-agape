@@ -107,7 +107,6 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier) {
         aideHumaineService.delete(aideHumaineId);
         return "redirect:/dossiers/" + dossier.getId() + "/aides";
@@ -123,9 +122,13 @@ public class AideController {
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
-    public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model) {
-        aideHumaineService.save(aideHumaineId, aideHumaine);
+//    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
+    public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            aideHumaineService.save(aideHumaineId, aideHumaine);
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
