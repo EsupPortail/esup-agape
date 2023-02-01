@@ -13,8 +13,8 @@
                     <label class="form-label">Type d’aide matérielle</label>
                     <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
                         <div class="form-check">
-                            <input th:checked="${aideMaterielle.typeAideMaterielle == typeAideMaterielle}" class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" required>
-                            <label class="form-check-label" th:text="#{'aides.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
+                            <input th:id="${typeAideMaterielle}" th:checked="${aideMaterielle.typeAideMaterielle == typeAideMaterielle}" class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" required>
+                            <label th:for="${typeAideMaterielle}" class="form-check-label" th:text="#{'aides.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
                         </div>
                     </th:block>
                     <div class="mb-3 mt-3">

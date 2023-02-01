@@ -197,7 +197,9 @@ public class DossierService {
         if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
         }
-        dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
+        if(StringUtils.hasText(dossierIndividuForm.getNationalite())) {
+            dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
+        }
     }
 
     public List<ComposanteDto> getAllComposantes() {

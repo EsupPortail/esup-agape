@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +23,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = "org.esupportail.esupagape.web.controller")
 @EnableConfigurationProperties(ApplicationProperties.class)
@@ -62,6 +67,7 @@ public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
         model.addAttribute("applicationEmail", applicationProperties.getApplicationEmail());
         model.addAttribute("currentYear", utilsService.getCurrentYear());
         model.addAttribute("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+        model.addAttribute("locales", Arrays.stream(Locale.getAvailableLocales()).map(Locale::getDisplayCountry).filter(StringUtils::hasText).distinct().sorted(Comparator.comparing(String::toString)).collect(Collectors.toList()));
     }
 
     @ExceptionHandler(value = { AgapeException.class })
