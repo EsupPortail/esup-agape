@@ -3,10 +3,10 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.TypeDocumentAideHumaine;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.repository.AideHumaineRepository;
-import org.esupportail.esupagape.repository.AideMaterielleRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
@@ -29,15 +29,12 @@ public class AideHumaineService {
     private final DocumentService documentService;
 
     private final UtilsService utilsService;
-    private final AideMaterielleRepository aideMaterielleRepository;
 
-    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService,
-                              AideMaterielleRepository aideMaterielleRepository) {
+    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService) {
         this.aideHumaineRepository = aideHumaineRepository;
         this.individuService = individuService;
         this.documentService = documentService;
         this.utilsService = utilsService;
-        this.aideMaterielleRepository = aideMaterielleRepository;
     }
 
     public AideHumaine create(AideHumaine aideHumaine) {
@@ -118,12 +115,19 @@ public class AideHumaineService {
     }
 
     @Transactional
-    public void addFiche(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+    public void addDocument(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier, TypeDocumentAideHumaine type) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         try {
             for (MultipartFile multipartFile : multipartFiles) {
-                Document ficheRenseignement = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setFicheRenseignement(ficheRenseignement);
+                Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                switch (type) {
+                    case FICHE -> aideHumaine.setFicheRenseignement(document);
+                    case ANNEXE -> aideHumaine.setAnnexe(document);
+                    case CONTRAT -> aideHumaine.setContrat(document);
+                    case RIB -> aideHumaine.setRib(document);
+                    case CARTE_VITALE -> aideHumaine.setCarteVitale(document);
+                    case CARTE_ETU -> aideHumaine.setCarteEtu(document);
+                }
             }
         } catch (IOException e) {
             throw new AgapeIOException(e.getMessage());
@@ -131,181 +135,35 @@ public class AideHumaineService {
     }
 
     @Transactional
-    public void deleteFiche(Long aideHumaineId) {
+    public void deleteDocument(Long aideHumaineId, TypeDocumentAideHumaine type) {
         AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getFicheRenseignement();
-        aideHumaine.setFicheRenseignement(null);
-        documentService.delete(document);
-    }
-
-    @Transactional
-    public void getFicheHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            Document document = aideHumaine.getFicheRenseignement();
-            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void addAnnexe(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            for (MultipartFile multipartFile : multipartFiles) {
-                Document annexe = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setAnnexe(annexe);
-            }
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void deleteAnnexe(Long aideHumaineId) {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getAnnexe();
-        aideHumaine.setAnnexe(null);
-        documentService.delete(document);
-    }
-
-    @Transactional
-    public void getAnnexeHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            Document document = aideHumaine.getAnnexe();
-            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void addContrat(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            for (MultipartFile multipartFile : multipartFiles) {
-                Document contrat = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setContrat(contrat);
-            }
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void deleteContrat(Long aideHumaineId) {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getContrat();
-        aideHumaine.setContrat(null);
-        documentService.delete(document);
-    }
-
-    @Transactional
-    public void getContratHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            Document document = aideHumaine.getContrat();
-            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void addRib(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            for (MultipartFile multipartFile : multipartFiles) {
-                Document rib = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setRib(rib);
-            }
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void deleteRib(Long aideHumaineId) {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getRib();
-        aideHumaine.setRib(null);
-        documentService.delete(document);
-    }
-
-    @Transactional
-    public void getRibHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            Document document = aideHumaine.getRib();
-            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void addCarteVitale(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            for (MultipartFile multipartFile : multipartFiles) {
-                Document carteVitale = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setCarteVitale(carteVitale);
-            }
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void deleteCarteVitale(Long aideHumaineId) {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getCarteVitale();
-        aideHumaine.setCarteVitale(null);
-        documentService.delete(document);
-    }
-
-    @Transactional
-    public void getCarteVitaleHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            Document document = aideHumaine.getCarteVitale();
-            utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void addCarteEtu(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        try {
-            for (MultipartFile multipartFile : multipartFiles) {
-                Document carteEtu = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
-                aideHumaine.setCarteEtu(carteEtu);
-            }
-        } catch (IOException e) {
-            throw new AgapeIOException(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void deleteCarteEtu(Long aideHumaineId) {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        Document document = aideHumaine.getCarteEtu();
+        Document document = getDocumentByType(type, aideHumaine);
         aideHumaine.setCarteEtu(null);
         documentService.delete(document);
     }
 
     @Transactional
-    public void getCarteEtuHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public void getDocumentHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse, TypeDocumentAideHumaine type) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         try {
-            Document document = aideHumaine.getCarteEtu();
+            Document document = getDocumentByType(type, aideHumaine);
             utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
         } catch (IOException e) {
             throw new AgapeIOException(e.getMessage());
         }
     }
+
+    private static Document getDocumentByType(TypeDocumentAideHumaine type, AideHumaine aideHumaine) {
+        Document document = null;
+        switch (type) {
+            case FICHE -> document = aideHumaine.getFicheRenseignement();
+            case ANNEXE -> document = aideHumaine.getAnnexe();
+            case CONTRAT -> document = aideHumaine.getContrat();
+            case RIB -> document = aideHumaine.getRib();
+            case CARTE_VITALE -> document = aideHumaine.getCarteVitale();
+            case CARTE_ETU -> document = aideHumaine.getCarteEtu();
+        }
+        return document;
+    }
+
 }

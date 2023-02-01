@@ -111,68 +111,17 @@
                             </td>
                         </tr>
                     </table>
-                    <form th:if="${aideHumaine.ficheRenseignement == null && currentYear == currentDossier.year}"
+                    <form th:if="${currentYear == currentDossier.year}"
                             class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-fiche/'"
+                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document/'"
                             th:method="post"
                             enctype="multipart/form-data">
-                        <label class="form-label">Ajouter la fiche de renseignements</label>
+                        <select name="typeDocumentAideHumaine" class="form-select">
+                            <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumaines}">
+                                <option th:value="${typeDocumentAideHumaine}" th:text="${typeDocumentAideHumaine}"></option>
+                            </th:block>
+                        </select>
                         <div class="input-group mb-2">
-                            <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
-                        </div>
-                    </form>
-                    <form th:if="${aideHumaine.annexe == null && currentYear == currentDossier.year}"
-                            class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-annexe/'"
-                            th:method="post"
-                            enctype="multipart/form-data">
-                        <label class="form-label">Ajouter l’annexe</label>
-                        <div class="input-group mb-3">
-                            <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success" value="Ajouter">
-                        </div>
-                    </form>
-                    <form th:if="${aideHumaine.contrat == null && currentYear == currentDossier.year}"
-                            class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-contrat/'"
-                            th:method="post"
-                            enctype="multipart/form-data">
-                        <label class="form-label">Ajouter le contrat</label>
-                        <div class="input-group mb-3">
-                            <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
-                        </div>
-                    </form>
-                    <form th:if="${aideHumaine.rib == null && currentYear == currentDossier.year}"
-                            class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-rib/'"
-                            th:method="post"
-                            enctype="multipart/form-data">
-                        <label class="form-label">Ajouter le rib</label>
-                        <div class="input-group mb-3">
-                            <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
-                        </div>
-                    </form>
-                    <form th:if="${aideHumaine.carteVitale == null && currentYear == currentDossier.year}"
-                            class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-carteVitale/'"
-                            th:method="post"
-                            enctype="multipart/form-data">
-                        <label class="form-label">Ajouter la carte Vitale</label>
-                        <div class="input-group mb-3">
-                            <input type="file" name="multipartFiles" multiple class="form-control" required>
-                            <input type="submit" class="btn btn-success " value="Ajouter">
-                        </div>
-                    </form>
-                    <form th:if="${aideHumaine.carteEtu == null && currentYear == currentDossier.year}"
-                            class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-carteEtu/'"
-                            th:method="post"
-                            enctype="multipart/form-data">
-                        <label class="form-label">Ajouter la carte étudiante</label>
-                        <div class="input-group mb-3">
                             <input type="file" name="multipartFiles" multiple class="form-control" required>
                             <input type="submit" class="btn btn-success " value="Ajouter">
                         </div>
