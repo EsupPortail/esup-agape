@@ -172,9 +172,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         .then((response) => response.json())
                         .then(function (data) {
                             console.log(data);
-                            if(data.length >  0) {
+                            if(data.length > 1) {
                                 codSco.setData(data);
                                 codSco.enable();
+                                // document.getElementById("codScoDiv").classList.remove("d-none");
+                            } else {
+                                // document.getElementById("codScoDiv").classList.add("d-none");
+                                codSco.setData([{text: '', value: ''}]);
+                                codSco.disable();
                             }
                         });
                 }

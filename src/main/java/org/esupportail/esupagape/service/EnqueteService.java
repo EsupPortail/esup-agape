@@ -8,7 +8,6 @@ import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -19,11 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EnqueteService {
@@ -266,7 +261,10 @@ public class EnqueteService {
         if (codScos.size() > 0) {
             slimSelectDtos.add(new SlimSelectDto("", ""));
             for (String codSco : codScos) {
-                slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco));
+                SlimSelectDto slimSelectDto = new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);
+                if(slimSelectDto.getValue() != null) {
+                    slimSelectDtos.add(slimSelectDto);
+                }
             }
         }
         return slimSelectDtos;
