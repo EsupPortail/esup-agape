@@ -238,7 +238,6 @@ public class AideController {
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-annexe")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     @ResponseBody
     public ResponseEntity<Void> getAnnexe(@PathVariable Long aideHumaineId, HttpServletResponse httpServletResponse) throws AgapeIOException {
         aideHumaineService.getAnnexeHttpResponse(aideHumaineId, httpServletResponse);

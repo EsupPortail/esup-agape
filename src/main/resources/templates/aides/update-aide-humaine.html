@@ -120,7 +120,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 mb-3">
-                                        <select id="fonctionAidants" class="mb-3 agape-slim-select" name="fonctionAidants" th:field="*{fonctionAidants}" size="1" multiple required>
+                                        <label th:for="fonctionAidants" class="form-label">Fonction</label>
+                                        <select disabled id="fonctionAidants" class="mb-3 agape-slim-select" name="fonctionAidants" th:field="*{fonctionAidants}" size="1" multiple required>
                                             <th:block th:each="fonctionAidant : ${fonctionAidants}">
                                                 <option th:id="${fonctionAidant}" th:value="${fonctionAidant}" th:text="#{'aides.fonctionAidant.' +${fonctionAidant}}"></option>
                                             </th:block>
@@ -246,7 +247,7 @@
                                         </form>
                                         <td>
                                             <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
-                                                <button th:if="${currentYear == currentDossier.year}" type="button"
+                                                <button th:if="${currentYear == currentDossier.year || periodeAideHumaineEntry.value.feuilleHeures != null}" type="button"
                                                         class="btn btn-sm btn-outline-dark"
                                                         th:classappend="${periodeAideHumaineEntry.value.feuilleHeures != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
@@ -291,7 +292,7 @@
                                                                                         class="btn btn-sm btn-info"><i class="fa-solid fa-download"></i></a>
                                                                             </td>
                                                                         </tr>
-                                                                        <tr>
+                                                                        <tr th:if="${currentYear == currentDossier.year}">
                                                                             <td>
                                                                                 <label class="form-label">Supprimer la feuille heures</label>
                                                                             </td>
@@ -314,7 +315,7 @@
                                         <td>
                                             <th:block th:if="${periodeAideHumaineEntry.value.id != null}">
                                                 <button type="button"
-                                                        th:if="${currentYear == currentDossier.year}"
+                                                        th:if="${currentYear == currentDossier.year || periodeAideHumaineEntry.value.planning != null }"
                                                         class="btn btn-sm btn-outline-dark"
                                                         th:classappend="${periodeAideHumaineEntry.value.planning != null ? 'btn-info' : 'btn-light' }"
                                                         data-bs-toggle="modal"
@@ -359,7 +360,7 @@
                                                                                         class="btn btn-sm btn-info"><i class="fa-solid fa-download"></i></a>
                                                                             </td>
                                                                         </tr>
-                                                                        <tr>
+                                                                        <tr th:if="${currentYear == currentDossier.year}">
                                                                             <td>
                                                                                 <label class="form-label">Supprimer le planning</label>
                                                                             </td>

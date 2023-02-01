@@ -16,6 +16,7 @@
                             <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                         </div>
                         <div class="col-12 col-xxl-8">
+                            <label th:for="fonctionAidants" class="form-label">Fonction</label>
                             <select id="fonctionAidants" class="mb-3 agape-slim-select" name="fonctionAidants" th:field="*{fonctionAidants}" size="1" multiple required>
                                 <th:block th:each="fonctionAidant : ${fonctionAidants}">
                                     <option th:id="${fonctionAidant}" th:value="${fonctionAidant}" th:text="#{'aides.fonctionAidant.' +${fonctionAidant}}"></option>
