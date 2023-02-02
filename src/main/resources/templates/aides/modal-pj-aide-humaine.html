@@ -10,11 +10,12 @@
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
-                        <tr th:if="${aideHumaine.ficheRenseignement != null ||
-                     aideHumaine.annexe != null ||
-                     aideHumaine.rib != null ||
-                     aideHumaine.carteVitale != null ||
-                      aideHumaine.carteEtu != null}">
+                        <tr th:if="${
+                                aideHumaine.ficheRenseignement != null ||
+                                aideHumaine.annexe != null ||
+                                aideHumaine.rib != null ||
+                                aideHumaine.carteVitale != null ||
+                                aideHumaine.carteEtu != null}">
                             <th>Type</th>
                             <th>Nom</th>
                             <th></th>
@@ -113,7 +114,7 @@
                     </table>
                     <form th:if="${currentYear == currentDossier.year}"
                             class="me-2"
-                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document/'"
+                            th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document'"
                             th:method="post"
                             enctype="multipart/form-data">
                         <select name="typeDocumentAideHumaine" class="form-select">

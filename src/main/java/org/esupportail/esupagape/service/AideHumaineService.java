@@ -122,14 +122,14 @@ public class AideHumaineService {
     }
 
     @Transactional
-    public void addDocument(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier, TypeDocumentAideHumaine type) throws AgapeIOException {
+    public void addDocument(Long aideHumaineId, MultipartFile[] multipartFiles, TypeDocumentAideHumaine type) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
         if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
-                Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
+                Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), aideHumaine.getDossier());
                 switch (type) {
                     case FICHE -> aideHumaine.setFicheRenseignement(document);
                     case ANNEXE -> aideHumaine.setAnnexe(document);

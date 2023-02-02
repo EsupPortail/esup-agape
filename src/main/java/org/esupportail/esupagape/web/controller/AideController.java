@@ -191,10 +191,10 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-document")
-    public String addDocument(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
-        aideHumaineService.addDocument(aideHumaineId, multipartFiles, dossier, typeDocumentAideHumaine);
+    public String addDocument(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier currentDossier, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.addDocument(aideHumaineId, multipartFiles, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + currentDossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document")
