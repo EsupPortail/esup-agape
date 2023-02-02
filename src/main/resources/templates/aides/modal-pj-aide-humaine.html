@@ -22,22 +22,22 @@
                             <th></th>
                         </tr>
                         <tr th:if="${aideHumaine.ficheRenseignement != null}">
-                            <td>Fiche de renseignement</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.ficheRenseignement.getFileName()}"></td>
                             <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-fiche'">
+                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document'">
                                     <i class="fa-solid fa-download"></i></a>
                             </td>
                             <td>
                                 <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-fiche/'"
+                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/'"
                                         th:method="delete">
                                     <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
                         <tr th:if="${aideHumaine.annexe != null}">
-                            <td>Annexe</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.annexe.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-annexe'">
@@ -52,7 +52,7 @@
                             </td>
                         </tr>
                         <tr th:if="${aideHumaine.contrat != null}">
-                            <td>Contrat</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.contrat.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-contrat'">
@@ -67,7 +67,7 @@
                             </td>
                         </tr>
                         <tr th:if="${aideHumaine.rib != null}">
-                            <td>Rib</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.rib.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-rib'"><i class="fa-solid fa-download"></i>
@@ -82,7 +82,7 @@
                             </td>
                         </tr>
                         <tr th:if="${aideHumaine.carteVitale != null}">
-                            <td>Carte Vitale</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.carteVitale.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteVitale'">
@@ -97,7 +97,7 @@
                             </td>
                         </tr>
                         <tr th:if="${aideHumaine.carteEtu != null}">
-                            <td>Carte d'étudiant</td>
+                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
                             <td th:text="${aideHumaine.carteEtu.getFileName()}"></td>
                             <td>
                                 <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteEtu'">
