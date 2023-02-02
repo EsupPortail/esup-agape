@@ -108,10 +108,8 @@ public class AideController {
         model.addAttribute("piecesJointes", aideHumaineService.getPiecesJointes(aideHumaineId));
         model.addAttribute("periodeAideHumaineMap", periodeAideHumaineService.getPeriodeAideHumaineMapByAideHumaine(aideHumaineId));
         model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
-        List<TypeDocument> typeDocumentAideHumaines = aideHumaineService.getPiecesJointesTypes(aideHumaineId);
-        model.addAttribute("typeDocumentAideHumaines", typeDocumentAideHumaines);
         List<TypeDocument> typeDocumentAideHumainesEmpty = new java.util.ArrayList<>(List.of(TypeDocument.values()));
-        typeDocumentAideHumainesEmpty.removeAll(typeDocumentAideHumaines);
+        typeDocumentAideHumainesEmpty.removeAll(aideHumaineService.getPiecesJointesTypes(aideHumaineId));
         model.addAttribute("typeDocumentAideHumainesEmpty", typeDocumentAideHumainesEmpty);
         return "aides/update-aide-humaine";
     }
