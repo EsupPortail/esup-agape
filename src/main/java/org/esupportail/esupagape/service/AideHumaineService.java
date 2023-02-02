@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -152,14 +153,16 @@ public class AideHumaineService {
     }
 
     @Transactional
-    public void deleteDocument(Long aideHumaineId, TypeDocument type) {
+    public void deleteDocument(Long aideHumaineId, Long documentId) {
         AideHumaine aideHumaine = getById(aideHumaineId);
         if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        Document document = getDocumentByType(aideHumaineId, type);
-        aideHumaine.getPiecesJointes().remove(document);
-        documentService.delete(document);
+        if(aideHumaine.getPiecesJointes().stream().anyMatch(document -> Objects.equals(document.getId(), documentId))) {
+            Document document = documentService.getById(documentId);
+            aideHumaine.getPiecesJointes().remove(document);
+            documentService.delete(document);
+        }
     }
 
     @Transactional

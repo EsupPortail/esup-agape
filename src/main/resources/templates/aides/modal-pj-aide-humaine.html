@@ -26,9 +26,8 @@
                                 </td>
                                 <td>
                                     <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
-                                          th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/'"
+                                          th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/' + ${pieceJointe.id}"
                                           th:method="delete">
-                                        <input type="hidden" name="typeDocumentAideHumaine" th:value="${pieceJointe.typeDocument}">
                                         <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </td>

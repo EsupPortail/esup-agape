@@ -192,9 +192,9 @@ public class AideController {
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
-    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document")
-    public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam TypeDocument typeDocumentAideHumaine, RedirectAttributes redirectAttributes) {
-        aideHumaineService.deleteDocument(aideHumaineId, typeDocumentAideHumaine);
+    @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document/{documentId}")
+    public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Long documentId, RedirectAttributes redirectAttributes) {
+        aideHumaineService.deleteDocument(aideHumaineId, documentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
