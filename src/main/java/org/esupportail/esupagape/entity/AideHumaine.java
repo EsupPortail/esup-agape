@@ -2,6 +2,7 @@ package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
+import org.esupportail.esupagape.entity.enums.TypeDocumentAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -24,6 +25,9 @@ public class AideHumaine {
 
     @Enumerated(EnumType.STRING)
     private StatusAideHumaine statusAideHumaine = StatusAideHumaine.EN_COURS;
+
+    @Enumerated(EnumType.STRING)
+    private TypeDocumentAideHumaine typeDocumentAideHumaine;
 
     private String numEtuAidant;
 
@@ -91,6 +95,8 @@ public class AideHumaine {
     public void setStatusAideHumaine(StatusAideHumaine statusAideHumaine) {
         this.statusAideHumaine = statusAideHumaine;
     }
+
+
 
     public String getNumEtuAidant() {
         return numEtuAidant;
