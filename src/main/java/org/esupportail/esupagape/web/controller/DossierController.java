@@ -70,9 +70,9 @@ public class DossierController {
         return "dossiers/list";
     }
 
-    @GetMapping("/{id}")
-    public String update(@PathVariable Long id, Model model) {
-        Dossier dossier = dossierService.getById(id);
+    @GetMapping("/{dossierId}")
+    public String update(@PathVariable Long dossierId, Model model) {
+        Dossier dossier = dossierService.getById(dossierId);
         model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
@@ -90,52 +90,52 @@ public class DossierController {
         return "dossiers/update";
     }
 
-    @GetMapping("/{id}/sync")
-    public String sync(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        dossierService.syncDossier(id);
+    @GetMapping("/{dossierId}/sync")
+    public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
+        dossierService.syncDossier(dossierId);
         try {
-            individuService.syncIndividu(dossierService.getById(id).getIndividu().getId());
+            individuService.syncIndividu(dossierService.getById(dossierId).getIndividu().getId());
         } catch (AgapeJpaException e) {
             throw new RuntimeException(e);
         }
         redirectAttributes.addFlashAttribute("message", new Message("success", "Synchonisation effectuée"));
-        return "redirect:/dossiers/" + id;
+        return "redirect:/dossiers/" + dossierId;
     }
 
-    @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid Dossier dossier) {
-        dossierService.update(id, dossier);
-        return "redirect:/dossiers/" + id;
+    @PutMapping("/{dossierId}")
+    public String update(@PathVariable Long dossierId, @Valid Dossier dossier) {
+        dossierService.update(dossierId, dossier);
+        return "redirect:/dossiers/" + dossierId;
     }
 
-    @PutMapping("/{id}/update-dossier-individu")
-    public String update(@PathVariable Long id, @Valid DossierIndividuForm dossierIndividuForm) {
-        dossierService.updateDossierIndividu(id, dossierIndividuForm);
-        return "redirect:/dossiers/" + id;
+    @PutMapping("/{dossierId}/update-dossier-individu")
+    public String update(@PathVariable Long dossierId, @Valid DossierIndividuForm dossierIndividuForm) {
+        dossierService.updateDossierIndividu(dossierId, dossierIndividuForm);
+        return "redirect:/dossiers/" + dossierId;
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    @DeleteMapping(value = "/delete-dossier/{id}")
-    public String deleteDossier(@PathVariable("id") long id) {
-        dossierService.deleteDossier(id);
+    @DeleteMapping(value = "/delete-dossier/{dossierId}")
+    public String deleteDossier(@PathVariable Long dossierId) {
+        dossierService.deleteDossier(dossierId);
         return "redirect:/dossiers";
     }
 
-    @PostMapping("/{id}/add-attachments")
-    public String addAttachments(@PathVariable Long id, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
-        dossierService.addAttachment(id, multipartFiles);
+    @PostMapping("/{dossierId}/add-attachments")
+    public String addAttachments(@PathVariable Long dossierId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
+        dossierService.addAttachment(dossierId, multipartFiles);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossier.getId();
     }
-    @GetMapping(value = "/{id}/get-attachment/{attachmentId}")
+    @GetMapping(value = "/{dossierId}/get-attachment/{attachmentId}")
     @ResponseBody
     public ResponseEntity<Void> getLastFileFromSignRequest(@PathVariable("attachmentId") Long attachmentId, HttpServletResponse httpServletResponse) throws AgapeIOException {
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}/delete-attachment/{attachmentId}")
-    public String getLastFileFromSignRequest(@PathVariable("id") Long dossierId, @PathVariable("attachmentId") Long attachmentId, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
+    @DeleteMapping(value = "/{dossierId}/delete-attachment/{attachmentId}")
+    public String getLastFileFromSignRequest(@PathVariable Long dossierId, @PathVariable("attachmentId") Long attachmentId, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
         dossierService.deleteAttachment(dossierId, attachmentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossier.getId();

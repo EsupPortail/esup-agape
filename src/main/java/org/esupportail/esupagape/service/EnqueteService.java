@@ -65,7 +65,7 @@ public class EnqueteService {
     }
 
     @Transactional
-    public void update(Long id, EnqueteForm enqueteForm, Dossier dossier) throws AgapeJpaException {
+    public void update(Long id, EnqueteForm enqueteForm, Long dossierId) throws AgapeJpaException {
         Enquete enqueteToUpdate = getById(id);
         if(enqueteToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -153,7 +153,7 @@ public class EnqueteService {
         enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
         enqueteToUpdate.setNewNum(enqueteForm.getNewNum());
         enqueteToUpdate.setNewId(enqueteForm.getNewId());
-        enqueteToUpdate.setDossier(dossier);
+        enqueteToUpdate.setDossier(dossierService.getById(dossierId));
     }
 
     private Enquete createByDossierId(Long id) {

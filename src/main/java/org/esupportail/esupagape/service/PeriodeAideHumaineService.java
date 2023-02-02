@@ -36,11 +36,14 @@ public class PeriodeAideHumaineService {
 
     private final UtilsService utilsService;
 
-    public PeriodeAideHumaineService(PeriodeAideHumaineRepository periodeAideHumaineRepository, AideHumaineService aideHumaineService, DocumentService documentService, UtilsService utilsService) {
+    private final DossierService dossierService;
+
+    public PeriodeAideHumaineService(PeriodeAideHumaineRepository periodeAideHumaineRepository, AideHumaineService aideHumaineService, DocumentService documentService, UtilsService utilsService, DossierService dossierService) {
         this.periodeAideHumaineRepository = periodeAideHumaineRepository;
         this.aideHumaineService = aideHumaineService;
         this.documentService = documentService;
         this.utilsService = utilsService;
+        this.dossierService = dossierService;
     }
 
     public Map<Integer, PeriodeAideHumaine> getPeriodeAideHumaineMapByAideHumaine(Long aideHumaineId) {
@@ -99,7 +102,8 @@ public class PeriodeAideHumaineService {
     }
 
     @Transactional
-    public void addFeuilleHeures(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+    public void addFeuilleHeures(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Long dossierId) throws AgapeIOException {
+        Dossier dossier = dossierService.getById(dossierId);
         if(dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
@@ -136,7 +140,8 @@ public class PeriodeAideHumaineService {
     }
 
     @Transactional
-    public void addPlanning(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+    public void addPlanning(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Long dossierId) throws AgapeIOException {
+        Dossier dossier = dossierService.getById(dossierId);
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dossiers/{id}/entretiens")
+@RequestMapping("/dossiers/{dossierId}/entretiens")
 public class EntretienController {
 
     private final EntretienService entretienService;
@@ -41,10 +41,10 @@ public class EntretienController {
     }
 
     @GetMapping
-    public String list(Dossier dossier, @PageableDefault(
+    public String list(@PathVariable Long dossierId, @PageableDefault(
             sort = "date",
             direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        Page<EntretienAttachement> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossier.getId(),pageable);
+        Page<EntretienAttachement> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossierId,pageable);
         model.addAttribute("entretiens", entretiens);
         model.addAttribute("entretien", new Entretien());
         model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
@@ -60,19 +60,18 @@ public class EntretienController {
     }
 
     @PostMapping("/create-entretien")
-    public String create(@Valid Entretien entretien, BindingResult bindingResult, Dossier dossier, PersonLdap personLdap, Model model) {
+    public String create(@PathVariable Long dossierId, @Valid Entretien entretien, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
-            setModel(model, dossier);
+            setModel(model, dossierId);
             model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
             return "entretiens/list";
         }
-        entretien.setDossier(dossier);
-        entretienService.create(entretien, dossier.getId(), personLdap);
-        return "redirect:/dossiers/" + dossier.getId() + "/entretiens";
+        entretienService.create(entretien, dossierId, personLdap);
+        return "redirect:/dossiers/" + dossierId + "/entretiens";
     }
 
-    private void setModel(Model model, Dossier dossier) {
-        model.addAttribute("entretiens", entretienService.findByDossier(dossier, Pageable.unpaged()));
+    private void setModel(Model model, Long dossierId) {
+        model.addAttribute("entretiens", entretienService.findByDossier(dossierId, Pageable.unpaged()));
     }
 
     @GetMapping("/{entretienId}/update")
@@ -85,21 +84,21 @@ public class EntretienController {
     }
 
     @PutMapping("/{entretienId}/update")
-    public String update(@PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap,  Dossier dossier) throws AgapeJpaException {
+    public String update(@PathVariable Long dossierId, @PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap) throws AgapeJpaException {
         entretienService.update(entretienId, entretien, personLdap);
-        return "redirect:/dossiers/" + dossier.getId() + "/entretiens/" + entretienId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/entretiens/" + entretienId + "/update";
     }
 
     @DeleteMapping(value = "/{entretienId}/delete")
-    public String deleteDossier(@PathVariable Long entretienId, Dossier dossier) {
+    public String deleteDossier(@PathVariable Long dossierId, @PathVariable Long entretienId) {
         entretienService.deleteEntretien(entretienId);
-        return "redirect:/dossiers/" + dossier.getId() + "/entretiens";
+        return "redirect:/dossiers/" + dossierId + "/entretiens";
     }
 
     @PostMapping("/{entretienId}/add-attachments")
-    public String addAttachments(@PathVariable Long entretienId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
+    public String addAttachments(@PathVariable Long dossierId, @PathVariable Long entretienId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles) throws AgapeException {
         entretienService.addAttachment(entretienId, multipartFiles);
-        return "redirect:/dossiers/" + dossier.getId() + "/entretiens/" + entretienId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/entretiens/" + entretienId + "/update";
     }
 
     @GetMapping(value = "/{entretienId}/get-attachment/{attachmentId}")

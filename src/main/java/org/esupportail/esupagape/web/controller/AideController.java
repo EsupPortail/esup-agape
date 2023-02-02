@@ -2,7 +2,6 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.AideMaterielle;
-import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
-@RequestMapping("/dossiers/{id}/aides")
+@RequestMapping("/dossiers/{dossierId}/aides")
 public class AideController {
 
     private static final Logger logger = LoggerFactory.getLogger(AideController.class);
@@ -50,61 +49,59 @@ public class AideController {
     }
 
     @GetMapping
-    public String list(Dossier dossier, Model model) {
+    public String list(@PathVariable Long dossierId, Model model) {
         setModel(model);
         model.addAttribute("aideMaterielle", new AideMaterielle());
         model.addAttribute("aideHumaine", new AideHumaine());
-        model.addAttribute("aideMaterielles", aideMaterielleService.findByDossier(dossier));
-        model.addAttribute("aideHumaines", aideHumaineService.findByDossier(dossier));
-        model.addAttribute("total", aideMaterielleService.additionCostAideMaterielle(aideMaterielleService.findByDossier(dossier)));
+        model.addAttribute("aideMaterielles", aideMaterielleService.findByDossier(dossierId));
+        model.addAttribute("aideHumaines", aideHumaineService.findByDossier(dossierId));
+        model.addAttribute("total", aideMaterielleService.additionCostAideMaterielle(aideMaterielleService.findByDossier(dossierId)));
 
         return "aides/list";
     }
 
     @PostMapping("/create-aide-materiel")
-    public String createAideMaterielle(@Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Model model, Dossier dossier) {
+    public String createAideMaterielle(@PathVariable Long dossierId, @Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model);
             return "aides/list";
         }
-        aideMaterielle.setDossier(dossier);
-        aideMaterielleService.create(aideMaterielle);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+        aideMaterielleService.create(aideMaterielle, dossierId);
+        return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
 
     @PostMapping("/create-aide-humaine")
-    public String createAideHumaine(@Valid AideHumaine aideHumaine, BindingResult bindingResult, Model model, Dossier dossier) {
+    public String createAideHumaine(@PathVariable Long dossierId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model);
             return "aides/list";
         }
-        aideHumaine.setDossier(dossier);
-        AideHumaine savedHumaine = aideHumaineService.create(aideHumaine);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + savedHumaine.getId() + "/update";
+        AideHumaine savedHumaine = aideHumaineService.create(aideHumaine, dossierId);
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + savedHumaine.getId() + "/update";
     }
 
     @PutMapping("/aides-materielles/{aideMaterielleId}/update")
-    public String updateAideMaterielle(@PathVariable Long aideMaterielleId, @Valid AideMaterielle aideMaterielle, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public String updateAideMaterielle(@PathVariable Long dossierId, @PathVariable Long aideMaterielleId, @Valid AideMaterielle aideMaterielle, RedirectAttributes redirectAttributes) throws AgapeJpaException {
         aideMaterielleService.save(aideMaterielleId, aideMaterielle);
         redirectAttributes.addFlashAttribute("lastEdit", aideMaterielleId);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+        return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
     @DeleteMapping("/aides-materielles/{aideMaterielleId}/delete")
-    public String deleteAideMaterielle(@PathVariable Long aideMaterielleId, Dossier dossier) {
+    public String deleteAideMaterielle(@PathVariable Long dossierId, @PathVariable Long aideMaterielleId) {
         aideMaterielleService.delete(aideMaterielleId);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+        return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete")
-    public String deleteAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier) {
+    public String deleteAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId) {
         aideHumaineService.delete(aideHumaineId);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides";
+        return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/update")
-    public String editAideHumaine(@PathVariable Long aideHumaineId, Dossier dossier, Model model) {
+    public String editAideHumaine(@PathVariable Long aideHumaineId, Model model) {
         setModel(model);
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         model.addAttribute("aideHumaine", aideHumaine);
@@ -122,46 +119,46 @@ public class AideController {
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
-    public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model, RedirectAttributes redirectAttributes) {
+    public String updateAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, RedirectAttributes redirectAttributes) {
         try {
             aideHumaineService.save(aideHumaineId, aideHumaine);
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update-periode/{month}")
-    public String updatePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String updatePeriode(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le format des données saisies est mauvais"));
         } else {
             periodeAideHumaineService.save(aideHumaineId, month, periodeAideHumaine);
         }
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-periode/{month}")
-    public String deletePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String deletePeriode(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, RedirectAttributes redirectAttributes) {
         try {
             periodeAideHumaineService.delete(aideHumaineId, month);
             redirectAttributes.addFlashAttribute("message", new Message("info", "Période supprimée"));
         } catch (NoSuchElementException e) {
             logger.debug("no periode to delete " + aideHumaineId + " : " + month);
         }
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-feuille-heures/{month}")
-    public String addFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
-        periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossier);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    public String addFeuilleHeures(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles) throws AgapeException {
+        periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossierId);
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-feuille-heures/{month}")
-    public String deleteFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
+    public String deleteFeuilleHeures(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month) {
         periodeAideHumaineService.deleteFeuilleHeures(aideHumaineId, month);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-feuille-heures/{month}")
@@ -172,15 +169,15 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-planning/{month}")
-    public String addPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
-        periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossier);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+    public String addPlanning(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles) throws AgapeException {
+        periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossierId);
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-planning/{month}")
-    public String deletePlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
+    public String deletePlanning(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month) {
         periodeAideHumaineService.deletePlanning(aideHumaineId, month);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-planning/{month}")
@@ -191,17 +188,17 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-document")
-    public String addDocument(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier currentDossier, RedirectAttributes redirectAttributes) throws AgapeException {
+    public String addDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, RedirectAttributes redirectAttributes) throws AgapeException {
         aideHumaineService.addDocument(aideHumaineId, multipartFiles, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
-        return "redirect:/dossiers/" + currentDossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document")
-    public String deleteDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, RedirectAttributes redirectAttributes) {
         aideHumaineService.deleteDocument(aideHumaineId, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
-        return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("aides-humaine/{aideHumaineId}/get-document")

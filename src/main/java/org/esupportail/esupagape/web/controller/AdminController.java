@@ -64,20 +64,20 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/delete-year")
-    public String deleteYear(@RequestParam Long id) {
-        utilsService.deleteYear(id);
+    public String deleteYear(@RequestParam Long idYear) {
+        utilsService.deleteYear(idYear);
         return "redirect:/admin";
     }
 
-    @DeleteMapping(value = "/delete-individu/{id}")
-    public String deleteIndividu(@PathVariable("id") long id) {
-        individuService.deleteIndividu(id);
+    @DeleteMapping(value = "/delete-individu/{idIndividu}")
+    public String deleteIndividu(@PathVariable("idIndividu") long idIndividu) {
+        individuService.deleteIndividu(idIndividu);
         return "redirect:/dossiers";
     }
 
-    @DeleteMapping(value = "/delete-dossier/{id}")
-    public String deleteDossier(@PathVariable("id") long id) {
-        dossierService.deleteDossier(id);
+    @DeleteMapping(value = "/delete-dossier/{idIndividu}")
+    public String deleteDossier(@PathVariable("idIndividu") long idIndividu) {
+        dossierService.deleteDossier(idIndividu);
         return "redirect:/dossiers";
     }
 

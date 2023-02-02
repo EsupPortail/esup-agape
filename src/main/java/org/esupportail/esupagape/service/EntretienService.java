@@ -133,8 +133,8 @@ public class EntretienService {
         entretienRepository.save(entretienToUpdate);
     }
 
-    public Page<Entretien> findByDossier(Dossier dossier, Pageable pageable) {
-        return entretienRepository.findEntretiensByDossierId(dossier.getId(), pageable);
+    public Page<Entretien> findByDossier(Long dossierId, Pageable pageable) {
+        return entretienRepository.findEntretiensByDossierId(dossierId, pageable);
     }
 
     public Page<EntretienAttachement> findEntretiensWithAttachementsByDossierId(Long dossierId,  Pageable pageable) {

@@ -39,15 +39,17 @@ public class AideMaterielleService {
     }
 
     @Transactional
-    public void create(AideMaterielle aideMaterielle) {
-        if(aideMaterielle.getDossier().getYear() != utilsService.getCurrentYear()) {
+    public void create(AideMaterielle aideMaterielle, Long dossierId) {
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
+        aideMaterielle.setDossier(dossier);
         aideMaterielleRepository.save(aideMaterielle);
     }
 
-    public Page<AideMaterielle> findByDossier(Dossier dossier) {
-        return aideMaterielleRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
+    public Page<AideMaterielle> findByDossier(Long dossierId) {
+        return aideMaterielleRepository.findByDossierId(dossierId, Pageable.unpaged());
     }
 
     @Transactional

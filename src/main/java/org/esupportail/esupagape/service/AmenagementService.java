@@ -61,8 +61,8 @@ public class AmenagementService {
         return amenagementRepository.findById(id).orElseThrow();
     }
 
-    public Page<Amenagement> findByDossier(Dossier dossier) {
-        return amenagementRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
+    public Page<Amenagement> findByDossier(Long dossierId) {
+        return amenagementRepository.findByDossierId(dossierId, Pageable.unpaged());
     }
 
     public Amenagement isAmenagementValid(Long dossierId) {

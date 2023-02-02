@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.dtos.EnqueteForm;
-import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/dossiers/{id}/enquete")
+@RequestMapping("/dossiers/{dossierId}/enquete")
 public class EnqueteController {
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -34,17 +33,17 @@ public class EnqueteController {
     }
 
     @GetMapping
-    public String show(Dossier dossier, Model model) {
+    public String show(@PathVariable Long dossierId, Model model) {
         setModel(model);
-        Enquete enquete = enqueteService.getAndUpdateByDossierId(dossier.getId());
+        Enquete enquete = enqueteService.getAndUpdateByDossierId(dossierId);
         model.addAttribute("enquete", enquete);
         return "enquete/update";
     }
 
     @PutMapping("/{enqueteId}/update")
-    public String update(@PathVariable Long id, @PathVariable Long enqueteId, @Valid EnqueteForm enqueteForm, Dossier dossier) throws AgapeJpaException {
-        enqueteService.update(enqueteId, enqueteForm, dossier);
-        return "redirect:/dossiers/" + id + "/enquete";
+    public String update(@PathVariable Long dossierId, @PathVariable Long enqueteId, @Valid EnqueteForm enqueteForm) throws AgapeJpaException {
+        enqueteService.update(enqueteId, enqueteForm, dossierId);
+        return "redirect:/dossiers/" + dossierId + "/enquete";
     }
 
     private void setModel(Model model) {

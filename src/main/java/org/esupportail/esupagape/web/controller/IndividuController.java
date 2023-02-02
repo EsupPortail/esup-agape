@@ -36,9 +36,9 @@ public class IndividuController {
         this.dossierService = dossierService;
     }
 
-    @GetMapping("{id}")
-    public String showRedirect(@PathVariable Long id) {
-        List<Dossier> dossiers = dossierService.getAllByIndividu(id);
+    @GetMapping("{individuId}")
+    public String showRedirect(@PathVariable Long individuId) {
+        List<Dossier> dossiers = dossierService.getAllByIndividu(individuId);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         if (!dossiers.isEmpty()) {
             return "redirect:/dossiers/" + dossiers.get(0).getId();

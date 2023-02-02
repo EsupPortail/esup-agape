@@ -31,20 +31,29 @@ public class AideHumaineService {
 
     private final UtilsService utilsService;
 
-    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService) {
+    private final DossierService dossierService;
+
+    public AideHumaineService(AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService, DossierService dossierService) {
         this.aideHumaineRepository = aideHumaineRepository;
         this.individuService = individuService;
         this.documentService = documentService;
         this.utilsService = utilsService;
+        this.dossierService = dossierService;
     }
 
-    public AideHumaine create(AideHumaine aideHumaine) {
+    @Transactional
+    public AideHumaine create(AideHumaine aideHumaine, Long dossierId) {
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        aideHumaine.setDossier(dossier);
         recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaine);
         return aideHumaineRepository.save(aideHumaine);
     }
 
-    public Page<AideHumaine> findByDossier(Dossier dossier) {
-        return aideHumaineRepository.findByDossierId(dossier.getId(), Pageable.unpaged());
+    public Page<AideHumaine> findByDossier(Long dossierId) {
+        return aideHumaineRepository.findByDossierId(dossierId, Pageable.unpaged());
     }
 
     public AideHumaine getById(Long aideHumaineId) {

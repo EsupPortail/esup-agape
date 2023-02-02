@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.Amenagement;
-import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -10,7 +9,6 @@ import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/dossiers/{id}/amenagements")
+@RequestMapping("/dossiers/{dossierId}/amenagements")
 public class AmenagementController {
 
     private final AmenagementService amenagementService;
@@ -31,8 +29,8 @@ public class AmenagementController {
     }
 
     @GetMapping
-    public String list(Dossier dossier, Model model) {
-        model.addAttribute("amenagements", amenagementService.findByDossier(dossier));
+    public String list(@PathVariable Long dossierId, Model model) {
+        model.addAttribute("amenagements", amenagementService.findByDossier(dossierId));
         return "amenagements/list";
     }
 
@@ -44,10 +42,10 @@ public class AmenagementController {
     }
 
     @PostMapping("/create")
-    public String createSave(@Valid Amenagement amenagement, Dossier dossier, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+    public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap) {
         amenagement.setId(null);
-        amenagementService.create(amenagement, dossier.getId(), personLdap);
-        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagement.getId() + "/update";
+        amenagementService.create(amenagement, dossierId, personLdap);
+        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("{amenagementId}/show")
@@ -65,9 +63,9 @@ public class AmenagementController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, Dossier dossier) throws AgapeJpaException {
+    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
-        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
     }
 
     private void setModel(Model model) {
@@ -78,18 +76,18 @@ public class AmenagementController {
         model.addAttribute("autorisations", Autorisation.values());
     }
     @DeleteMapping(value = "/{amenagementId}/delete")
-    public String deleteAmenagement(@PathVariable Long amenagementId, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String deleteAmenagement(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
         try {
             amenagementService.softDeleteAmenagement(amenagementId);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été supprimé"));
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
-        return "redirect:/dossiers/" + dossier.getId() + "/amenagements";
+        return "redirect:/dossiers/" + dossierId + "/amenagements";
     }
 
     @PostMapping("/{amenagementId}/validation-medecin")
-    public String validationMedecin(@PathVariable Long amenagementId, Dossier dossier, RedirectAttributes redirectAttributes) {
+    public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
         try {
             amenagementService.validationMedecin(amenagementId);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
@@ -97,7 +95,7 @@ public class AmenagementController {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
 
-        return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
     }
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")

@@ -27,9 +27,9 @@ public class DossierControllerAdvice {
     }
 
     @ModelAttribute
-    public void globalAttributes(@PathVariable(required = false) Long id, Model model) {
-        if(id != null) {
-            Dossier dossier = dossierService.getById(id);
+    public void globalAttributes(@PathVariable(required = false) Long dossierId, Model model) {
+        if(dossierId != null) {
+            Dossier dossier = dossierService.getById(dossierId);
             List<Dossier> dossiers = dossierService.getAllByIndividu(dossier.getIndividu().getId());
             dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
             model.addAttribute("currentsDossiers", dossiers);
