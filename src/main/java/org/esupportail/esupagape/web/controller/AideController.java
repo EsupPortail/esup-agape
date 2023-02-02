@@ -2,7 +2,6 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.AideMaterielle;
-import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{dossierId}/aides")
@@ -107,6 +105,7 @@ public class AideController {
         setModel(model);
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         model.addAttribute("aideHumaine", aideHumaine);
+        model.addAttribute("piecesJointes", aideHumaineService.getPiecesJointes(aideHumaineId));
         model.addAttribute("periodeAideHumaineMap", periodeAideHumaineService.getPeriodeAideHumaineMapByAideHumaine(aideHumaineId));
         model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
         List<TypeDocument> typeDocumentAideHumaines = aideHumaineService.getPiecesJointesTypes(aideHumaineId);

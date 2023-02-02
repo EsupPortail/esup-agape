@@ -10,23 +10,25 @@
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
-                        <tr th:if="${typeDocumentAideHumaines.size() > 0}">
+                        <tr th:if="${piecesJointes.size() > 0}">
                             <th>Type</th>
+                            <th>Nom</th>
                             <th></th>
                             <th></th>
                         </tr>
-                        <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumaines}">
+                        <th:block th:each="pieceJointe : ${piecesJointes}">
                             <tr>
-                                <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
+                                <td th:text="#{'aides.typeDocumentAideHumaine.' + ${pieceJointe.typeDocument}}"></td>
+                                <td th:text="${pieceJointe.fileName}"></td>
                                 <td>
-                                    <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document?typeDocumentAideHumaine=' + ${typeDocumentAideHumaine}">
+                                    <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document?typeDocumentAideHumaine=' + ${pieceJointe.typeDocument}">
                                         <i class="fa-solid fa-download"></i></a>
                                 </td>
                                 <td>
                                     <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
                                           th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/'"
                                           th:method="delete">
-                                        <input type="hidden" name="typeDocumentAideHumaine" th:value="${typeDocumentAideHumaine}">
+                                        <input type="hidden" name="typeDocumentAideHumaine" th:value="${pieceJointe.typeDocument}">
                                         <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </td>

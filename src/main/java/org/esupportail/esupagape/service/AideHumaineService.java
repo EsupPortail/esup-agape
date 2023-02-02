@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -183,5 +184,11 @@ public class AideHumaineService {
     public List<TypeDocument> getPiecesJointesTypes(Long aideHumaineId) {
         AideHumaine aideHumaine = getById(aideHumaineId);
         return aideHumaine.getPiecesJointes().stream().map(Document::getTypeDocument).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Document> getPiecesJointes(Long aideHumaineId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        return new ArrayList<>(aideHumaine.getPiecesJointes());
     }
 }
