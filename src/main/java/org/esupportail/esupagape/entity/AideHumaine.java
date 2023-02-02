@@ -2,7 +2,6 @@ package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
-import org.esupportail.esupagape.entity.enums.TypeDocumentAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -25,9 +24,6 @@ public class AideHumaine {
 
     @Enumerated(EnumType.STRING)
     private StatusAideHumaine statusAideHumaine = StatusAideHumaine.EN_COURS;
-
-    @Enumerated(EnumType.STRING)
-    private TypeDocumentAideHumaine typeDocumentAideHumaine;
 
     private String numEtuAidant;
 
@@ -54,23 +50,8 @@ public class AideHumaine {
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
     private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
 
-    @OneToOne
-    private Document ficheRenseignement;
-
-    @OneToOne
-    private Document contrat;
-
-    @OneToOne
-    private Document annexe;
-
-    @OneToOne
-    private Document rib;
-
-    @OneToOne
-    private Document carteVitale;
-
-    @OneToOne
-    private Document carteEtu;
+    @OneToMany(mappedBy = "parentId", cascade = CascadeType.REMOVE)
+    private List<Document> piecesJointes;
 
     public Long getId() {
         return id;
@@ -170,51 +151,11 @@ public class AideHumaine {
         this.periodeAideHumaines = periodeAideHumaines;
     }
 
-    public Document getFicheRenseignement() {
-        return ficheRenseignement;
+    public List<Document> getPiecesJointes() {
+        return piecesJointes;
     }
 
-    public void setFicheRenseignement(Document ficheRenseignement) {
-        this.ficheRenseignement = ficheRenseignement;
-    }
-
-    public Document getContrat() {
-        return contrat;
-    }
-
-    public void setContrat(Document contrat) {
-        this.contrat = contrat;
-    }
-
-    public Document getAnnexe() {
-        return annexe;
-    }
-
-    public void setAnnexe(Document annexe) {
-        this.annexe = annexe;
-    }
-
-    public Document getRib() {
-        return rib;
-    }
-
-    public void setRib(Document rib) {
-        this.rib = rib;
-    }
-
-    public Document getCarteVitale() {
-        return carteVitale;
-    }
-
-    public void setCarteVitale(Document carteVitale) {
-        this.carteVitale = carteVitale;
-    }
-
-    public Document getCarteEtu() {
-        return carteEtu;
-    }
-
-    public void setCarteEtu(Document carteEtu) {
-        this.carteEtu = carteEtu;
+    public void setPiecesJointes(List<Document> piecesJointes) {
+        this.piecesJointes = piecesJointes;
     }
 }

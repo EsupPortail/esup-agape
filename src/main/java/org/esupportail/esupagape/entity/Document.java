@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.esupportail.esupagape.entity.enums.TypeDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -44,6 +45,9 @@ public class Document {
 
     @ManyToOne(optional = false)
     private Dossier dossier;
+
+    @Enumerated(EnumType.STRING)
+    private TypeDocument typeDocument;
 
     @JsonIgnore
     public InputStream getInputStream() {
@@ -135,5 +139,13 @@ public class Document {
 
     public void setDossier(Dossier dossier) {
         this.dossier = dossier;
+    }
+
+    public TypeDocument getTypeDocument() {
+        return typeDocument;
+    }
+
+    public void setTypeDocument(TypeDocument typeDocument) {
+        this.typeDocument = typeDocument;
     }
 }

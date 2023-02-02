@@ -2,11 +2,12 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.AideMaterielle;
+import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
-import org.esupportail.esupagape.entity.enums.TypeDocumentAideHumaine;
+import org.esupportail.esupagape.entity.enums.TypeDocument;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -27,9 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{dossierId}/aides")
@@ -108,15 +109,9 @@ public class AideController {
         model.addAttribute("aideHumaine", aideHumaine);
         model.addAttribute("periodeAideHumaineMap", periodeAideHumaineService.getPeriodeAideHumaineMapByAideHumaine(aideHumaineId));
         model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
-        List<TypeDocumentAideHumaine> typeDocumentAideHumaines = new ArrayList<>();
-        if(aideHumaine.getFicheRenseignement() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.FICHE);
-        if(aideHumaine.getAnnexe() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.ANNEXE);
-        if(aideHumaine.getContrat() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CONTRAT);
-        if(aideHumaine.getRib() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.RIB);
-        if(aideHumaine.getCarteVitale() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CARTE_VITALE);
-        if(aideHumaine.getCarteEtu() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CARTE_ETU);
+        List<TypeDocument> typeDocumentAideHumaines = aideHumaineService.getPiecesJointesTypes(aideHumaineId);
         model.addAttribute("typeDocumentAideHumaines", typeDocumentAideHumaines);
-        List<TypeDocumentAideHumaine> typeDocumentAideHumainesEmpty = new java.util.ArrayList<>(List.of(TypeDocumentAideHumaine.values()));
+        List<TypeDocument> typeDocumentAideHumainesEmpty = new java.util.ArrayList<>(List.of(TypeDocument.values()));
         typeDocumentAideHumainesEmpty.removeAll(typeDocumentAideHumaines);
         model.addAttribute("typeDocumentAideHumainesEmpty", typeDocumentAideHumainesEmpty);
         return "aides/update-aide-humaine";
@@ -192,14 +187,14 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-document")
-    public String addDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, RedirectAttributes redirectAttributes) throws AgapeException {
+    public String addDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocument typeDocumentAideHumaine, RedirectAttributes redirectAttributes) throws AgapeException {
         aideHumaineService.addDocument(aideHumaineId, multipartFiles, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document")
-    public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, RedirectAttributes redirectAttributes) {
+    public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam TypeDocument typeDocumentAideHumaine, RedirectAttributes redirectAttributes) {
         aideHumaineService.deleteDocument(aideHumaineId, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -207,7 +202,7 @@ public class AideController {
 
     @GetMapping("aides-humaines/{aideHumaineId}/get-document")
     @ResponseBody
-    public ResponseEntity<Void> getDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public ResponseEntity<Void> getDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocument typeDocumentAideHumaine, HttpServletResponse httpServletResponse) throws AgapeIOException {
         aideHumaineService.getDocumentHttpResponse(aideHumaineId, httpServletResponse, typeDocumentAideHumaine);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -216,6 +211,6 @@ public class AideController {
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
         model.addAttribute("statusAideHumaines", StatusAideHumaine.values());
-        model.addAttribute("typeDocumentAideHumaines", TypeDocumentAideHumaine.values());
+        model.addAttribute("typeDocumentAideHumaines", TypeDocument.values());
     }
 }
