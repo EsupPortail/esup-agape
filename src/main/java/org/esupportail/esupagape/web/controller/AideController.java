@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -107,14 +108,17 @@ public class AideController {
         model.addAttribute("aideHumaine", aideHumaine);
         model.addAttribute("periodeAideHumaineMap", periodeAideHumaineService.getPeriodeAideHumaineMapByAideHumaine(aideHumaineId));
         model.addAttribute("aideHumainePeriodeSums", periodeAideHumaineService.getAideHumainePeriodeSums(aideHumaineId));
-        List<TypeDocumentAideHumaine> typeDocumentAideHumaines = new java.util.ArrayList<>(List.of(TypeDocumentAideHumaine.values()));
-        if(aideHumaine.getFicheRenseignement() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.FICHE);
-        if(aideHumaine.getAnnexe() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.ANNEXE);
-        if(aideHumaine.getContrat() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.CONTRAT);
-        if(aideHumaine.getRib() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.RIB);
-        if(aideHumaine.getCarteVitale() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.CARTE_VITALE);
-        if(aideHumaine.getCarteEtu() != null) typeDocumentAideHumaines.remove(TypeDocumentAideHumaine.CARTE_ETU);
+        List<TypeDocumentAideHumaine> typeDocumentAideHumaines = new ArrayList<>();
+        if(aideHumaine.getFicheRenseignement() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.FICHE);
+        if(aideHumaine.getAnnexe() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.ANNEXE);
+        if(aideHumaine.getContrat() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CONTRAT);
+        if(aideHumaine.getRib() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.RIB);
+        if(aideHumaine.getCarteVitale() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CARTE_VITALE);
+        if(aideHumaine.getCarteEtu() != null) typeDocumentAideHumaines.add(TypeDocumentAideHumaine.CARTE_ETU);
         model.addAttribute("typeDocumentAideHumaines", typeDocumentAideHumaines);
+        List<TypeDocumentAideHumaine> typeDocumentAideHumainesEmpty = new java.util.ArrayList<>(List.of(TypeDocumentAideHumaine.values()));
+        typeDocumentAideHumainesEmpty.removeAll(typeDocumentAideHumaines);
+        model.addAttribute("typeDocumentAideHumainesEmpty", typeDocumentAideHumainesEmpty);
         return "aides/update-aide-humaine";
     }
 
@@ -201,7 +205,7 @@ public class AideController {
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
-    @GetMapping("aides-humaine/{aideHumaineId}/get-document")
+    @GetMapping("aides-humaines/{aideHumaineId}/get-document")
     @ResponseBody
     public ResponseEntity<Void> getDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, HttpServletResponse httpServletResponse) throws AgapeIOException {
         aideHumaineService.getDocumentHttpResponse(aideHumaineId, httpServletResponse, typeDocumentAideHumaine);

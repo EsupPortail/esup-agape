@@ -10,115 +10,36 @@
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
-                        <tr th:if="${
-                                aideHumaine.ficheRenseignement != null ||
-                                aideHumaine.annexe != null ||
-                                aideHumaine.rib != null ||
-                                aideHumaine.carteVitale != null ||
-                                aideHumaine.carteEtu != null}">
+                        <tr th:if="${typeDocumentAideHumaines.size() > 0}">
                             <th>Type</th>
-                            <th>Nom</th>
                             <th></th>
                             <th></th>
                         </tr>
-                        <tr th:if="${aideHumaine.ficheRenseignement != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.ficheRenseignement.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document'">
-                                    <i class="fa-solid fa-download"></i></a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${aideHumaine.annexe != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.annexe.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-annexe'">
-                                    <i class="fa-solid fa-download"></i></a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de l’annexe ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-annexe/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${aideHumaine.contrat != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.contrat.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-contrat'">
-                                    <i class="fa-solid fa-download"></i></a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression du contrat ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-contrat/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${aideHumaine.rib != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.rib.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-rib'"><i class="fa-solid fa-download"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression du rib ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-rib/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${aideHumaine.carteVitale != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.carteVitale.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteVitale'">
-                                    <i class="fa-solid fa-download"></i></a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la carte Vitale ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteVitale/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${aideHumaine.carteEtu != null}">
-                            <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
-                            <td th:text="${aideHumaine.carteEtu.getFileName()}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-carteEtu'">
-                                    <i class="fa-solid fa-download"></i></a>
-                            </td>
-                            <td>
-                                <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la carte étudiante ?');"
-                                        th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-carteEtu/'"
-                                        th:method="delete">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
+                        <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumaines}">
+                            <tr>
+                                <td th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></td>
+                                <td>
+                                    <a class="btn btn-sm btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document?typeDocumentAideHumaine=' + ${typeDocumentAideHumaine}">
+                                        <i class="fa-solid fa-download"></i></a>
+                                </td>
+                                <td>
+                                    <form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
+                                          th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/'"
+                                          th:method="delete">
+                                        <input type="hidden" name="typeDocumentAideHumaine" th:value="${typeDocumentAideHumaine}">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
                     </table>
-                    <form th:if="${currentYear == currentDossier.year}"
+                    <form th:if="${currentYear == currentDossier.year && typeDocumentAideHumainesEmpty.size() > 0}"
                             class="me-2"
                             th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document'"
                             th:method="post"
                             enctype="multipart/form-data">
                         <select name="typeDocumentAideHumaine" class="form-select">
-                            <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumaines}">
+                            <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumainesEmpty}">
                                 <option th:value="${typeDocumentAideHumaine}" th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></option>
                             </th:block>
                         </select>
