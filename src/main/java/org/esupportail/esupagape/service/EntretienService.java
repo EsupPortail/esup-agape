@@ -9,9 +9,11 @@ import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,16 +35,22 @@ public class EntretienService {
 
     private final DocumentService documentService;
 
-    public EntretienService(EntretienRepository entretienRepository, DossierService dossierService, DocumentRepository documentRepository, DocumentService documentService) {
+    private final UtilsService utilsService;
+
+    public EntretienService(EntretienRepository entretienRepository, DossierService dossierService, DocumentRepository documentRepository, DocumentService documentService, UtilsService utilsService) {
         this.entretienRepository = entretienRepository;
         this.dossierService = dossierService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.utilsService = utilsService;
     }
 
     @Transactional
     public void save(Entretien entretien){
         Dossier dossier = dossierService.getById(entretien.getDossier().getId());
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         //TODO passage automatique en suivi si status importé, a confirmer avec celine martin
         if(dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.SUIVI);
@@ -53,6 +61,9 @@ public class EntretienService {
     @Transactional
     public void create (Entretien entretien, Long idDossier, PersonLdap personLdap) {
        Dossier dossier = dossierService.getById(idDossier);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
        entretien.setDossier(dossier);
        entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
@@ -69,12 +80,19 @@ public class EntretienService {
 
     @Transactional
     public void deleteEntretien(Long id) {
+        Entretien entretien = getById(id);
+        if(entretien.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         entretienRepository.deleteById(id);
     }
 
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Entretien entretien = getById(id);
+        if(entretien.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             for(MultipartFile multipartFile : multipartFiles) {
                 Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), id, Entretien.class.getTypeName(), entretien.getDossier());
@@ -94,6 +112,9 @@ public class EntretienService {
     @Transactional
     public void deleteAttachment(Long id, Long attachmentId) throws AgapeException {
         Entretien entretien = getById(id);
+        if(entretien.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         Document attachment = documentService.getById(attachmentId);
         entretien.getAttachments().remove(attachment);
         documentService.delete(attachment);
@@ -102,6 +123,9 @@ public class EntretienService {
     @Transactional
     public void update(Long entretienId, Entretien entretien, PersonLdap personLdap) throws AgapeJpaException {
         Entretien entretienToUpdate = getById(entretienId);
+        if(entretienToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         entretienToUpdate.setDate(entretien.getDate());
         entretienToUpdate.setTypeContact(entretien.getTypeContact());
         entretienToUpdate.setInterlocuteur(personLdap.getDisplayName());

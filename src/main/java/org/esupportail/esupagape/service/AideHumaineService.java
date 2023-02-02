@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.TypeDocumentAideHumaine;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AideHumaineRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -54,7 +55,10 @@ public class AideHumaineService {
     public void delete(Long aideHumaineId) {
         AideHumaine aideHumaineToUpdate = getById(aideHumaineId);
         if(aideHumaineToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeException("c'est mal");
+            throw new AgapeYearException();
+        }
+        if(aideHumaineToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeException("Impossible de modifier un dossier d'une année précédente");
         }
         aideHumaineRepository.deleteById(aideHumaineId);
     }
@@ -62,6 +66,9 @@ public class AideHumaineService {
     @Transactional
     public void save(Long aideHumaineId, AideHumaine aideHumaine) throws AgapeException {
         AideHumaine aideHumaineToUpdate = getById(aideHumaineId);
+        if(aideHumaineToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
         aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());
         aideHumaineToUpdate.setRib(aideHumaine.getRib());
@@ -117,6 +124,9 @@ public class AideHumaineService {
     @Transactional
     public void addDocument(Long aideHumaineId, MultipartFile[] multipartFiles, Dossier dossier, TypeDocumentAideHumaine type) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
                 Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), dossier);
@@ -137,6 +147,9 @@ public class AideHumaineService {
     @Transactional
     public void deleteDocument(Long aideHumaineId, TypeDocumentAideHumaine type) {
         AideHumaine aideHumaine = getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         Document document = getDocumentByType(type, aideHumaine);
         aideHumaine.setCarteEtu(null);
         documentService.delete(document);
@@ -145,6 +158,9 @@ public class AideHumaineService {
     @Transactional
     public void getDocumentHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse, TypeDocumentAideHumaine type) throws AgapeIOException {
         AideHumaine aideHumaine = getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             Document document = getDocumentByType(type, aideHumaine);
             utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);

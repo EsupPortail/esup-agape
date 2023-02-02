@@ -17,6 +17,7 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -79,6 +80,9 @@ public class AmenagementService {
     @Transactional
     public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) {
         Dossier dossier = dossierService.getById(idDossier);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
         }
@@ -91,12 +95,19 @@ public class AmenagementService {
 
     @Transactional
     public void deleteAmenagement(Long amenagementId) {
+        Amenagement amenagement = getById(amenagementId);
+        if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         amenagementRepository.deleteById(amenagementId);
     }
 
     @Transactional
     public void softDeleteAmenagement(Long amenagementId) throws AgapeException {
         Amenagement amenagement = getById(amenagementId);
+        if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
         } else {
@@ -107,6 +118,9 @@ public class AmenagementService {
     @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
+        if(amenagementToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if(amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)){
         amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
         amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
@@ -159,6 +173,9 @@ public class AmenagementService {
     @Transactional
     public void validationMedecin(Long id) throws AgapeException {
         Amenagement amenagement = getById(id);
+        if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagement.setValideMedecinDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
@@ -171,6 +188,9 @@ public class AmenagementService {
     @Transactional
     public void validationAdministration(Long id, PersonLdap personLdap) throws AgapeException {
         Amenagement amenagement = getById(id);
+        if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
@@ -185,6 +205,9 @@ public class AmenagementService {
     @Transactional
     public void refusAdministration(Long id, PersonLdap personLdap, String motif) throws AgapeException {
         Amenagement amenagement = getById(id);
+        if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);

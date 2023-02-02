@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.PeriodeAideHumaineRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -61,6 +62,9 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void save(Long aideHumaineId, Integer month, PeriodeAideHumaine periodeAideHumaine) {
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         periodeAideHumaine.setAideHumaine(aideHumaine);
         periodeAideHumaine.setMois(Month.of(month));
         PeriodeAideHumaine periodeAideHumaineToUpdate;
@@ -96,6 +100,9 @@ public class PeriodeAideHumaineService {
 
     @Transactional
     public void addFeuilleHeures(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             for(MultipartFile multipartFile : multipartFiles) {
                 PeriodeAideHumaine periodeAideHumaineToUpdate = getPeriodeAideHumaineByMonth(aideHumaineId, month);
@@ -120,6 +127,9 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void deleteFeuilleHeures(Long aideHumaineId, Integer month) {
         PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
+        if(periodeAideHumaine.getAideHumaine().getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         Document document = periodeAideHumaine.getFeuilleHeures();
         periodeAideHumaine.setFeuilleHeures(null);
         documentService.delete(document);
@@ -128,6 +138,9 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void addPlanning(Long aideHumaineId, Integer month, MultipartFile[] multipartFiles, Dossier dossier) throws AgapeIOException {
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             for(MultipartFile multipartFile : multipartFiles) {
                 PeriodeAideHumaine periodeAideHumaineToUpdate = aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
@@ -152,6 +165,9 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void deletePlanning(Long aideHumaineId, Integer month) {
         PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
+        if(periodeAideHumaine.getAideHumaine().getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         Document document = periodeAideHumaine.getPlanning();
         periodeAideHumaine.setPlanning(null);
         documentService.delete(document);
@@ -160,6 +176,9 @@ public class PeriodeAideHumaineService {
     @Transactional
     public void delete(Long aideHumaineId, Integer month) {
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
+        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         PeriodeAideHumaine periodeAideHumaine = getPeriodeAideHumaineByMonth(aideHumaineId, month);
         aideHumaine.getPeriodeAideHumaines().remove(periodeAideHumaine);
         periodeAideHumaineRepository.delete(periodeAideHumaine);

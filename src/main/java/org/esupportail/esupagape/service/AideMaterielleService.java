@@ -3,7 +3,9 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AideMaterielleRepository;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,12 @@ public class AideMaterielleService {
 
     private final DossierService dossierService;
 
-    public AideMaterielleService(AideMaterielleRepository aideMaterielleRepository, DossierService dossierService) {
+    private final UtilsService utilsService;
+
+    public AideMaterielleService(AideMaterielleRepository aideMaterielleRepository, DossierService dossierService, UtilsService utilsService) {
         this.aideMaterielleRepository = aideMaterielleRepository;
         this.dossierService = dossierService;
+        this.utilsService = utilsService;
     }
 
     public AideMaterielle getById(Long id) throws AgapeJpaException {
@@ -35,6 +40,9 @@ public class AideMaterielleService {
 
     @Transactional
     public void create(AideMaterielle aideMaterielle) {
+        if(aideMaterielle.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         aideMaterielleRepository.save(aideMaterielle);
     }
 
@@ -44,17 +52,24 @@ public class AideMaterielleService {
 
     @Transactional
     public void delete(Long aideMaterielleId) {
+        AideMaterielle aideMaterielle = getById(aideMaterielleId);
+        if(aideMaterielle.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         aideMaterielleRepository.deleteById(aideMaterielleId);
     }
 
     @Transactional
     public void save(Long id, AideMaterielle aideMaterielle) throws AgapeJpaException {
-        AideMaterielle toUpdateAideMaterielle = getById(id);
-        toUpdateAideMaterielle.setTypeAideMaterielle(aideMaterielle.getTypeAideMaterielle());
-        toUpdateAideMaterielle.setStartDate(aideMaterielle.getStartDate());
-        toUpdateAideMaterielle.setEndDate(aideMaterielle.getEndDate());
-        toUpdateAideMaterielle.setCost(aideMaterielle.getCost());
-        toUpdateAideMaterielle.setComment(aideMaterielle.getComment());
+        AideMaterielle aideMaterielleToUpdate = getById(id);
+        if(aideMaterielleToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        aideMaterielleToUpdate.setTypeAideMaterielle(aideMaterielle.getTypeAideMaterielle());
+        aideMaterielleToUpdate.setStartDate(aideMaterielle.getStartDate());
+        aideMaterielleToUpdate.setEndDate(aideMaterielle.getEndDate());
+        aideMaterielleToUpdate.setCost(aideMaterielle.getCost());
+        aideMaterielleToUpdate.setComment(aideMaterielle.getComment());
         aideMaterielleRepository.save(aideMaterielle);
     }
 

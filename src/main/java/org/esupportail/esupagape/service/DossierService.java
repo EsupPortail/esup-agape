@@ -13,6 +13,7 @@ import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
@@ -110,10 +111,11 @@ public class DossierService {
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable);
     }
 
-    public void update(Long id, Dossier dossier) throws AgapeException {
+    @Transactional
+    public void update(Long id, Dossier dossier) {
         Dossier dossierToUpdate = getById(id);
         if(dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeException("c'est mal");
+            throw new AgapeYearException();
         }
         dossierToUpdate.setClassification(dossier.getClassification());
         dossierToUpdate.setEtat(dossier.getEtat());
@@ -189,6 +191,9 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
         Dossier dossierToUpdate = getById(id);
+        if(dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
         if(!StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
@@ -209,6 +214,9 @@ public class DossierService {
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
                 Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getTypeName(), dossier);
@@ -228,6 +236,9 @@ public class DossierService {
     public void deleteAttachment(Long id, Long attachmentId) {
         //if parentType == org.esupportail.esupagape.entity.Dossier
         Dossier dossier = getById(id);
+        if(dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         Document attachment = documentService.getById(attachmentId);
         if ("org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())) {
             dossier.getAttachments().remove(attachment);

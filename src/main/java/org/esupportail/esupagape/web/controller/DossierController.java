@@ -103,12 +103,8 @@ public class DossierController {
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, @Valid Dossier dossier, RedirectAttributes redirectAttributes) {
-        try {
-            dossierService.update(id, dossier);
-        } catch (AgapeException e) {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
-        }
+    public String update(@PathVariable Long id, @Valid Dossier dossier) {
+        dossierService.update(id, dossier);
         return "redirect:/dossiers/" + id;
     }
 

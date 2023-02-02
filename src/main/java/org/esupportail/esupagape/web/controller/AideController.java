@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,7 +62,6 @@ public class AideController {
     }
 
     @PostMapping("/create-aide-materiel")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String createAideMaterielle(@Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Model model, Dossier dossier) {
         if (bindingResult.hasErrors()) {
             setModel(model);
@@ -76,7 +74,6 @@ public class AideController {
 
 
     @PostMapping("/create-aide-humaine")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String createAideHumaine(@Valid AideHumaine aideHumaine, BindingResult bindingResult, Model model, Dossier dossier) {
         if (bindingResult.hasErrors()) {
             setModel(model);
@@ -95,7 +92,6 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-materielles/{aideMaterielleId}/delete")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteAideMaterielle(@PathVariable Long aideMaterielleId, Dossier dossier) {
         aideMaterielleService.delete(aideMaterielleId);
         return "redirect:/dossiers/" + dossier.getId() + "/aides";
@@ -126,7 +122,6 @@ public class AideController {
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
-//    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String updateAideHumaine(@PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Dossier dossier, Model model, RedirectAttributes redirectAttributes) {
         try {
             aideHumaineService.save(aideHumaineId, aideHumaine);
@@ -137,7 +132,6 @@ public class AideController {
     }
 
     @PutMapping("/aides-humaines/{aideHumaineId}/update-periode/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String updatePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, @Valid PeriodeAideHumaine periodeAideHumaine, BindingResult bindingResult, Dossier dossier, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le format des données saisies est mauvais"));
@@ -148,7 +142,6 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-periode/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deletePeriode(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier, RedirectAttributes redirectAttributes) {
         try {
             periodeAideHumaineService.delete(aideHumaineId, month);
@@ -160,14 +153,12 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-feuille-heures/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String addFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
         periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossier);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-feuille-heures/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
         periodeAideHumaineService.deleteFeuilleHeures(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -181,14 +172,12 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-planning/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String addPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, Dossier dossier) throws AgapeException {
         periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossier);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-planning/{month}")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deletePlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, Dossier dossier) {
         periodeAideHumaineService.deletePlanning(aideHumaineId, month);
         return "redirect:/dossiers/" + dossier.getId() + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -202,7 +191,6 @@ public class AideController {
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-document")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String addDocument(@PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier dossier, RedirectAttributes redirectAttributes) throws AgapeException {
         aideHumaineService.addDocument(aideHumaineId, multipartFiles, dossier, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
@@ -210,7 +198,6 @@ public class AideController {
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocumentAideHumaine typeDocumentAideHumaine, Dossier dossier, RedirectAttributes redirectAttributes) {
         aideHumaineService.deleteDocument(aideHumaineId, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);

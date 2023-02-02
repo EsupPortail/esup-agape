@@ -296,7 +296,7 @@ public class IndividuService {
     @Transactional
     public void deleteIndividu(long id) {
         Individu individu = getById(id);
-        enqueteService.deleteByIndividu(id);
+        enqueteService.detachAllByDossiers(id);
         if (StringUtils.hasText(individu.getNumEtu())) {
             ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
             if(excludeIndividu == null) {

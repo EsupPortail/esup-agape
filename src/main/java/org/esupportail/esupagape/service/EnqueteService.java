@@ -11,9 +11,12 @@ import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeYearException;
+import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,12 +36,18 @@ public class EnqueteService {
 
     private final AmenagementService amenagementService;
 
-    public EnqueteService(EnqueteRepository enqueteRepository, EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository, EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository, DossierService dossierService, AmenagementService amenagementService) {
+    private final UtilsService utilsService;
+    private final DossierRepository dossierRepository;
+
+    public EnqueteService(EnqueteRepository enqueteRepository, EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository, EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository, DossierService dossierService, AmenagementService amenagementService, UtilsService utilsService,
+                          DossierRepository dossierRepository) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
+        this.utilsService = utilsService;
+        this.dossierRepository = dossierRepository;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -58,6 +67,9 @@ public class EnqueteService {
     @Transactional
     public void update(Long id, EnqueteForm enqueteForm, Dossier dossier) throws AgapeJpaException {
         Enquete enqueteToUpdate = getById(id);
+        if(enqueteToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
         enqueteToUpdate.setNfic(enqueteForm.getNfic());
         enqueteToUpdate.setNumetu(enqueteForm.getNumetu());
         enqueteToUpdate.setGender(enqueteForm.getGender());
@@ -155,59 +167,60 @@ public class EnqueteService {
     public Enquete getAndUpdateByDossierId(Long id) {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
-        enquete.setAn(String.valueOf(dossier.getYear()));
-        enquete.setGender(dossier.getIndividu().getGender());
-        enquete.setTypeFrmn(dossier.getTypeFormation());
-        enquete.setModFrmn(dossier.getModeFormation());
-        Amenagement amenagement = amenagementService.isAmenagementValid(id);
-        if (amenagement != null) {
-            enquete.getCodMeae().add(CodMeae.AE4);
-            enquete.getCodMeae().remove(CodMeae.AE0);
-            if (amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
-                enquete.getCodMeae().add(CodMeae.AE7);
+        if(dossier.getYear() == utilsService.getCurrentYear()) {
+            enquete.setAn(String.valueOf(dossier.getYear()));
+            enquete.setGender(dossier.getIndividu().getGender());
+            enquete.setTypeFrmn(dossier.getTypeFormation());
+            enquete.setModFrmn(dossier.getModeFormation());
+            Amenagement amenagement = amenagementService.isAmenagementValid(id);
+            if (amenagement != null) {
+                enquete.getCodMeae().add(CodMeae.AE4);
+                enquete.getCodMeae().remove(CodMeae.AE0);
+                if (amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
+                    enquete.getCodMeae().add(CodMeae.AE7);
+                }
+            } else {
+                enquete.getCodMeae().add(CodMeae.AE0);
             }
-        } else {
-            enquete.getCodMeae().add(CodMeae.AE0);
-        }
-        if (StringUtils.hasText(enquete.getAutAE())) {
-            enquete.getCodMeae().add(CodMeae.AEo);
-        } else {
-            enquete.getCodMeae().remove(CodMeae.AEo);
-        }
-        enquete.setHdTmp(false);
-        enquete.setCodHd(null);
-        if (dossier.getClassification().size() > 2) {
-            enquete.setCodHd(CodHd.PTA);
-            if (dossier.getClassification().contains(Classification.TEMPORAIRE)) {
-                enquete.setHdTmp(true);
+            if (StringUtils.hasText(enquete.getAutAE())) {
+                enquete.getCodMeae().add(CodMeae.AEo);
+            } else {
+                enquete.getCodMeae().remove(CodMeae.AEo);
             }
-        } else if (dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
-            for (Classification classification : dossier.getClassification()) {
-                if (classification.equals(Classification.TEMPORAIRE)) {
+            enquete.setHdTmp(false);
+            enquete.setCodHd(null);
+            if (dossier.getClassification().size() > 2) {
+                enquete.setCodHd(CodHd.PTA);
+                if (dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+                    enquete.setHdTmp(true);
+                }
+            } else if (dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+                for (Classification classification : dossier.getClassification()) {
+                    if (classification.equals(Classification.TEMPORAIRE)) {
+                        enquete.setHdTmp(true);
+                    } else {
+                        enquete.setCodHd(getClassificationEnqueteMap().get(classification));
+                    }
+                }
+            } else if (dossier.getClassification().size() == 2) {
+                enquete.setCodHd(CodHd.PTA);
+            } else if (dossier.getClassification().size() == 1) {
+                if (dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 } else {
-                    enquete.setCodHd(getClassificationEnqueteMap().get(classification));
+                    enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassification().stream().toList().get(0)));
                 }
             }
-        } else if (dossier.getClassification().size() == 2) {
-            enquete.setCodHd(CodHd.PTA);
-        } else if (dossier.getClassification().size() == 1) {
-            if (dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
-                enquete.setHdTmp(true);
-            } else {
-                enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassification().stream().toList().get(0)));
-            }
         }
-
         return enquete;
     }
 
-    public void deleteByIndividu(long id) {
+    public void detachAllByDossiers(long id) {
         List<Dossier> dossiers = dossierService.getAllByIndividu(id);
         for (Dossier dossier : dossiers) {
             Enquete enquete = enqueteRepository.findByDossierId(dossier.getId()).orElse(null);
             if (enquete != null) {
-                enqueteRepository.delete(enquete);
+                enquete.setDossier(null);
             }
         }
     }

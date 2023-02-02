@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.BigFile;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -25,16 +26,19 @@ public class DocumentService {
 
 	private final BigFileService bigFileService;
 
-	private final UtilsService utilService;
+	private final UtilsService utilsService;
 
-	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService, UtilsService utilService) {
+	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService, UtilsService utilsService) {
 		this.documentRepository = documentRepository;
 		this.bigFileService = bigFileService;
-		this.utilService = utilService;
+		this.utilsService = utilsService;
 	}
 
 	@Transactional
 	public Document createDocument(InputStream inputStream, String name, String contentType, Long parentId, String parentType, Dossier dossier) throws AgapeIOException {
+		if(dossier.getYear() != utilsService.getCurrentYear()) {
+			throw new AgapeYearException();
+		}
 		Document document = new Document();
 		document.setCreateDate(new Date());
 		document.setFileName(name);
@@ -80,7 +84,7 @@ public class DocumentService {
 	public void getDocumentHttpResponse(Long id, HttpServletResponse httpServletResponse) throws AgapeIOException {
 		Document document = getById(id);
 		try {
-			utilService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
+			utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);
 		} catch (IOException e) {
 			throw new AgapeIOException(e.getMessage());
 		}

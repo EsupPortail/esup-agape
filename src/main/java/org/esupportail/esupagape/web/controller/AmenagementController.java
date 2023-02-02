@@ -44,7 +44,6 @@ public class AmenagementController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String createSave(@Valid Amenagement amenagement, Dossier dossier, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         amenagement.setId(null);
         amenagementService.create(amenagement, dossier.getId(), personLdap);
@@ -66,7 +65,6 @@ public class AmenagementController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public  String update(@PathVariable Long amenagementId, @Valid Amenagement amenagement, Dossier dossier) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
         return "redirect:/dossiers/" + dossier.getId() + "/amenagements/" + amenagementId + "/update";
@@ -80,7 +78,6 @@ public class AmenagementController {
         model.addAttribute("autorisations", Autorisation.values());
     }
     @DeleteMapping(value = "/{amenagementId}/delete")
-    @PreAuthorize("@dossierService.isDossierOfThisYear(#dossier)")
     public String deleteAmenagement(@PathVariable Long amenagementId, Dossier dossier, RedirectAttributes redirectAttributes) {
         try {
             amenagementService.softDeleteAmenagement(amenagementId);
