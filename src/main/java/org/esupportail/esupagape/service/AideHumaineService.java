@@ -151,7 +151,14 @@ public class AideHumaineService {
             throw new AgapeYearException();
         }
         Document document = getDocumentByType(type, aideHumaine);
-        aideHumaine.setCarteEtu(null);
+        switch (type) {
+            case FICHE -> aideHumaine.setFicheRenseignement(null);
+            case ANNEXE -> aideHumaine.setAnnexe(null);
+            case CONTRAT -> aideHumaine.setContrat(null);
+            case RIB -> aideHumaine.setRib(null);
+            case CARTE_VITALE -> aideHumaine.setCarteVitale(null);
+            case CARTE_ETU -> aideHumaine.setCarteEtu(null);
+        }
         documentService.delete(document);
     }
 
