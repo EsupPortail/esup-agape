@@ -228,5 +228,6 @@ public class AideController {
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
         model.addAttribute("statusAideHumaines", StatusAideHumaine.values());
+        model.addAttribute("typeDocumentAideHumaines", TypeDocumentAideHumaine.values());
     }
 }

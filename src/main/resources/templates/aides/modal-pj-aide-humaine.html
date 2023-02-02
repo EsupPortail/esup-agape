@@ -118,7 +118,7 @@
                             enctype="multipart/form-data">
                         <select name="typeDocumentAideHumaine" class="form-select">
                             <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumaines}">
-                                <option th:value="${typeDocumentAideHumaine}" th:text="${typeDocumentAideHumaine}"></option>
+                                <option th:value="${typeDocumentAideHumaine}" th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></option>
                             </th:block>
                         </select>
                         <div class="input-group mb-2">
