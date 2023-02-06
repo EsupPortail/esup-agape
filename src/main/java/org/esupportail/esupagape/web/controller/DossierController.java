@@ -122,10 +122,10 @@ public class DossierController {
     }
 
     @PostMapping("/{dossierId}/add-attachments")
-    public String addAttachments(@PathVariable Long dossierId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
+    public String addAttachments(@PathVariable Long dossierId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, RedirectAttributes redirectAttributes) throws AgapeException {
         dossierService.addAttachment(dossierId, multipartFiles);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
-        return "redirect:/dossiers/" + dossier.getId();
+        return "redirect:/dossiers/" + dossierId;
     }
     @GetMapping(value = "/{dossierId}/get-attachment/{attachmentId}")
     @ResponseBody
@@ -135,9 +135,9 @@ public class DossierController {
     }
 
     @DeleteMapping(value = "/{dossierId}/delete-attachment/{attachmentId}")
-    public String getLastFileFromSignRequest(@PathVariable Long dossierId, @PathVariable("attachmentId") Long attachmentId, RedirectAttributes redirectAttributes, Dossier dossier) throws AgapeException {
+    public String getLastFileFromSignRequest(@PathVariable Long dossierId, @PathVariable("attachmentId") Long attachmentId, RedirectAttributes redirectAttributes) throws AgapeException {
         dossierService.deleteAttachment(dossierId, attachmentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
-        return "redirect:/dossiers/" + dossier.getId();
+        return "redirect:/dossiers/" + dossierId;
     }
 }
