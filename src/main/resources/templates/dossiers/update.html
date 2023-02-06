@@ -332,10 +332,8 @@
                                             <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
                                         </td>
                                         <td th:text="${attachment.parentType}">
-
                                         </td>
                                         <td class="align-middle">
-                                            </form>
                                                 <button th:attr="id=${attachment.id}"
                                                         data-bs-toggle="modal"
                                                         href="#"
