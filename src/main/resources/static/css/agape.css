@@ -127,6 +127,10 @@ select[disabled] > option {
     min-height: 38px;
 }
 
+.ss-content {
+    position: fixed;
+}
+
 .float-buttons {
     z-index: 1;
     position: absolute;

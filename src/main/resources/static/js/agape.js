@@ -89,10 +89,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Gestion automatique des slimselect avec search
     document.querySelectorAll(".agape-slim-select-search").forEach(function (element) {
         if(element.id !== '') {
-            console.info("enable slimselect on : " + element.id);
+            console.info("enable slimselect search on : " + element.id);
             new SlimSelect({
                 select: '#' + element.id,
                 settings: {
+                    contentLocation: document.getElementById('local'),
+                    openPosition: 'down',
                     placeholderText: 'Choisir',
                     searchPlaceholder: 'Rechercher',
                 }
