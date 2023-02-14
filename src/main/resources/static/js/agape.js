@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             new SlimSelect({
                 select: '#' + element.id,
                 settings: {
-                    contentLocation: document.getElementById('local'),
                     openPosition: 'down',
                     placeholderText: 'Choisir',
                     searchPlaceholder: 'Rechercher',

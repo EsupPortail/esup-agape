@@ -127,8 +127,9 @@ select[disabled] > option {
     min-height: 38px;
 }
 
-.ss-content {
-    position: fixed;
+.ss-value-text {
+    font-size: initial !important;
+    line-height: 24px !important;
 }
 
 .float-buttons {
