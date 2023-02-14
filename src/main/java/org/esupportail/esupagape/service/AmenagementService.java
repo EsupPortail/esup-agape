@@ -261,6 +261,8 @@ public class AmenagementService {
             amenagementsWithNumbers += i + " - " + line + "\r\n";
             i++;
         }
+        certificatPdf.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
+        certificatPdf.setAutresTempsMajores(amenagement.getAutresTempsMajores());
         certificatPdf.setAmenagementText(amenagementsWithNumbers);
         certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
