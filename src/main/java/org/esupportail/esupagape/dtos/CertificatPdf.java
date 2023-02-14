@@ -11,7 +11,9 @@ public class CertificatPdf {
     String address;
     String endDate;
     String typeEpreuves;
+    String autresTypeEpreuve;
     String tempsMajore;
+    String autresTempsMajores;
     String amenagementText;
     String valideMedecinDate;
     String nomMedecin;
@@ -90,12 +92,28 @@ public class CertificatPdf {
         this.typeEpreuves = typeEpreuves;
     }
 
+    public String getAutresTypeEpreuve() {
+        return autresTypeEpreuve;
+    }
+
+    public void setAutresTypeEpreuve(String autresTypeEpreuve) {
+        this.autresTypeEpreuve = this.autresTypeEpreuve;
+    }
+
     public String getTempsMajore() {
         return tempsMajore;
     }
 
     public void setTempsMajore(String tempsMajore) {
         this.tempsMajore = tempsMajore;
+    }
+
+    public String getAutresTempsMajores() {
+        return autresTempsMajores;
+    }
+
+    public void setAutresTempsMajores(String autresTempsMajores) {
+        this.autresTempsMajores = autresTempsMajores;
     }
 
     public String getAmenagementText() {

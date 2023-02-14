@@ -36,7 +36,7 @@
                                                     data-bs-toggle="modal"
                                                     href="#"
                                                     data-bs-target="#modal-warning"
-                                                    class="btn btn-danger"
+                                                    class="btn btn-sm btn-danger"
                                                     th:data-bs-current-dossier="${currentDossier.id}"
                                                     th:data-bs-aide-humaine-id="${aideHumaine.id}"
                                                     th:data-bs-piece-jointe-id="${pieceJointe.id}"
@@ -50,7 +50,7 @@
                                 th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document'"
                                 th:method="post"
                                 enctype="multipart/form-data">
-                            <select name="typeDocumentAideHumaine" class="form-select">
+                            <select name="typeDocumentAideHumaine" class="form-select mb-3">
                                 <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumainesEmpty}">
                                     <option th:value="${typeDocumentAideHumaine}" th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></option>
                                 </th:block>
