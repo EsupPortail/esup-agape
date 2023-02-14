@@ -97,7 +97,7 @@ public class CertificatPdf {
     }
 
     public void setAutresTypeEpreuve(String autresTypeEpreuve) {
-        this.autresTypeEpreuve = this.autresTypeEpreuve;
+        this.autresTypeEpreuve = autresTypeEpreuve;
     }
 
     public String getTempsMajore() {
