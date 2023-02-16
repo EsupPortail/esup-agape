@@ -11,7 +11,7 @@ public interface IndividuRepository extends JpaRepository<Individu, Long> {
 
     Individu findByNumEtu(String numEtu);
 
-    Individu findByNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(String name, String firstName, LocalDate dateOfBirth);
+    Individu findByCodeIneAndNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(String codeIne, String name, String firstName, LocalDate dateOfBirth);
 
     Page<Individu> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
 }

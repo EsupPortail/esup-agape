@@ -40,7 +40,7 @@ public class CalciumIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
+    public Individu getIndividuByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
         return null;
     }
 

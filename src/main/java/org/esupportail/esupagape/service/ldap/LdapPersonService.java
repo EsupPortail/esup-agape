@@ -68,10 +68,10 @@ public class LdapPersonService {
         return personLdap;
     }
 
-    public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {
+    public List<PersonLdap> searchByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String dateOfBirthString = dateOfBirth.format(dateTimeFormatter);
-        return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
+        return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(codeIne, name, firstName, dateOfBirthString);
     }
 
     public OrganizationalUnitLdap getOrganizationalUnitLdap(String supannCodeEntite) throws AgapeJpaException {

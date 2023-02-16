@@ -59,6 +59,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
                 }
                 individuInfos.setFixCountry(address.split("\\$")[address.split("\\$").length - 1].trim());
             }
+            individuInfos.setCodeIne(personLdaps.get(0).getSupannCodeINE());
             individuInfos.setName(personLdap.getSn());
             individuInfos.setFirstName(personLdap.getGivenName());
             individuInfos.setGenre(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
@@ -84,8 +85,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
-        List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(name, firstName, dateOfBirth);
+    public Individu getIndividuByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(codeIne, name, firstName, dateOfBirth);
         return getIndividuFromPersonLdap(personLdaps);
     }
 
@@ -93,6 +94,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
         if (!personLdaps.isEmpty()) {
             Individu individu = new Individu();
             individu.setNumEtu(personLdaps.get(0).getSupannEtuId());
+            individu.setCodeIne(personLdaps.get(0).getSupannCodeINE());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
             individu.setSex(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));

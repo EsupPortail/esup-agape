@@ -21,6 +21,8 @@
                 <dl class="row">
                     <dt class="col-sm-5">N° Étudiant</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.numEtu}"></dd>
+                    <dt class="col-sm-5">N° Ine</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.codeIne}"></dd>
                     <dt class="col-sm-5">Login</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.eppn}"></dd>
                     <dt class="col-sm-5">Date de naissance</dt>
@@ -49,7 +51,7 @@
                         </th:block>
                     </dd>
                     <dt>Statut aménagement</dt>
-                    <dd th:text="#{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}}"></dd>
+                    <dd th:text="${currentDossier.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} : 'Pas d\'aménagement'"></dd>
                     <dt class="col-sm-5">Genre</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>
                     <dt class="col-sm-5">Nationalité</dt>

@@ -21,6 +21,9 @@ public class Individu {
     @Column(unique = true)
     private String numEtu;
 
+
+    private String codeIne;
+
     @NotEmpty(message = "Le nom doit être renseigné")
     private String name;
 
@@ -62,6 +65,7 @@ public class Individu {
 
     private String contactPhone;
 
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -72,12 +76,16 @@ public class Individu {
 
     }
 
-    public Individu(String numEtu, String name, String firstName, String sex, LocalDate dateOfBirth) {
+    public Individu(String numEtu, String codeIne, String name, String firstName, String sex, LocalDate dateOfBirth) {
         this.numEtu = numEtu;
+        this.codeIne = codeIne;
         this.name = name;
         this.firstName = firstName;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Individu(String codEtu, String libNomPatInd, String libPr1Ind, String codSexEtu, LocalDate dateNaiInd) {
     }
 
     public Long getId() {
@@ -94,6 +102,14 @@ public class Individu {
 
     public void setNumEtu(String numEtu) {
         this.numEtu = numEtu;
+    }
+
+    public String getCodeIne() {
+        return codeIne;
+    }
+
+    public void setCodeIne(String codeIne) {
+        this.codeIne = codeIne;
     }
 
     public String getName() {

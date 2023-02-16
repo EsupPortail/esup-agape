@@ -40,7 +40,7 @@
             <h2 class="accordion-header" id="headingTwo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Ajout par nom / prénom / date de naissance
+                    Ajout par code Ine /nom / prénom / date de naissance
                 </button>
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResultError != null ? 'show' : ''}" aria-labelledby="headingTwo"
@@ -48,6 +48,11 @@
                 <div class="accordion-body">
                     <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
                         <div class="row mb3">
+                            <label for="codeIne" class="col-md-2 col-form-label mb-1">Code Ine</label>
+                            <div class="col-sm-10">
+                                <input id="codeIne" th:field="*{codeIne}" type="text" class="form-control"/>
+                                <p th:if="${#fields.hasErrors('codeIne')}" th:errorclass="error" th:errors="*{codeIne}"></p>
+                            </div>
                             <label for="name" class="col-md-2 col-form-label mb-1">Nom</label>
                             <div class="col-sm-10">
                                 <input id="name" th:field="*{name}" type="text" class="form-control" required />

@@ -13,6 +13,8 @@ public interface DossierIndividuDto {
 
     String getNumEtu();
 
+    String getCodeIne();
+
     String getFirstName();
 
     String getName();

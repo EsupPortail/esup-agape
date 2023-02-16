@@ -73,8 +73,8 @@ public class IndividuService {
         return individuRepository.findByNumEtu(numEtu);
     }
 
-    public Individu getIndividu(String name, String firstName, LocalDate dateOfBirth) {
-        return individuRepository.findByNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(name, firstName, dateOfBirth);
+    public Individu getIndividu(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
+        return individuRepository.findByCodeIneAndNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(codeIne, name, firstName, dateOfBirth);
     }
 
     public List<Individu> getAllIndividus() {
@@ -251,10 +251,10 @@ public class IndividuService {
             if (individuTestIsExist == null) {
                 return createFromSources(individu.getNumEtu(), force);
             }
-        } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
-            individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
+        } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
+            individuTestIsExist = getIndividu(individu.getCodeIne(), individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if (individuTestIsExist == null) {
-                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
+                Individu newIndividu = createFromSources(individu.getCodeIne(), individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
                 if (newIndividu != null) {
                     return newIndividu;
                 } else {
@@ -265,7 +265,7 @@ public class IndividuService {
         }
         if (individuTestIsExist != null) {
             return individuTestIsExist;
-        } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
+        } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(individu, force);
         }
         return individu;
@@ -285,10 +285,10 @@ public class IndividuService {
         return individuFromSources;
     }
 
-    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth, String force) throws AgapeJpaException {
+    public Individu createFromSources(String codeIne, String name, String firstName, LocalDate dateOfBirth, String force) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);
+            individuFromSources = individuSourceService.getIndividuByProperties(codeIne,name, firstName, dateOfBirth);
             if (individuFromSources != null) {
                 break;
             }

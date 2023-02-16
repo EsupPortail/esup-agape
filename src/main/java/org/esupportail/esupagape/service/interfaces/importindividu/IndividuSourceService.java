@@ -11,7 +11,9 @@ public interface IndividuSourceService {
 
     IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos, int annee);
     Individu getIndividuByNumEtu(String numEtu);
-    Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth);
+    Individu getIndividuByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth);
+
+
     List<Individu> getAllIndividuNums();
     Map<String, Classification> getClassificationMap();
 

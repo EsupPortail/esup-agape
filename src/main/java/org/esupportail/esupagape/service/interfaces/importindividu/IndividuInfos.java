@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public class IndividuInfos {
 
     String eppn;
+    String codeIne;
     String name;
     String firstName;
     String genre;
@@ -32,6 +33,15 @@ public class IndividuInfos {
 
     public void setEppn(String eppn) {
         this.eppn = eppn;
+    }
+
+
+    public String getCodeIne() {
+        return codeIne;
+    }
+
+    public void setCodeIne(String codeIne) {
+        this.codeIne = codeIne;
     }
 
     public String getName() {
