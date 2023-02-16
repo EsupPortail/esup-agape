@@ -20,6 +20,9 @@ public class IndividuInfos {
     String fixCP;
     String fixCity;
     String fixCountry;
+    String currentAddress;
+    String currentCP;
+    String currentCity;
     String photoId;
     Classification handicap;
 
@@ -133,6 +136,30 @@ public class IndividuInfos {
 
     public void setFixCountry(String fixCountry) {
         this.fixCountry = fixCountry;
+    }
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public void setCurrentAddress(String currentAddress) {
+        this.currentAddress = currentAddress;
+    }
+
+    public String getCurrentCP() {
+        return currentCP;
+    }
+
+    public void setCurrentCP(String currentCP) {
+        this.currentCP = currentCP;
+    }
+
+    public String getCurrentCity() {
+        return currentCity;
+    }
+
+    public void setCurrentCity(String currentCity) {
+        this.currentCity = currentCity;
     }
 
     public String getPhotoId() {

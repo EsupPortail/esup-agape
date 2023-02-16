@@ -134,9 +134,19 @@ public class IndividuService {
         if(StringUtils.hasText(individuInfos.getFixCountry())) {
             individu.setFixCountry(individuInfos.getFixCountry());
         }
+        if(StringUtils.hasText(individuInfos.getCurrentAddress())) {
+            individu.setCurrentAddress(individuInfos.getCurrentAddress());
+        }
+        if(StringUtils.hasText(individuInfos.getCurrentCP())) {
+            individu.setCurrentCP(individuInfos.getCurrentCP());
+        }
+        if(StringUtils.hasText(individuInfos.getCurrentCity())) {
+            individu.setCurrentCity(individuInfos.getCurrentCity());
+        }
         if(StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }
+
         if(StringUtils.hasText(individuInfos.getContactPhone())) {
             individu.setContactPhone(individuInfos.getContactPhone());
         }
@@ -179,7 +189,7 @@ public class IndividuService {
             individuRepository.saveAll(individusToCreate);
             List<Individu> individusWithoutDossier = new ArrayList<>();
             individusWithoutDossier.addAll(individusToCreate);
-            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == 2021)).toList());
+            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
             List<Dossier> dossiers = new ArrayList<>();
             for(Individu individu : individusWithoutDossier) {
                 Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
