@@ -143,6 +143,9 @@ public class IndividuService {
         if(StringUtils.hasText(individuInfos.getCurrentCity())) {
             individu.setCurrentCity(individuInfos.getCurrentCity());
         }
+        if(StringUtils.hasText(individuInfos.getCurrentCountry())) {
+            individu.setCurrentCountry(individuInfos.getCurrentCountry());
+        }
         if(StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }

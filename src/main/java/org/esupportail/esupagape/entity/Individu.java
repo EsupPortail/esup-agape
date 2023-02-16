@@ -53,6 +53,8 @@ public class Individu {
 
     private String currentCity;
 
+    private String currentCountry;
+
     private String fixAddress;
 
     private String fixCP;
@@ -202,6 +204,14 @@ public class Individu {
 
     public void setCurrentCity(String currentCity) {
         this.currentCity = currentCity;
+    }
+
+    public String getCurrentCountry() {
+        return currentCountry;
+    }
+
+    public void setCurrentCountry(String currentCountry) {
+        this.currentCountry = currentCountry;
     }
 
     public String getFixAddress() {

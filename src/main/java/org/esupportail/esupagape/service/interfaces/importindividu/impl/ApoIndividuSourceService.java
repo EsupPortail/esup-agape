@@ -50,13 +50,24 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             if (StringUtils.hasText(coordonneesDTO2.getNumTelPortable())) {
                 individuInfos.setContactPhone(coordonneesDTO2.getNumTelPortable());
             }
+            if (coordonneesDTO2.getAdresseFixe() != null) {
+                if(coordonneesDTO2.getAdresseFixe().getCommune() != null) {
+                    individuInfos.setFixCity(coordonneesDTO2.getAdresseFixe().getCommune().getNomCommune());
+                    individuInfos.setFixCP(coordonneesDTO2.getAdresseFixe().getCommune().getCodePostal());
+                    if(StringUtils.hasText(coordonneesDTO2.getAdresseFixe().getLibAd1())) {
+                        individuInfos.setFixAddress(coordonneesDTO2.getAdresseFixe().getLibAd1());
+                    }
+                    individuInfos.setFixCountry(coordonneesDTO2.getAdresseFixe().getPays().getLibPay());
+                }
+            }
             if (coordonneesDTO2.getAdresseAnnuelle() != null) {
                 if(coordonneesDTO2.getAdresseAnnuelle().getCommune() != null) {
-                    individuInfos.setFixCity(coordonneesDTO2.getAdresseAnnuelle().getCommune().getNomCommune());
-                    individuInfos.setFixCP(coordonneesDTO2.getAdresseAnnuelle().getCommune().getCodePostal());
+                    individuInfos.setCurrentCity(coordonneesDTO2.getAdresseAnnuelle().getCommune().getNomCommune());
+                    individuInfos.setCurrentCP(coordonneesDTO2.getAdresseAnnuelle().getCommune().getCodePostal());
                     if(StringUtils.hasText(coordonneesDTO2.getAdresseAnnuelle().getLibAd1())) {
-                        individuInfos.setFixAddress(coordonneesDTO2.getAdresseAnnuelle().getLibAd1());
+                        individuInfos.setCurrentAddress(coordonneesDTO2.getAdresseAnnuelle().getLibAd1());
                     }
+                    individuInfos.setCurrentCountry(coordonneesDTO2.getAdresseAnnuelle().getPays().getLibPay());
                 }
             }
             if (StringUtils.hasText(coordonneesDTO2.getEmail())) {

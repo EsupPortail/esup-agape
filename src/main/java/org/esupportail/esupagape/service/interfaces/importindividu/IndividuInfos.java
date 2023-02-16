@@ -24,6 +24,7 @@ public class IndividuInfos {
     String currentAddress;
     String currentCP;
     String currentCity;
+    String currentCountry;
     String photoId;
     Classification handicap;
 
@@ -170,6 +171,14 @@ public class IndividuInfos {
 
     public void setCurrentCity(String currentCity) {
         this.currentCity = currentCity;
+    }
+
+    public String getCurrentCountry() {
+        return currentCountry;
+    }
+
+    public void setCurrentCountry(String currentCountry) {
+        this.currentCountry = currentCountry;
     }
 
     public String getPhotoId() {
