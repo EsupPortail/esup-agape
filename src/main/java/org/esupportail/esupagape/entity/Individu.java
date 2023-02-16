@@ -21,7 +21,7 @@ public class Individu {
     @Column(unique = true)
     private String numEtu;
 
-
+    @Column(unique = true)
     private String codeIne;
 
     @NotEmpty(message = "Le nom doit être renseigné")

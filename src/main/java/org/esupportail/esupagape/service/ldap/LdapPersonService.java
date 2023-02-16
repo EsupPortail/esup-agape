@@ -45,6 +45,11 @@ public class LdapPersonService {
         return personLdapRepository.findBySupannEtuId(numEtu);
     }
 
+    public List<PersonLdap> searchBySupannCodeINE(String codeIne) {
+        return personLdapRepository.findBySupannCodeINE(codeIne);
+
+    }
+
     public String getPersonLdapAttribute(String authName, String attribute) throws AgapeException {
         if(attribute != null) {
             String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[]{authName});
@@ -68,10 +73,10 @@ public class LdapPersonService {
         return personLdap;
     }
 
-    public List<PersonLdap> searchByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
+    public List<PersonLdap> searchByProperties(String name, String firstName, LocalDate dateOfBirth) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String dateOfBirthString = dateOfBirth.format(dateTimeFormatter);
-        return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(codeIne, name, firstName, dateOfBirthString);
+        return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
     }
 
     public OrganizationalUnitLdap getOrganizationalUnitLdap(String supannCodeEntite) throws AgapeJpaException {
@@ -91,4 +96,5 @@ public class LdapPersonService {
             throw new AgapeJpaException(supannEtablissement + " not fount in OU");
         }
     }
+
 }

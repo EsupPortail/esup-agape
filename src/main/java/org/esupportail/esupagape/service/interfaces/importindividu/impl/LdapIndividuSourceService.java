@@ -85,8 +85,14 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
-        List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(codeIne, name, firstName, dateOfBirth);
+    public Individu getIndividuByCodeIne(String codeIne) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannCodeINE(codeIne);
+        return getIndividuFromPersonLdap(personLdaps);
+    }
+
+    @Override
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchByProperties(name, firstName, dateOfBirth);
         return getIndividuFromPersonLdap(personLdaps);
     }
 

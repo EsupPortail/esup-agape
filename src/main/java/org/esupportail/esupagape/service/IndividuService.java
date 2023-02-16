@@ -73,8 +73,8 @@ public class IndividuService {
         return individuRepository.findByNumEtu(numEtu);
     }
 
-    public Individu getIndividu(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
-        return individuRepository.findByCodeIneAndNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(codeIne, name, firstName, dateOfBirth);
+    public Individu getIndividu(String name, String firstName, LocalDate dateOfBirth) {
+        return individuRepository.findByNameIgnoreCaseAndFirstNameIgnoreCaseAndDateOfBirth(name, firstName, dateOfBirth);
     }
 
     public List<Individu> getAllIndividus() {
@@ -244,17 +244,15 @@ public class IndividuService {
     @Transactional
     public Individu create(Individu individu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
-//        individu.setName(StringUtils.capitalize(individu.getName()));
-//        individu.setFirstName(StringUtils.capitalize(individu.getFirstName()));
         if (StringUtils.hasText(individu.getNumEtu())) {
             individuTestIsExist = getIndividu(individu.getNumEtu());
             if (individuTestIsExist == null) {
                 return createFromSources(individu.getNumEtu(), force);
             }
-        } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
-            individuTestIsExist = getIndividu(individu.getCodeIne(), individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
+        } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
+            individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if (individuTestIsExist == null) {
-                Individu newIndividu = createFromSources(individu.getCodeIne(), individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
+                Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
                 if (newIndividu != null) {
                     return newIndividu;
                 } else {
@@ -271,12 +269,20 @@ public class IndividuService {
         return individu;
     }
 
-    public Individu createFromSources(String numEtu, String force) throws AgapeJpaException {
+    public Individu createFromSources(String code, String force) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuFromSources = individuSourceService.getIndividuByNumEtu(numEtu);
+            individuFromSources = individuSourceService.getIndividuByNumEtu(code);
             if (individuFromSources != null) {
                 break;
+            }
+        }
+        if(individuFromSources == null) {
+            for (IndividuSourceService individuSourceService : individuSourceServices) {
+                individuFromSources = individuSourceService.getIndividuByCodeIne(code);
+                if (individuFromSources != null) {
+                    break;
+                }
             }
         }
         if (individuFromSources != null) {
@@ -285,10 +291,10 @@ public class IndividuService {
         return individuFromSources;
     }
 
-    public Individu createFromSources(String codeIne, String name, String firstName, LocalDate dateOfBirth, String force) throws AgapeJpaException {
+    public Individu createFromSources(String name, String firstName, LocalDate dateOfBirth, String force) throws AgapeJpaException {
         Individu individuFromSources = null;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuFromSources = individuSourceService.getIndividuByProperties(codeIne,name, firstName, dateOfBirth);
+            individuFromSources = individuSourceService.getIndividuByProperties(name, firstName, dateOfBirth);
             if (individuFromSources != null) {
                 break;
             }

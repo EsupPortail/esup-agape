@@ -84,7 +84,12 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public Individu getIndividuByProperties(String codeIne, String name, String firstName, LocalDate dateOfBirth) {
+    public Individu getIndividuByCodeIne(String codeIne) {
+        return null;
+    }
+
+    @Override
+    public Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth) {
         return null;
     }
 

@@ -10,14 +10,14 @@
             <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumEtu"
                         aria-expanded="true" aria-controls="collapseNumEtu">
-                    Ajout par numéro d’étudiant
+                    Ajout par numéro d’étudiant ou par code INE
                 </button>
             </h2>
             <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
                 <div class="accordion-body">
                     <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
                         <div class="row">
-                            <label for="numEtu" class="form-label col-2">Numéro étudiant</label>
+                            <label for="numEtu" class="form-label col-2">Numéro étudiant ou code INE</label>
                             <div class="mb-3 col-2">
                                 <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
                             </div>
