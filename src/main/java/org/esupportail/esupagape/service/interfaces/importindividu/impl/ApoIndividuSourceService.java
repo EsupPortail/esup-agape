@@ -103,6 +103,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                 "    INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
                 "    INNER JOIN annee_uni ON ins_adm_etp.cod_anu = annee_uni.cod_anu " +
                 "WHERE annee_uni.eta_anu_iae = 'O' " +
+                "    AND individu.cod_etu IS NOT NULL " +
                 "    AND individu.cod_thp IS NOT NULL " +
                 "    AND ins_adm_etp.eta_iae = 'E' " +
                 "    AND ins_adm_etp.eta_pmt_iae = 'P' " +

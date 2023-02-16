@@ -76,16 +76,12 @@ public class Individu {
 
     }
 
-    public Individu(String numEtu, String codeIne, String name, String firstName, String sex, LocalDate dateOfBirth) {
+    public Individu(String numEtu, String name, String firstName, String sex, LocalDate dateOfBirth) {
         this.numEtu = numEtu;
-        this.codeIne = codeIne;
         this.name = name;
         this.firstName = firstName;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public Individu(String codEtu, String libNomPatInd, String libPr1Ind, String codSexEtu, LocalDate dateNaiInd) {
     }
 
     public Long getId() {

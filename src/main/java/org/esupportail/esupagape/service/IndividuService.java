@@ -192,6 +192,7 @@ public class IndividuService {
             individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
             List<Dossier> dossiers = new ArrayList<>();
             for(Individu individu : individusWithoutDossier) {
+                logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
                 Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
                 individu.getDossiers().add(dossier);
