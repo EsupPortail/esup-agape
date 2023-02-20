@@ -1,13 +1,23 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.RentreeProchaine;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.Taux;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.service.CsvService;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -15,17 +25,28 @@ import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -39,8 +60,7 @@ public class DossierController {
 
     private final DocumentService documentService;
 
-    public DossierController(DossierService dossierService,
-                             IndividuService individuService, UtilsService utilsService, DocumentService documentService) {
+    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.utilsService = utilsService;
@@ -48,12 +68,13 @@ public class DossierController {
     }
 
     @GetMapping
-    public String list(@RequestParam(required = false) String fullTextSearch,
-                       @RequestParam(required = false) TypeIndividu typeIndividu,
-                       @RequestParam(required = false) StatusDossier statusDossier,
-                       @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
-                       @RequestParam(required = false) Integer yearFilter,
-                       @PageableDefault(sort = "name") Pageable pageable, Model model) {
+    public String list(
+            @RequestParam(required = false) String fullTextSearch,
+            @RequestParam(required = false) TypeIndividu typeIndividu,
+            @RequestParam(required = false) StatusDossier statusDossier,
+            @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
+            @RequestParam(required = false) Integer yearFilter,
+            @PageableDefault(sort = "name") Pageable pageable, Model model) {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
@@ -122,22 +143,52 @@ public class DossierController {
     }
 
     @PostMapping("/{dossierId}/add-attachments")
-    public String addAttachments(@PathVariable Long dossierId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, RedirectAttributes redirectAttributes) throws AgapeException {
+    public String addAttachments(
+            @PathVariable Long dossierId,
+            @RequestParam("multipartFiles") MultipartFile[] multipartFiles,
+            RedirectAttributes redirectAttributes) throws AgapeException {
         dossierService.addAttachment(dossierId, multipartFiles);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId;
     }
+
     @GetMapping(value = "/{dossierId}/get-attachment/{attachmentId}")
     @ResponseBody
-    public ResponseEntity<Void> getLastFileFromSignRequest(@PathVariable("attachmentId") Long attachmentId, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public ResponseEntity<Void> getLastFileFromSignRequest(
+            @PathVariable("attachmentId") Long attachmentId,
+            HttpServletResponse httpServletResponse) throws AgapeIOException {
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{dossierId}/delete-attachment/{attachmentId}")
-    public String getLastFileFromSignRequest(@PathVariable Long dossierId, @PathVariable("attachmentId") Long attachmentId, RedirectAttributes redirectAttributes) throws AgapeException {
+    public String getLastFileFromSignRequest(
+            @PathVariable Long dossierId,
+            @PathVariable("attachmentId") Long attachmentId,
+            RedirectAttributes redirectAttributes) throws AgapeException {
         dossierService.deleteAttachment(dossierId, attachmentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId;
+    }
+
+    @GetMapping("/export-to-csv")
+    public void exportToCsv(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) TypeIndividu typeIndividu,
+            @RequestParam(required = false) StatusDossier statusDossier,
+            @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
+            HttpServletResponse response) {
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierService.getCsvDossier(year, typeIndividu, statusDossier, statusDossierAmenagement);
+        String fileName = "dossier-complet.csv";
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+
+        try (Writer writer = response.getWriter()) {
+            CsvService csvService = new CsvService();
+            csvService.writeDossierCompletToCsv(dossierCompletCSVDtos, writer);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

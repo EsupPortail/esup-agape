@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
+import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
@@ -114,7 +115,7 @@ public class DossierService {
     @Transactional
     public void update(Long id, Dossier dossier) {
         Dossier dossierToUpdate = getById(id);
-        if(dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         dossierToUpdate.setClassification(dossier.getClassification());
@@ -160,7 +161,7 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
-        if(dossier.getAmenagements().size() == 0) {
+        if (dossier.getAmenagements().size() == 0) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
@@ -191,18 +192,18 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
         Dossier dossierToUpdate = getById(id);
-        if(dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
-        if(!StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
+        if (!StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
             dossierToUpdate.setType(dossierIndividuForm.getType());
         }
         if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
             dossierToUpdate.getIndividu().setNumEtu(dossierIndividuForm.getNumEtu());
         }
-        if(StringUtils.hasText(dossierIndividuForm.getNationalite())) {
+        if (StringUtils.hasText(dossierIndividuForm.getNationalite())) {
             dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
         }
     }
@@ -214,7 +215,7 @@ public class DossierService {
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
-        if(dossier.getYear() != utilsService.getCurrentYear()) {
+        if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         try {
@@ -236,7 +237,7 @@ public class DossierService {
     public void deleteAttachment(Long id, Long attachmentId) {
         //if parentType == org.esupportail.esupagape.entity.Dossier
         Dossier dossier = getById(id);
-        if(dossier.getYear() != utilsService.getCurrentYear()) {
+        if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         Document attachment = documentService.getById(attachmentId);
@@ -254,7 +255,7 @@ public class DossierService {
         Dossier dossier = getById(id);
         try {
             Dossier thisYearDossier = getCurrent(dossier.getIndividu().getId());
-            if(thisYearDossier.getId().equals(dossier.getId())) {
+            if (thisYearDossier.getId().equals(dossier.getId())) {
                 return true;
             }
         } catch (AgapeJpaException e) {
@@ -263,4 +264,9 @@ public class DossierService {
         return false;
     }
 
+    @Transactional
+    public List<DossierCompletCSVDto> getCsvDossier(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement) {
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findByYearForCSV(year, typeIndividu, statusDossier, statusDossierAmenagement);
+        return dossierCompletCSVDtos;
+    }
 }

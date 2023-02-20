@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.repository;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
+import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -24,7 +25,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             "or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')) " +
             "or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%')) " +
             "or upper(d.individu.numEtu) = :fullTextSearch) " +
-            "and (:typeIndividu is null or d.type = : typeIndividu) " +
+            "and (:typeIndividu is null or d.type = :typeIndividu) " +
             "and (:statusDossier is null or d.statusDossier = :statusDossier) " +
             "and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)" +
             "and (:yearFilter is null or d.year = :yearFilter)")
@@ -42,4 +43,19 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.codComposante as cod, trim(d.composante) as libelle from Dossier d order by cod")
     List<ComposanteDto> findAllComposantes();
 
+    @Query("""
+                    select distinct d.id as id, 
+                    d.year as year,
+                    i.numEtu as numEtu, 
+                    i.name as name, 
+                    i.firstName as firstName, 
+                    d.type as type, 
+                    d.statusDossier as statusDossier
+                    from Dossier d join Individu i on d.individu.id = i.id 
+                    where (:year is null or d.year = :year) 
+                    and (:typeIndividu is null or d.type = :typeIndividu) 
+                    and (:statusDossier is null or d.statusDossier = :statusDossier) 
+                    and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
+                    """)
+    List<DossierCompletCSVDto> findByYearForCSV(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement);
 }
