@@ -47,15 +47,20 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
                     select distinct d.id as id, 
                     d.year as year,
                     i.numEtu as numEtu, 
+                    i.codeIne as codeIne,
+                    i.gender as gender,
                     i.name as name, 
                     i.firstName as firstName, 
+                    i.dateOfBirth as dateOfBirth,
                     d.type as type, 
-                    d.statusDossier as statusDossier
+                    d.statusDossier as statusDossier,
+                    d.statusDossierAmenagement as statusDossierAmenagement
                     from Dossier d join Individu i on d.individu.id = i.id 
                     where (:year is null or d.year = :year) 
                     and (:typeIndividu is null or d.type = :typeIndividu) 
                     and (:statusDossier is null or d.statusDossier = :statusDossier) 
                     and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
+                    order by name
                     """)
     List<DossierCompletCSVDto> findByYearForCSV(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement);
 }

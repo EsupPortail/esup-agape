@@ -13,7 +13,7 @@ public class CsvService {
     public void writeDossierCompletToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create();
         csvFormat.setDelimiter(";");
-        csvFormat.setHeader("id", "year", "numEtu", "nom", "prénom", "type", "statutDossier", "statutDossierAmenagement");
+        csvFormat.setHeader("Id", "Année", "numéro étudiant", "Code INE", "Genre", "Nom", "Prénom", "Date de naissance", "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement");
         CSVPrinter printer;
         try {
             printer = new CSVPrinter(writer, csvFormat.build());
@@ -21,8 +21,11 @@ public class CsvService {
                 printer.printRecord(dossierCompletCSVDto.getId(),
                         dossierCompletCSVDto.getYear(),
                         dossierCompletCSVDto.getNumEtu(),
+                        dossierCompletCSVDto.getCodeIne(),
+                        dossierCompletCSVDto.getGender(),
                         dossierCompletCSVDto.getName(),
                         dossierCompletCSVDto.getFirstName(),
+                        dossierCompletCSVDto.getDateOfBirth(),
                         dossierCompletCSVDto.getType(),
                         dossierCompletCSVDto.getStatusDossier(),
                         dossierCompletCSVDto.getStatusDossierAmenagement());
