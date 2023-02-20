@@ -72,7 +72,7 @@ public class AideMaterielleService {
         aideMaterielleToUpdate.setEndDate(aideMaterielle.getEndDate());
         aideMaterielleToUpdate.setCost(aideMaterielle.getCost());
         aideMaterielleToUpdate.setComment(aideMaterielle.getComment());
-        aideMaterielleRepository.save(aideMaterielle);
+        aideMaterielleRepository.save(aideMaterielleToUpdate);
     }
 
     public double additionCostAideMaterielle(Page<AideMaterielle> aideMaterielles) {
