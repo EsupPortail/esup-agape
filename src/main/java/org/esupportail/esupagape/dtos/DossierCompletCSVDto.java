@@ -10,14 +10,20 @@ import java.time.LocalDate;
 public interface DossierCompletCSVDto {
 
     Long getId();
-    String getYear() ;
+    Integer getYear() ;
     String getNumEtu();
     String getCodeIne();
     Gender getGender();
     String getName();
     String getFirstName();
     LocalDate getDateOfBirth();
+    String getEmailEtu();
+    String getFixAddress();
+    String getFixCP();
+    String getFixCity();
+    String getFixCountry();
     TypeIndividu getType();
     StatusDossier getStatusDossier();
     StatusDossierAmenagement getStatusDossierAmenagement();
+   String getFormAddress();
 }

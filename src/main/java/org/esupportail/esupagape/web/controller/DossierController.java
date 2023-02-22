@@ -177,8 +177,9 @@ public class DossierController {
             @RequestParam(required = false) TypeIndividu typeIndividu,
             @RequestParam(required = false) StatusDossier statusDossier,
             @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
+            @RequestParam(required = false) String formAddress,
             HttpServletResponse response) {
-        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierService.getCsvDossier(year, typeIndividu, statusDossier, statusDossierAmenagement);
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierService.getCsvDossier(year, typeIndividu, statusDossier, statusDossierAmenagement, formAddress);
         String fileName = "dossier-complet.csv";
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
@@ -191,4 +192,5 @@ public class DossierController {
             throw new RuntimeException(e);
         }
     }
+
 }

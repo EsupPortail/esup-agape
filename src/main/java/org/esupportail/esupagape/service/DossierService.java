@@ -265,8 +265,8 @@ public class DossierService {
     }
 
     @Transactional
-    public List<DossierCompletCSVDto> getCsvDossier(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement) {
-        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findByYearForCSV(year, typeIndividu, statusDossier, statusDossierAmenagement);
+    public List<DossierCompletCSVDto> getCsvDossier(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress) {
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findByYearForCSV(year, typeIndividu, statusDossier, statusDossierAmenagement, formAddress);
         return dossierCompletCSVDtos;
     }
 }
