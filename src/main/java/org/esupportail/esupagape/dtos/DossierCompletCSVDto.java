@@ -18,6 +18,7 @@ public interface DossierCompletCSVDto {
     String getFirstName();
     LocalDate getDateOfBirth();
     String getEmailEtu();
+    String getEmailPerso();
     String getFixAddress();
     String getFixCP();
     String getFixCity();

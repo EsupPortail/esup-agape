@@ -47,17 +47,18 @@ public class CsvService {
         }
     }
 
-    public void writeEmailsToCsv(List<String> emailList, Writer writer) {
+    public void writeEmailsToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);
         csvFormat.setDelimiter(";");
         csvFormat.setQuote('"');
         csvFormat.setQuoteMode(QuoteMode.ALL);
-        csvFormat.setHeader("Email");
+        csvFormat.setHeader("Email universitaire", "Email personnel");
         CSVPrinter printer;
         try {
             printer = new CSVPrinter(writer, csvFormat.build());
-            for (String email : emailList) {
-                printer.printRecord(email);
+            for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
+                printer.printRecord(dossierCompletCSVDto.getEmailEtu(),
+                        dossierCompletCSVDto.getEmailPerso());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -271,7 +271,8 @@ public class DossierService {
         return dossierCompletCSVDtos;
     }
 
-    public List<String> findEmailEtuByYearForCSV(Integer year) {
-        return dossierRepository.findEmailEtuByYearForCSV(year);
+    public List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year) {
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findEmailEtuByYearForCSV(year);
+        return dossierCompletCSVDtos;
     }
 }

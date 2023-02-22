@@ -45,7 +45,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -199,13 +198,19 @@ public class DossierController {
     }
 
     @GetMapping("/export-all-email-to-csv")
-    public ResponseEntity<String> getAllEmailToCsv(@RequestParam(required = false) Integer year) {
-        List<String> emailList = dossierService.findEmailEtuByYearForCSV(year);
-        StringWriter writer = new StringWriter();
-        csvService.writeEmailsToCsv(emailList, writer);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"emails.csv\"");
-        return ResponseEntity.ok().headers(headers).body(writer.toString());
+    public void exportAllEmailToCsv(
+            @RequestParam(required = false) Integer year,
+            HttpServletResponse response) {
+        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierService.findEmailEtuByYearForCSV(year);
+        String fileName = "emails.csv";
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+        try (Writer writer = response.getWriter()) {
+            CsvService csvService = new CsvService();
+            csvService.writeEmailsToCsv(dossierCompletCSVDtos, writer);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
