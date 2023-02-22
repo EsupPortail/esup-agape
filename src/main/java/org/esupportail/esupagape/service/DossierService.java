@@ -50,6 +50,7 @@ public class DossierService {
 
     private final DocumentService documentService;
 
+
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
@@ -268,5 +269,9 @@ public class DossierService {
     public List<DossierCompletCSVDto> getCsvDossier(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress) {
         List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findByYearForCSV(year, typeIndividu, statusDossier, statusDossierAmenagement, formAddress);
         return dossierCompletCSVDtos;
+    }
+
+    public List<String> findEmailEtuByYearForCSV(Integer year) {
+        return dossierRepository.findEmailEtuByYearForCSV(year);
     }
 }

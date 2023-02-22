@@ -4,11 +4,13 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+@Service
 public class CsvService {
 
     public void writeDossierCompletToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
@@ -22,7 +24,7 @@ public class CsvService {
             printer = new CSVPrinter(writer, csvFormat.build());
             for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
                 printer.printRecord(dossierCompletCSVDto.getId(),
-                       dossierCompletCSVDto.getYear(),
+                        dossierCompletCSVDto.getYear(),
                         dossierCompletCSVDto.getNumEtu(),
                         dossierCompletCSVDto.getCodeIne(),
                         dossierCompletCSVDto.getGender(),
@@ -39,6 +41,23 @@ public class CsvService {
                         dossierCompletCSVDto.getStatusDossierAmenagement(),
                         dossierCompletCSVDto.getFormAddress());
 
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void writeEmailsToCsv(List<String> emailList, Writer writer) {
+        CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);
+        csvFormat.setDelimiter(";");
+        csvFormat.setQuote('"');
+        csvFormat.setQuoteMode(QuoteMode.ALL);
+        csvFormat.setHeader("Email");
+        CSVPrinter printer;
+        try {
+            printer = new CSVPrinter(writer, csvFormat.build());
+            for (String email : emailList) {
+                printer.printRecord(email);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

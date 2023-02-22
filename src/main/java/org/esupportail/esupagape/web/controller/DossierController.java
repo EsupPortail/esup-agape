@@ -45,6 +45,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -60,11 +61,15 @@ public class DossierController {
 
     private final DocumentService documentService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService) {
+    private final CsvService csvService;
+
+    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService, CsvService csvService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.utilsService = utilsService;
         this.documentService = documentService;
+
+        this.csvService = csvService;
     }
 
     @GetMapping
@@ -193,4 +198,14 @@ public class DossierController {
         }
     }
 
+    @GetMapping("/export-all-email-to-csv")
+    public ResponseEntity<String> getAllEmailToCsv(@RequestParam(required = false) Integer year) {
+        List<String> emailList = dossierService.findEmailEtuByYearForCSV(year);
+        StringWriter writer = new StringWriter();
+        csvService.writeEmailsToCsv(emailList, writer);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"emails.csv\"");
+        return ResponseEntity.ok().headers(headers).body(writer.toString());
+    }
 }

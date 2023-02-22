@@ -70,4 +70,11 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
                     order by name
                     """)
     List<DossierCompletCSVDto> findByYearForCSV(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress);
+
+    @Query("""
+            select distinct i.emailEtu as emailEtu
+            from Dossier d join Individu i on d.individu.id = i.id
+            where (:year is null or d.year = :year)
+            order by i.emailEtu """)
+    List<String> findEmailEtuByYearForCSV(Integer year);
 }
