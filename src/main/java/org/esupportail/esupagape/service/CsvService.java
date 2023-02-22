@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 
 import java.io.IOException;
@@ -11,8 +12,10 @@ import java.util.List;
 public class CsvService {
 
     public void writeDossierCompletToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
-        CSVFormat.Builder csvFormat = CSVFormat.Builder.create();
+        CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);
         csvFormat.setDelimiter(";");
+        csvFormat.setQuote('"');
+        csvFormat.setQuoteMode(QuoteMode.ALL);
         csvFormat.setHeader("Id", "Année", "numéro étudiant", "Code INE", "Genre", "Nom", "Prénom", "Date de naissance", "email", "Adresse", "Code postal", "Ville", "Pays", "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement", "Adresse de formation");
         CSVPrinter printer;
         try {
