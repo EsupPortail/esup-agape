@@ -275,8 +275,8 @@
                             <div class="float-buttons">
                                 <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
                                 <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none"><i class="fa-solid fa-xmark"></i></button>
-                                <button id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none"><i class="fa-solid fa-save"></i></button>
+                                <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none"><i class="fa-solid fa-xmark"></i></button>
+                                <button title="Enregistrer la modification du dossier" id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none"><i class="fa-solid fa-save"></i></button>
                                 <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i></button>
                                 <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
                                 <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'" ><i class="fa-solid fa-refresh" style="font-size: 20px;"></i></a>
@@ -287,10 +287,11 @@
                         </div>
 
                     </form>
-                    <a th:href="@{/dossiers/export-all-email-to-csv(year=${yearFilter})}" class="btn btn-primary">Download all email CSV file</a>
+                    <a title="Exporter tous les emails en csv" th:href="@{/dossiers/export-all-email-to-csv(year=${yearFilter})}" class="btn btn-primary">Download all email CSV file</a>
             </div>
             </div>
         </main>
+
         <div class="modal fade" id="notesModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

@@ -51,7 +51,7 @@
                             <input class="btn btn-success" type="submit" value="Rechercher">
                             <a class="btn btn-secondary" id="btnClear" th:href="@{/dossiers}">Effacer</a>
                             <a class="btn btn-primary" th:href="@{/individus/create}">Ajouter un individu</a>
-                            <a th:href="@{/dossiers/export-to-csv(year=${yearFilter},typeIndividu=${typeIndividu},statusDossier=${statusDossier})}" class="btn btn-primary">Download CSV File</a>
+                            <a title="Exporter le dossier en csv" th:href="@{/dossiers/export-to-csv(year=${yearFilter},typeIndividu=${typeIndividu},statusDossier=${statusDossier})}" class="btn btn-primary">Download CSV File</a>
                         </div>
 
 

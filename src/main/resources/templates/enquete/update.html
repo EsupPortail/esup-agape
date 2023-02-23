@@ -9,7 +9,7 @@
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
-                <button th:if="${currentYear == currentDossier.year}" id="save-btn" class="btn btn-success">
+                <button title="Enregistrer l'enquête" th:if="${currentYear == currentDossier.year}" id="save-btn" class="btn btn-success">
                     <i class="fa-solid fa-save"></i>
                 </button>
             </div>
