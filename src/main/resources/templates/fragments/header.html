@@ -28,18 +28,12 @@
                             <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Outils
                             </a>
-                            <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+                            <ul class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
                                 <li>
-                                    <a class="dropdown-item text-light" href="#">Aides</a>
+                                    <a class="dropdown-item text-dark" th:href="@{/dossiers/export-to-csv}">Export de tous les dossiers complets</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-light" href="#">Contacts</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-light" href="#">Aménagements</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-light" href="#">Enquête</a>
+                                    <a class="dropdown-item text-dark " th:href="@{/dossiers/export-all-email-to-csv}">Export de tous les emails</a>
                                 </li>
                             </ul>
                         </li>
