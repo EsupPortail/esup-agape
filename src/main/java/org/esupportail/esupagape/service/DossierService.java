@@ -271,6 +271,7 @@ public class DossierService {
         return dossierCompletCSVDtos;
     }
 
+    @Transactional
     public List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year) {
         List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findEmailEtuByYearForCSV(year);
         return dossierCompletCSVDtos;

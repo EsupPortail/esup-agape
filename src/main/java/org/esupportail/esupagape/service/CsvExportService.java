@@ -11,7 +11,7 @@ import java.io.Writer;
 import java.util.List;
 
 @Service
-public class CsvService {
+public class CsvExportService {
 
     public void writeDossierCompletToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);

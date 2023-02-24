@@ -17,7 +17,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.service.CsvService;
+import org.esupportail.esupagape.service.CsvExportService;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -60,9 +60,9 @@ public class DossierController {
 
     private final DocumentService documentService;
 
-    private final CsvService csvService;
+    private final CsvExportService csvService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService, CsvService csvService) {
+    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService, CsvExportService csvService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.utilsService = utilsService;
@@ -189,7 +189,7 @@ public class DossierController {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
 
         try (Writer writer = response.getWriter()) {
-            CsvService csvService = new CsvService();
+            CsvExportService csvService = new CsvExportService();
             csvService.writeDossierCompletToCsv(dossierCompletCSVDtos, writer);
             writer.flush();
         } catch (IOException e) {
@@ -206,7 +206,7 @@ public class DossierController {
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try (Writer writer = response.getWriter()) {
-            CsvService csvService = new CsvService();
+            CsvExportService csvService = new CsvExportService();
             csvService.writeEmailsToCsv(dossierCompletCSVDtos, writer);
             writer.flush();
         } catch (IOException e) {
