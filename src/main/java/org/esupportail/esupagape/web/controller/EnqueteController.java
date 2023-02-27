@@ -93,6 +93,15 @@ public class EnqueteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'importation du fichier CSV : " + e.getMessage());
         }
     }
+    @PostMapping("/{enqueteId}/importCsvLibelle")
+    public ResponseEntity<String> importCsvLibelle(@RequestParam("file") MultipartFile file) {
+        try {
+            csvImportService.importCsvLibelle(file);
 
+            return ResponseEntity.ok("Importation réussie !");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'importation du fichier CSV libellés : " + e.getMessage());
+        }
+    }
 }
 

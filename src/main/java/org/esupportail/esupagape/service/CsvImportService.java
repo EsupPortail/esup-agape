@@ -55,6 +55,32 @@ public class CsvImportService {
         String sql = "INSERT INTO enquete_enum_fil_fmt_sco(id, cod_fil, cod_fmt, cod_sco) VALUES (?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, records);
     }
+
+    public void importCsvLibelle(MultipartFile file) throws IOException {
+
+        CSVFormat csvFormat = CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withIgnoreEmptyLines()
+                .withNullString("");
+
+        List<CSVRecord> csvRecords = csvFormat.parse(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)).getRecords();
+        List<Object[]> records = new ArrayList<>();
+        for (CSVRecord csvRecord : csvRecords) {
+            Long id = null;
+            try {
+                id = Long.parseLong(csvRecord.get(0));
+            } catch (NumberFormatException e) {
+                throw new AgapeIOException(e.getMessage(), e);
+            }
+            String cod = StringUtils.trimToNull(csvRecord.get(1));
+            String libelle = StringUtils.trimToNull(csvRecord.get(2));
+
+            records.add(new Object[]{id, cod, libelle});
+        }
+
+        String sql = "INSERT INTO enquete_enum_fil_fmt_sco_libelle(id, cod, libelle) VALUES (?, ?, ?)";
+        jdbcTemplate.batchUpdate(sql, records);
+    }
 }
 
 
