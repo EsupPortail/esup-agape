@@ -19,17 +19,12 @@ import org.esupportail.esupagape.service.CsvImportService;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
@@ -83,25 +78,5 @@ public class EnqueteController {
         model.addAttribute("genders", Gender.values());
     }
 
-    @PostMapping("/{enqueteId}/importCsv")
-    public ResponseEntity<String> importCsv(@RequestParam("file") MultipartFile file) {
-        try {
-            csvImportService.importCsv(file);
-
-            return ResponseEntity.ok("Importation réussie !");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'importation du fichier CSV : " + e.getMessage());
-        }
-    }
-    @PostMapping("/{enqueteId}/importCsvLibelle")
-    public ResponseEntity<String> importCsvLibelle(@RequestParam("file") MultipartFile file) {
-        try {
-            csvImportService.importCsvLibelle(file);
-
-            return ResponseEntity.ok("Importation réussie !");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'importation du fichier CSV libellés : " + e.getMessage());
-        }
-    }
 }
 

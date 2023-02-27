@@ -16,6 +16,24 @@
                 <li class="m-1"><a role="button" href="/admin/sync-dossiers" class="btn btn-dark">Forcer la synchro des
                     dossiers</a></li>
             </ul>
+
+            <h2>Import</h2>
+            <h3>Nomenclature du ministère</h3>
+            <h6>Le format attendu : ficher au format CSV,
+                en-tête,
+                séparateur de chaîne de caractère = '""',
+                séparateur de champ  = ' ;',
+                3 colonnes pour les codes ,
+                4 colonnes pour les libellés</h6>
+            <form th:action="@{/admin/import-codes-ministere}" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv"><br>
+                <button class="btn btn-primary mt-2" type="submit">Importer codes</button>
+            </form>
+            <form th:action="@{/admin/import-libelles-ministere}" method="post" enctype="multipart/form-data">
+                <input class="mt-2" type="file" name="file" accept=".csv"><br>
+                <button class="btn btn-primary mt-2" type="submit">Importer libellés</button>
+            </form>
+
             <h1>Années</h1>
             <hr>
             <div class="col-6 mx-auto">

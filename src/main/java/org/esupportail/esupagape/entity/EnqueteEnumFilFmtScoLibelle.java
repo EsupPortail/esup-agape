@@ -10,7 +10,7 @@ public class EnqueteEnumFilFmtScoLibelle {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(length = 8, unique = true)
+    @Column(length = 100, unique = true)
     String cod;
 
     String libelle;

@@ -26,14 +26,6 @@
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='enquete')"></div>
                 <div class="m-3">
-                    <form action="/dossiers/{dossierId}/enquete/{enqueteId}/importCsv" th:action="@{/dossiers/{dossierId}/enquete/{enqueteId}/importCsv(dossierId=${dossierId},enqueteId=${enquete.id})}" method="post" enctype="multipart/form-data">
-                        <input type="file" name="file" accept=".csv"><br>
-                        <button class="btn btn-primary mt-2" type="submit">Importer CSV</button>
-                    </form>
-                    <form action="/dossiers/{dossierId}/enquete/{enqueteId}/importCsvLibelle" th:action="@{/dossiers/{dossierId}/enquete/{enqueteId}/importCsvLibelle(dossierId=${dossierId},enqueteId=${enquete.id})}" method="post" enctype="multipart/form-data">
-                        <input class="mt-2" type="file" name="file" accept=".csv"><br>
-                        <button class="btn btn-primary mt-2" type="submit">Importer Libelles CSV</button>
-                    </form>
                     <form id="enquete"
                             class="form-horizontal"
                             th:method="put"
