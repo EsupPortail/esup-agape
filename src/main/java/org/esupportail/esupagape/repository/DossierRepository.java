@@ -17,18 +17,20 @@ import java.util.Optional;
 
 public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
-    @Query("select distinct d.id as id, i.numEtu as numEtu, i.codeIne as codeIne, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.gender as gender, " +
-            "d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId " +
-            "from Dossier d join Individu i on i.id = d.individu.id " +
-            "where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%')) " +
-            "or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch)) " +
-            "or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')) " +
-            "or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%')) " +
-            "or upper(d.individu.numEtu) = :fullTextSearch) " +
-            "and (:typeIndividu is null or d.type = :typeIndividu) " +
-            "and (:statusDossier is null or d.statusDossier = :statusDossier) " +
-            "and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)" +
-            "and (:yearFilter is null or d.year = :yearFilter)")
+    @Query("""
+            select distinct d.id as id, i.numEtu as numEtu, i.codeIne as codeIne, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.gender as gender,
+            d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId
+            from Dossier d join Individu i on i.id = d.individu.id
+            where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%'))
+            or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch))
+            or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%'))
+            or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%'))
+            or upper(d.individu.numEtu) = :fullTextSearch)
+            and (:typeIndividu is null or d.type = :typeIndividu)
+            and (:statusDossier is null or d.statusDossier = :statusDossier)
+            and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
+            and (:yearFilter is null or d.year = :yearFilter)
+            """)
     Page<DossierIndividuDto> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable);
 
     Page<Dossier> findAllByYear(Integer year, Pageable pageable);
@@ -67,16 +69,16 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             and (:statusDossier is null or d.statusDossier = :statusDossier) 
             and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
             and (:formAddress is null or d.formAddress = :formAddress)
-            order by name
+            order by year desc, name
             """)
     List<DossierCompletCSVDto> findByYearForCSV(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress);
 
     @Query("""
-                         select i.emailEtu as emailEtu,
-                         i.emailPerso as emailPerso
-                         from Dossier d join Individu i on d.individu.id = i.id
-                         where (:year is null or d.year = :year)
-                         order by i.name
+            select i.emailEtu as emailEtu,
+            i.emailPerso as emailPerso
+            from Dossier d join Individu i on d.individu.id = i.id
+            where (:year is null or d.year = :year)
+            order by i.name
             """)
     List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year);
 }

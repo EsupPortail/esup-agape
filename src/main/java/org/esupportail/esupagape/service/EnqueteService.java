@@ -5,7 +5,9 @@ import org.esupportail.esupagape.dtos.SlimSelectDto;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
@@ -72,7 +74,7 @@ public class EnqueteService {
         }
         enqueteToUpdate.setNfic(enqueteForm.getNfic());
         enqueteToUpdate.setNumetu(enqueteForm.getNumetu());
-        enqueteToUpdate.setGender(enqueteForm.getGender());
+        enqueteToUpdate.setSexe(enqueteForm.getSexe());
         enqueteToUpdate.setTypeFrmn(enqueteForm.getTypeFrmn());
         enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
         enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
@@ -169,7 +171,11 @@ public class EnqueteService {
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         if(dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getYear()));
-            enquete.setGender(dossier.getIndividu().getGender());
+            if(dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
+                enquete.setSexe("0");
+            } else if(dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
+                enquete.setSexe("1");
+            }
             enquete.setTypeFrmn(dossier.getTypeFormation());
             enquete.setModFrmn(dossier.getModeFormation());
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
@@ -254,6 +260,15 @@ public class EnqueteService {
 
     public List<String> getCodScoByCodFmt(String codFmt) {
         return enqueteEnumFilFmtScoRepository.findDistinctByCodFmt(codFmt);
+    }
+
+    public Map<String, String> getAllCodFmt() {
+        Map<String, String> codFmts = new HashMap<>();
+        List<EnqueteEnumFilFmtScoLibelle> enqueteEnumFilFmtScoLibelles = enqueteEnumFilFmtScoLibelleRepository.findAll();
+        for (EnqueteEnumFilFmtScoLibelle enqueteEnumFilFmtScoLibelle : enqueteEnumFilFmtScoLibelles) {
+            codFmts.put(enqueteEnumFilFmtScoLibelle.getCod().toLowerCase(), enqueteEnumFilFmtScoLibelle.getLibelle());
+        }
+        return codFmts;
     }
 
     public List<SlimSelectDto> getSlimSelectDtosOfCodFmts(String codFil) {

@@ -3,19 +3,8 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
-import org.esupportail.esupagape.entity.enums.enquete.LibelleCodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF;
-import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.service.CsvImportService;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +28,8 @@ public class EnqueteController {
 
     private final EnqueteService enqueteService;
 
-    private final CsvImportService csvImportService;
-
-    public EnqueteController(EnqueteService enqueteService, CsvImportService csvImportService) {
+    public EnqueteController(EnqueteService enqueteService) {
         this.enqueteService = enqueteService;
-
-        this.csvImportService = csvImportService;
     }
 
     @GetMapping
@@ -76,6 +61,7 @@ public class EnqueteController {
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());
+        model.addAttribute("enqueteEnumFilFmtSco", enqueteService.getAllCodFmt());
     }
 
 }

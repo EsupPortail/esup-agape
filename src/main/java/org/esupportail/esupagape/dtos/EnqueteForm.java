@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.dtos;
 
-import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class EnqueteForm {
 
     private String an;
 
-    private Gender gender;
+    private String sexe;
 
     private TypeFrmn typeFrmn;
 
@@ -124,12 +123,12 @@ public class EnqueteForm {
         this.an = an;
     }
 
-    public Gender getGender() {
-        return gender;
+    public String getSexe() {
+        return sexe;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
     }
 
     public TypeFrmn getTypeFrmn() {

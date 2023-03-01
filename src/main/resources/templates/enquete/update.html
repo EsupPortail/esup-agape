@@ -50,11 +50,12 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="genders">Genre</label>
                                         <div>
-                                            <select name="gender" class="form-control" size="1" th:disabled="${enquete.gender != null}">
-                                                <option th:selected="${gender == enquete.gender}"
-                                                        th:each="gender : ${genders}"
-                                                        th:value="${enquete.gender}"
+                                            <select name="sexe" class="form-control" size="1" th:disabled="${enquete.sexe != null}">
+                                                <th:block th:each="gender, iterator : ${genders}">
+                                                <option th:selected="${iterator.index + '' == enquete.sexe}"
+                                                        th:value="${iterator.index}"
                                                         th:text="#{'individu.gender.' + ${gender}}"></option>
+                                                </th:block>
                                             </select>
                                         </div>
                                     </div>
@@ -90,7 +91,7 @@
                                                 <option th:selected="${enumCodfil == enquete.codFil}"
                                                         th:each="enumCodfil : ${codFils}"
                                                         th:value="${enumCodfil}"
-                                                        th:text="#{'enquete.codFil.' + ${enumCodfil}}"></option>
+                                                        th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -98,6 +99,9 @@
                                         <label class="mt-1 form-label" th:for="codFmt">Formation</label>
                                         <div>
                                             <select id="codFmt" name="codFmt" size="1">
+                                                <option selected th:if="${enquete.codFmt != null}"
+                                                        th:value="${enquete.codFmt}"
+                                                        th:text="${enqueteEnumFilFmtSco.get('fmt' + enquete.codFmt.toLowerCase())}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -105,6 +109,9 @@
                                         <label class="mt-1 form-label" th:for="codSco">Année d’études</label>
                                         <div>
                                             <select id="codSco" name="codSco" size="1">
+                                                <option selected th:if="${enquete.codSco != null}"
+                                                        th:value="${enquete.codSco}"
+                                                        th:text="${enqueteEnumFilFmtSco.get('sco' + enquete.codSco.toLowerCase())}"></option>
                                             </select>
                                         </div>
                                     </div>
