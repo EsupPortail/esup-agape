@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.repository;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
-import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -45,40 +44,4 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.codComposante as cod, trim(d.composante) as libelle from Dossier d order by cod")
     List<ComposanteDto> findAllComposantes();
 
-    @Query("""
-            select distinct d.id as id, 
-            d.year as year,
-            i.numEtu as numEtu, 
-            i.codeIne as codeIne,
-            i.gender as gender,
-            i.name as name, 
-            i.firstName as firstName, 
-            i.dateOfBirth as dateOfBirth,
-            i.emailEtu as emailEtu,
-            i.fixAddress as fixAddress,
-            i.fixCP as fixCP,
-            i.fixCity as fixCity,
-            i.fixCountry as fixCountry,
-            d.type as type, 
-            d.statusDossier as statusDossier,
-            d.statusDossierAmenagement as statusDossierAmenagement,
-            d.formAddress as formAddress
-            from Dossier d join Individu i on d.individu.id = i.id 
-            where (:year is null or d.year = :year) 
-            and (:typeIndividu is null or d.type = :typeIndividu) 
-            and (:statusDossier is null or d.statusDossier = :statusDossier) 
-            and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
-            and (:formAddress is null or d.formAddress = :formAddress)
-            order by year desc, name
-            """)
-    List<DossierCompletCSVDto> findByYearForCSV(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress);
-
-    @Query("""
-            select i.emailEtu as emailEtu,
-            i.emailPerso as emailPerso
-            from Dossier d join Individu i on d.individu.id = i.id
-            where (:year is null or d.year = :year)
-            order by i.name
-            """)
-    List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year);
 }

@@ -28,7 +28,14 @@
                                         <label class="form-label select-label" th:for="classification">Classification du handicap</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <select multiple id="classification" disabled th:field="*{classification}" size="1" type="text" class="agape-slim-select-search" th:value="${currentDossier.classification}">
+                                        <select multiple
+                                                id="classification"
+                                                disabled
+                                                th:field="*{classification}"
+                                                size="1"
+                                                type="text"
+                                                class="agape-slim-select-search"
+                                                th:value="${currentDossier.classification}">
                                             <option type="text"
                                                     th:checked="${currentDossier.classification.contains(classification)}"
                                                     th:each="classification : ${classifications}"
@@ -213,13 +220,13 @@
                                     <div class="col-12 col-xxl-8">
                                         <div class="input-group">
                                             <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormationPrec"
-                                                      name="libelleFormationPrec"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormationPrec}"
-                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
+                                                    disabled
+                                                    id="libelleFormationPrec"
+                                                    name="libelleFormationPrec"
+                                                    class="form-control"
+                                                    style="min-height:60px; resize: none;"
+                                                    th:text="${currentDossier.libelleFormationPrec}"
+                                                    th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -273,22 +280,27 @@
                         <hr>
                         <div class="d-inline">
                             <div class="float-buttons">
-                                <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button"><i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
-                                <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
-                                <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none"><i class="fa-solid fa-xmark"></i></button>
-                                <button title="Enregistrer la modification du dossier" id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none"><i class="fa-solid fa-save"></i></button>
-                                <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i></button>
+                                <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button">
+                                    <i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
+                                <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                                    <i class="fa-solid fa-pen"></i></button>
+                                <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                                    <i class="fa-solid fa-xmark"></i></button>
+                                <button title="Enregistrer la modification du dossier" id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
+                                    <i class="fa-solid fa-save"></i></button>
+                                <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i>
+                                </button>
                                 <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
-                                <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'" ><i class="fa-solid fa-refresh" style="font-size: 20px;"></i></a>
+                                <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'"><i class="fa-solid fa-refresh"
+                                        style="font-size: 20px;"></i></a>
                             </div>
-<!--                            <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">-->
-<!--                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">-->
-<!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
+                            <!--                            <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">-->
+                            <!--                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">-->
+                            <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
 
                     </form>
-                    <a title="Exporter tous les emails en csv" th:href="@{/dossiers/export-all-email-to-csv(year=${yearFilter})}" class="btn btn-primary">Download all email CSV file</a>
-            </div>
+                </div>
             </div>
         </main>
 
@@ -321,38 +333,37 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                            <label th:for="date" class="form-label">Pièces jointes</label>
-                            <table class="table table-striped" th:if="${attachments.size() > 0}">
+                        <label th:for="date" class="form-label">Pièces jointes</label>
+                        <table class="table table-striped" th:if="${attachments.size() > 0}">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Type</th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="attachment : ${attachments}">
                                 <tr>
-                                    <th>Nom</th>
-                                    <th>Type</th>
-                                    <th></th>
+                                    <td class="align-middle">
+                                        <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
+                                    </td>
+                                    <td th:text="${attachment.parentType}"></td>
+                                    <td class="align-middle">
+                                        <button th:attr="id=${attachment.id}"
+                                                data-bs-toggle="modal"
+                                                href="#"
+                                                data-bs-target="#modal-warning"
+                                                class="btn btn-danger"
+                                                th:data-bs-whatever="${currentDossier.id}"
+                                                th:data-bs-attachment="${attachment.fileName}"
+                                                th:disabled="${!#strings.equals(attachment.parentType, 'org.esupportail.esupagape.entity.Dossier')}"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
                                 </tr>
-                                <th:block th:each="attachment : ${attachments}">
-                                    <tr>
-                                        <td class="align-middle">
-                                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/get-attachment/' + ${attachment.id}" th:text="${attachment.fileName}"></a>
-                                        </td>
-                                        <td th:text="${attachment.parentType}">
-                                        </td>
-                                        <td class="align-middle">
-                                                <button th:attr="id=${attachment.id}"
-                                                        data-bs-toggle="modal"
-                                                        href="#"
-                                                        data-bs-target="#modal-warning"
-                                                        class="btn btn-danger"
-                                                        th:data-bs-whatever="${currentDossier.id}"
-                                                        th:data-bs-attachment="${attachment.fileName}"
-                                                        th:disabled="${!#strings.equals(attachment.parentType, 'org.esupportail.esupagape.entity.Dossier')}"><i class="fa-solid fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </th:block>
-                            </table>
-                            <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id}  + '/add-attachments'" th:method="post" enctype="multipart/form-data">
-                                <label class="form-label">Ajouter un fichier</label>
-                                <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
-                                <input type="submit" class="btn btn-primary" value="Ajouter">
-                            </form>
+                            </th:block>
+                        </table>
+                        <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id}  + '/add-attachments'" th:method="post" enctype="multipart/form-data">
+                            <label class="form-label">Ajouter un fichier</label>
+                            <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
+                            <input type="submit" class="btn btn-primary" value="Ajouter">
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -363,29 +374,21 @@
         <div class="modal modal-warning fade" id="modal-warning" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="form-modal-warning" th:action="|/dossiers/dossierId/delete-attachment/attachmentId|"
-                            th:method="delete">
+                    <form id="form-modal-warning" th:action="|/dossiers/dossierId/delete-attachment/attachmentId|" th:method="delete">
                         <div class="modal-header">
-                            <h5 class="modal-title fs-5"
-                                    th:id="'delete-attachment-label'">
+                            <h5 class="modal-title fs-5" th:id="'delete-attachment-label'">
                                 Suppression d'une pièce jointe</h5>
-                            <button type="button" class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert alert-danger text-center">Confirmez-vous
-                                la suppression de
-                                cette pièce jointe <br><span id="attachmentFileName"></span> ?
+                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de cette pièce jointe <br><span id="attachmentFileName"></span> ?
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline pull-left"
-                                    data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
                                 Annuler
                             </button>
-                            <button type="submit"
-                                    class="btn btn-outline pull-left btn-danger">
+                            <button type="submit" class="btn btn-outline pull-left btn-danger">
                                 Supprimer
                             </button>
                         </div>
@@ -403,7 +406,7 @@
                 const button = event.relatedTarget
                 const currentDossier = button.getAttribute('data-bs-whatever')
                 const attachmentFileName = button.getAttribute('data-bs-attachment')
-                formModalWarning.action = '/dossiers/'+currentDossier+'/delete-attachment/'+button.id
+                formModalWarning.action = '/dossiers/' + currentDossier + '/delete-attachment/' + button.id
                 spanAttachmentFileName.textContent = attachmentFileName
             })
         </script>

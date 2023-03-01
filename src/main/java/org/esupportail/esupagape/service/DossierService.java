@@ -2,7 +2,6 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
-import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
@@ -264,16 +263,6 @@ public class DossierService {
         }
         return false;
     }
-
-    @Transactional
-    public List<DossierCompletCSVDto> getCsvDossier(Integer year, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, String formAddress) {
-        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findByYearForCSV(year, typeIndividu, statusDossier, statusDossierAmenagement, formAddress);
-        return dossierCompletCSVDtos;
-    }
-
-    @Transactional
-    public List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year) {
-        List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierRepository.findEmailEtuByYearForCSV(year);
-        return dossierCompletCSVDtos;
-    }
 }
+
+
