@@ -3,15 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.dtos.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.Etat;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.RentreeProchaine;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.Taux;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -31,21 +23,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -67,7 +54,6 @@ public class DossierController {
         this.individuService = individuService;
         this.utilsService = utilsService;
         this.documentService = documentService;
-
         this.csvService = csvService;
     }
 
@@ -186,10 +172,11 @@ public class DossierController {
         List<DossierCompletCSVDto> dossierCompletCSVDtos = dossierService.getCsvDossier(year, typeIndividu, statusDossier, statusDossierAmenagement, formAddress);
         String fileName = "dossier-complet.csv";
         response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-
-        try (Writer writer = response.getWriter()) {
-            CsvExportService csvService = new CsvExportService();
+        response.setHeader("Set-Cookie", "fileDownload=true; path=/");
+//        csvService.writeExcelHackToCsv(response);
+        try (Writer writer = new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8)) {
             csvService.writeDossierCompletToCsv(dossierCompletCSVDtos, writer);
             writer.flush();
         } catch (IOException e) {
@@ -206,7 +193,6 @@ public class DossierController {
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try (Writer writer = response.getWriter()) {
-            CsvExportService csvService = new CsvExportService();
             csvService.writeEmailsToCsv(dossierCompletCSVDtos, writer);
             writer.flush();
         } catch (IOException e) {
