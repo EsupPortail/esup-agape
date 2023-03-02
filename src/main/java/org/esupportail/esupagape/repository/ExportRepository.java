@@ -18,6 +18,7 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             i.firstName as firstName, 
             i.dateOfBirth as dateOfBirth,
             i.emailEtu as emailEtu,
+            i.emailPerso as emailPerso,
             i.fixAddress as fixAddress,
             i.fixCP as fixCP,
             i.fixCity as fixCity,
@@ -25,9 +26,30 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             d.type as type, 
             d.statusDossier as statusDossier,
             d.statusDossierAmenagement as statusDossierAmenagement,
-            d.formAddress as formAddress
+            c as classification,
+            d.mdph as mdph,
+            d.taux as taux,
+            t as typeSuiviHandisup,
+            d.commentaire as commentaire,
+            d.typeFormation as typeFormation,
+            d.modeFormation as modeFormation,
+            d.site as site,
+            d.libelleFormation as libelleFormation,
+            d.libelleFormationPrec as libelleFormationPrec,
+            d.codComposante as codComposante,
+            d.composante as composante,
+            d.formAddress as formAddress,
+            d.resultatS1 as resultatS1,
+            d.noteS1 as noteS1,
+            d.resultatS2 as resultatS2,
+            d.noteS2 as noteS2, 
+            d.resultatTotal as resultatTotal,
+            d.noteTotal as noteTotal,
+            d.suiviHandisup as suiviHandisup
             from Dossier d join Individu i on d.individu.id = i.id 
-            where (:year is null or d.year = :year) 
+            left join d.classification c
+            left join d.typeSuiviHandisup t
+            where (:year is null or d.year = :year)
             order by year desc, name
             """)
     List<DossierCompletCSVDto> findByYearForCSV(Integer year);

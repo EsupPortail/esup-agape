@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,13 @@ import java.util.List;
 @Service
 public class CsvExportService {
 
+    private final MessageSource messageSource;
+
     private final static byte[] EXCEL_UTF8_HACK = new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF};
+
+    public CsvExportService(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     public void writeExcelHackToCsv(HttpServletResponse response) {
         try {
@@ -30,7 +37,12 @@ public class CsvExportService {
         csvFormat.setDelimiter(";");
         csvFormat.setQuote('"');
         csvFormat.setQuoteMode(QuoteMode.ALL);
-        csvFormat.setHeader("Id", "Année", "numéro étudiant", "Code INE", "Genre", "Nom", "Prénom", "Date de naissance", "email", "Adresse", "Code postal", "Ville", "Pays", "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement", "Adresse de formation");
+        csvFormat.setHeader("Id", "Année", "Numéro étudiant", "Code INE", "Genre", "Nom", "Prénom",
+                "Date de naissance", "Email étudiant", "Email perso", "Adresse", "Code postal", "Ville", "Pays",
+                "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement", "Classification du handicap",
+                 "Suivi MDPH", "Taux", "Suivi Handisup", "Commentaire", "Type de formation",
+                "Modalités de formation", "Etablissement", "Formation", "Formation précédente",
+                "Code composante", "Composante","Adresse de formation", "Resultat 1er semestre", "Note 1er semestre", "Resultat 2e semestre", "Note 2e semestre", "Resultat total", "Note total", "suivi Handisup");
         try {
             CSVPrinter printer = new CSVPrinter(writer, csvFormat.build());
             for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
@@ -43,6 +55,7 @@ public class CsvExportService {
                 dossierCompletCSVDto.getFirstName(),
                 dossierCompletCSVDto.getDateOfBirth(),
                 dossierCompletCSVDto.getEmailEtu(),
+                dossierCompletCSVDto.getEmailPerso(),
                 dossierCompletCSVDto.getFixAddress(),
                 dossierCompletCSVDto.getFixCP(),
                 dossierCompletCSVDto.getFixCity(),
@@ -50,7 +63,26 @@ public class CsvExportService {
                 dossierCompletCSVDto.getType(),
                 dossierCompletCSVDto.getStatusDossier(),
                 dossierCompletCSVDto.getStatusDossierAmenagement(),
-                dossierCompletCSVDto.getFormAddress());
+                dossierCompletCSVDto.getClassification(),
+                dossierCompletCSVDto.getMdph(),
+                dossierCompletCSVDto.getTaux(),
+                dossierCompletCSVDto.getTypeSuiviHandisup(),
+                dossierCompletCSVDto.getCommentaire(),
+                dossierCompletCSVDto.getTypeFormation(),
+                dossierCompletCSVDto.getModeFormation(),
+                dossierCompletCSVDto.getSite(),
+                dossierCompletCSVDto.getLibelleFormation(),
+                dossierCompletCSVDto.getLibelleFormationPrec(),
+                dossierCompletCSVDto.getCodComposante(),
+                dossierCompletCSVDto.getComposante(),
+                dossierCompletCSVDto.getFormAddress(),
+                dossierCompletCSVDto.getResultatS1(),
+                dossierCompletCSVDto.getNoteS1(),
+                dossierCompletCSVDto.getResultatS2(),
+                dossierCompletCSVDto.getNoteS2(),
+                dossierCompletCSVDto.getResultatTotal(),
+                dossierCompletCSVDto.getNoteTotal(),
+                dossierCompletCSVDto.getSuiviHandisup());
             }
         } catch (IOException e) {
             throw new AgapeRuntimeException("Enable to write export csv");
