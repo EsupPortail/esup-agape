@@ -1,17 +1,20 @@
 package org.esupportail.esupagape.dtos;
 
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.Taux;
+import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface DossierCompletCSVDto {
@@ -89,5 +92,24 @@ public interface DossierCompletCSVDto {
     Double getNoteTotal();
 
     Boolean getSuiviHandisup();
+
+    String getNumEtuAidant();
+    String getNameAidant();
+    String getFirstNameAidant();
+    LocalDate getDateOfBirthAidant();
+    String getEmailAidant();
+    String getPhoneAidant();
+
+    LocalDateTime getStartDate();
+
+    Set<FonctionAidant> getFonctionAidants();
+
+    TypeAideMaterielle getTypeAideMaterielle();
+
+    LocalDateTime getEndDate();
+
+    Double getCost();
+
+    String getComment();
 
 }

@@ -42,7 +42,12 @@ public class CsvExportService {
                 "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement", "Classification du handicap",
                  "Suivi MDPH", "Taux", "Suivi Handisup", "Commentaire", "Type de formation",
                 "Modalités de formation", "Etablissement", "Formation", "Formation précédente",
-                "Code composante", "Composante","Adresse de formation", "Resultat 1er semestre", "Note 1er semestre", "Resultat 2e semestre", "Note 2e semestre", "Resultat total", "Note total", "suivi Handisup");
+                "Code composante", "Composante","Adresse de formation", "Resultat 1er semestre",
+                "Note 1er semestre", "Resultat 2e semestre", "Note 2e semestre",
+                "Resultat total", "Note total", "suivi Handisup", "N° étudiant de l'aidant",
+                "Nom de l'aidant", "Prénom de l'aidant", "Date de naissance de l'aidant", "Email de l'aidant",
+                "tél de l'aidant", "Date de début du contrat", "Fonction de l'aidant","Type d'aide matérielle", "Date de fin de l'aide matérielle",
+                "Coût", "Commentaire");
         try {
             CSVPrinter printer = new CSVPrinter(writer, csvFormat.build());
             for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
@@ -82,7 +87,19 @@ public class CsvExportService {
                 dossierCompletCSVDto.getNoteS2(),
                 dossierCompletCSVDto.getResultatTotal(),
                 dossierCompletCSVDto.getNoteTotal(),
-                dossierCompletCSVDto.getSuiviHandisup());
+                dossierCompletCSVDto.getSuiviHandisup(),
+                dossierCompletCSVDto.getNumEtuAidant(),
+                dossierCompletCSVDto.getNameAidant(),
+                dossierCompletCSVDto.getFirstNameAidant(),
+                dossierCompletCSVDto.getDateOfBirthAidant(),
+                dossierCompletCSVDto.getEmailAidant(),
+                dossierCompletCSVDto.getPhoneAidant(),
+                dossierCompletCSVDto.getStartDate(),
+                dossierCompletCSVDto.getFonctionAidants(),
+                dossierCompletCSVDto.getTypeAideMaterielle(),
+                dossierCompletCSVDto.getEndDate(),
+                dossierCompletCSVDto.getCost(),
+                dossierCompletCSVDto.getComment());
             }
         } catch (IOException e) {
             throw new AgapeRuntimeException("Enable to write export csv");

@@ -45,10 +45,24 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             d.noteS2 as noteS2, 
             d.resultatTotal as resultatTotal,
             d.noteTotal as noteTotal,
-            d.suiviHandisup as suiviHandisup
-            from Dossier d join Individu i on d.individu.id = i.id 
+            d.suiviHandisup as suiviHandisup,
+            ah.numEtuAidant as numEtuAidant,
+            ah.nameAidant as nameAidant,
+            ah.firstNameAidant as firstNameAidant,
+            ah.dateOfBirthAidant as dateOfBirthAidant,
+            ah.emailAidant as emailAidant,
+            ah.phoneAidant as phoneAidant,
+            ah.startDate as startDate,
+            ah as fonctionAidant,
+            amat.typeAideMaterielle as typeAideMaterielle,
+            amat.endDate as endDate,
+            amat.cost as cost,
+            amat.comment as comment
+            from Dossier d join Individu i on d.individu.id = i.id
             left join d.classification c
             left join d.typeSuiviHandisup t
+            left join d.aidesHumaines ah
+            left join d.aidesMaterielles amat
             where (:year is null or d.year = :year)
             order by year desc, name
             """)
