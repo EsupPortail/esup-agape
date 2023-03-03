@@ -38,9 +38,9 @@ public class CsvExportService {
         put("gender",                   "Genre");
         put("name",                     "Nom");
         put("firstName",                "Prénom");
-        put("emailEtu",                 "Date de naissance");
-        put("emailPerso",               "Email étudiant");
-        put("dateOfBirth",              "Email perso");
+        put("emailEtu",                 "Email étudiant");
+        put("emailPerso",               "Email perso");
+        put("dateOfBirth",              "Date de naissance");
         put("fixAddress",               "Adresse");
         put("fixCP",                    "Code postal");
         put("fixCity",                  "Ville");
