@@ -13,7 +13,12 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CsvExportService {
@@ -113,7 +118,14 @@ public class CsvExportService {
                 List<String> record = new ArrayList<>();
                 for(String methodName : dossierCompletCsv.keySet()) {
                     try {
-                        record.add(DossierCompletCSVDto.class.getDeclaredMethod("get" + StringUtils.capitalize(methodName)).invoke(dossierCompletCSVDto).toString());
+                        Object value = DossierCompletCSVDto.class.getDeclaredMethod("get" + StringUtils.capitalize(methodName)).invoke(dossierCompletCSVDto);
+                        if (value instanceof LocalDateTime) {
+                            LocalDateTime dateTimeValue = (LocalDateTime) value;
+                            String formattedDate = dateTimeValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                            record.add(formattedDate);
+                        } else {
+                            record.add(value.toString());
+                        }
                     } catch (Exception e) {
                         record.add("");
                         logger.debug(methodName + " doesn't exist");
