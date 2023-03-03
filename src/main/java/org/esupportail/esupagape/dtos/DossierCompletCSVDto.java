@@ -34,7 +34,7 @@ public interface DossierCompletCSVDto {
     String getFirstName();
     String getEmailEtu();
     String getEmailPerso();
-    LocalDateTime getDateOfBirth();
+    LocalDate getDateOfBirth();
     String getFixAddress();
     String getFixCP();
     String getFixCity();
@@ -93,5 +93,4 @@ public interface DossierCompletCSVDto {
     LocalDateTime getValideMedecinDate();
     LocalDateTime getAdministrationDate();
     LocalDateTime getDeleteDate();
-
 }
