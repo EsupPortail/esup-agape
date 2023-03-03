@@ -30,6 +30,8 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             d.mdph as mdph,
             d.taux as taux,
             t as typeSuiviHandisup,
+            ah as fonctionAidant,
+            am as typeEpreuves,
             d.commentaire as commentaire,
             d.typeFormation as typeFormation,
             d.modeFormation as modeFormation,
@@ -47,22 +49,40 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             d.noteTotal as noteTotal,
             d.suiviHandisup as suiviHandisup,
             ah.numEtuAidant as numEtuAidant,
+            ah.statusAideHumaine as statusAideHumaine,
             ah.nameAidant as nameAidant,
             ah.firstNameAidant as firstNameAidant,
             ah.dateOfBirthAidant as dateOfBirthAidant,
             ah.emailAidant as emailAidant,
             ah.phoneAidant as phoneAidant,
             ah.startDate as startDate,
-            ah as fonctionAidant,
             amat.typeAideMaterielle as typeAideMaterielle,
             amat.endDate as endDate,
             amat.cost as cost,
-            amat.comment as comment
+            amat.comment as comment,
+            am.autorisation as autorisation,
+            am.statusAmenagement as statusAmenagement,
+            am.typeAmenagement as typeAmenagement,
+            am.createDate as createDate,
+            am.autresTypeEpreuve as autresTypeEpreuve,
+            am.tempsMajore as tempsMajore,
+            am.autresTempsMajores as autresTempsMajores,
+            am.amenagementText as amenagementText,
+            am.nomMedecin as nomMedecin,
+            am.mailMedecin as mailMedecin,
+            am.nomValideur as nomValideur,
+            am.mailValideur as mailValideur,
+            am.mailIndividu as mailIndividu,
+            am.motifRefus as motifRefus,
+            am.valideMedecinDate as valideMedecinDate,
+            am.administrationDate as administrationDate,
+            am.deleteDate as deleteDate
             from Dossier d join Individu i on d.individu.id = i.id
             left join d.classification c
             left join d.typeSuiviHandisup t
             left join d.aidesHumaines ah
             left join d.aidesMaterielles amat
+            left join d.amenagements am
             where (:year is null or d.year = :year)
             order by year desc, name
             """)
