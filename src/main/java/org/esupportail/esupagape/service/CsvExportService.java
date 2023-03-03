@@ -31,31 +31,74 @@ public class CsvExportService {
     }
 
     Map<String, String> dossierCompletCsv = new LinkedHashMap<>() {{
-        put("id",                           "Id");
-        put("year",                         "Année");
-        put("numEtu",                       "Numéro étudiant");
-        put("codeIne",                      "Code INE");
-        put("gender",                       "Genre");
-        put("name",                         "Nom");
-        put("firstName",                    "Prénom");
-        put("dateOfBirth",                  "Date de naissance");
-        put("emailEtu",                     "Email étudiant");
-        put("emailPerso",                   "Email perso");
-        put("fixAddress",                   "Adresse");
-        put("fixCp",                        "Code postal");
-        put("fixCity",                      "Ville");
-        put("fixCountry",                   "Pays");
-        put("type",                         "Type d’individu");
-        put("statusDossier",                "Statut du dossier");
-        put("statusDossierAmenagement",     "Statut de l’aménagement");
-        put("classification",               "Classification du handicap");
-        put("mdph",                         "Suivi MDPH");
-        put("taux",                         "Taux");
-        put("TypeSuiviHandisup",            "Suivi Handisup");
-        put("commentaire",                  "Commentaire");
-        put("typeFormation",                "Type de formation");
-        put("modeFormation",                "Modalités de formation");
-        put("site",                         "Établissement");
+        put("id",                       "Id");
+        put("year",                     "Année");
+        put("numEtu",                   "Numéro étudiant");
+        put("codeIne",                  "Code INE");
+        put("gender",                   "Genre");
+        put("name",                     "Nom");
+        put("firstName",                "Prénom");
+        put("emailEtu",                 "Date de naissance");
+        put("emailPerso",               "Email étudiant");
+        put("dateOfBirth",              "Email perso");
+        put("fixAddress",               "Adresse");
+        put("fixCP",                    "Code postal");
+        put("fixCity",                  "Ville");
+        put("fixCountry",               "Pays");
+        put("type",                     "Type de l'individu");
+        put("statusDossier",            "Statut du dossier");
+        put("statusDossierAmenagement", "Statut du Dossier Aménagement");
+        put("classification",           "Classification du handicap");
+        put("mdph",                     "Suivi MDPH");
+        put("taux",                     "Taux");
+        put("typeSuiviHandisup",        "Suivi Handisup");
+        put("commentaire",              "Commentaire");
+        put("typeFormation",            "Type de formation");
+        put("modeFormation",            "Modalités de formation");
+        put("site",                     "Etablissement");
+        put("libelleFormation",         "Formation");
+        put("libelleFormationPrec",     "Formation précédente");
+        put("codComposante",            "Code composante");
+        put("composante",               "Composante");
+        put("formAddress",              "Adresse de formation");
+        put("resultatS1",               "Resultat 1er semestre");
+        put("noteS1",                   "Note 1er semestre");
+        put("resultatS2",               "Resultat 2e semestre");
+        put("noteS2",                   "Note 2e semestre");
+        put("resultatTotal",            "Resultat total");
+        put("noteTotal",                "Note total");
+        put("suiviHandisup",            "suivi Handisup");
+        put("numEtuAidant",             "N° étudiant de l'aidant");
+        put("nameAidant",               "Statut de l'aide humaine");
+        put("firstNameAidant",          "Nom de l'aidant");
+        put("dateOfBirthAidant",        "Prénom de l'aidant");
+        put("emailAidant",              "Date de naissance de l'aidant");
+        put("phoneAidant",              "Email de l'aidant");
+        put("startDate",                "Tél de l'aidant");
+        put("fonctionAidants",          "Date de début du contrat");
+        put("typeAideMaterielle",       "Fonction de l'aidant");
+        put("endDate",                  "Type d'aide matérielle");
+        put("cost",                     "Date de fin de l'aide matérielle");
+        put("comment",                  "Coût");
+        put("autorisation",             "Commentaire");
+        put("statusAmenagement",        "Autorisation");
+        put("statusAideHumaine",        "Statut de l'amenagement");
+        put("mailIndividu",             "Date de création");
+        put("typeAmenagement",          "Mail de l'individu");
+        put("typeEpreuves",             "Type d'amenagement");
+        put("autresTypeEpreuve",        "Type d'epreuve");
+        put("tempMajore",               "Autre type d'epreuve");
+        put("autresTempsMajores",       "Temps Majores");
+        put("amenagementText",          "Autre temps majore");
+        put("mailMedecin",              "Texte");
+        put("nomMedecin",               "Nom du medecin");
+        put("mailValideur",             "Mail du medecin");
+        put("nomValideur",              "Nom du valideur");
+        put("motifRefus",               "Mail du valideur");
+        put("createDate",               "Motif du refus");
+        put("valideMedecinDate",        "Date de valiation du medecin");
+        put("administrationDate",       "Date de validation de l'administration");
+        put("deleteDate",               "Date de suppresssion");
     }};
 
     public void writeDossierCompletToCsv(List<DossierCompletCSVDto> dossierCompletCSVDtos, Writer writer) {
@@ -64,17 +107,6 @@ public class CsvExportService {
         csvFormat.setQuote('"');
         csvFormat.setQuoteMode(QuoteMode.ALL);
         csvFormat.setHeader(dossierCompletCsv.values().toArray(String[]::new));
-//        csvFormat.setHeader("Id", "Année", "Numéro étudiant", "Code INE", "Genre", "Nom", "Prénom",
-//                "Date de naissance", "Email étudiant", "Email perso", "Adresse", "Code postal", "Ville", "Pays",
-//                "Type de l’individu", "Statut du dossier", "Statut du Dossier Aménagement", "Classification du handicap",
-//                 "Suivi MDPH", "Taux", "Suivi Handisup", "Commentaire", "Type de formation",
-//                "Modalités de formation", "Etablissement", "Formation", "Formation précédente",
-//                "Code composante", "Composante","Adresse de formation", "Resultat 1er semestre",
-//                "Note 1er semestre", "Resultat 2e semestre", "Note 2e semestre",
-//                "Resultat total", "Note total", "suivi Handisup", "N° étudiant de l'aidant",
-//                "Nom de l'aidant", "Prénom de l'aidant", "Date de naissance de l'aidant", "Email de l'aidant",
-//                "tél de l'aidant", "Date de début du contrat", "Fonction de l'aidant","Type d'aide matérielle", "Date de fin de l'aide matérielle",
-//                "Coût", "Commentaire");
         try {
             CSVPrinter printer = new CSVPrinter(writer, csvFormat.build());
             for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
@@ -88,91 +120,6 @@ public class CsvExportService {
                     }
                 }
                 printer.printRecord(record);
-//        csvFormat.setHeader("Id", "Année", "Numéro étudiant", "Code INE", "Genre", "Nom", "Prénom",
-//                "Date de naissance", "Email étudiant", "Email perso", "Adresse", "Code postal", "Ville", "Pays",
-//                "Type de l'individu", "Statut du dossier", "Statut du Dossier Aménagement", "Classification du handicap",
-//                "Suivi MDPH", "Taux", "Suivi Handisup", "Commentaire", "Type de formation",
-//                "Modalités de formation", "Etablissement", "Formation", "Formation précédente",
-//                "Code composante", "Composante", "Adresse de formation", "Resultat 1er semestre",
-//                "Note 1er semestre", "Resultat 2e semestre", "Note 2e semestre",
-//                "Resultat total", "Note total", "suivi Handisup", "N° étudiant de l'aidant", "Statut de l'aide humaine",
-//                "Nom de l'aidant", "Prénom de l'aidant", "Date de naissance de l'aidant", "Email de l'aidant",
-//                "Tél de l'aidant", "Date de début du contrat", "Fonction de l'aidant", "Type d'aide matérielle", "Date de fin de l'aide matérielle",
-//                "Coût", "Commentaire", "Autorisation", "Statut de l'amenagement", "Date de création", "Mail de l'individu", "Type d'amenagement", "Type d'epreuve", "Autre type d'epreuve",
-//                "Temps Majores", "Autre temps majore", "Texte", "Nom du medecin", "Mail du medecin", "Nom du valideur", "Mail du valideur", "Motif du refus", "Date de valiation du medecin",
-//                "Date de validation de l'administration", "Date de suppresssion");
-//        try {
-//            CSVPrinter printer = new CSVPrinter(writer, csvFormat.build());
-//            for (DossierCompletCSVDto dossierCompletCSVDto : dossierCompletCSVDtos) {
-//                printer.printRecord(dossierCompletCSVDto.getId(),
-//                        dossierCompletCSVDto.getYear(),
-//                        dossierCompletCSVDto.getNumEtu(),
-//                        dossierCompletCSVDto.getCodeIne(),
-//                        dossierCompletCSVDto.getGender(),
-//                        dossierCompletCSVDto.getName(),
-//                        dossierCompletCSVDto.getFirstName(),
-//                        dossierCompletCSVDto.getDateOfBirth(),
-//                        dossierCompletCSVDto.getEmailEtu(),
-//                        dossierCompletCSVDto.getEmailPerso(),
-//                        dossierCompletCSVDto.getFixAddress(),
-//                        dossierCompletCSVDto.getFixCP(),
-//                        dossierCompletCSVDto.getFixCity(),
-//                        dossierCompletCSVDto.getFixCountry(),
-//                        dossierCompletCSVDto.getType(),
-//                        dossierCompletCSVDto.getStatusDossier(),
-//                        dossierCompletCSVDto.getStatusDossierAmenagement(),
-//                        dossierCompletCSVDto.getClassification(),
-//                        dossierCompletCSVDto.getMdph(),
-//                        dossierCompletCSVDto.getTaux(),
-//                        dossierCompletCSVDto.getTypeSuiviHandisup(),
-//                        dossierCompletCSVDto.getCommentaire(),
-//                        dossierCompletCSVDto.getTypeFormation(),
-//                        dossierCompletCSVDto.getModeFormation(),
-//                        dossierCompletCSVDto.getSite(),
-//                        dossierCompletCSVDto.getLibelleFormation(),
-//                        dossierCompletCSVDto.getLibelleFormationPrec(),
-//                        dossierCompletCSVDto.getCodComposante(),
-//                        dossierCompletCSVDto.getComposante(),
-//                        dossierCompletCSVDto.getFormAddress(),
-//                        dossierCompletCSVDto.getResultatS1(),
-//                        dossierCompletCSVDto.getNoteS1(),
-//                        dossierCompletCSVDto.getResultatS2(),
-//                        dossierCompletCSVDto.getNoteS2(),
-//                        dossierCompletCSVDto.getResultatTotal(),
-//                        dossierCompletCSVDto.getNoteTotal(),
-//                        dossierCompletCSVDto.getSuiviHandisup(),
-//                        dossierCompletCSVDto.getNumEtuAidant(),
-//                        dossierCompletCSVDto.getStatusAideHumaine(),
-//                        dossierCompletCSVDto.getNameAidant(),
-//                        dossierCompletCSVDto.getFirstNameAidant(),
-//                        dossierCompletCSVDto.getDateOfBirthAidant(),
-//                        dossierCompletCSVDto.getEmailAidant(),
-//                        dossierCompletCSVDto.getPhoneAidant(),
-//                        dossierCompletCSVDto.getStartDate(),
-//                        dossierCompletCSVDto.getFonctionAidants(),
-//                        dossierCompletCSVDto.getTypeAideMaterielle(),
-//                        dossierCompletCSVDto.getEndDate(),
-//                        dossierCompletCSVDto.getCost(),
-//                        dossierCompletCSVDto.getComment(),
-//                        dossierCompletCSVDto.getAutorisation(),
-//                        dossierCompletCSVDto.getStatusAmenagement(),
-//                        dossierCompletCSVDto.getCreateDate(),
-//                        dossierCompletCSVDto.getMailIndividu(),
-//                        dossierCompletCSVDto.getTypeAmenagement(),
-//                        dossierCompletCSVDto.getTypeEpreuves(),
-//                        dossierCompletCSVDto.getAutresTypeEpreuve(),
-//                        dossierCompletCSVDto.getTempMajore(),
-//                        dossierCompletCSVDto.getAutresTempsMajores(),
-//                        dossierCompletCSVDto.getAmenagementText(),
-//                        dossierCompletCSVDto.getNomMedecin(),
-//                        dossierCompletCSVDto.getMailMedecin(),
-//                        dossierCompletCSVDto.getNomValideur(),
-//                        dossierCompletCSVDto.getMailValideur(),
-//                        dossierCompletCSVDto.getMotifRefus(),
-//                        dossierCompletCSVDto.getValideMedecinDate(),
-//                        dossierCompletCSVDto.getAdministrationDate(),
-//                        dossierCompletCSVDto.getDeleteDate()
-//                        );
             }
         } catch (IOException e) {
             throw new AgapeRuntimeException("Enable to write export csv");
