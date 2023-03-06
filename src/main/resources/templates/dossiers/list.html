@@ -20,7 +20,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-2" style="width: 350px;">
+                        <div class="col-2" style="width: 330px;">
                             <div class="input-group">
                                 <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
                                 <select id="typeIndividu" class="form-select" name="typeIndividu" onchange="this.form.submit();">
@@ -49,8 +49,10 @@
                         </div>
                         <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
                             <input class="btn btn-success" type="submit" value="Rechercher">
-                            <a class="btn btn-secondary" id="btnClear" th:href="@{/dossiers}">Effacer</a>
+                            <a class="btn btn-secondary d-none d-lg-inline" id="btnClear" th:href="@{/dossiers}">Effacer</a>
                             <a class="btn btn-primary" th:href="@{/individus/create}">Ajouter un individu</a>
+                            <a class="btn btn-primary" th:href="@{exports/export-to-csv(year=${yearFilter})}">
+                               Exporter les dossiers</a>
                         </div>
                     </div>
                 </form>
