@@ -73,9 +73,8 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setNfic(enqueteForm.getNfic());
-        enqueteToUpdate.setNumetu(enqueteForm.getNumetu());
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        enqueteToUpdate.setTypeFrmn(enqueteForm.getTypeFrmn());
+        enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
         enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
         enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
@@ -162,6 +161,7 @@ public class EnqueteService {
         Enquete enquete = new Enquete();
         Dossier dossier = dossierService.getById(id);
         enquete.setDossier(dossier);
+        enquete.setNumetu(dossier.getIndividu().getNumEtu());
         return enqueteRepository.save(enquete);
     }
 
@@ -170,13 +170,13 @@ public class EnqueteService {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         if(dossier.getYear() == utilsService.getCurrentYear()) {
-            enquete.setAn(String.valueOf(dossier.getYear()));
+            enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
             if(dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
                 enquete.setSexe("0");
             } else if(dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
                 enquete.setSexe("1");
             }
-            enquete.setTypeFrmn(dossier.getTypeFormation());
+            enquete.setTypFrmn(dossier.getTypeFormation());
             enquete.setModFrmn(dossier.getModeFormation());
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {
@@ -296,6 +296,14 @@ public class EnqueteService {
             }
         }
         return slimSelectDtos;
+    }
+
+    public Enquete findByDossierId(Long dossierId) {
+        return enqueteRepository.findByDossierId(dossierId).get();
+    }
+
+    public List<Enquete> findAllByDossierYear(int year){
+        return enqueteRepository.findAllByDossierYear(year);
     }
 
 

@@ -12,7 +12,7 @@ import org.esupportail.esupagape.entity.enums.Taux;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -96,7 +96,7 @@ public class DossierController {
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("etats", Etat.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
-        model.addAttribute("typeFormations", TypeFrmn.values());
+        model.addAttribute("typeFormations", TypFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
 //        model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));

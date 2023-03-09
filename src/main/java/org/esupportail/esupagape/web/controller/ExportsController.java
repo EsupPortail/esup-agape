@@ -1,9 +1,12 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
+import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.service.CsvExportService;
 import org.esupportail.esupagape.service.ExportService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,8 @@ import java.util.List;
 @RequestMapping("/exports")
 public class ExportsController {
 
-   private final ExportService exportService;
+    private static final Logger logger = LoggerFactory.getLogger(ExportsController.class);
+    private final ExportService exportService;
     private final CsvExportService csvService;
     private final UtilsService utilsService;
     public ExportsController(ExportService exportService, CsvExportService csvService, UtilsService utilsService) {
@@ -75,4 +79,20 @@ public class ExportsController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping("/export-enquete-to-csv")
+    public void exportEnqueteToCsv(
+            @RequestParam(required = false) Integer year,
+            HttpServletResponse response) {
+        List<EnqueteForm> enqueteForms = exportService.findEnqueteByYearForCSV(year);
+        String fileName = "enquetes.csv";
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+        try (Writer writer = response.getWriter()) {
+            csvService.writeEnquetesToCsv(enqueteForms, writer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

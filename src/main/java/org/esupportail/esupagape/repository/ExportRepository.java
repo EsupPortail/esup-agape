@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.repository;
 
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
+import org.esupportail.esupagape.dtos.EnqueteForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -96,4 +97,48 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             order by i.name
             """)
     List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year);
+
+    @Query("""
+            select 
+            new org.esupportail.esupagape.dtos.EnqueteForm(
+            d.id,
+            e.numetu,
+            e.an,
+            e.sexe,
+            e.typFrmn,
+            e.modFrmn,
+            e.codSco,
+            e.codFmt,
+            e.codFil,
+            e.codHd,
+            e.hdTmp,
+            e.com,
+            e.codPfpp,
+            e.codPfas,
+            e.interpH,
+            e.codeurH,
+            e.aidHNat,
+            e.autAE,
+            e.autAA)
+            from Enquete e 
+            join Dossier d
+            on e.dossier.id = d.id
+            where d.year = :year""")
+    List<EnqueteForm> findByEnqueteByYearForCSV(Integer year);
+
+
+
+   /* @Query("""
+        select
+            new org.esupportail.esupagape.dtos.EnqueteExportCsv(
+            d.id,
+            e.numetu,
+            e.an,
+            e.typeFrmn)
+            from Enquete e
+            join Dossier d
+            on e.dossier.id = d.id
+            where d.year = :year""")
+    List<EnqueteExportCsv> findEnqueteByYearForCSV(Integer year);*/
+
 }

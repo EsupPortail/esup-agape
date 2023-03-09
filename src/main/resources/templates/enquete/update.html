@@ -44,7 +44,7 @@
                                                     name="an"
                                                     class="form-control"
                                                     type="text"
-                                                    th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}">
+                                                    th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'yyyy')}">
                                         </div>
                                     </div>
                                     <div>
@@ -60,14 +60,14 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="mt-1 form-label" th:for="typeFrmns">Type formation<span th:text="${currentDossier.typeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
+                                        <label class="mt-1 form-label" th:for="typFrmns">Type formation<span th:text="${currentDossier.typeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
                                         <div>
-                                            <select id="typeFormation" name="typeFrmn" type="text" class="form-control" disabled>
+                                            <select id="typeFormation" name="typFrmn" type="text" class="form-control" disabled>
                                                 <option value="" disabled selected></option>
                                                 <option th:selected="${currentDossier.typeFormation == typeFormation}"
-                                                        th:each="typeFormation : ${typeFrmns}"
+                                                        th:each="typeFormation : ${typFrmns}"
                                                         th:value="${typeFormation}"
-                                                        th:text="#{'enquete.typeFrmn.' +${typeFormation}}"></option>
+                                                        th:text="#{'enquete.typFrmn.' +${typeFormation}}"></option>
                                             </select>
                                         </div>
                                     </div>

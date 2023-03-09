@@ -1,10 +1,32 @@
 package org.esupportail.esupagape.entity;
 
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Autorisation;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.RentreeProchaine;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.Taux;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +74,7 @@ public class Dossier {
     private Taux taux;
 
     @Enumerated(EnumType.STRING)
-    private TypeFrmn typeFormation;
+    private TypFrmn typeFormation;
 
     @Enumerated(EnumType.STRING)
     private ModFrmn modeFormation;
@@ -207,11 +229,11 @@ public class Dossier {
         this.taux = taux;
     }
 
-    public TypeFrmn getTypeFormation() {
+    public TypFrmn getTypeFormation() {
         return typeFormation;
     }
 
-    public void setTypeFormation(TypeFrmn typeFormation) {
+    public void setTypeFormation(TypFrmn typeFormation) {
         this.typeFormation = typeFormation;
     }
 

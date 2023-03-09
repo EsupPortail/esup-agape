@@ -22,7 +22,7 @@ public class Enquete {
     private String sexe;
 
     @Enumerated(EnumType.STRING)
-    private TypeFrmn typeFrmn;
+    private TypFrmn typFrmn;
 
     @Enumerated(EnumType.STRING)
     private ModFrmn modFrmn;
@@ -125,12 +125,12 @@ public class Enquete {
         this.sexe = sexe;
     }
 
-    public TypeFrmn getTypeFrmn() {
-        return typeFrmn;
+    public TypFrmn getTypFrmn() {
+        return typFrmn;
     }
 
-    public void setTypeFrmn(TypeFrmn typeFrmn) {
-        this.typeFrmn = typeFrmn;
+    public void setTypFrmn(TypFrmn typFrmn) {
+        this.typFrmn = typFrmn;
     }
 
     public ModFrmn getModFrmn() {

@@ -153,7 +153,7 @@
                                             <option value="" disabled selected>Choisir</option>
                                             <option th:selected="${currentDossier.typeFormation == typeFormation}"
                                                     th:each="typeFormation : ${typeFormations}"
-                                                    th:text="#{'enquete.typeFrmn.' +${typeFormation}}"
+                                                    th:text="#{'enquete.typFrmn.' +${typeFormation}}"
                                                     th:value="${typeFormation}"></option>
                                         </select>
                                     </div>

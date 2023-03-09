@@ -17,7 +17,7 @@ import org.esupportail.esupagape.entity.enums.TypeEpreuve;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypeFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,7 +47,7 @@ public interface DossierCompletCSVDto {
     Taux getTaux();
     Set<TypeSuiviHandisup> getTypeSuiviHandisup();
     String getCommentaire();
-    TypeFrmn getTypeFormation();
+    TypFrmn getTypeFormation();
     ModFrmn getModeFormation();
     String getSite();
     String getLibelleFormation();

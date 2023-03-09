@@ -47,7 +47,7 @@ public class EnqueteController {
     }
 
     private void setModel(Model model) {
-        model.addAttribute("typeFrmns", TypeFrmn.values());
+        model.addAttribute("typFrmns", TypFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("codFils", enqueteService.getCodFils());
         model.addAttribute("codHds", CodHd.values());
