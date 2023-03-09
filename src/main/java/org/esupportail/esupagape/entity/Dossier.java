@@ -1,32 +1,10 @@
 package org.esupportail.esupagape.entity;
 
-import org.esupportail.esupagape.entity.enums.Autorisation;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.Etat;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.RentreeProchaine;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.Taux;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -134,9 +112,6 @@ public class Dossier {
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
-
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Enquete enquete;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> attachments;
@@ -435,14 +410,6 @@ public class Dossier {
 
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
-    }
-
-    public Enquete getEnquete() {
-        return enquete;
-    }
-
-    public void setEnquete(Enquete enquete) {
-        this.enquete = enquete;
     }
 
     public List<Document> getAttachments() {
