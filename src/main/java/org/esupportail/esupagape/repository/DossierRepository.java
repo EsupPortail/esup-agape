@@ -41,7 +41,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     List<Dossier> findAllByIndividuId(Long id);
 
-    @Query("select distinct d.codComposante as cod, trim(d.composante) as libelle from Dossier d order by cod")
+    @Query("select distinct d.codComposante as cod, d.composante as libelle from Dossier d order by cod")
     List<ComposanteDto> findAllComposantes();
 
 }
