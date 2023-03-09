@@ -118,7 +118,7 @@
                                     <div>
                                         <label class="mt-1 form-label" th:for="codHd">Type de handicap</label>
                                         <div>
-                                            <select id="_codHd_id" name="codHd" class="form-select" size="1">
+                                            <select id="_codHd_id" name="codHd" class="form-select" size="1" disabled>
                                                 <option disabled selected value="nul">Choisir</option>
                                                 <option th:selected="${enumCodHd == enquete.codHd}"
                                                         th:each="enumCodHd : ${codHds}"
@@ -128,7 +128,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}" style="width: 15px; height: 15px;">
+                                        <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}" disabled style="width: 15px; height: 15px;">
                                         <label class="form-label mt-2" th:for="hdTmp">Handicap temporaire
                                         </label>
                                     </div>
