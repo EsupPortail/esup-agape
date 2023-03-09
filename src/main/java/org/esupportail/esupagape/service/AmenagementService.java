@@ -83,6 +83,9 @@ public class AmenagementService {
         if(dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
+        if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
+            throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
+        }
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
             dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
         }

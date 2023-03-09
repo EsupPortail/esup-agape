@@ -58,8 +58,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         typeAmenagementInput.addEventListener("change", function (e) {
             if (this.value === "DATE") {
                 document.getElementById("amenagement-end-date").classList.remove("d-none");
+                document.getElementById("end-date").required = true;
             } else {
                 document.getElementById("amenagement-end-date").classList.add("d-none");
+                document.getElementById("end-date").required = false;
             }
         });
     }

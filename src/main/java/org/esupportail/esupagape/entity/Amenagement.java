@@ -28,9 +28,6 @@ public class Amenagement {
     private Boolean mailIndividu = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime startDate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
@@ -116,14 +113,6 @@ public class Amenagement {
 
     public void setMailIndividu(Boolean mailIndividu) {
         this.mailIndividu = mailIndividu;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
     }
 
     public LocalDateTime getEndDate() {
