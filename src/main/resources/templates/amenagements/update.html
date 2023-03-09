@@ -44,13 +44,13 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="amenagement-end-date" class="row mb-1 align-items-baseline d-none">
+                        <div id="amenagement-end-date" class="row mb-1 align-items-baseline" th:classappend="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? '' : 'd-none'">
                             <div class="col-4" style="width: 250px;">
                                 <label th:for="end-date" class="form-label">Date de fin</label>
                             </div>
                             <div class="col-12 col-xxl-8">
                                 <input id="end-date" type="date" class="form-control" th:name="endDate"
-                                       th:value="${now}">
+                                       th:value="${#temporals.format(amenagement.endDate, 'yyyy-MM-dd')}">
                                 <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error"
                                    th:errors="*{endDate}"></p>
                             </div>
