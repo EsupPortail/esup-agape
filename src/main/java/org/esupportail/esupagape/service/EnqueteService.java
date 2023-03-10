@@ -150,7 +150,7 @@ public class EnqueteService {
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
         enqueteToUpdate.getCodMeaa().clear();
         enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
-        enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
+        //enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
         enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
         enqueteToUpdate.setNewNum(enqueteForm.getNewNum());

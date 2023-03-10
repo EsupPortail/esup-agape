@@ -101,8 +101,8 @@ public class EnqueteForm {
     @CsvBindByPosition(position = 26)
     private CodMeaa codMeaaStructure;
 
-    @CsvBindAndSplitByPosition(position = 27, elementType = CodMeaa.class)
-    private Set<CodMeaa> codMeaa = new HashSet<>();
+    @CsvBindAndSplitByPosition(position = 27, elementType = String.class)
+    private Set<String> codMeaa = new HashSet<>();
 
     @CsvBindAndSplitByPosition(position = 41, elementType = String.class, writeDelimiter = "")
     private Set<String> codAmLs = new HashSet<>();
@@ -371,11 +371,11 @@ public class EnqueteForm {
         this.codMeaaStructure = codMeaaStructure;
     }
 
-    public Set<CodMeaa> getCodMeaa() {
+    public Set<String> getCodMeaa() {
         return codMeaa;
     }
 
-    public void setCodMeaa(Set<CodMeaa> codMeaa) {
+    public void setCodMeaa(Set<String> codMeaa) {
         this.codMeaa = codMeaa;
     }
 
