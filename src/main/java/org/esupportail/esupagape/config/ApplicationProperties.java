@@ -9,6 +9,11 @@ import org.springframework.validation.annotation.Validated;
 public class ApplicationProperties {
 
     /**
+     * Code établissement
+     */
+    private String codeEtab;
+
+    /**
      * Adresse email du contact technique de l’application
      */
     private String applicationEmail = "esup.agape@univ-ville.fr";
@@ -30,6 +35,24 @@ public class ApplicationProperties {
      * Ex : https://esup-signature.univ-ville.fr
      */
     private String esupSignatureUrl = "";
+
+    String papercutAuthToken;
+
+    String papercutServer;
+
+    String papercutScheme = "http";
+
+    int papercutPort;
+
+    String papercutAccountName = "";
+
+    public String getCodeEtab() {
+        return codeEtab;
+    }
+
+    public void setCodeEtab(String codeEtab) {
+        this.codeEtab = codeEtab;
+    }
 
     public String getApplicationEmail() {
         return applicationEmail;
@@ -61,5 +84,45 @@ public class ApplicationProperties {
 
     public void setEsupSignatureUrl(String esupSignatureUrl) {
         this.esupSignatureUrl = esupSignatureUrl;
+    }
+
+    public String getPapercutAuthToken() {
+        return papercutAuthToken;
+    }
+
+    public void setPapercutAuthToken(String papercutAuthToken) {
+        this.papercutAuthToken = papercutAuthToken;
+    }
+
+    public String getPapercutServer() {
+        return papercutServer;
+    }
+
+    public void setPapercutServer(String papercutServer) {
+        this.papercutServer = papercutServer;
+    }
+
+    public String getPapercutScheme() {
+        return papercutScheme;
+    }
+
+    public void setPapercutScheme(String papercutScheme) {
+        this.papercutScheme = papercutScheme;
+    }
+
+    public int getPapercutPort() {
+        return papercutPort;
+    }
+
+    public void setPapercutPort(int papercutPort) {
+        this.papercutPort = papercutPort;
+    }
+
+    public String getPapercutAccountName() {
+        return papercutAccountName;
+    }
+
+    public void setPapercutAccountName(String papercutAccountName) {
+        this.papercutAccountName = papercutAccountName;
     }
 }
