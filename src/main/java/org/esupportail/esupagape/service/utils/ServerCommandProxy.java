@@ -21,7 +21,7 @@ import java.util.Vector;
  * See README.txt for details.
  */
 public class ServerCommandProxy {
-    
+
     private final XmlRpcClient _xmlRpcClient;
     private final String _authToken;
 
