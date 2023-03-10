@@ -308,4 +308,5 @@ public class Enquete {
     public void setDossier(Dossier dossier) {
         this.dossier = dossier;
     }
+
 }

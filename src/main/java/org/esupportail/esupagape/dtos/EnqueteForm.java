@@ -5,7 +5,6 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
 import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
@@ -93,8 +92,8 @@ public class EnqueteForm {
     @CsvBindByPosition(position = 23)
     private String aidHNat;
 
-    @CsvBindByPosition(position = 24)
-    private Set<CodMeae> codMeae = new HashSet<>();
+    @CsvBindAndSplitByPosition(position = 24, elementType = String.class)
+    private Set<String> codMeae = new HashSet<>();
 
     @CsvBindByPosition(position = 25)
     private String autAE;
@@ -348,11 +347,11 @@ public class EnqueteForm {
         this.aidHNat = aidHNat;
     }
 
-    public Set<CodMeae> getCodMeae() {
+    public Set<String> getCodMeae() {
         return codMeae;
     }
 
-    public void setCodMeae(Set<CodMeae> codMeae) {
+    public void setCodMeae(Set<String> codMeae) {
         this.codMeae = codMeae;
     }
 

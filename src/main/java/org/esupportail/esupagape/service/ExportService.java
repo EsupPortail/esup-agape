@@ -58,8 +58,13 @@ public class ExportService {
             //codAmLs = new LinkedHashSet<>(codAmLOrdered);
             Set<String> stringsOrdered = new LinkedHashSet<>(stringsCodAmL);
 
+            List<CodMeae> codMeaeOrdered = new ArrayList<>(codMeaes).stream().sorted().toList();
+            List<String> stringsCodMeae = codMeaeOrdered.stream().map(codMeae -> codMeae.name().toLowerCase()).toList();
+            Set<String> stringsCodMeaeOrdered = new LinkedHashSet<>(stringsCodMeae);
+
             logger.info(stringsOrdered.toString());
 
+            logger.info(stringsCodMeaeOrdered.toString());
 
             EnqueteForm enqueteForm = new EnqueteForm();
             enqueteForm.setId(enquete.getId());
@@ -79,7 +84,7 @@ public class ExportService {
             enqueteForm.setCodPfas(enquete.getCodPfas());
             enqueteForm.setAutAE(enquete.getAutAE());
             enqueteForm.setAutAA(enquete.getAutAA());
-            enqueteForm.setCodMeae(codMeaes);
+            enqueteForm.setCodMeae(stringsCodMeaeOrdered);
             enqueteForm.setCodMeaa(codMeaas);
             enqueteForm.setCodAmLs(stringsOrdered);
             enqueteForm.setDjaCop(enquete.getDjaCop());
