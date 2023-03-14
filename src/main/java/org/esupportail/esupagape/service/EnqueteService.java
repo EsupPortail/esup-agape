@@ -79,10 +79,18 @@ public class EnqueteService {
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
         enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
         enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
-        enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
-        enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
-        enqueteToUpdate.setCodFil(enqueteForm.getCodFil());
-        enqueteToUpdate.setCodHd(enqueteForm.getCodHd());
+        if(enqueteForm.getCodSco() != null) {
+            enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
+        }
+        if(enqueteForm.getCodFmt() != null) {
+            enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
+        }
+        if(enqueteForm.getCodFil() != null) {
+            enqueteToUpdate.setCodFil(enqueteForm.getCodFil());
+        }
+        if(enqueteForm.getCodHd() != null) {
+            enqueteToUpdate.setCodHd(enqueteForm.getCodHd());
+        }
         enqueteToUpdate.setHdTmp(enqueteForm.getHdTmp());
         enqueteToUpdate.setCom(enqueteForm.getCom());
         if (enqueteForm.getCodPfpp() != null) {
@@ -148,8 +156,6 @@ public class EnqueteService {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
         }
-        enqueteToUpdate.setCodAmL(enqueteForm.getCodAmL());
-        // enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
         enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
@@ -189,13 +195,15 @@ public class EnqueteService {
                 if (amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
                     enquete.getCodMeae().add(CodMeae.AE7);
                 }
-            } else {
-                enquete.getCodMeae().add(CodMeae.AE0);
             }
             if (StringUtils.hasText(enquete.getAutAE())) {
                 enquete.getCodMeae().add(CodMeae.AEo);
+                enquete.getCodMeae().remove(CodMeae.AE0);
             } else {
                 enquete.getCodMeae().remove(CodMeae.AEo);
+            }
+            if(enquete.getCodMeae().isEmpty()) {
+                enquete.getCodMeae().add(CodMeae.AE0);
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);

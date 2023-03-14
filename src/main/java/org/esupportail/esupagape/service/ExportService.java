@@ -166,9 +166,9 @@ public class ExportService {
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
                     enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
-                    enquete.getCodSco(),
-                    enquete.getCodFmt(),
-                    enquete.getCodFil(),
+                    enquete.getCodSco().toLowerCase(),
+                    enquete.getCodFmt().toLowerCase(),
+                    enquete.getCodFil().toLowerCase(),
                     enquete.getCodHd() != null ? enquete.getCodHd().name().toLowerCase() : "",
                     (enquete.getHdTmp()) ? "1" : "0",
                     enquete.getCom(),
@@ -178,11 +178,11 @@ public class ExportService {
                     enquete.getInterpH().toString(),
                     enquete.getCodeurH().toString(),
                     enquete.getAidHNat(),
-                    String.join("" ,enquete.getCodMeae().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList()),
+                    String.join("" ,enquete.getCodMeae().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAE(),
-                    String.join("" ,enquete.getCodMeaa().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList()),
+                    String.join("" ,enquete.getCodMeaa().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAA(),
-                    String.join("" ,enquete.getCodAmL().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList())
+                    String.join("" ,enquete.getCodAmL().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList())
             );
             enqueteExportCsvs.add(enqueteExportCsv);
         }

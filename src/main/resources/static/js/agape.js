@@ -130,6 +130,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion du formulaire enquete
+    let codMeae = document.getElementById("codMeae")
+    if(codMeae != null) {
+        let codMeaeSlim = new SlimSelect({
+            select: '#codMeae',
+            settings: {
+                showSearch: false,
+                placeholderText: 'Choisir',
+            },
+            events: {
+                afterChange: (newVals) => {
+                    if(newVals.length > 1) {
+                        newVals = newVals.filter(newVal => newVal.value !== "AE0");
+                        codMeaeSlim.setSelected(newVals.map(newVal => newVal.value));
+                    } else if(newVals.length === 0) {
+                        codMeaeSlim.setSelected("AE0");
+                    }
+                }
+            }
+        });
+        //Hack slimselect required
+        codMeae.style.display = "block";
+        codMeae.style.position = "absolute";
+        codMeae.style.marginTop = "15px";
+        codMeae.style.opacity = 0;
+        codMeae.style.zIndex = -1;
+    }
+
     let codMeaa = document.getElementById("codMeaa")
     if(codMeaa != null) {
         new SlimSelect({
@@ -139,9 +166,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 placeholderText: 'Choisir',
             },
             events: {
-                afterChange: (newVal) => {
-                    console.log(newVal);
-                    if(newVal.filter((v) => v.value === "AAo").length > 0) {
+                afterChange: (newVals) => {
+                    if(newVals.filter((v) => v.value === "AAo").length > 0) {
                         document.getElementById("autAADiv").classList.remove("d-none");
                     } else {
                         document.getElementById("autAADiv").classList.add("d-none");
@@ -178,9 +204,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             if(data.length > 1) {
                                 codSco.setData(data);
                                 codSco.enable();
-                                // document.getElementById("codScoDiv").classList.remove("d-none");
                             } else {
-                                // document.getElementById("codScoDiv").classList.add("d-none");
                                 codSco.setData([{text: '', value: ''}]);
                                 codSco.disable();
                             }
