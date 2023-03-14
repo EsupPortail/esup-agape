@@ -1,53 +1,47 @@
 package org.esupportail.esupagape.dtos;
 
+import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
+import org.esupportail.esupagape.entity.enums.enquete.CodHd;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
+import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
+import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
-public class EnqueteExportCsv {
+import java.util.Set;
 
-    private Long dossierId;
+public interface EnqueteExportCsv {
 
-    private String numEtu;
 
-    private String an;
+Long getId();
+String getYear();
+String getNfic();
+String getNumetu();
+String getAn();
+String getSexe();
+TypFrmn getTypFrmn();
+ModFrmn getModFrmn();
+String getCodSco();
+String getCodFmt();
+String getCodFil();
+CodHd getCodHd();
+Boolean getHdTmp();
+String getCom();
+CodPfpp getCodPfpp();
+CodPfas getCodPfas();
+Set<CodMeahF>getCodMeahF();
+Integer getInterpH();
+Integer getCodeurH();
+String getAidHNat();
+Set<CodMeae> getCodMeae();
+String getAutAE();
+Set<CodMeaa>getCodMeaa();
+String getAutAA();
+Set<CodAmL>getCodAmL();
+String getDjaCop();
+String getNewNum();
+String getNewId();
 
-    private TypFrmn typFrmn;
-
-    public EnqueteExportCsv() {
-    }
-
-    public EnqueteExportCsv(Long dossierId, String numEtu, String an, TypFrmn typFrmn) {
-        this.dossierId = dossierId;
-        this.numEtu = numEtu;
-        this.an = an;
-        this.typFrmn =typFrmn;
-
-    }
-
-    public Long getDossierId() {
-        return dossierId;
-    }
-
-    public void setDossierId(Long dossierId) {
-        this.dossierId = dossierId;
-    }
-
-    public String getNumEtu() {
-        return numEtu;
-    }
-
-    public void setNumEtu(String numEtu) {
-        this.numEtu = numEtu;
-    }
-
-    public String getAn() {
-        return an;
-    }
-
-    public void setAn(String an) {
-        this.an = an;
-    }
-
-    public TypFrmn getTypFrmn() {return typFrmn;}
-
-    public void setTypFrmn(TypFrmn typFrmn) {this.typFrmn = typFrmn;}
 }

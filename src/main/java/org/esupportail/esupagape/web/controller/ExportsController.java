@@ -1,7 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
-import org.esupportail.esupagape.dtos.EnqueteForm;
+import org.esupportail.esupagape.dtos.EnqueteExportCsv;
 import org.esupportail.esupagape.service.CsvExportService;
 import org.esupportail.esupagape.service.ExportService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -84,12 +84,12 @@ public class ExportsController {
     public void exportEnqueteToCsv(
             @RequestParam(required = false) Integer year,
             HttpServletResponse response) {
-        List<EnqueteForm> enqueteForms = exportService.findEnqueteByYearForCSV(year);
+        List<EnqueteExportCsv> enqueteExportCsvs = exportService.findEnqueteByYearForCSV(year);
         String fileName = "enquetes.csv";
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try (Writer writer = response.getWriter()) {
-            csvService.writeEnquetesToCsv(enqueteForms, writer);
+            csvService.writeEnquetesToCsv(enqueteExportCsvs, writer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,21 +1,14 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
-import org.esupportail.esupagape.dtos.EnqueteForm;
-import org.esupportail.esupagape.entity.Enquete;
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
+import org.esupportail.esupagape.dtos.EnqueteExportCsv;
 import org.esupportail.esupagape.repository.ExportRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ExportService {
@@ -45,59 +38,12 @@ public class ExportService {
     }
 
     @Transactional
-    public List<EnqueteForm> findEnqueteByYearForCSV(Integer year) {
-       // List<EnqueteForm> enqueteForms = exportRepository.findByEnqueteByYearForCSV(year);
-        List<EnqueteForm> enqueteForms = new ArrayList<>();
-        List<Enquete> enquetes = enqueteService.findAllByDossierYear(year);
-        for (Enquete enquete : enquetes) {
-            Set<CodMeae> codMeaes = enquete.getCodMeae();
-            Set<CodMeaa> codMeaas = enquete.getCodMeaa();
-            Set<CodAmL> codAmLs = enquete.getCodAmL();
-            List<CodAmL> codAmLOrdered = new ArrayList<>(codAmLs).stream().sorted().toList();
-            List<String> stringsCodAmL = codAmLOrdered.stream().map(codAmL -> codAmL.name().toLowerCase()).toList();
-            //codAmLs = new LinkedHashSet<>(codAmLOrdered);
-            Set<String> stringsOrdered = new LinkedHashSet<>(stringsCodAmL);
+    public List<EnqueteExportCsv> findEnqueteByYearForCSV(Integer year) {
+        List<EnqueteExportCsv> enqueteExportCsvs = exportRepository.findEnqueteByYearForCSV(year);
 
-            List<CodMeae> codMeaeOrdered = new ArrayList<>(codMeaes).stream().sorted().toList();
-            List<String> stringsCodMeae = codMeaeOrdered.stream().map(codMeae -> codMeae.name().toLowerCase()).toList();
-            Set<String> stringsCodMeaeOrdered = new LinkedHashSet<>(stringsCodMeae);
 
-            List<CodMeaa> codMeaaOrdered = new ArrayList<>(codMeaas).stream().sorted().toList();
-            List<String> stringsCodMeaa = codMeaaOrdered.stream().map(codMeaa -> codMeaa.name().toLowerCase()).toList();
-            Set<String>stringsCodMeaaOrdered = new LinkedHashSet<>(stringsCodMeaa);
+        return enqueteExportCsvs;
 
-            logger.info(stringsOrdered.toString());
-
-            logger.info(stringsCodMeaeOrdered.toString());
-
-            logger.info(stringsCodMeaaOrdered.toString());
-
-            EnqueteForm enqueteForm = new EnqueteForm();
-            enqueteForm.setId(enquete.getId());
-            enqueteForm.setNfic(enquete.getNfic());
-            enqueteForm.setNumetu(enquete.getNumetu());
-            enqueteForm.setAn(enquete.getAn());
-            enqueteForm.setSexe(enquete.getSexe());
-            enqueteForm.setTypFrmn(enquete.getTypFrmn());
-            enqueteForm.setModFrmn(enquete.getModFrmn());
-            enqueteForm.setCodSco(enquete.getCodSco());
-            enqueteForm.setCodFmt(enquete.getCodFmt());
-            enqueteForm.setCodFil(enquete.getCodFil());
-            enqueteForm.setCodHd(enquete.getCodHd());
-            enqueteForm.setHdTmp(enquete.getHdTmp());
-            enqueteForm.setCom(enquete.getCom());
-            enqueteForm.setCodPfpp(enquete.getCodPfpp());
-            enqueteForm.setCodPfas(enquete.getCodPfas());
-            enqueteForm.setAutAE(enquete.getAutAE());
-            enqueteForm.setAutAA(enquete.getAutAA());
-            enqueteForm.setCodMeae(stringsCodMeaeOrdered);
-            enqueteForm.setCodMeaa(stringsCodMeaaOrdered);
-            enqueteForm.setCodAmLs(stringsOrdered);
-            enqueteForm.setDjaCop(enquete.getDjaCop());
-
-            enqueteForms.add(enqueteForm);
-        }
-        return enqueteForms;
     }
-}
 
+}

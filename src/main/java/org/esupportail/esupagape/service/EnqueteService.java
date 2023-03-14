@@ -23,7 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EnqueteService {
@@ -69,7 +73,7 @@ public class EnqueteService {
     @Transactional
     public void update(Long id, EnqueteForm enqueteForm, Long dossierId) throws AgapeJpaException {
         Enquete enqueteToUpdate = getById(id);
-        if(enqueteToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+        if (enqueteToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setNfic(enqueteForm.getNfic());
@@ -141,16 +145,16 @@ public class EnqueteService {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
         }
-//        enqueteToUpdate.setCodAmL(enqueteForm.getCodAmL());
+        enqueteToUpdate.setCodAmL(enqueteForm.getCodAmL());
         // enqueteToUpdate.setCodMeahF(enqueteForm.getCodMeahF());
         enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
-      //  enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
+        enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
 
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
         enqueteToUpdate.getCodMeaa().clear();
         enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
-        //enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
+        enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
         enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
         enqueteToUpdate.setNewNum(enqueteForm.getNewNum());
@@ -170,11 +174,11 @@ public class EnqueteService {
     public Enquete getAndUpdateByDossierId(Long id) {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
-        if(dossier.getYear() == utilsService.getCurrentYear()) {
+        if (dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
-            if(dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
+            if (dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
                 enquete.setSexe("0");
-            } else if(dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
+            } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
                 enquete.setSexe("1");
             }
             enquete.setTypFrmn(dossier.getTypeFormation());
@@ -291,7 +295,7 @@ public class EnqueteService {
             slimSelectDtos.add(new SlimSelectDto("", ""));
             for (String codSco : codScos) {
                 SlimSelectDto slimSelectDto = new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);
-                if(slimSelectDto.getValue() != null) {
+                if (slimSelectDto.getValue() != null) {
                     slimSelectDtos.add(slimSelectDto);
                 }
             }
@@ -303,9 +307,9 @@ public class EnqueteService {
         return enqueteRepository.findByDossierId(dossierId).get();
     }
 
-    public List<Enquete> findAllByDossierYear(int year){
+
+    public List<Enquete> findAllByDossierYear(int year) {
         return enqueteRepository.findAllByDossierYear(year);
+
     }
-
-
 }

@@ -1,16 +1,10 @@
 package org.esupportail.esupagape.service;
 
-import com.opencsv.CSVWriter;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
-import org.esupportail.esupagape.dtos.EnqueteForm;
+import org.esupportail.esupagape.dtos.EnqueteExportCsv;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,11 +158,12 @@ public class CsvExportService {
     }
 
     private Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
+        put("nfic", "Nfic");
         put("id", "Id");
         put("year", "Année");
         put("numetu", "Numéro étudiant");
         put("an", "Année de naissance");
-        put("sexe", "Genre");
+        put("sexe", "Sexe");
         put("typFrmn", "Type formation");
         put("modFrmn", "Modalité formation");
         put("codSco", "Discipline");
@@ -179,6 +174,7 @@ public class CsvExportService {
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement spécifique");
+        put("codMeahF", "Mesures aides humaines");
         put("interpH", "Interprète: nombre d'heures");
         put("codeurH", "Codeur: nombre d'heures");
         put("aidHnat", "Autre aide humaine");
@@ -186,21 +182,25 @@ public class CsvExportService {
         put("autAE", "Autre aménagement des examens");
         put("codMeaa", "Autres aides");
         put("autAA", "Autres (à préciser");
+        put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
+        put("djaCop", "DjaCop");
+        put("newNum", "Nouveau numéro");
+        put("NewId", "Nouvel id");
     }};
 
-    public void writeEnquetesToCsv(List<EnqueteForm> enqueteForms, Writer writer) {
-        /*CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);
+    public void writeEnquetesToCsv(List<EnqueteExportCsv> enqueteExportCsvs, Writer writer) {
+        CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.EXCEL);
         csvFormat.setDelimiter(";");
         csvFormat.setQuote('"');
         csvFormat.setQuoteMode(QuoteMode.ALL);
         csvFormat.setHeader(enqueteCsv.values().toArray(String[]::new));
         try {
             CSVPrinter printer = new CSVPrinter(writer, csvFormat.build());
-            for (EnqueteExportCsv enqueteExportCsv : enquetes) {
+            for (EnqueteExportCsv enqueteExportCsv : enqueteExportCsvs) {
                 List<String> record = new ArrayList<>();
                 for (String methodName : enqueteCsv.keySet()) {
                     try {
-                        record.add(EnqueteForm.class.getDeclaredMethod("get" + StringUtils.capitalize(methodName)).invoke(enqueteExportCsv).toString());
+                        record.add(EnqueteExportCsv.class.getDeclaredMethod("get" + StringUtils.capitalize(methodName)).invoke(enqueteExportCsv).toString());
                     } catch (Exception e) {
                         record.add("");
                         logger.debug(methodName + " doesn't exist");
@@ -210,30 +210,7 @@ public class CsvExportService {
             }
         } catch (IOException e) {
             throw new AgapeRuntimeException("Enable to write export csv");
-        }*/
-        try {
-            CSVWriter csvWriter;
-            csvWriter = new CSVWriter(writer,
-                    ';',
-                    CSVWriter.NO_QUOTE_CHARACTER,
-                    CSVWriter.NO_ESCAPE_CHARACTER,
-                    CSVWriter.DEFAULT_LINE_END);
-
-            ColumnPositionMappingStrategy<EnqueteForm> mappingStrategy = new ColumnPositionMappingStrategy<>();
-            mappingStrategy.setType(EnqueteForm.class);
-            StatefulBeanToCsvBuilder<EnqueteForm> builder = new StatefulBeanToCsvBuilder<>(csvWriter);
-            StatefulBeanToCsv<EnqueteForm> beanWriter =  builder.withMappingStrategy(mappingStrategy).build();
-            beanWriter.write(enqueteForms);
-            csvWriter.close();
-            writer.close();
-        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-
 
     }
 }
