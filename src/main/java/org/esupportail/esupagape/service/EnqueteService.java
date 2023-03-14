@@ -76,7 +76,6 @@ public class EnqueteService {
         if (enqueteToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        enqueteToUpdate.setNfic(enqueteForm.getNfic());
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
         enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
         enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
@@ -95,12 +94,15 @@ public class EnqueteService {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
         } else {
             for (String AHS1 : enqueteForm.getAHS1()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
             }
             for (String AHS2 : enqueteForm.getAHS2()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
             }
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
             }
             if (StringUtils.hasText(enqueteForm.getAHS4())) {
@@ -111,6 +113,7 @@ public class EnqueteService {
                 }
             }
             if (StringUtils.hasText(enqueteForm.getAHS5())) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
             }
         }
@@ -156,9 +159,6 @@ public class EnqueteService {
         enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
         enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
-        enqueteToUpdate.setDjaCop(enqueteForm.getDjaCop());
-        enqueteToUpdate.setNewNum(enqueteForm.getNewNum());
-        enqueteToUpdate.setNewId(enqueteForm.getNewId());
         enqueteToUpdate.setDossier(dossierService.getById(dossierId));
     }
 
@@ -166,7 +166,6 @@ public class EnqueteService {
         Enquete enquete = new Enquete();
         Dossier dossier = dossierService.getById(id);
         enquete.setDossier(dossier);
-        enquete.setNumetu(dossier.getIndividu().getNumEtu());
         return enqueteRepository.save(enquete);
     }
 

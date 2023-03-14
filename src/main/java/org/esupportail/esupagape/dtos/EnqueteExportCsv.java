@@ -26,10 +26,8 @@ public class EnqueteExportCsv {
     String codMeaa;
     String autAA;
     String codAmL;
-    String djaCop;
-    String newNum;
 
-    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String djaCop, String newNum) {
+    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL) {
         this.nfic = nfic;
         this.id = id;
         this.numetu = numetu;
@@ -54,8 +52,6 @@ public class EnqueteExportCsv {
         this.codMeaa = codMeaa;
         this.autAA = autAA;
         this.codAmL = codAmL;
-        this.djaCop = djaCop;
-        this.newNum = newNum;
     }
 
     public String getNfic() {
@@ -250,19 +246,4 @@ public class EnqueteExportCsv {
         this.codAmL = codAmL;
     }
 
-    public String getDjaCop() {
-        return djaCop;
-    }
-
-    public void setDjaCop(String djaCop) {
-        this.djaCop = djaCop;
-    }
-
-    public String getNewNum() {
-        return newNum;
-    }
-
-    public void setNewNum(String newNum) {
-        this.newNum = newNum;
-    }
 }

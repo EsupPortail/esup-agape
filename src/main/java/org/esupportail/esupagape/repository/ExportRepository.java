@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.repository;
 
 import org.esupportail.esupagape.dtos.DossierCompletCSVDto;
-import org.esupportail.esupagape.dtos.EnqueteExportCsv;
 import org.esupportail.esupagape.entity.Dossier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -97,44 +96,5 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             order by i.name
             """)
     List<DossierCompletCSVDto> findEmailEtuByYearForCSV(Integer year);
-
-
-    @Query("""
-        select distinct d.id as id, 
-            e.numetu as numetu,
-            d.year as year,
-            e.nfic as nfic,
-            e.an as an,
-            e.sexe as sexe,
-            e.typFrmn as typFrmn,
-            e.modFrmn as modFrmn,
-            e.codSco as codSco,
-            e.codFmt as codFmt,
-            e.codFil as codFil,
-            e.codHd as codHd, 
-            e.hdTmp as hdTmp, 
-            e.com as com, 
-            e.codPfpp as codPfpp, 
-            e.codPfas as codPfas,
-            hF as codMeahF,
-            e.interpH as interpH,
-            e.codeurH as codeurH,
-            e.aidHNat as aidhNat,
-            ae as codMeae, 
-            e.autAE as autAE, 
-            aa as codMeaa, 
-            e.autAA as autAA, 
-            mL as codAmL,
-            e.djaCop as djaCop, 
-            e.newNum as newNum,
-            e.newId as newId
-            from Enquete e join Dossier d on e.dossier.id = d.id
-            left join e.codMeahF hF
-            left join e.codMeae ae
-            left join e.codMeaa aa
-            left join e.codAmL mL
-            where (:year is null or d.year = :year)
-            order by an desc """)
-    List<EnqueteExportCsv> findEnqueteByYearForCSV(Integer year);
 
 }

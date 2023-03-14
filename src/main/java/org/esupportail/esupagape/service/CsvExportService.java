@@ -36,7 +36,7 @@ public class CsvExportService {
         }
     }
 
-    private Map<String, String> dossierCompletCsv = new LinkedHashMap<>() {{
+    private final Map<String, String> dossierCompletCsv = new LinkedHashMap<>() {{
         put("id", "Id");
         put("year", "Année");
         put("numEtu", "Numéro étudiant");
@@ -157,10 +157,9 @@ public class CsvExportService {
         }
     }
 
-    private Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
+    private final Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
         put("nfic", "Nfic");
         put("id", "Id");
-        put("year", "Année");
         put("numetu", "Numéro étudiant");
         put("an", "Année de naissance");
         put("sexe", "Sexe");
@@ -183,9 +182,6 @@ public class CsvExportService {
         put("codMeaa", "Autres aides");
         put("autAA", "Autres (à préciser");
         put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
-        put("djaCop", "DjaCop");
-        put("newNum", "Nouveau numéro");
-        put("NewId", "Nouvel id");
     }};
 
     public void writeEnquetesToCsv(List<EnqueteExportCsv> enqueteExportCsvs, Writer writer) {

@@ -65,7 +65,7 @@ public class ExportService {
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     enquete.getCodPfas() != null ? enquete.getCodPfas().name().toLowerCase() : "",
-                    String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList()),
+                    String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getInterpH().toString(),
                     enquete.getCodeurH().toString(),
                     enquete.getAidHNat(),
@@ -73,9 +73,7 @@ public class ExportService {
                     enquete.getAutAE(),
                     String.join("" ,enquete.getCodMeaa().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList()),
                     enquete.getAutAA(),
-                    String.join("" ,enquete.getCodAmL().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList()),
-                    enquete.getDjaCop(),
-                    enquete.getNewNum()
+                    String.join("" ,enquete.getCodAmL().stream().map(codMeahF -> codMeahF.name().toLowerCase()).toList())
             );
             enqueteExportCsvs.add(enqueteExportCsv);
         }

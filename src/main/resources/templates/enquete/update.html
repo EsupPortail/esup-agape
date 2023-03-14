@@ -194,11 +194,11 @@
                                                             <input th:name="${enumLibelleCodMeahF}"
                                                                     th:type="${codMeahF.name().startsWith('AHS1') || codMeahF.name().startsWith('AHS2')} ? 'checkbox' : 'radio'"
                                                                     th:value="${codMeahF}"
-                                                                    th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
+                                                                    th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
                                                                     th:checked="${enquete.codMeahF.contains(codMeahF)}">
                                                             <label class="me-2"
                                                                     th:text="#{'enquete.codMeahF.' + ${codMeahF}}"
-                                                                    th:if="${codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
+                                                                    th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
                                                         </th:block>
                                                         <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
                                                             <input th:name="${enumLibelleCodMeahF}"

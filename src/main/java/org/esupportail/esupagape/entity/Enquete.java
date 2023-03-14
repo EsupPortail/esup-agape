@@ -13,10 +13,6 @@ public class Enquete {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String nfic;
-
-    private String numetu;
-
     private String an;
 
     private String sexe;
@@ -76,12 +72,6 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private Set<CodAmL> codAmL = new HashSet<>();
 
-    private String djaCop;
-
-    private String newNum;
-
-    private String newId;
-
     @OneToOne(optional = false)
     private Dossier dossier;
 
@@ -91,22 +81,6 @@ public class Enquete {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNfic() {
-        return nfic;
-    }
-
-    public void setNfic(String nfic) {
-        this.nfic = nfic;
-    }
-
-    public String getNumetu() {
-        return numetu;
-    }
-
-    public void setNumetu(String numetu) {
-        this.numetu = numetu;
     }
 
     public String getAn() {
@@ -275,30 +249,6 @@ public class Enquete {
 
     public void setCodAmL(Set<CodAmL> codAmL) {
         this.codAmL = codAmL;
-    }
-
-    public String getDjaCop() {
-        return djaCop;
-    }
-
-    public void setDjaCop(String djaCop) {
-        this.djaCop = djaCop;
-    }
-
-    public String getNewNum() {
-        return newNum;
-    }
-
-    public void setNewNum(String newNum) {
-        this.newNum = newNum;
-    }
-
-    public String getNewId() {
-        return newId;
-    }
-
-    public void setNewId(String newId) {
-        this.newId = newId;
     }
 
     public Dossier getDossier() {

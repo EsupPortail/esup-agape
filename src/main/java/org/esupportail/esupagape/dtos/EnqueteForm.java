@@ -17,8 +17,6 @@ import java.util.Set;
 public class EnqueteForm {
 
     private Long id;
-    private String nfic;
-    private String numetu;
     private String an;
     private String sexe;
     private TypFrmn typFrmn;
@@ -56,9 +54,6 @@ public class EnqueteForm {
     private String AM6;
     private String AM7;
     private String AM8;
-    private String djaCop;
-    private String newNum;
-    private String newId;
 
     public Long getId() {
         return id;
@@ -66,22 +61,6 @@ public class EnqueteForm {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNfic() {
-        return nfic;
-    }
-
-    public void setNfic(String nfic) {
-        this.nfic = nfic;
-    }
-
-    public String getNumetu() {
-        return numetu;
-    }
-
-    public void setNumetu(String numetu) {
-        this.numetu = numetu;
     }
 
     public String getAn() {
@@ -373,27 +352,4 @@ public class EnqueteForm {
         this.AM8 = AM8;
     }
 
-    public String getDjaCop() {
-        return djaCop;
-    }
-
-    public void setDjaCop(String djaCop) {
-        this.djaCop = djaCop;
-    }
-
-    public String getNewNum() {
-        return newNum;
-    }
-
-    public void setNewNum(String newNum) {
-        this.newNum = newNum;
-    }
-
-    public String getNewId() {
-        return newId;
-    }
-
-    public void setNewId(String newId) {
-        this.newId = newId;
-    }
 }
