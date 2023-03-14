@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ExportRepository extends JpaRepository <Dossier, Long> {
     @Query("""
-            select distinct d.id as id, 
+            select d.id as id,
             d.year as year,
             i.numEtu as numEtu, 
             i.codeIne as codeIne,

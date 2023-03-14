@@ -1,21 +1,6 @@
 package org.esupportail.esupagape.dtos;
 
-import org.esupportail.esupagape.entity.enums.Autorisation;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.FonctionAidant;
-import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
-import org.esupportail.esupagape.entity.enums.StatusAmenagement;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.Taux;
-import org.esupportail.esupagape.entity.enums.TempsMajore;
-import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
-import org.esupportail.esupagape.entity.enums.TypeAmenagement;
-import org.esupportail.esupagape.entity.enums.TypeEpreuve;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
@@ -93,4 +78,5 @@ public interface DossierCompletCSVDto {
     LocalDateTime getValideMedecinDate();
     LocalDateTime getAdministrationDate();
     LocalDateTime getDeleteDate();
+
 }
