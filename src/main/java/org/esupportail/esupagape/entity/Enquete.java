@@ -51,9 +51,9 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private Set<CodMeahF> codMeahF = new HashSet<>();
 
-    private Integer interpH;
+    private Integer interpH = 0;
 
-    private Integer codeurH;
+    private Integer codeurH = 0;
 
     @Column(columnDefinition = "TEXT")
     private String aidHNat;

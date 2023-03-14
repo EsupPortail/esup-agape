@@ -320,7 +320,7 @@
                                                                 <input th:id="'X' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
                                                                         type="radio"
                                                                         th:value="${enumLibelleCodAmL} + 'X'"
-                                                                        th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
+                                                                        th:checked="${enquete.codAmL.isEmpty() || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
                                                                 <label th:for="'X' + ${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
                                                             </div>
                                                         </div>

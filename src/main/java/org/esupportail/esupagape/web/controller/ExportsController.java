@@ -71,6 +71,7 @@ public class ExportsController {
         List<DossierCompletCSVDto> dossierCompletCSVDtos = exportService.findEmailEtuByYearForCSV(year);
         String fileName = "emails.csv";
         response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try (Writer writer = response.getWriter()) {
             csvService.writeEmailsToCsv(dossierCompletCSVDtos, writer);
@@ -87,6 +88,7 @@ public class ExportsController {
         List<EnqueteExportCsv> enqueteExportCsvs = exportService.findEnqueteByYearForCSV(year);
         String fileName = "enquetes.csv";
         response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try (Writer writer = response.getWriter()) {
             csvService.writeEnquetesToCsv(enqueteExportCsvs, writer);
