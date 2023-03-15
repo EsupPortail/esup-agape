@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.repository;
 
-import org.esupportail.esupagape.dtos.EntretienAttachement;
+import org.esupportail.esupagape.dtos.EntretienAttachementDto;
 import org.esupportail.esupagape.entity.Entretien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +21,6 @@ public interface EntretienRepository extends JpaRepository <Entretien, Long> {
             "left join Document d on e.id = d.parentId " +
             "where e.dossier.id = :dossierId " +
             "group by e.id")
-    Page<EntretienAttachement> findEntretiensWithAttachementsByDossierId(Long dossierId, Pageable pageable);
+    Page<EntretienAttachementDto> findEntretiensWithAttachementsByDossierId(Long dossierId, Pageable pageable);
 
 }

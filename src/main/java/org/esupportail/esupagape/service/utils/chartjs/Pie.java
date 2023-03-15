@@ -1,14 +1,14 @@
-package org.esupportail.esupagape.dtos.charjs;
+package org.esupportail.esupagape.service.utils.chartjs;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Doughnut implements Chart {
+public class Pie implements Chart {
 
-    String type = "doughnut";
+    String type = "pie";
     Data data;
 
-    public Doughnut(Data data) {
+    public Pie(Data data) {
         this.data = data;
     }
 

@@ -4,7 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.config.ApplicationProperties;
-import org.esupportail.esupagape.dtos.EnqueteExportCsv;
+import org.esupportail.esupagape.dtos.csvs.EnqueteExportCsv;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.ExportRepository;

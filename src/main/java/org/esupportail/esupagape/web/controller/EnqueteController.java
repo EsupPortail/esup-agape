@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.dtos.EnqueteForm;
+import org.esupportail.esupagape.dtos.forms.EnqueteForm;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;

@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.dtos.DossierIndividuForm;
+import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Etat;

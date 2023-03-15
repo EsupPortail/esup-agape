@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.dtos.csvs;
 
 public class EnqueteExportCsv {
 

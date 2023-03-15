@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos.charjs;
+package org.esupportail.esupagape.service.utils.chartjs;
 
 public interface Chart {
 

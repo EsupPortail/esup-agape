@@ -4,7 +4,7 @@ import org.esupportail.esupagape.entity.enums.TypeContact;
 
 import java.time.LocalDateTime;
 
-public interface EntretienAttachement {
+public interface EntretienAttachementDto {
 
     Long getId();
 

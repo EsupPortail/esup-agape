@@ -1,10 +1,11 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.service.utils.slimselect;
 
-public class SlimSelectDto {
+public class SlimSelectData {
+
     String text;
     String value;
 
-    public SlimSelectDto(String text, String value) {
+    public SlimSelectData(String text, String value) {
         this.text = text;
         this.value = value;
     }

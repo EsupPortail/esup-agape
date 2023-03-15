@@ -1,7 +1,7 @@
 package org.esupportail.esupagape.service;
 
-import org.esupportail.esupagape.dtos.EnqueteForm;
-import org.esupportail.esupagape.dtos.SlimSelectDto;
+import org.esupportail.esupagape.dtos.forms.EnqueteForm;
+import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
@@ -283,25 +283,25 @@ public class EnqueteService {
         return codFmts;
     }
 
-    public List<SlimSelectDto> getSlimSelectDtosOfCodFmts(String codFil) {
+    public List<SlimSelectData> getSlimSelectDtosOfCodFmts(String codFil) {
         List<String> codFmts = getCodFmtByCodFil(codFil);
-        List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
+        List<SlimSelectData> slimSelectDtos = new ArrayList<>();
         if (codFmts.size() > 0) {
-            slimSelectDtos.add(new SlimSelectDto("", ""));
+            slimSelectDtos.add(new SlimSelectData("", ""));
             for (String codFmt : codFmts) {
-                slimSelectDtos.add(new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
+                slimSelectDtos.add(new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
             }
         }
         return slimSelectDtos;
     }
 
-    public List<SlimSelectDto> getSlimSelectDtosOfCodScos(String codFmt) {
+    public List<SlimSelectData> getSlimSelectDtosOfCodScos(String codFmt) {
         List<String> codScos = getCodScoByCodFmt(codFmt);
-        List<SlimSelectDto> slimSelectDtos = new ArrayList<>();
+        List<SlimSelectData> slimSelectDtos = new ArrayList<>();
         if (codScos.size() > 0) {
-            slimSelectDtos.add(new SlimSelectDto("", ""));
+            slimSelectDtos.add(new SlimSelectData("", ""));
             for (String codSco : codScos) {
-                SlimSelectDto slimSelectDto = new SlimSelectDto(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);
+                SlimSelectData slimSelectDto = new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);
                 if (slimSelectDto.getValue() != null) {
                     slimSelectDtos.add(slimSelectDto);
                 }

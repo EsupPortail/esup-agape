@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.dtos.forms;
 
 import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
 import org.esupportail.esupagape.entity.enums.enquete.CodHd;

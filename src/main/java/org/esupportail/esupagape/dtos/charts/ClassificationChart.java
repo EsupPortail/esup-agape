@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.dtos.charts;
 
 public interface ClassificationChart {
 

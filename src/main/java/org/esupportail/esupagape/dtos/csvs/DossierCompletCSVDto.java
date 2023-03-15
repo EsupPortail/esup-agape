@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.dtos.csvs;
 
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;

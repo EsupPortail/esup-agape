@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.dtos.SlimSelectDto;
+import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -24,7 +24,7 @@ public class WsSecureController {
 
     @GetMapping("/enquete/cod-fmt")
     @ResponseBody
-    public List<SlimSelectDto> getCodFmt(@RequestParam String codFil) {
+    public List<SlimSelectData> getCodFmt(@RequestParam String codFil) {
         if(StringUtils.hasText(codFil)) {
             return enqueteService.getSlimSelectDtosOfCodFmts(codFil);
         }
@@ -33,7 +33,7 @@ public class WsSecureController {
 
     @GetMapping("/enquete/cod-sco")
     @ResponseBody
-    public List<SlimSelectDto> getCodSco(@RequestParam String codFmt) {
+    public List<SlimSelectData> getCodSco(@RequestParam String codFmt) {
         if(StringUtils.hasText(codFmt)) {
             return enqueteService.getSlimSelectDtosOfCodScos(codFmt);
         }

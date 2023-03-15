@@ -1,9 +1,12 @@
 package org.esupportail.esupagape.service;
 
-import org.esupportail.esupagape.dtos.ClassificationChart;
-import org.esupportail.esupagape.dtos.charjs.*;
+import org.esupportail.esupagape.dtos.charts.ClassificationChart;
 import org.esupportail.esupagape.repository.StatistiquesRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.service.utils.chartjs.Chart;
+import org.esupportail.esupagape.service.utils.chartjs.Data;
+import org.esupportail.esupagape.service.utils.chartjs.Dataset;
+import org.esupportail.esupagape.service.utils.chartjs.Doughnut;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 

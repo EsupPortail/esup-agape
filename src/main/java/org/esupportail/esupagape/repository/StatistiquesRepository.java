@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.repository;
 
-import org.esupportail.esupagape.dtos.ClassificationChart;
+import org.esupportail.esupagape.dtos.charts.ClassificationChart;
 import org.esupportail.esupagape.entity.Dossier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

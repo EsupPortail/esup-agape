@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.dtos;
+package org.esupportail.esupagape.dtos.forms;
 
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;

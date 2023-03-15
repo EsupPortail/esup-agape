@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.dtos.EntretienAttachement;
+import org.esupportail.esupagape.dtos.EntretienAttachementDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.entity.enums.TypeContact;
@@ -44,7 +44,7 @@ public class EntretienController {
     public String list(@PathVariable Long dossierId, @PageableDefault(
             sort = "date",
             direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        Page<EntretienAttachement> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossierId,pageable);
+        Page<EntretienAttachementDto> entretiens = entretienService.findEntretiensWithAttachementsByDossierId(dossierId,pageable);
         model.addAttribute("entretiens", entretiens);
         model.addAttribute("entretien", new Entretien());
         model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
