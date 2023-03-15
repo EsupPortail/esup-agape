@@ -27,6 +27,7 @@ public class StatistiquesController {
         }
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());
+        model.addAttribute("classificationChart", statistiquesService.getClassificationChart(yearFilter));
         return "statistiques/list";
     }
 }
