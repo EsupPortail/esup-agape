@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div class="agape-content">
+                <form th:action="@{/statistiques}" method="get">
+                    <div class="card mt-2 ms-2">
+                        <div class="card">
+                            <div class="row mt-2 ms-2">
+                                <div class="col-2" style="width: 350px;">
+                                    <div class="input-group">
+                                        <label class="input-group-text">Année universitaire</label>
+                                        <select class="form-select" name="yearFilter" onchange="this.form.submit();">
+                                            <option disabled selected value="">Choisir</option>
+                                            <option th:selected="${yearFilter == year.number}"
+                                                    th:each="year : ${years}"
+                                                    th:value="${year.number}"
+                                                    th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+
+                                </div>
+                            </div>
+                            <div class="card-header text-white bg-primary mt-2">
+                                <h3 class="ms-2">Statistiques</h3>
+                            </div>
+                            <div class="card-body mt-3" style="height: 500px">
+                                <div id="container" style="width: 800px; height: 373px;" width="800" height="373">
+
+                                </div>
+
+                                <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
+                                <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-pie.min.js"></script>
+
+
+                                <script>
+                                    anychart.onDocumentReady(function () {
+
+                                        // add the data
+                                        var data = anychart.data.set([
+                                            ['Troubles langage et parole', 34],
+                                            ['Moteur', 60],
+                                            ['Troubles viscéraux', 15],
+                                            ['Troubles psychiques', 11],
+                                            ['Troubles intellectuels et cognitifs', 6],
+                                            ['Autisme', 13]
+                                        ]);
+
+                                        // creates palette
+                                        var palette = anychart.palettes.distinctColors();
+
+                                        //Add the colors accroding to the brands
+                                        palette.items([
+                                            {color: '#1dd05d'},
+                                            {color: '#000000'},
+                                            {color: '#00a3da'},
+                                            {color: '#156ef2'},
+                                            {color: '#f60000'},
+                                            {color: '#96a6a6'}
+                                        ]);
+
+                                         //create pie chart with passed data
+                                        var chart = anychart.pie(data);
+
+                                        // set donut settings
+                                        chart
+                                            // set chart radius
+                                            .innerRadius('55%')
+                                            // set chart palette
+                                            .palette(palette);
+
+                                        // set the position of labels
+                                        //chart.labels().format('{%x} - {%y}%').fontSize(10);
+
+                                        // Disable the legend
+                                        chart.legend(true);
+
+                                        // format tooltip
+                                        chart.tooltip().format('Handicap: {%PercentValue}%');
+
+                                        // create standalone label and set label settings
+                                        var label = anychart.standalones.label();
+
+                                        label
+                                            .useHtml(true)
+
+                                            .position('center')
+                                            .anchor('center')
+                                            .hAlign('center')
+                                            .vAlign('middle');
+
+
+                                        // set label to center content of chart
+                                        // chart.center().content(label);
+
+                                        // set container id for the chart
+                                        chart.container('container');
+
+                                        // initiate chart drawing
+                                        chart.draw();
+                                    });
+
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+    </body>
+</html>
