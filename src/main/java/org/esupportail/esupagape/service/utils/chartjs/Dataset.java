@@ -12,13 +12,13 @@ public class Dataset {
     List<String> backgroundColor = List.of(
             "#FF5C4D",
             "#FF9933",
-            "#FFD134",
+            "#88338C",
             "#FFFF4F",
-            "#FFFF67",
+            "#284EE8",
             "#E3FF3C",
             "#51FF62",
             "#5ADBFF",
-            "#5A9FFF",
+            "#208A8C",
             "#5A9FFF",
             "#D759FF",
             "#FF5AC1",
@@ -32,13 +32,17 @@ public class Dataset {
             "#E64D4D",
             "#985972");
     Integer hoverOffset;
+    Integer borderWith;
 
-    public Dataset(String label, List<String> data, List<String> backgroundColor, Integer hoverOffset) {
+
+
+    public Dataset(String label, List<String> data, List<String> backgroundColor, Integer hoverOffset, Integer borderWith) {
         this.label = label;
         this.data = data;
         if(backgroundColor != null) {
             this.backgroundColor = backgroundColor;
         }
         this.hoverOffset = hoverOffset;
+        this.borderWith = borderWith;
     }
 }

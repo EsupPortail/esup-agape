@@ -57,8 +57,15 @@
                                     <div class="modal-content">
                                         <div class="modal-body">
                                             Confirmez la suppression de l’année ?
-                                            <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
+                                           <!-- <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
                                                 <input type="hidden" name="id" th:value="${year.id}">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Annuler
+                                                </button>
+                                                <input class="btn btn-success" type="submit" value="Valider">
+                                            </form>-->
+                                            <form th:action="@{/admin/delete-year}" th:method="delete" class="float-end">
+                                                <input type="hidden" name="idYear" th:value="${year.id}">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                     Annuler
                                                 </button>

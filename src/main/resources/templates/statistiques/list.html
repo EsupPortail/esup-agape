@@ -21,26 +21,41 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+                                <!-- <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
 
-                                </div>
+                                 </div>-->
                             </div>
                             <div class="card-header text-white bg-primary mt-2">
                                 <h3 class="ms-2">Statistiques</h3>
                             </div>
                             <div class="card-body mt-3">
-                                <div id="container">
-                                    <div style="width: 500px;">
-                                        <canvas id="myChart"></canvas>
+                                <div id="container" class="row">
+
+                                        <div class="col-lg-4">
+                                            <canvas id="myChart" style="min-height: 500px; min-width: 500px;"></canvas>
+                                            <script th:inline="javascript">
+                                                const ctx = document.getElementById('myChart');
+                                                new Chart(ctx, [[${classificationChart}]]);
+                                            </script>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <canvas id="myChart2" style="min-height: 500px; min-width: 500px;"></canvas>
+                                            <script th:inline="javascript">
+                                                const ctx2 = document.getElementById('myChart2');
+                                                new Chart(ctx2, [[${composanteChart}]]);
+                                            </script>
+                                        </div>
+                                    <div class="col-lg-4">
+                                        <canvas id="myChart3" style="min-height: 600px; min-width: 600px;"></canvas>
+                                        <script th:inline="javascript">
+                                            const ctx3 = document.getElementById('myChart3');
+                                            new Chart(ctx3, [[${individuChart}]]);
+                                        </script>
                                     </div>
-                                    <script th:inline="javascript">
-                                        const ctx = document.getElementById('myChart');
-                                        new Chart(ctx, [[${classificationChart}]]);
-                                    </script>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </form>
             </div>
         </main>

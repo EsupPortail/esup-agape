@@ -28,6 +28,10 @@ public class StatistiquesController {
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());
         model.addAttribute("classificationChart", statistiquesService.getClassificationChart(yearFilter));
+        model.addAttribute("composanteChart", statistiquesService.getComposanteChart(yearFilter));
+        model.addAttribute("individuChart", statistiquesService.getIndividuChart());
         return "statistiques/list";
     }
+
+
 }
