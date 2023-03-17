@@ -32,30 +32,32 @@
                                 <div id="container" class="row">
 
                                         <div class="col-lg-4">
-                                            <canvas id="myChart" style="min-height: 500px; min-width: 500px;"></canvas>
+                                            <canvas id="myChart" style="min-height: 400px; min-width: 400px;"></canvas>
                                             <script th:inline="javascript">
                                                 const ctx = document.getElementById('myChart');
                                                 new Chart(ctx, [[${classificationChart}]]);
                                             </script>
                                         </div>
                                         <div class="col-lg-4">
-                                            <canvas id="myChart2" style="min-height: 500px; min-width: 500px;"></canvas>
+                                            <canvas id="myChart2"style="min-height: 400px; min-width: 400px;"></canvas>
                                             <script th:inline="javascript">
                                                 const ctx2 = document.getElementById('myChart2');
                                                 new Chart(ctx2, [[${composanteChart}]]);
                                             </script>
                                         </div>
-                                    <div class="col-lg-4">
-                                        <canvas id="myChart3" style="min-height: 600px; min-width: 600px;"></canvas>
-                                        <script th:inline="javascript">
-                                            const ctx3 = document.getElementById('myChart3');
-                                            new Chart(ctx3, [[${individuChart}]]);
-                                        </script>
-                                    </div>
+                                        <div class="col-lg-4">
+                                            <canvas id="myChart3" style="min-height: 600px; min-width:400px;"></canvas>
+                                            <script th:inline="javascript">
+                                                const ctx3 = document.getElementById('myChart3');
+                                                new Chart(ctx3, [[${individuLineChart}]]);
+                                            </script>
+                                        </div>
                                     </div>
                                 </div>
+                                </div>
+
                             </div>
-                        </div>
+
                 </form>
             </div>
         </main>

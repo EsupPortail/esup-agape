@@ -33,10 +33,9 @@ public class Dataset {
             "#985972");
     Integer hoverOffset;
     Integer borderWith;
+    Double tension;
 
-
-
-    public Dataset(String label, List<String> data, List<String> backgroundColor, Integer hoverOffset, Integer borderWith) {
+    public Dataset(String label, List<String> data, List<String> backgroundColor, Integer hoverOffset, Integer borderWith, Double tension) {
         this.label = label;
         this.data = data;
         if(backgroundColor != null) {
@@ -44,5 +43,6 @@ public class Dataset {
         }
         this.hoverOffset = hoverOffset;
         this.borderWith = borderWith;
+        this.tension = tension;
     }
 }
