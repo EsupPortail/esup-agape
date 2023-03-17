@@ -115,9 +115,9 @@ public class DossierService {
     @Transactional
     public void update(Long id, Dossier dossier) {
         Dossier dossierToUpdate = getById(id);
-        /*if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
-        }*/
+        }
         dossierToUpdate.setClassification(dossier.getClassification());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdph(dossier.getMdph());
