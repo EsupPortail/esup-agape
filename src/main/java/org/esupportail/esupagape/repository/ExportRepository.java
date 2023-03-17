@@ -89,8 +89,7 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
     List<DossierCompletCSVDto> findByYearForCSV(Integer year);
 
     @Query("""
-            select i.emailEtu as emailEtu,
-            i.emailPerso as emailPerso
+            select i.emailEtu as emailEtu
             from Dossier d join Individu i on d.individu.id = i.id
             where (:year is null or d.year = :year)
             order by i.name

@@ -117,7 +117,6 @@ public class ExportService {
 
     private final Map<String, String> emailCsv = new LinkedHashMap<>() {{
         put("emailEtu", "Email universitaire");
-        put("emailPerso", "Email personnel");
     }};
 
     @Transactional
@@ -129,7 +128,7 @@ public class ExportService {
         put("nfic", "Nfic");
         put("id", "Id");
         put("numetu", "Numéro étudiant");
-        put("an", "Année de naissance");
+        put("an", "Année");
         put("sexe", "Sexe");
         put("typFrmn", "Type formation");
         put("modFrmn", "Modalité formation");
@@ -166,23 +165,23 @@ public class ExportService {
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
                     enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
-                    enquete.getCodSco().toLowerCase(),
-                    enquete.getCodFmt().toLowerCase(),
-                    enquete.getCodFil().toLowerCase(),
+                    enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase().toString() : "",
+                    enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase().toString() : "",
+                    enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase().toString() : "",
                     enquete.getCodHd() != null ? enquete.getCodHd().name().toLowerCase() : "",
                     (enquete.getHdTmp()) ? "1" : "0",
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     enquete.getCodPfas() != null ? enquete.getCodPfas().name().toLowerCase() : "",
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
-                    enquete.getInterpH().toString(),
-                    enquete.getCodeurH().toString(),
+                    enquete.getInterpH() != null ? enquete.getInterpH().toString() : "",
+                    enquete.getCodeurH()!= null ? enquete.getCodeurH().toString() : "",
                     enquete.getAidHNat(),
-                    String.join("" ,enquete.getCodMeae().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    String.join("" ,enquete.getCodMeae().stream().map(codMeae -> codMeae.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAE(),
-                    String.join("" ,enquete.getCodMeaa().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    String.join("" ,enquete.getCodMeaa().stream().map(codMeaa -> codMeaa.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAA(),
-                    String.join("" ,enquete.getCodAmL().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList())
+                    String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList())
             );
             enqueteExportCsvs.add(enqueteExportCsv);
         }
