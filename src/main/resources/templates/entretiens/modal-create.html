@@ -22,8 +22,8 @@
                         <div>
                             <th:block th:each="enumTypeContact : ${typeContacts}">
                                 <div>
-                                    <input th:selected="${enumTypeContact == entretien.typeContact}"
-                                            th:id="${enumTypeContact}"
+                                    <input th:id="${enumTypeContact}"
+                                            class="form-check-input"
                                             name="typeContact"
                                             size="1"
                                             type="radio"
