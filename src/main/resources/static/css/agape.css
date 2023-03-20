@@ -16,6 +16,10 @@ select[disabled] > option {
     color: initial;
 }
 
+*:invalid {
+    border-color: hsl(0, 76%, 50%);;
+}
+
 .form-label {
     font-weight: bold;
 }
