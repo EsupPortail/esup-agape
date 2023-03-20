@@ -13,12 +13,12 @@
                 </div>
                 <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create-entretien(id=${currentDossier.id})}" th:object="${entretien}">
                     <div class="modal-body mb-3 mt-3">
-                        <label th:for="date" class="form-label">Date de l’entretien</label>
+                        <label th:for="date" class="form-label">* Date de l’entretien</label>
                         <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}" required>
                         <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
                     </div>
                     <div class="ms-3">
-                        <label class="form-label" th:for="typeContact">Type Contact</label>
+                        <label class="form-label" th:for="typeContact">* Type Contact</label>
                         <div>
                             <th:block th:each="enumTypeContact : ${typeContacts}">
                                 <div>
@@ -40,9 +40,12 @@
                         <input type="text" class="form-control" id="displayName" th:value="${personLdap.displayName}" name="displayName">
                     </div>
                     <div class="modal-body mt-3 mb-3">
-                        <label for="compteRendu" class="form-label">Compte rendu</label>
+                        <label for="compteRendu" class="form-label">* Compte rendu</label>
                         <textarea class="form-control" id="compteRendu" th:field="*{compteRendu}" th:value="${entretien.compteRendu}" required></textarea>
                         <p th:if="${#fields.hasErrors('compteRendu')}" th:errorclass="error" th:errors="*{compteRendu}"></p>
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        * Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

@@ -26,7 +26,7 @@
                             <div class="col-12 col-xl-6">
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
+                                        <label class="form-label" for="typeAmenagement">* Type d’aménagement</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="typeAmenagement"
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label">Types d’épreuves</label>
+                                        <label class="form-label">* Types d’épreuves</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="tempsMajore">Temps majoré</label>
+                                        <label class="form-label" for="tempsMajore">* Temps majoré</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="tempsMajore" type="text" class="form-select" name="tempsMajore" th:value="${amenagement.tempsMajore}" required>
@@ -130,7 +130,7 @@
                                 <div id="classificationDiv" class="d-none">
                                     <div class="row mb-1 align-items-baseline">
                                         <div class="col-4" style="width: 250px;">
-                                            <label class="form-label select-label" th:for="classification">Classification du
+                                            <label class="form-label select-label" th:for="classification">* Classification du
                                                 handicap</label>
                                         </div>
                                         <div class="col-12 col-xxl-8">
@@ -157,6 +157,9 @@
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="alert alert-warning" style="margin-top: 160px;" role="alert">
+                    * Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                 </div>
             </div>
         </main>
