@@ -2,6 +2,7 @@ package org.esupportail.esupagape.web.controller.administratif;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
+import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -99,7 +100,13 @@ public class AmenagementAdministratifController {
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
         model.addAttribute("amenagement", amenagement);
-        model.addAttribute("currentDossier", dossierService.getCurrent(amenagement.getDossier().getIndividu().getId()));
+        Dossier dossier;
+        try {
+            dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+        } catch (AgapeJpaException e) {
+            dossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.AJOUT_MANUEL);
+        }
+        model.addAttribute("currentDossier", dossier);
         model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));
         return "administratif/amenagements/show";
     }

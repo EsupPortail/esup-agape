@@ -13,6 +13,7 @@ import java.util.List;
 public interface AmenagementRepository extends JpaRepository <Amenagement, Long> {
 
     Page<Amenagement> findByDossierId(Long dossierId, Pageable pageable);
+
     @Query("select a from Amenagement a where a.dossier.id = :dossierId and a.statusAmenagement = :statusAmenagement order by a.administrationDate desc")
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
 
@@ -36,7 +37,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "(:codComposante is null or a.dossier.codComposante  = :codComposante) " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and (d.year < :yearFilter) " +
-            "and (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1")
+            "and ((select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter) = 0 or (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1)")
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query(value = "select count(a) from Amenagement a " +
