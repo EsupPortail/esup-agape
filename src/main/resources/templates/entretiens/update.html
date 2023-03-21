@@ -28,7 +28,7 @@
                     <h4><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></h4>
                     <hr>
                     <div class="row">
-                        <div class="col-12 col-xl-6">
+                        <div class="col-xl-12">
                             <form id="form-entretien"
                                     class="container"
                                     th:method="put"
@@ -81,35 +81,6 @@
                                         <i class="fa-solid fa-save"></i>
                                     </button>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="col-12 col-xl-6">
-                            <label th:for="date" class="form-label">Pièces jointes</label>
-                            <table class="table table-striped" th:if="${attachments.size() > 0}">
-                                <tr>
-                                    <th>Nom</th>
-                                    <th></th>
-                                </tr>
-                                <th:block th:each="attachment : ${attachments}">
-                                    <tr>
-                                        <td class="align-middle">
-                                            <a th:href="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/get-attachment/' + ${attachment.id}"
-                                                    th:text="${attachment.fileName}"></a>
-                                        </td>
-                                        <td class="align-middle">
-                                            <form th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/delete-attachment/' + ${attachment.id}"
-                                                    th:method="delete"
-                                                    enctype="multipart/form-data">
-                                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </th:block>
-                            </table>
-                            <form class="me-2" th:action="'/dossiers/' + ${currentDossier.id} + '/entretiens/' + ${entretien.id} + '/add-attachments'" th:method="post" enctype="multipart/form-data">
-                                <label class="form-label">Ajouter un fichier</label>
-                                <input type="file" name="multipartFiles" multiple class="form-control mb-2" required>
-                                <input type="submit" class="btn btn-primary" value="Ajouter">
                             </form>
                         </div>
                     </div>

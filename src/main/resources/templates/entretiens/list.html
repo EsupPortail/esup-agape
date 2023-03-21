@@ -40,7 +40,6 @@
                                         <th class="d-none d-lg-table-cell d-xl-table-cell">
                                             <a class="sorted">Compte rendu</a>
                                         </th>
-                                        <th class="d-none d-lg-table-cell d-xl-table-cell" style="width: 200px;">Documents</th>
                                         <th style="width: 200px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -50,12 +49,6 @@
                                         <td class="align-middle" th:utext="${entretien.typeContact != null} ? #{'entretien.typeContact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
                                         <td class="align-middle" th:utext="${entretien.interlocuteur}"></td>
                                         <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell align-middle" style="max-width: 150px;" th:text="${entretien.compteRendu}"></td>
-                                        <td class="d-none d-lg-table-cell d-xl-table-cell align-middle">
-                                            <div class="border border-1 border-info rounded p-1 text-center">
-                                                Pièce(s) jointe(s) <span class="badge text-bg-secondary" th:text="${entretien.numberOfAttachements}"></span>
-                                            </div>
-
-                                        </td>
                                         <td>
                                             <ul class="list-group list-group-horizontal">
                                                 <li class="list-group-item border-0 p-1 bg-transparent">
