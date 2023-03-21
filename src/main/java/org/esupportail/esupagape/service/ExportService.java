@@ -48,7 +48,6 @@ public class ExportService {
         put("name", "Nom");
         put("firstName", "Prénom");
         put("emailEtu", "Email étudiant");
-        put("emailPerso", "Email perso");
         put("dateOfBirth", "Date de naissance");
         put("fixAddress", "Adresse");
         put("fixCP", "Code postal");

@@ -64,7 +64,6 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuInfos.setFirstName(personLdap.getGivenName());
             individuInfos.setGenre(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
             individuInfos.setEmailEtu(personLdap.getMail());
-            individuInfos.setEmailPerso(personLdap.getSupannMailPerso());
             individuInfos.setFixPhone(personLdap.getTelephoneNumber());
             individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
             individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSchacDateOfBirth(), DateTimeFormatter.ofPattern("yyyyMMdd")));

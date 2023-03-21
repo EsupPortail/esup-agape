@@ -120,9 +120,6 @@ public class AideHumaineService {
         if (StringUtils.hasText(individuInfos.getEmailEtu())) {
             aideHumaineToUpdate.setEmailAidant(individuInfos.getEmailEtu());
         }
-        if (StringUtils.hasText(individuInfos.getEmailPerso())) {
-            aideHumaineToUpdate.setEmailAidant(individuInfos.getEmailPerso());
-        }
         if (individuInfos.getDateOfBirth() != null) {
             aideHumaineToUpdate.setDateOfBirthAidant(individuInfos.getDateOfBirth());
         }

@@ -14,7 +14,6 @@ public class IndividuInfos {
     LocalDate dateOfBirth;
     String nationalite;
     String emailEtu;
-    String emailPerso;
     String fixPhone;
     String contactPhone;
     String fixAddress;
@@ -91,14 +90,6 @@ public class IndividuInfos {
 
     public void setEmailEtu(String emailEtu) {
         this.emailEtu = emailEtu;
-    }
-
-    public String getEmailPerso() {
-        return emailPerso;
-    }
-
-    public void setEmailPerso(String emailPerso) {
-        this.emailPerso = emailPerso;
     }
 
     public String getFixPhone() {
