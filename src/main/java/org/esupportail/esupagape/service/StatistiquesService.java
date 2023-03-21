@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +28,7 @@ public class StatistiquesService {
         this.messageSource = messageSource;
     }
 
-    public Chart getClassificationChart(Integer year) {
+    /*public Chart getClassificationChart(Integer year) {
         List<ClassificationChart> classificationCharts = statistiquesRepository.countFindClassificationByYear(year);
         Dataset dataset = new Dataset("Nombre d'individus", classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList()), null, 4, null, null);
         List<String> labels = new ArrayList<>();
@@ -38,15 +37,42 @@ public class StatistiquesService {
         }
 
         return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
+    }*/
+    public Chart getClassificationChart(Integer year) {
+        List<ClassificationChart> classificationCharts = statistiquesRepository.countFindClassificationByYear(year);
+        List<String> classificationCounts = classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList());
+        List<String> percentages = new ArrayList<>();
+        double sum = classificationCounts.stream().mapToDouble(Double::parseDouble).sum();
+        for (String count : classificationCounts) {
+            double percentage = Double.parseDouble(count) * 100 / sum;
+            percentages.add(String.format("%.2f%%", percentage));
+        }
+        Dataset dataset = new Dataset("Nombre d'individus", classificationCounts, null, 4, null, null, percentages);
+        dataset.addDataLabels(percentages); 
+        List<String> labels = new ArrayList<>();
+
+            labels.addAll(classificationCharts.stream().map(ClassificationChart::getClassification).toList());
+
+        return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
     }
 
     public Chart getComposanteChart(Integer year) {
         List<ComposanteChart> composanteCharts = statistiquesRepository.countFindComposanteByYear(year);
-        Dataset dataset = new Dataset("Nombre d'individus", composanteCharts.stream().map(ComposanteChart::getComposanteCount).collect(Collectors.toList()), null, 4, null, null);
+        List<String> composanteCounts = composanteCharts.stream().map(ComposanteChart::getComposanteCount).collect(Collectors.toList());
+        List<String> percentages = new ArrayList<>();
+        double sum = composanteCounts.stream().mapToDouble(Double::parseDouble).sum();
+        for (String count : composanteCounts) {
+            double percentage = Double.parseDouble(count) * 100 / sum;
+            percentages.add(String.format("%.2f%%", percentage));
+        }
+
+        Dataset dataset = new Dataset("Nombre d'individus", composanteCharts.stream().map(ComposanteChart::getComposanteCount).collect(Collectors.toList()), null, 4, null, null,percentages);
+        dataset.addDatalabels(percentages);
         List<String> labels = new ArrayList<>();
         labels.addAll(composanteCharts.stream().map(ComposanteChart::getComposante).toList());
         return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
     }
+
 
     /*public Chart getIndividuChart() {
 
@@ -73,7 +99,7 @@ public class StatistiquesService {
 
     }*/
 
-        public Chart getIndividuLineChart() {
+       public Chart getIndividuLineChart() {
         List<Integer> years = statistiquesRepository.findDistinctYears().stream()
                 .sorted(Collections.reverseOrder())
                 .collect(Collectors.toList());
@@ -85,7 +111,7 @@ public class StatistiquesService {
             counts.add(String.valueOf(statistiquesRepository.countFindIndividuByYear(year)));
         }
 
-        Dataset dataset = new Dataset("Nombre d'individus par année", counts, null, null, 1, 0.1);
+        Dataset dataset = new Dataset("Nombre d'individus par année", counts, null, null, 1, 0.1,null);
         List<String> labels = years.stream().map(String::valueOf).collect(Collectors.toList());
 
         Options options = new Options();

@@ -8,8 +8,10 @@ public class Doughnut implements Chart {
     String type = "doughnut";
     Data data;
 
+
     public Doughnut(Data data) {
         this.data = data;
+
     }
 
     @Override
