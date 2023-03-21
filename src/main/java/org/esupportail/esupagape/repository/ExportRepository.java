@@ -18,7 +18,6 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             i.firstName as firstName, 
             i.dateOfBirth as dateOfBirth,
             i.emailEtu as emailEtu,
-            i.emailPerso as emailPerso,
             i.fixAddress as fixAddress,
             i.fixCP as fixCP,
             i.fixCity as fixCity,

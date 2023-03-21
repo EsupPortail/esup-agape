@@ -48,7 +48,7 @@ public class StatistiquesService {
             percentages.add(String.format("%.2f%%", percentage));
         }
         Dataset dataset = new Dataset("Nombre d'individus", classificationCounts, null, 4, null, null, percentages);
-        dataset.addDataLabels(percentages); 
+        dataset.addDataLabels(percentages);
         List<String> labels = new ArrayList<>();
 
             labels.addAll(classificationCharts.stream().map(ClassificationChart::getClassification).toList());

@@ -45,8 +45,6 @@ public class Individu {
 
     private String emailEtu;
 
-    private String emailPerso;
-
     private String currentAddress;
 
     private String currentCP;
@@ -174,13 +172,6 @@ public class Individu {
         this.emailEtu = emailEtu;
     }
 
-    public String getEmailPerso() {
-        return emailPerso;
-    }
-
-    public void setEmailPerso(String emailPerso) {
-        this.emailPerso = emailPerso;
-    }
 
     public String getCurrentAddress() {
         return currentAddress;

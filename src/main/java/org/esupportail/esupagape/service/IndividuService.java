@@ -119,9 +119,7 @@ public class IndividuService {
         if(StringUtils.hasText(individuInfos.getEmailEtu())) {
             individu.setEmailEtu(individuInfos.getEmailEtu());
         }
-        if(StringUtils.hasText(individuInfos.getEmailPerso())) {
-            individu.setEmailPerso(individuInfos.getEmailPerso());
-        }
+
         if(StringUtils.hasText(individuInfos.getFixAddress())) {
             individu.setFixAddress(individuInfos.getFixAddress());
         }

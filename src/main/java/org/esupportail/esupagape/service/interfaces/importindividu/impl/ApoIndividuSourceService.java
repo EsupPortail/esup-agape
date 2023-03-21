@@ -70,9 +70,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                     individuInfos.setCurrentCountry(coordonneesDTO2.getAdresseAnnuelle().getPays().getLibPay());
                 }
             }
-            if (StringUtils.hasText(coordonneesDTO2.getEmail())) {
-                individuInfos.setEmailPerso(coordonneesDTO2.getEmail());
-            }
         }
         InfoAdmEtuDTO4  infoAdmEtuDTO4 = wsApogeeServiceEtudiant.recupererInfosAdmEtu(numEtu);
         if(infoAdmEtuDTO4 != null) {
