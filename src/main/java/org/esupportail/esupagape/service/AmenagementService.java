@@ -24,6 +24,7 @@ import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,10 @@ public class AmenagementService {
     }
 
     public Page<Amenagement> findByDossier(Long dossierId) {
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossier.getAmenagementPorte() != null) {
+            return new PageImpl<>(List.of(dossier.getAmenagementPorte()), Pageable.unpaged(), 1);
+        }
         return amenagementRepository.findByDossierId(dossierId, Pageable.unpaged());
     }
 
