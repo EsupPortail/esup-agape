@@ -229,8 +229,8 @@ public class DossierService {
     }
 
     @Transactional
-    public List<DocumentDto> getAttachements(Long id) {
-        return documentRepository.findByDossierId(id);
+    public List<DocumentDto> getAttachments(Long id) {
+        return documentRepository.findByDossierId(id).stream().filter(attachment -> "org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())).toList();
     }
 
     @Transactional

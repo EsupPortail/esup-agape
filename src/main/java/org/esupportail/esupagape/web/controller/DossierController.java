@@ -101,7 +101,7 @@ public class DossierController {
 //        model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
-        model.addAttribute("attachments", dossierService.getAttachements(dossier.getId()));
+        model.addAttribute("attachments", dossierService.getAttachments(dossier.getId()));
         return "dossiers/update";
     }
 
@@ -154,7 +154,6 @@ public class DossierController {
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     @DeleteMapping(value = "/{dossierId}/delete-attachment/{attachmentId}")
     public String getLastFileFromSignRequest(
             @PathVariable Long dossierId,
