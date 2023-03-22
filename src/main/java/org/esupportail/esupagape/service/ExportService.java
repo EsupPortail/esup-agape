@@ -33,23 +33,15 @@ public class ExportService {
     private final EnqueteService enqueteService;
 
     public ExportService(ApplicationProperties applicationProperties, ExportRepository exportRepository,
-                         EnqueteService enqueteService) {
+        EnqueteService enqueteService) {
         this.applicationProperties = applicationProperties;
         this.exportRepository = exportRepository;
         this.enqueteService = enqueteService;
     }
 
     private final Map<String, String> dossierCompletCsv = new LinkedHashMap<>() {{
-        put("id", "Id");
-        put("year", "Année");
-        put("numEtu", "Numéro étudiant");
-        put("codeIne", "Code INE");
+        put("yearOfBirth", "Année de naissance");
         put("gender", "Genre");
-        put("name", "Nom");
-        put("firstName", "Prénom");
-        put("emailEtu", "Email étudiant");
-        put("dateOfBirth", "Date de naissance");
-        put("fixAddress", "Adresse");
         put("fixCP", "Code postal");
         put("fixCity", "Ville");
         put("fixCountry", "Pays");
@@ -59,8 +51,7 @@ public class ExportService {
         put("classification", "Classification du handicap");
         put("mdph", "Suivi MDPH");
         put("taux", "Taux");
-        put("typeSuiviHandisup", "Suivi Handisup");
-        put("commentaire", "Commentaire");
+        put("typeSuiviHandisup", "Type de suivi Handisup");
         put("typeFormation", "Type de formation");
         put("modeFormation", "Modalités de formation");
         put("site", "Etablissement");
@@ -69,44 +60,8 @@ public class ExportService {
         put("codComposante", "Code composante");
         put("composante", "Composante");
         put("formAddress", "Adresse de formation");
-        put("resultatS1", "Resultat 1er semestre");
-        put("noteS1", "Note 1er semestre");
-        put("resultatS2", "Resultat 2e semestre");
-        put("noteS2", "Note 2e semestre");
         put("resultatTotal", "Resultat total");
-        put("noteTotal", "Note total");
-        put("suiviHandisup", "suivi Handisup");
-        put("numEtuAidant", "N° étudiant de l'aidant");
-        put("nameAidant", "Nom de l'aidant");
-        put("firstNameAidant", "Prénom de l'aidant");
-        put("dateOfBirthAidant", "Date de naissance de l'aidant");
-        put("emailAidant", "Email de l'aidant");
-        put("phoneAidant", "Tél de l'aidant");
-        put("startDate", "Date de début du contrat");
-        put("fonctionAidants", "Fonction de l'aidant");
-        put("typeAideMaterielle", "Type d'aide matérielle");
-        put("endDate", "Date de fin de l'aide matérielle");
-        put("cost", "Coût");
-        put("comment", "Commentaire");
-        put("autorisation", "Autorisation");
-        put("statusAmenagement", "Statut de l'amenagement");
-        put("statusAideHumaine", "Statut de l'aide humaine");
-        put("mailIndividu", "Mail de l'individu");
-        put("typeAmenagement", "Type d'amenagement");
-        put("typeEpreuves", "Type d'epreuve");
-        put("autresTypeEpreuve", "Autre type d'epreuve");
-        put("tempMajore", "Temps Majores");
-        put("autresTempsMajores", "Autre temps majore");
-        put("amenagementText", "Texte");
-        put("mailMedecin", "Mail du médecin");
-        put("nomMedecin", "Nom du médecin");
-        put("mailValideur", "Mail du valideur");
-        put("nomValideur", "Nom du valideur");
-        put("motifRefus", "Motif du refus");
-        put("createDate", "Date de création");
-        put("valideMedecinDate", "Date de validation du medecin");
-        put("administrationDate", "Date de validation de l'administration");
-        put("deleteDate", "Date de suppression");
+
     }};
 
     @Transactional
