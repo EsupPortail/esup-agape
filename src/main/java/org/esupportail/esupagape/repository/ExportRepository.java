@@ -23,7 +23,6 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             t as typeSuiviHandisup,
             d.typeFormation as typeFormation,
             d.modeFormation as modeFormation,
-            d.site as site,
             d.libelleFormation as libelleFormation,
             d.libelleFormationPrec as libelleFormationPrec,
             d.codComposante as codComposante,

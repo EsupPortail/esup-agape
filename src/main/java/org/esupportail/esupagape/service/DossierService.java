@@ -129,9 +129,6 @@ public class DossierService {
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
         dossierToUpdate.setTypeFormation(dossier.getTypeFormation());
         dossierToUpdate.setModeFormation(dossier.getModeFormation());
-        if (StringUtils.hasText(dossier.getSite())) {
-            dossierToUpdate.setSite(dossier.getSite());
-        }
         if (StringUtils.hasText(dossier.getLibelleFormation())) {
             dossierToUpdate.setLibelleFormation(dossier.getLibelleFormation());
         }
@@ -167,9 +164,6 @@ public class DossierService {
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, false, new DossierInfos());
             if (dossierInfos != null) {
-                if (StringUtils.hasText(dossierInfos.getEtablissement())) {
-                    dossier.setSite(dossierInfos.getEtablissement());
-                }
                 if (StringUtils.hasText(dossierInfos.getCodComposante())) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }

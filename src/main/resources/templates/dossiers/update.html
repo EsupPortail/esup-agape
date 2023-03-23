@@ -174,23 +174,6 @@
                                 </div>
                                 <div class="row mb-1 align-items-baseline">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="site">Établissement</label>
-                                    </div>
-                                    <div class="col-12 col-xxl-8">
-                                        <div class="input-group">
-                                            <input disabled id="site" name="site" type="text" class="form-control" th:value="${currentDossier.site}" th:readonly="${currentDossier.site != ''}">
-                                            <a onclick="toggleInputLock('site');"
-                                                    role="button"
-                                                    id="siteEdit"
-                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-1 align-items-baseline">
-                                    <div class="col-4" style="width: 250px;">
                                         <label class="form-label" for="libelleFormation">Formation</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
