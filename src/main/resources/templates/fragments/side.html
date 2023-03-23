@@ -12,6 +12,8 @@
                         </a>
                     </div>
                     <div class="col-6">
+                        <dt>N° Étudiant</dt>
+                        <dd th:text="${currentDossier.individu.numEtu}"></dd>
                         <dt>Nom</dt>
                         <dd th:text="${#strings.toUpperCase(currentDossier.individu.name)}"></dd>
                         <dt>Prénom</dt>
@@ -19,8 +21,6 @@
                     </div>
                 </div>
                 <dl class="row">
-                    <dt class="col-sm-5">N° Étudiant</dt>
-                    <dd class="col-sm-7" th:text="${currentDossier.individu.numEtu}"></dd>
                     <dt class="col-sm-5">N° Ine</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.codeIne}"></dd>
                     <dt class="col-sm-5">Login</dt>
@@ -65,11 +65,15 @@
                     <dd th:text="${currentDossier.individu.emailEtu}"></dd>
                     <dt class="col-sm-5">Téléphone</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.contactPhone}"></dd>
-                    <dt class="col-sm-5">Téléphone fixe</dt>
-                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixPhone}"></dd>
+                    <!-- <dt class="col-sm-5">Téléphone fixe</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixPhone}"></dd>-->
+                    <dt class="col-sm-5">Code postal</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixCP}"></dd>
+                    <dt class="col-sm-5">Ville</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixCity}"></dd>
                 </dl>
             </div>
-            <span class="fs-6 card text-bg-primary mb-3 ps-3">Adresses</span>
+           <!-- <span class="fs-6 card text-bg-primary mb-3 ps-3">Adresses</span>
             <div class="accordion" id="accordionAddress">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
@@ -105,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
     </div>

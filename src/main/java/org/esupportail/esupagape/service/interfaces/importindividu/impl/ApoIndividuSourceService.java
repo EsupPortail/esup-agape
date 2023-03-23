@@ -60,7 +60,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                     individuInfos.setFixCountry(coordonneesDTO2.getAdresseFixe().getPays().getLibPay());
                 }
             }
-            if (coordonneesDTO2.getAdresseAnnuelle() != null) {
+           /* if (coordonneesDTO2.getAdresseAnnuelle() != null) {
                 if(coordonneesDTO2.getAdresseAnnuelle().getCommune() != null) {
                     individuInfos.setCurrentCity(coordonneesDTO2.getAdresseAnnuelle().getCommune().getNomCommune());
                     individuInfos.setCurrentCP(coordonneesDTO2.getAdresseAnnuelle().getCommune().getCodePostal());
@@ -69,7 +69,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                     }
                     individuInfos.setCurrentCountry(coordonneesDTO2.getAdresseAnnuelle().getPays().getLibPay());
                 }
-            }
+            }*/
         }
         InfoAdmEtuDTO4  infoAdmEtuDTO4 = wsApogeeServiceEtudiant.recupererInfosAdmEtu(numEtu);
         if(infoAdmEtuDTO4 != null) {
