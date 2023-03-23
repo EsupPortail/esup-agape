@@ -60,22 +60,6 @@ public class ExportsController {
         }
     }
 
-    @GetMapping("/export-all-email-to-csv")
-    public void exportAllEmailToCsv(
-            @RequestParam(required = false) Integer year,
-            HttpServletResponse response) {
-        String fileName = "emails.csv";
-        response.setContentType("text/csv");
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-        try (Writer writer = response.getWriter()) {
-            exportService.findEmailEtuByYearForCSV(year, writer);
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @GetMapping("/export-enquete-to-csv")
     public void exportEnqueteToCsv(
             @RequestParam(required = false) Integer year,

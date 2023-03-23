@@ -54,7 +54,7 @@ public interface DossierCompletCSVDto {
     String getComposante();
 
     String getFormAddress();
-    String getResultatTotal();
 
+    String getResultatTotal();
 
 }

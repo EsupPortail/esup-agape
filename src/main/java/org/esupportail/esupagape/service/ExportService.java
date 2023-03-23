@@ -69,15 +69,6 @@ public class ExportService {
         writeObjectListToCsv(exportRepository.findByYearForCSV(year), dossierCompletCsv, writer);
     }
 
-    private final Map<String, String> emailCsv = new LinkedHashMap<>() {{
-        put("emailEtu", "Email universitaire");
-    }};
-
-    @Transactional
-    public void findEmailEtuByYearForCSV(Integer year, Writer writer) {
-        writeObjectListToCsv(exportRepository.findEmailEtuByYearForCSV(year), emailCsv, writer);
-    }
-
     private final Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
         put("nfic", "Nfic");
         put("id", "Id");
