@@ -20,10 +20,10 @@ public class IndividuInfos {
     String fixCP;
     String fixCity;
     String fixCountry;
-    String currentAddress;
+   /* String currentAddress;
     String currentCP;
     String currentCity;
-    String currentCountry;
+    String currentCountry;*/
     String photoId;
     Classification handicap;
 
@@ -140,7 +140,7 @@ public class IndividuInfos {
         this.fixCountry = fixCountry;
     }
 
-    public String getCurrentAddress() {
+   /* public String getCurrentAddress() {
         return currentAddress;
     }
 
@@ -170,7 +170,7 @@ public class IndividuInfos {
 
     public void setCurrentCountry(String currentCountry) {
         this.currentCountry = currentCountry;
-    }
+    }*/
 
     public String getPhotoId() {
         return photoId;

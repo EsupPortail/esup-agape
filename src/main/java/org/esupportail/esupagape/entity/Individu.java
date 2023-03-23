@@ -45,13 +45,13 @@ public class Individu {
 
     private String emailEtu;
 
-    private String currentAddress;
+   /* private String currentAddress;
 
     private String currentCP;
 
     private String currentCity;
 
-    private String currentCountry;
+    private String currentCountry;*/
 
     private String fixAddress;
 
@@ -173,7 +173,7 @@ public class Individu {
     }
 
 
-    public String getCurrentAddress() {
+   /* public String getCurrentAddress() {
         return currentAddress;
     }
 
@@ -203,7 +203,7 @@ public class Individu {
 
     public void setCurrentCountry(String currentCountry) {
         this.currentCountry = currentCountry;
-    }
+    }*/
 
     public String getFixAddress() {
         return fixAddress;

@@ -132,7 +132,7 @@ public class IndividuService {
         if(StringUtils.hasText(individuInfos.getFixCountry())) {
             individu.setFixCountry(individuInfos.getFixCountry());
         }
-        if(StringUtils.hasText(individuInfos.getCurrentAddress())) {
+     /*   if(StringUtils.hasText(individuInfos.getCurrentAddress())) {
             individu.setCurrentAddress(individuInfos.getCurrentAddress());
         }
         if(StringUtils.hasText(individuInfos.getCurrentCP())) {
@@ -143,7 +143,7 @@ public class IndividuService {
         }
         if(StringUtils.hasText(individuInfos.getCurrentCountry())) {
             individu.setCurrentCountry(individuInfos.getCurrentCountry());
-        }
+        }*/
         if(StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }
