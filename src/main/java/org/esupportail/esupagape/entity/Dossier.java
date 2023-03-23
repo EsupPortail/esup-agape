@@ -88,6 +88,8 @@ public class Dossier {
 
     private Boolean suiviHandisup;
 
+    private Boolean employee;
+
     @ManyToOne
     private Individu individu;
 
@@ -338,6 +340,14 @@ public class Dossier {
 
     public void setSuiviHandisup(Boolean suiviHandisup) {
         this.suiviHandisup = suiviHandisup;
+    }
+
+    public Boolean getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Boolean employee) {
+        this.employee = employee;
     }
 
     public Individu getIndividu() {

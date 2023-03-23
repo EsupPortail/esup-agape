@@ -124,6 +124,7 @@ public class DossierService {
         dossierToUpdate.setTaux(dossier.getTaux());
         dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
+        dossierToUpdate.setEmployee(dossier.getEmployee());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
