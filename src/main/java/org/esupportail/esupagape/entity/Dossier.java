@@ -66,7 +66,7 @@ public class Dossier {
 
     private String libelleFormationPrec;
 
-    private String site;
+//    private String site;
 
     private String formAddress;
 
@@ -252,14 +252,6 @@ public class Dossier {
 
     public void setLibelleFormationPrec(String libelleFormationPrec) {
         this.libelleFormationPrec = libelleFormationPrec;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public void setSite(String site) {
-        this.site = site;
     }
 
     public String getFormAddress() {

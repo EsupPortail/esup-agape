@@ -54,7 +54,6 @@ public class ExportService {
         put("typeSuiviHandisup", "Type de suivi Handisup");
         put("typeFormation", "Type de formation");
         put("modeFormation", "Modalités de formation");
-        put("site", "Etablissement");
         put("libelleFormation", "Formation");
         put("libelleFormationPrec", "Formation précédente");
         put("codComposante", "Code composante");
