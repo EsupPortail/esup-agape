@@ -85,6 +85,30 @@ public class DossierController {
         return "dossiers/list";
     }
 
+    @GetMapping("/filter")
+    public String listFilter(
+            @RequestParam(required = false) String fullTextSearch,
+            @RequestParam(required = false) TypeIndividu typeIndividu,
+            @RequestParam(required = false) StatusDossier statusDossier,
+            @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
+            @RequestParam(required = false) Integer yearFilter,
+            @PageableDefault(sort = "name") Pageable pageable, Model model) {
+        if (yearFilter == null) {
+            yearFilter = utilsService.getCurrentYear();
+        }
+        model.addAttribute("fullTextSearch", fullTextSearch);
+        model.addAttribute("typeIndividu", typeIndividu);
+        model.addAttribute("statusDossier", statusDossier);
+        model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
+        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
+        model.addAttribute("yearFilter", yearFilter);
+        model.addAttribute("years", utilsService.getYears());
+        model.addAttribute("statusDossierList", StatusDossier.values());
+        model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
+        model.addAttribute("typeIndividuList", TypeIndividu.values());
+        return "dossiers/list";
+    }
+
     @GetMapping("/{dossierId}")
     public String update(@PathVariable Long dossierId, Model model) {
         Dossier dossier = dossierService.getById(dossierId);
