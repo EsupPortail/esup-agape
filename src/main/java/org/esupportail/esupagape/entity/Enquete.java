@@ -75,6 +75,8 @@ public class Enquete {
     @OneToOne(optional = false)
     private Dossier dossier;
 
+    private Boolean finished;
+
     public Long getId() {
         return id;
     }
@@ -259,4 +261,11 @@ public class Enquete {
         this.dossier = dossier;
     }
 
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
 }

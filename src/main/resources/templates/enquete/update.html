@@ -9,8 +9,14 @@
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
-                <button title="Enregistrer l'enquête" th:if="${currentYear == currentDossier.year}" id="save-btn" class="btn btn-success">
+                <button title="Enregistrer l'enquête" th:if="${currentYear == currentDossier.year && enquete.finished != true}" id="save-btn" class="btn btn-success">
                     <i class="fa-solid fa-save"></i>
+                </button>
+                <button title="Enquête terminée" th:if="${currentYear == currentDossier.year && enquete.finished != true}" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#finishedModal">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button title="Enquête terminée" th:if="${currentYear == currentDossier.year && enquete.finished == true}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unlockModal">
+                    <i class="fa-solid fa-pencil"></i>
                 </button>
             </div>
             <div th:replace="fragments/side :: side"></div>
@@ -31,313 +37,354 @@
                             th:method="put"
                             th:action="@{/dossiers/{id}/enquete/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}"
                             th:object="${enquete}">
-                        <input th:field="*{dossier}" type="hidden" readonly class="form-control">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div>
+                        <fieldset th:disabled="${currentYear == currentDossier.year && enquete.finished == true}">
+                            <input th:field="*{dossier}" type="hidden" readonly class="form-control">
+                            <div class="row">
+                                <div class="col-lg-6">
                                     <div>
-                                        <label class="mt-3 form-label" th:for="an">Année de naissance</label>
                                         <div>
-                                            <input disabled
-                                                    readonly
-                                                    id="an"
-                                                    name="an"
-                                                    class="form-control"
-                                                    type="text"
-                                                    th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'yyyy')}">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="genders">Genre</label>
-                                        <div>
-                                            <select name="sexe" class="form-control" size="1" th:disabled="${enquete.sexe != null}">
-                                                <th:block th:each="gender, iterator : ${genders}">
-                                                <option th:selected="${iterator.index + '' == enquete.sexe}"
-                                                        th:value="${iterator.index}"
-                                                        th:text="#{'individu.gender.' + ${gender}}"></option>
-                                                </th:block>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="typFrmns">Type formation<span th:text="${currentDossier.typeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
-                                        <div>
-                                            <select id="typeFormation" name="typFrmn" type="text" class="form-control" disabled>
-                                                <option value="" disabled selected></option>
-                                                <option th:selected="${currentDossier.typeFormation == typeFormation}"
-                                                        th:each="typeFormation : ${typFrmns}"
-                                                        th:value="${typeFormation}"
-                                                        th:text="#{'enquete.typFrmn.' +${typeFormation}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="modFrmns">Modalité formation<span th:text="${currentDossier.modeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
-                                        <div>
-                                            <select id="modeFormation" name="modFrmn" type="text" class="form-control" disabled>
-                                                <option value="" disabled selected></option>
-                                                <option th:selected="${currentDossier.modeFormation == modeFormation}"
-                                                        th:each="modeFormation : ${modFrmns}"
-                                                        th:value="${modeFormation}"
-                                                        th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codFil">Discipline</label>
-                                        <div>
-                                            <select id="codFil" name="codFil" class="form-select" size="1">
-                                                <option disabled selected value="">Choisir</option>
-                                                <option th:selected="${enumCodfil == enquete.codFil}"
-                                                        th:each="enumCodfil : ${codFils}"
-                                                        th:value="${enumCodfil}"
-                                                        th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codFmt">Formation</label>
-                                        <div>
-                                            <select id="codFmt" name="codFmt" size="1">
-                                                <option selected th:if="${enquete.codFmt != null}"
-                                                        th:value="${enquete.codFmt}"
-                                                        th:text="${enqueteEnumFilFmtSco.get('fmt' + enquete.codFmt.toLowerCase())}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="codScoDiv">
-                                        <label class="mt-1 form-label" th:for="codSco">Année d’études</label>
-                                        <div>
-                                            <select id="codSco" name="codSco" size="1">
-                                                <option selected th:if="${enquete.codSco != null}"
-                                                        th:value="${enquete.codSco}"
-                                                        th:text="${enqueteEnumFilFmtSco.get('sco' + enquete.codSco.toLowerCase())}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codHd">Type de handicap</label>
-                                        <div>
-                                            <select id="_codHd_id" name="codHd" class="form-select" size="1" disabled>
-                                                <option disabled selected value="nul">Choisir</option>
-                                                <option th:selected="${enumCodHd == enquete.codHd}"
-                                                        th:each="enumCodHd : ${codHds}"
-                                                        th:value="${enumCodHd}"
-                                                        th:text="#{'enquete.codHd.' + ${enumCodHd}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}" disabled style="width: 15px; height: 15px;">
-                                        <label class="form-label mt-2" th:for="hdTmp">Handicap temporaire
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label th:for="com" class="mt-1 form-label">Commentaire</label>
-                                        <div>
-                                            <textarea th:field="*{com}" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codPfpp">Plan d’accompagnement</label>
-                                        <div>
-                                            <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
-                                                <option disabled selected value="nul">Choisir</option>
-                                                <option th:selected="${enumCodpfpp == enquete.codPfpp}"
-                                                        th:each="enumCodpfpp : ${codPfpps}"
-                                                        th:value="${enumCodpfpp}"
-                                                        th:text="#{'enquete.codPfpp.' + ${enumCodpfpp}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codPfas">Aménagement spécifique</label>
-                                        <div>
-                                            <select id="_codPfas_id" name="codPfas" class="form-select" size="1">
-                                                <option disabled selected value="nul">Choisir</option>
-                                                <option th:selected="${enumCodPfas == enquete.codPfas}"
-                                                        th:each="enumCodPfas : ${codPfass}"
-                                                        th:value="${enumCodPfas}"
-                                                        th:text="#{'enquete.codPfas.' + ${enumCodPfas}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
-                                        <div>
-                                            <div class="d-inline me-2">
-                                                <input id="AHS0Off"
-                                                        name="AHS0"
-                                                        type="radio"
-                                                        th:value="AHS0"
-                                                        th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
-                                                <label for="AHS0Off">Aucune aide humaine spécifique</label>
-                                            </div>
-                                            <div class="d-inline">
-                                                <input id="AHS0On"
-                                                        name="AHS0"
-                                                        type="radio"
-                                                        value=""
-                                                        th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
-                                                <label for="AHS0On">L'étudiant bénéficie d’aide(s) humaine(s) spécifique(s)</label>
-                                            </div>
-                                            <div id="codMeahFDiv"
-                                                    th:classappend="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).valueOf('AHS0'))} ? 'd-none' : ''">
-                                                <th:block th:each="enumLibelleCodMeahF : ${libelleCodMeahFs}">
-                                                    <div class="mt-2">
-                                                        <label class="text-decoration-underline"
-                                                                th:for="${enumLibelleCodMeahF}"
-                                                                th:text="#{'enquete.libelleCodMeahF.' + ${enumLibelleCodMeahF}}"></label>
-                                                        <br />
-                                                        <th:block th:each="codMeahF : ${codMeahFs}"
-                                                                th:if="${!enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
-                                                            <input th:name="${enumLibelleCodMeahF}"
-                                                                    th:type="${codMeahF.name().startsWith('AHS1') || codMeahF.name().startsWith('AHS2')} ? 'checkbox' : 'radio'"
-                                                                    th:value="${codMeahF}"
-                                                                    th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
-                                                                    th:checked="${enquete.codMeahF.contains(codMeahF)}">
-                                                            <label class="me-2"
-                                                                    th:text="#{'enquete.codMeahF.' + ${codMeahF}}"
-                                                                    th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
-                                                        </th:block>
-                                                        <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
-                                                            <input th:name="${enumLibelleCodMeahF}"
-                                                                    type="radio"
-                                                                    value="on"
-                                                                    th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
-                                                            <label class="me-2">Oui</label>
-                                                            <input th:name="${enumLibelleCodMeahF}"
-                                                                    type="radio"
-                                                                    value="off"
-                                                                    th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
-                                                            <label>Non</label>
-                                                        </th:block>
-                                                    </div>
-                                                </th:block>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <div>
-                                        <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d’heures</label>
-                                        <div>
-                                            <input th:field="*{interpH}" class="form-control" type="text" value="">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d’heures</label>
-                                        <div>
-                                            <input th:field="*{codeurH}" class="form-control" type="text" value="">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label th:for="aidHNat" class="mt-1 form-label">Autre aide humaine</label>
-                                        <div>
-                                            <textarea th:field="*{aidHNat}" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
-                                        <div>
-                                            <select multiple id="codMeae" th:field="*{codMeae}">
-                                                <option th:checked="${enquete.codMeae.contains(codMeaes)}"
-                                                        th:each="enumCodMeae : ${codMeaes}"
-                                                        th:value="${enumCodMeae}"
-                                                        th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label th:for="autAE" class="mt-1 form-label">Autre aménagement des examens</label>
-                                        <div>
-                                            <textarea th:field="*{autAE}" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
-                                        <div class="form-check">
-                                            <th:block th:each="enumCodMeaa : ${codMeaaStructures}">
-                                                <input th:id="${enumCodMeaa}" name="codMeaaStructure" type="radio" th:value="${enumCodMeaa}"
-                                                        th:checked="${enquete.codMeaa.contains(enumCodMeaa)}">
-                                                <label th:for="${enumCodMeaa}" th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></label>
-                                            </th:block>
-                                        </div>
-                                        <div>
-                                            <select multiple id="codMeaa" th:field="*{codMeaa}" class="">
-                                                <option th:checked="${enquete.codMeaa.contains(codMeaas)}"
-                                                        th:each="enumCodMeaa : ${codMeaas}"
-                                                        th:value="${enumCodMeaa}"
-                                                        th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
-                                            </select>
-                                        </div>
-                                        <div id="autAADiv" th:class="${enquete.codMeaa.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).AAo) ? '' : 'd-none'}">
-                                            <label th:for="autAA" class="mt-1 form-label">Autres (à préciser)</label>
+                                            <label class="mt-3 form-label" th:for="an">Année de naissance</label>
                                             <div>
-                                                <textarea th:field="*{autAA}" class="form-control"></textarea>
+                                                <input disabled
+                                                        readonly
+                                                        id="an"
+                                                        name="an"
+                                                        class="form-control"
+                                                        type="text"
+                                                        th:value="${#temporals.format(currentDossier.individu.dateOfBirth, 'yyyy')}">
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="mt-1 form-label" th:for="codAmL">Autres mesures relevant ou non de la compétence de la CDAPH</label>
+                                            <label class="mt-1 form-label" th:for="genders">Genre</label>
                                             <div>
-                                                <div class="d-inline">
-                                                    <input id="AM0On"
-                                                            name="AM0"
+                                                <select name="sexe" class="form-control" size="1" th:disabled="${enquete.sexe != null}">
+                                                    <th:block th:each="gender, iterator : ${genders}">
+                                                    <option th:selected="${iterator.index + '' == enquete.sexe}"
+                                                            th:value="${iterator.index}"
+                                                            th:text="#{'individu.gender.' + ${gender}}"></option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="typFrmns">Type formation<span th:text="${currentDossier.typeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
+                                            <div>
+                                                <select id="typeFormation" name="typFrmn" type="text" class="form-control" disabled>
+                                                    <option value="" disabled selected></option>
+                                                    <option th:selected="${currentDossier.typeFormation == typeFormation}"
+                                                            th:each="typeFormation : ${typFrmns}"
+                                                            th:value="${typeFormation}"
+                                                            th:text="#{'enquete.typFrmn.' +${typeFormation}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="modFrmns">Modalité formation<span th:text="${currentDossier.modeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
+                                            <div>
+                                                <select id="modeFormation" name="modFrmn" type="text" class="form-control" disabled>
+                                                    <option value="" disabled selected></option>
+                                                    <option th:selected="${currentDossier.modeFormation == modeFormation}"
+                                                            th:each="modeFormation : ${modFrmns}"
+                                                            th:value="${modeFormation}"
+                                                            th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codFil">Discipline</label>
+                                            <div>
+                                                <select id="codFil" name="codFil" class="form-select" size="1">
+                                                    <option disabled selected value="">Choisir</option>
+                                                    <option th:selected="${enumCodfil == enquete.codFil}"
+                                                            th:each="enumCodfil : ${codFils}"
+                                                            th:value="${enumCodfil}"
+                                                            th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codFmt">Formation</label>
+                                            <div>
+                                                <select id="codFmt" name="codFmt" size="1">
+                                                    <option selected th:if="${enquete.codFmt != null}"
+                                                            th:value="${enquete.codFmt}"
+                                                            th:text="${enqueteEnumFilFmtSco.get('fmt' + enquete.codFmt.toLowerCase())}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="codScoDiv">
+                                            <label class="mt-1 form-label" th:for="codSco">Année d’études</label>
+                                            <div>
+                                                <select id="codSco" name="codSco" size="1">
+                                                    <option selected th:if="${enquete.codSco != null}"
+                                                            th:value="${enquete.codSco}"
+                                                            th:text="${enqueteEnumFilFmtSco.get('sco' + enquete.codSco.toLowerCase())}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codHd">Type de handicap</label>
+                                            <div>
+                                                <select id="_codHd_id" name="codHd" class="form-select" size="1" disabled>
+                                                    <option disabled selected value="nul">Choisir</option>
+                                                    <option th:selected="${enumCodHd == enquete.codHd}"
+                                                            th:each="enumCodHd : ${codHds}"
+                                                            th:value="${enumCodHd}"
+                                                            th:text="#{'enquete.codHd.' + ${enumCodHd}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <input th:field="*{hdTmp}" type="checkbox" th:checked="${hdTmp}" disabled style="width: 15px; height: 15px;">
+                                            <label class="form-label mt-2" th:for="hdTmp">Handicap temporaire
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label th:for="com" class="mt-1 form-label">Commentaire</label>
+                                            <div>
+                                                <textarea th:field="*{com}" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codPfpp">Plan d’accompagnement</label>
+                                            <div>
+                                                <select id="_codPfpp_id" name="codPfpp" class="form-select" size="1">
+                                                    <option disabled selected value="nul">Choisir</option>
+                                                    <option th:selected="${enumCodpfpp == enquete.codPfpp}"
+                                                            th:each="enumCodpfpp : ${codPfpps}"
+                                                            th:value="${enumCodpfpp}"
+                                                            th:text="#{'enquete.codPfpp.' + ${enumCodpfpp}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codPfas">Aménagement spécifique</label>
+                                            <div>
+                                                <select id="_codPfas_id" name="codPfas" class="form-select" size="1">
+                                                    <option disabled selected value="nul">Choisir</option>
+                                                    <option th:selected="${enumCodPfas == enquete.codPfas}"
+                                                            th:each="enumCodPfas : ${codPfass}"
+                                                            th:value="${enumCodPfas}"
+                                                            th:text="#{'enquete.codPfas.' + ${enumCodPfas}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codMeahF">Mesures aides humaines</label>
+                                            <div>
+                                                <div class="d-inline me-2">
+                                                    <input id="AHS0Off"
+                                                            name="AHS0"
                                                             type="radio"
-                                                            th:value="AM00"
-                                                            th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
-                                                    <label for="AM0On" th:text="#{'enquete.codAmL.AM00'}"></label>
+                                                            th:value="AHS0"
+                                                            th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
+                                                    <label for="AHS0Off">Aucune aide humaine spécifique</label>
                                                 </div>
                                                 <div class="d-inline">
-                                                    <input id="AM0Off"
-                                                            name="AM0"
+                                                    <input id="AHS0On"
+                                                            name="AHS0"
                                                             type="radio"
                                                             value=""
-                                                            th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
-                                                    <label for="AM0Off" th:text="#{'enquete.label.NoAM00'}"></label>
+                                                            th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS0)}">
+                                                    <label for="AHS0On">L'étudiant bénéficie d’aide(s) humaine(s) spécifique(s)</label>
                                                 </div>
-                                                <div id="codAmLDiv"
-                                                        th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
-                                                    <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
-                                                        <div>
-                                                            <label class="text-decoration-underline mt-2"
-                                                                    th:for="${enumLibelleCodAmL}"
-                                                                    th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
+                                                <div id="codMeahFDiv"
+                                                        th:classappend="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).valueOf('AHS0'))} ? 'd-none' : ''">
+                                                    <th:block th:each="enumLibelleCodMeahF : ${libelleCodMeahFs}">
+                                                        <div class="mt-2">
+                                                            <label class="text-decoration-underline"
+                                                                    th:for="${enumLibelleCodMeahF}"
+                                                                    th:text="#{'enquete.libelleCodMeahF.' + ${enumLibelleCodMeahF}}"></label>
                                                             <br />
-                                                            <div class="d-inline">
-                                                                <input th:id="'0' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
+                                                            <th:block th:each="codMeahF : ${codMeahFs}"
+                                                                    th:if="${!enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
+                                                                <input th:name="${enumLibelleCodMeahF}"
+                                                                        th:type="${codMeahF.name().startsWith('AHS1') || codMeahF.name().startsWith('AHS2')} ? 'checkbox' : 'radio'"
+                                                                        th:value="${codMeahF}"
+                                                                        th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"
+                                                                        th:checked="${enquete.codMeahF.contains(codMeahF)}">
+                                                                <label class="me-2"
+                                                                        th:text="#{'enquete.codMeahF.' + ${codMeahF}}"
+                                                                        th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
+                                                            </th:block>
+                                                            <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
+                                                                <input th:name="${enumLibelleCodMeahF}"
                                                                         type="radio"
-                                                                        th:value="${enumLibelleCodAmL} + '0'"
-                                                                        th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
-                                                                <label th:for="'0' + ${enumLibelleCodAmL}" class="me-2">Non</label>
-                                                                <input th:id="'1' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
+                                                                        value="on"
+                                                                        th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
+                                                                <label class="me-2">Oui</label>
+                                                                <input th:name="${enumLibelleCodMeahF}"
                                                                         type="radio"
-                                                                        th:value="${enumLibelleCodAmL} + '1'"
-                                                                        th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1'))}">
-                                                                <label th:for="'1' + ${enumLibelleCodAmL}" class="me-2">Oui</label>
-                                                                <input th:id="'X' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
-                                                                        type="radio"
-                                                                        th:value="${enumLibelleCodAmL} + 'X'"
-                                                                        th:checked="${enquete.codAmL.isEmpty() || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).AM00) || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
-                                                                <label th:for="'X' + ${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
-                                                            </div>
+                                                                        value="off"
+                                                                        th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
+                                                                <label>Non</label>
+                                                            </th:block>
                                                         </div>
                                                     </th:block>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="submit mb-3 mt-3">
-                                            <div class="btn-group"><span class="visible-lg-block visible-md-block visible-sm-block">
-                                                <input class="btn btn-success form-submit-btn d-none" value="Enregistrer" type="submit"></span><span class="visible-xs-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <div>
+                                            <label class="mt-3 form-label" th:for="interpH">Interprète: nombre d’heures</label>
+                                            <div>
+                                                <input th:field="*{interpH}" class="form-control" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codeurH">Codeur: nombre d’heures</label>
+                                            <div>
+                                                <input th:field="*{codeurH}" class="form-control" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label th:for="aidHNat" class="mt-1 form-label">Autre aide humaine</label>
+                                            <div>
+                                                <textarea th:field="*{aidHNat}" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codMeae">Aménagement des examens</label>
+                                            <div>
+                                                <select multiple id="codMeae" th:field="*{codMeae}">
+                                                    <option th:checked="${enquete.codMeae.contains(codMeaes)}"
+                                                            th:each="enumCodMeae : ${codMeaes}"
+                                                            th:value="${enumCodMeae}"
+                                                            th:text="#{'enquete.codMeae.' + ${enumCodMeae}}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label th:for="autAE" class="mt-1 form-label">Autre aménagement des examens</label>
+                                            <div>
+                                                <textarea th:field="*{autAE}" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
+                                            <div class="form-check">
+                                                <th:block th:each="enumCodMeaa : ${codMeaaStructures}">
+                                                    <input th:id="${enumCodMeaa}" name="codMeaaStructure" type="radio" th:value="${enumCodMeaa}"
+                                                            th:checked="${enquete.codMeaa.contains(enumCodMeaa)}">
+                                                    <label th:for="${enumCodMeaa}" th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></label>
+                                                </th:block>
+                                            </div>
+                                            <div>
+                                                <select multiple id="codMeaa" th:field="*{codMeaa}" class="" th:disabled="${currentYear == currentDossier.year && enquete.finished == true}">
+                                                    <option th:checked="${enquete.codMeaa.contains(codMeaas)}"
+                                                            th:each="enumCodMeaa : ${codMeaas}"
+                                                            th:value="${enumCodMeaa}"
+                                                            th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
+                                                </select>
+                                            </div>
+                                            <div id="autAADiv" th:class="${enquete.codMeaa.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).AAo) ? '' : 'd-none'}">
+                                                <label th:for="autAA" class="mt-1 form-label">Autres (à préciser)</label>
+                                                <div>
+                                                    <textarea th:field="*{autAA}" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="mt-1 form-label" th:for="codAmL">Autres mesures relevant ou non de la compétence de la CDAPH</label>
+                                                <div>
+                                                    <div class="d-inline">
+                                                        <input id="AM0On"
+                                                                name="AM0"
+                                                                type="radio"
+                                                                th:value="AM00"
+                                                                th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                        <label for="AM0On" th:text="#{'enquete.codAmL.AM00'}"></label>
+                                                    </div>
+                                                    <div class="d-inline">
+                                                        <input id="AM0Off"
+                                                                name="AM0"
+                                                                type="radio"
+                                                                value=""
+                                                                th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                        <label for="AM0Off" th:text="#{'enquete.label.NoAM00'}"></label>
+                                                    </div>
+                                                    <div id="codAmLDiv"
+                                                            th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
+                                                        <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
+                                                            <div>
+                                                                <label class="text-decoration-underline mt-2"
+                                                                        th:for="${enumLibelleCodAmL}"
+                                                                        th:text="#{'enquete.libelleCodAmL.' + ${enumLibelleCodAmL}}"></label>
+                                                                <br />
+                                                                <div class="d-inline">
+                                                                    <input th:id="'0' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
+                                                                            type="radio"
+                                                                            th:value="${enumLibelleCodAmL} + '0'"
+                                                                            th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))}">
+                                                                    <label th:for="'0' + ${enumLibelleCodAmL}" class="me-2">Non</label>
+                                                                    <input th:id="'1' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
+                                                                            type="radio"
+                                                                            th:value="${enumLibelleCodAmL} + '1'"
+                                                                            th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1'))}">
+                                                                    <label th:for="'1' + ${enumLibelleCodAmL}" class="me-2">Oui</label>
+                                                                    <input th:id="'X' + ${enumLibelleCodAmL}" th:name="${enumLibelleCodAmL}"
+                                                                            type="radio"
+                                                                            th:value="${enumLibelleCodAmL} + 'X'"
+                                                                            th:checked="${enquete.codAmL.isEmpty() || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).AM00) || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
+                                                                    <label th:for="'X' + ${enumLibelleCodAmL}" class="me-2">Ne sais pas</label>
+                                                                </div>
+                                                            </div>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="submit mb-3 mt-3">
+                                                <div class="btn-group"><span class="visible-lg-block visible-md-block visible-sm-block">
+                                                    <input class="btn btn-success form-submit-btn d-none" value="Enregistrer" type="submit"></span><span class="visible-xs-block"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </fieldset>
                     </form>
+                </div>
+            </div>
+            <div class="modal fade" id="finishedModal" tabindex="-1" aria-labelledby="finishedModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="finishedModalLabel">L'enquête est complète ?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Validez-vous que l’enquête est bien complète ?
+                        </div>
+                        <form th:action="'/dossiers/' + ${dossierId} + '/enquete/' + ${enquete.id} +'/finished'" method="post">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                <button type="submit" class="btn btn-primary">Oui</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="unlockModal" tabindex="-1" aria-labelledby="unlockModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="unlockModalLabel">L'enquête est complète ?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Vous souhaitez modifier l’enquête.
+                            Elle ne sera plus considérée comme complète jusqu’à ce qu’elle soit de nouveau validée.
+                        </div>
+                        <form th:action="'/dossiers/' + ${dossierId} + '/enquete/' + ${enquete.id} +'/finished'" method="post">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary">Continuer</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </main>

@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
-import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
@@ -14,20 +13,16 @@ import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EnqueteService {
@@ -43,17 +38,20 @@ public class EnqueteService {
     private final AmenagementService amenagementService;
 
     private final UtilsService utilsService;
-    private final DossierRepository dossierRepository;
 
-    public EnqueteService(EnqueteRepository enqueteRepository, EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository, EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository, DossierService dossierService, AmenagementService amenagementService, UtilsService utilsService,
-                          DossierRepository dossierRepository) {
+    public EnqueteService(
+            EnqueteRepository enqueteRepository,
+            EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository,
+            EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
+            DossierService dossierService,
+            AmenagementService amenagementService,
+            UtilsService utilsService) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
-        this.dossierRepository = dossierRepository;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -314,6 +312,15 @@ public class EnqueteService {
         return enqueteRepository.findByDossierId(dossierId).get();
     }
 
+    @Transactional
+    public void finished(Long enqueteId) {
+        Enquete enquete = getById(enqueteId);
+        if(enquete.getFinished() != null) {
+            enquete.setFinished(!enquete.getFinished());
+        } else {
+            enquete.setFinished(true);
+        }
+    }
 
     public List<Enquete> findAllByDossierYear(int year) {
         return enqueteRepository.findAllByDossierYear(year);

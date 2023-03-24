@@ -263,15 +263,15 @@ public class AmenagementService {
         }
         certificatPdf.setTypeEpreuves(amenagement.getTypeEpreuves().stream().map(typeEpreuve -> messageSource.getMessage("amenagement.typeEpreuve." + typeEpreuve.name(), null, Locale.getDefault())).collect(Collectors.joining(", ")));
         certificatPdf.setTempsMajore(messageSource.getMessage("amenagement.tempsMajore." + amenagement.getTempsMajore().name(), null, Locale.getDefault()));
-        String amenagementsWithNumbers = "";
+        StringBuilder amenagementsWithNumbers = new StringBuilder();
         int i = 1;
         for(String line : amenagement.getAmenagementText().split("\r\n")) {
-            amenagementsWithNumbers += i + " - " + line + "\r\n";
+            amenagementsWithNumbers.append(i).append(" - ").append(line).append("\r\n");
             i++;
         }
         certificatPdf.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         certificatPdf.setAutresTempsMajores(amenagement.getAutresTempsMajores());
-        certificatPdf.setAmenagementText(amenagementsWithNumbers);
+        certificatPdf.setAmenagementText(amenagementsWithNumbers.toString());
         certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
