@@ -1,9 +1,11 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.RentreeProchaine;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -87,26 +89,18 @@ public class DossierController {
 
     @GetMapping("/filter")
     public String listFilter(
-            @RequestParam(required = false) String fullTextSearch,
-            @RequestParam(required = false) TypeIndividu typeIndividu,
-            @RequestParam(required = false) StatusDossier statusDossier,
-            @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
-            @RequestParam(required = false) Integer yearFilter,
+            DossierFilter dossierFilter,
             @PageableDefault(sort = "name") Pageable pageable, Model model) {
-        if (yearFilter == null) {
-            yearFilter = utilsService.getCurrentYear();
-        }
-        model.addAttribute("fullTextSearch", fullTextSearch);
-        model.addAttribute("typeIndividu", typeIndividu);
-        model.addAttribute("statusDossier", statusDossier);
-        model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
-        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
-        model.addAttribute("yearFilter", yearFilter);
+        dossierFilter.setYearFilter(utilsService.getCurrentYear());
         model.addAttribute("years", utilsService.getYears());
+        model.addAttribute("genders", Gender.values());
+        model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
+        model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
-        return "dossiers/list";
+        return "dossiers/list-filter";
     }
 
     @GetMapping("/{dossierId}")

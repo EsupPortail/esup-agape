@@ -3,8 +3,8 @@ package org.esupportail.esupagape.dtos.forms;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DossierFilters {
+public class DossierFilter {
 
     private Integer yearFilter;
     private Boolean newDossier;
@@ -22,7 +22,7 @@ public class DossierFilters {
     private LocalDate dateOfBirth;
     private String fixCP;
     private StatusDossier statusDossier;
-    private StatusAmenagement statusAmenagement;
+    private StatusDossierAmenagement statusDossierAmenagement;
     private Mdph mdph;
     private Boolean suiviHandisup;
     private Boolean finished;
@@ -91,12 +91,12 @@ public class DossierFilters {
         this.statusDossier = statusDossier;
     }
 
-    public StatusAmenagement getStatusAmenagement() {
-        return statusAmenagement;
+    public StatusDossierAmenagement getStatusDossierAmenagement() {
+        return statusDossierAmenagement;
     }
 
-    public void setStatusAmenagement(StatusAmenagement statusAmenagement) {
-        this.statusAmenagement = statusAmenagement;
+    public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {
+        this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
     public Mdph getMdph() {
