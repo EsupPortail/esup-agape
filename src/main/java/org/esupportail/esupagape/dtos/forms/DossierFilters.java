@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.dtos.forms;
 
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
@@ -13,14 +14,13 @@ import java.util.Set;
 public class DossierFilters {
 
     private Boolean newDossier;
-    private String gender;
+    private Gender gender;
     private LocalDate dateOfBirth;
     private String fixCP;
     private StatusAmenagement statusAmenagement;
     private Mdph mdph;
-    private Boolean hdTmp;
+    private Boolean suiviHandisup;
     private Boolean finished;
-
     private TypFrmn typFrmn;
     private ModFrmn modFrmn;
     private Set<Classification> classification = new HashSet<>();
@@ -38,11 +38,11 @@ public class DossierFilters {
         this.newDossier = newDossier;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -78,12 +78,12 @@ public class DossierFilters {
         this.mdph = mdph;
     }
 
-    public Boolean getHdTmp() {
-        return hdTmp;
+    public Boolean getSuiviHandisup() {
+        return suiviHandisup;
     }
 
-    public void setHdTmp(Boolean hdTmp) {
-        this.hdTmp = hdTmp;
+    public void setSuiviHandisup(Boolean suiviHandisup) {
+        this.suiviHandisup = suiviHandisup;
     }
 
     public Boolean getFinished() {
