@@ -76,9 +76,9 @@ public class ExportService {
         put("sexe", "Sexe");
         put("typFrmn", "Type formation");
         put("modFrmn", "Modalité formation");
-        put("codSco", "Discipline");
+        put("codFil", "Discipline");
         put("codFmt", "Formation");
-        put("codFil", "Année d'études");
+        put("codSco", "Année d'études");
         put("codHd", "Type de handicap");
         put("hdTmp", "Handicap temporaire");
         put("com", "Commentaire");
