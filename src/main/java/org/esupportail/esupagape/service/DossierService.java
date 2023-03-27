@@ -3,6 +3,7 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
+import org.esupportail.esupagape.dtos.forms.DossierFilters;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
@@ -21,6 +22,7 @@ import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosSer
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,8 @@ public class DossierService {
         dossier.setStatusDossier(statusDossier);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
+        } else {
+            dossier.setType(TypeIndividu.INCONNU);
         }
         dossierRepository.save(dossier);
         return dossier;
@@ -240,6 +244,17 @@ public class DossierService {
             dossier.getAttachments().remove(attachment);
             documentService.delete(attachment);
         }
+    }
+
+    @Transactional
+    public Page<Dossier> findDossierByDossierFilter(DossierFilters dossierFilters) {
+        Dossier dossier = new Dossier();
+        dossier.setStatusDossierAmenagement(dossierFilters.getStatusDossierAmenagement());
+        Individu individu = new Individu();
+        individu.setGender(dossierFilters.getGender());
+        dossier.setIndividu(individu);
+        Example<Dossier> dossierExample = Example.of(dossier);
+        return dossierRepository.findAll(dossierExample, Pageable.unpaged());
     }
 
     public boolean isDossierOfThisYear(Dossier dossier) {

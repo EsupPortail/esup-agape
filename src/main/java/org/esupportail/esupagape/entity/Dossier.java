@@ -20,7 +20,7 @@ public class Dossier {
     private Long id;
 
 
-    private int year;
+    private Integer year;
 
     @Enumerated(EnumType.STRING)
     private StatusDossier statusDossier;
@@ -46,7 +46,7 @@ public class Dossier {
     private RentreeProchaine rentreeProchaine;
 
     @Enumerated(EnumType.STRING)
-    private TypeIndividu type = TypeIndividu.INCONNU;
+    private TypeIndividu type;
 
     @Enumerated(EnumType.STRING)
     private Taux taux;
@@ -76,15 +76,15 @@ public class Dossier {
 
     private String resultatS1;
 
-    private double noteS1;
+    private Double noteS1;
 
     private String resultatS2;
 
-    private double noteS2;
+    private Double noteS2;
 
     private String resultatTotal;
 
-    private double noteTotal;
+    private Double noteTotal;
 
     private Boolean suiviHandisup;
 
@@ -126,11 +126,11 @@ public class Dossier {
         this.id = id;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -162,8 +162,8 @@ public class Dossier {
         return typeSuiviHandisup;
     }
 
-    public void setTypeSuiviHandisup(Set<TypeSuiviHandisup> detailSuiviHandisup) {
-        this.typeSuiviHandisup = detailSuiviHandisup;
+    public void setTypeSuiviHandisup(Set<TypeSuiviHandisup> typeSuiviHandisup) {
+        this.typeSuiviHandisup = typeSuiviHandisup;
     }
 
     public Etat getEtat() {
@@ -286,11 +286,11 @@ public class Dossier {
         this.resultatS1 = resultatS1;
     }
 
-    public double getNoteS1() {
+    public Double getNoteS1() {
         return noteS1;
     }
 
-    public void setNoteS1(double noteS1) {
+    public void setNoteS1(Double noteS1) {
         this.noteS1 = noteS1;
     }
 
@@ -302,11 +302,11 @@ public class Dossier {
         this.resultatS2 = resultatS2;
     }
 
-    public double getNoteS2() {
+    public Double getNoteS2() {
         return noteS2;
     }
 
-    public void setNoteS2(double noteS2) {
+    public void setNoteS2(Double noteS2) {
         this.noteS2 = noteS2;
     }
 
@@ -318,11 +318,11 @@ public class Dossier {
         this.resultatTotal = resultatTotal;
     }
 
-    public double getNoteTotal() {
+    public Double getNoteTotal() {
         return noteTotal;
     }
 
-    public void setNoteTotal(double noteTotal) {
+    public void setNoteTotal(Double noteTotal) {
         this.noteTotal = noteTotal;
     }
 
@@ -421,5 +421,4 @@ public class Dossier {
     public void setAttachments(List<Document> attachments) {
         this.attachments = attachments;
     }
-
 }
