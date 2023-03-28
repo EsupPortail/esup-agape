@@ -1,6 +1,11 @@
 package org.esupportail.esupagape.dtos.forms;
 
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
@@ -8,12 +13,15 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DossierFilters {
+public class DossierFilter {
 
+    private Integer yearFilter;
     private Boolean newDossier;
+    private TypeIndividu type;
     private Gender gender;
     private LocalDate dateOfBirth;
     private String fixCP;
+    private StatusDossier statusDossier;
     private StatusDossierAmenagement statusDossierAmenagement;
     private Mdph mdph;
     private Boolean suiviHandisup;
@@ -27,12 +35,28 @@ public class DossierFilters {
     private String codSco;
     private String resultatTotal;
 
+    public Integer getYearFilter() {
+        return yearFilter;
+    }
+
+    public void setYearFilter(Integer yearFilter) {
+        this.yearFilter = yearFilter;
+    }
+
     public Boolean getNewDossier() {
         return newDossier;
     }
 
     public void setNewDossier(Boolean newDossier) {
         this.newDossier = newDossier;
+    }
+
+    public TypeIndividu getType() {
+        return type;
+    }
+
+    public void setType(TypeIndividu type) {
+        this.type = type;
     }
 
     public Gender getGender() {
@@ -57,6 +81,14 @@ public class DossierFilters {
 
     public void setFixCP(String fixCP) {
         this.fixCP = fixCP;
+    }
+
+    public StatusDossier getStatusDossier() {
+        return statusDossier;
+    }
+
+    public void setStatusDossier(StatusDossier statusDossier) {
+        this.statusDossier = statusDossier;
     }
 
     public StatusDossierAmenagement getStatusDossierAmenagement() {

@@ -1,153 +1,179 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-  <div th:fragment="side-filters" class="agape-side bg-light position-sticky ms-2 me-2">
-    <span class="fs-6 card text-bg-primary mt-3 mb-3 ps-3">Filtres avancés</span>
-      <form th:action="'/dossiers/filter'">
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Nouveau dossier</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Discipline</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Classification</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">MDPH</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Suivi handisup</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Composante</label>
-          <select class="form-select" name="yearFilter">
-            <option value="">Choisir</option>
-            <option th:selected="${yearFilter == year.number}"
-                    th:each="year : ${years}"
-                    th:value="${year.number}"
-                    th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Formation</label>
-          <select class="form-select" name="yearFilter">
-            <option value="">Choisir</option>
-            <option th:selected="${yearFilter == year.number}"
-                    th:each="year : ${years}"
-                    th:value="${year.number}"
-                    th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Niveau</label>
-          <select class="form-select" name="yearFilter">
-            <option value="">Choisir</option>
-            <option th:selected="${yearFilter == year.number}"
-                    th:each="year : ${years}"
-                    th:value="${year.number}"
-                    th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Enquête terminée</label>
-          <select class="form-select" name="enqueteFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Nouveau dossier</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Statut aménagement</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Genre</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Année naissance</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Code postal</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Type formation</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Modalité formation</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <div class="input-group mb-1">
-          <label class="input-group-text col-6">Résultat</label>
-          <select class="form-select" name="newFilter">
-            <option value="">Choisir</option>
-            <option value="1">Oui</option>
-            <option value="0">Non</option>
-          </select>
-        </div>
-        <input class="btn btn-success" type="submit" value="Filtrer">
-      </form>
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="dossierFilter" type="org.esupportail.esupagape.dtos.forms.DossierFilter"*/-->
+<div th:fragment="side-filters" class="agape-side bg-light position-sticky me-2">
+    <div class="p-2">
+        <span class="fs-6 card text-bg-primary ps-3">Filtres avancés</span>
     </div>
-  </div>
+    <form th:action="@{/dossiers/filter}" th:method="post" th:object="${dossierFilter}">
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Année universitaire</label>
+            <select class="form-select form-select-sm" th:field="*{yearFilter}">
+                <option value="">Choisir</option>
+                <th:block th:each="year : ${years}">
+                <option
+                        th:value="${year.number}"
+                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Nouveau dossier</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Type individu</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Genre</label>
+            <select th:field="*{gender}" class="form-select form-select-sm">
+                <option value="">Choisir</option>
+                <option th:each="gender : ${genders}"
+                        th:text="#{'individu.gender.' +${gender}}"
+                        th:value="${gender}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Année naissance</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Code postal</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Statut dossier</label>
+            <select class="form-select form-select-sm" th:field="*{statusDossier}">
+                <option value="">Choisir</option>
+                <option th:each="enumStatusDossier: ${statusDossiers}"
+                        th:value="${enumStatusDossier}"
+                        th:text="#{'dossier.statusDossier.' + ${enumStatusDossier}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Statut dossier aménagement</label>
+            <select th:field="*{statusDossierAmenagement}" class="form-select form-select-sm" >
+                <option value="">Choisir</option>
+                <option th:each="enumStatusDossierAmenagement: ${statusDossierAmenagements}"
+                        th:value="${enumStatusDossierAmenagement}"
+                        th:text="#{'dossier.statusDossierAmenagement.' + ${enumStatusDossierAmenagement}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">MDPH</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Suivi handisup</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Enquête terminée</label>
+            <select class="form-select form-select-sm" name="enqueteFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label th:for="typFrmns" class="input-group-text col-6">Type formation</label>
+            <select th:field="*{typFrmn}" type="text" class="form-select form-select-sm">
+                <option value="">Choisir</option>
+                <option th:each="typeFormation : ${typFrmns}"
+                        th:value="${typeFormation}"
+                        th:text="#{'enquete.typFrmn.' +${typeFormation}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Modalité formation</label>
+            <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm">
+                <option value="">Choisir</option>
+                <option th:each="modeFormation : ${modFrmns}"
+                        th:value="${modeFormation}"
+                        th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Classification</label>
+            <select th:field="*{classification}" type="text" class="form-select form-select-sm">
+                <option value="">Choisir</option>
+                <option th:each="classification : ${classifications}"
+                        th:value="${classification}"
+                        th:text="#{'dossier.classification.' +${classification}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Composante</label>
+            <select type="text" class="form-select form-select-sm">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Discipline</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Formation</label>
+            <select class="form-select form-select-sm" name="yearFilter">
+                <option value="">Choisir</option>
+                <option th:selected="${yearFilter == year.number}"
+                        th:each="year : ${years}"
+                        th:value="${year.number}"
+                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Niveau</label>
+            <select class="form-select form-select-sm" name="yearFilter">
+                <option value="">Choisir</option>
+                <option th:selected="${yearFilter == year.number}"
+                        th:each="year : ${years}"
+                        th:value="${year.number}"
+                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6">Résultat</label>
+            <select class="form-select form-select-sm" name="newFilter">
+                <option value="">Choisir</option>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>
+        </div>
+    <input class="btn btn-success float-end" type="submit" value="Filtrer">
+</form>
+</div>
+</div>
 </html>

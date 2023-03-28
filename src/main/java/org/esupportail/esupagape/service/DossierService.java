@@ -1,9 +1,11 @@
 package org.esupportail.esupagape.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
+import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
-import org.esupportail.esupagape.dtos.forms.DossierFilters;
+import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +34,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DossierService {
@@ -51,11 +51,13 @@ public class DossierService {
 
     private final DocumentService documentService;
 
+    private final ObjectMapper objectMapper;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, ObjectMapper objectMapper) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.objectMapper = objectMapper;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
@@ -247,14 +249,33 @@ public class DossierService {
     }
 
     @Transactional
-    public Page<Dossier> findDossierByDossierFilter(DossierFilters dossierFilters) {
-        Dossier dossier = new Dossier();
-        dossier.setStatusDossierAmenagement(dossierFilters.getStatusDossierAmenagement());
-        Individu individu = new Individu();
-        individu.setGender(dossierFilters.getGender());
-        dossier.setIndividu(individu);
-        Example<Dossier> dossierExample = Example.of(dossier);
-        return dossierRepository.findAll(dossierExample, Pageable.unpaged());
+    public Page<DossierIndividuClassDto> findDossierByDossierFilter(DossierFilter dossierFilter, Pageable pageable) {
+        Dossier dossierEx = new Dossier();
+        dossierEx.setYear(dossierFilter.getYearFilter());
+        dossierEx.setStatusDossier(dossierFilter.getStatusDossier());
+        dossierEx.setStatusDossierAmenagement(dossierFilter.getStatusDossierAmenagement());
+        Individu individuEx = new Individu();
+        individuEx.setGender(dossierFilter.getGender());
+        dossierEx.setIndividu(individuEx);
+        Example<Dossier> dossierExample = Example.of(dossierEx);
+        List<Dossier> dossiers = dossierRepository.findAll(dossierExample);
+        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
+        for(Dossier dossier : dossiers) {
+            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
+            dossierIndividuDto.setId(dossier.getId());
+            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
+            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
+            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
+            dossierIndividuDto.setName(dossier.getIndividu().getName());
+            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
+            dossierIndividuDto.setType(dossier.getType());
+            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
+            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
+            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
+            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
+            dossierIndividuDtos.add(dossierIndividuDto);
+        }
+        return new PageImpl<>(dossierIndividuDtos.stream().skip(pageable.getPageNumber() * pageable.getPageSize()).limit(pageable.getPageSize()).toList(), pageable, dossierIndividuDtos.size());
     }
 
     public boolean isDossierOfThisYear(Dossier dossier) {

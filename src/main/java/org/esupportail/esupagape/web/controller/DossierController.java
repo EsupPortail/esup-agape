@@ -1,9 +1,17 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.dtos.forms.DossierFilters;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.dtos.forms.DossierFilter;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.RentreeProchaine;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.Taux;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -27,7 +35,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -59,6 +66,7 @@ public class DossierController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
+        model.addAttribute("dossierFilter", new DossierFilter());
         model.addAttribute("fullTextSearch", fullTextSearch);
         model.addAttribute("typeIndividu", typeIndividu);
         model.addAttribute("statusDossier", statusDossier);
@@ -72,31 +80,22 @@ public class DossierController {
         return "dossiers/list";
     }
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
     public String listFilter(
-            @RequestParam(required = false) String fullTextSearch,
-            @RequestParam(required = false) TypeIndividu typeIndividu,
-            @RequestParam(required = false) StatusDossier statusDossier,
-            @RequestParam(required = false) StatusDossierAmenagement statusDossierAmenagement,
-            @RequestParam(required = false) Integer yearFilter,
+            @Valid DossierFilter dossierFilter,
             @PageableDefault(sort = "name") Pageable pageable, Model model) {
-        if (yearFilter == null) {
-            yearFilter = utilsService.getCurrentYear();
-        }
-        model.addAttribute("fullTextSearch", fullTextSearch);
-        model.addAttribute("typeIndividu", typeIndividu);
-        model.addAttribute("statusDossier", statusDossier);
-        model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
-        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
-        model.addAttribute("yearFilter", yearFilter);
+//        if(dossierFilter.getYearFilter() == null) {
+//            dossierFilter.setYearFilter(utilsService.getCurrentYear());
+//        }
+        model.addAttribute("dossierFilter", dossierFilter);
         model.addAttribute("years", utilsService.getYears());
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
-        DossierFilters dossierFilters = new DossierFilters();
-        dossierFilters.setGender(Gender.MASCULIN);
-        List<Dossier> dossiers = dossierService.findDossierByDossierFilter(dossierFilters).getContent();
-        return "dossiers/list";
+        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
+
+//        return "dossiers/list";
+        return "dossiers/list-filter";
     }
 
     @GetMapping("/{dossierId}")

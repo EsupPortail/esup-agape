@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     @Query("""
-            select distinct d.id as id, i.numEtu as numEtu, i.codeIne as codeIne, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.gender as gender,
+            select d.id as id, i.numEtu as numEtu, i.codeIne as codeIne, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth, i.gender as gender,
             d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId
             from Dossier d join Individu i on i.id = d.individu.id
             where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%'))
