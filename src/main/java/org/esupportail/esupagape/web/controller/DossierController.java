@@ -83,7 +83,7 @@ public class DossierController {
     @PostMapping("/filter")
     public String listFilter(
             @Valid DossierFilter dossierFilter,
-            @PageableDefault(sort = "name") Pageable pageable, Model model) {
+            @PageableDefault(sort = "id") Pageable pageable, Model model) {
 //        if(dossierFilter.getYearFilter() == null) {
 //            dossierFilter.setYearFilter(utilsService.getCurrentYear());
 //        }

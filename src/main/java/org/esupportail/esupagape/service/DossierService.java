@@ -258,7 +258,7 @@ public class DossierService {
         individuEx.setGender(dossierFilter.getGender());
         dossierEx.setIndividu(individuEx);
         Example<Dossier> dossierExample = Example.of(dossierEx);
-        List<Dossier> dossiers = dossierRepository.findAll(dossierExample);
+        Page<Dossier> dossiers = dossierRepository.findAll(dossierExample, pageable);
         List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
         for(Dossier dossier : dossiers) {
             DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
@@ -275,7 +275,7 @@ public class DossierService {
             dossierIndividuDto.setGender(dossier.getIndividu().getGender());
             dossierIndividuDtos.add(dossierIndividuDto);
         }
-        return new PageImpl<>(dossierIndividuDtos.stream().skip(pageable.getPageNumber() * pageable.getPageSize()).limit(pageable.getPageSize()).toList(), pageable, dossierIndividuDtos.size());
+        return new PageImpl<>(dossierIndividuDtos, pageable, dossierIndividuDtos.size());
     }
 
     public boolean isDossierOfThisYear(Dossier dossier) {
