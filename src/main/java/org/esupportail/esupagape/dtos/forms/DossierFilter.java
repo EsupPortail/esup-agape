@@ -1,16 +1,12 @@
 package org.esupportail.esupagape.dtos.forms;
 
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class DossierFilter {
@@ -21,7 +17,7 @@ public class DossierFilter {
     private Gender gender;
     private LocalDate dateOfBirth;
     private String fixCP;
-    private StatusDossier statusDossier;
+    private List<StatusDossier> statusDossier;
     private StatusDossierAmenagement statusDossierAmenagement;
     private Mdph mdph;
     private Boolean suiviHandisup;
@@ -83,11 +79,11 @@ public class DossierFilter {
         this.fixCP = fixCP;
     }
 
-    public StatusDossier getStatusDossier() {
+    public List<StatusDossier> getStatusDossier() {
         return statusDossier;
     }
 
-    public void setStatusDossier(StatusDossier statusDossier) {
+    public void setStatusDossier(List<StatusDossier> statusDossier) {
         this.statusDossier = statusDossier;
     }
 

@@ -24,7 +24,6 @@ import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosSer
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -252,35 +251,35 @@ public class DossierService {
         }
     }
 
-    @Transactional
-    public Page<DossierIndividuClassDto> findDossierByDossierFilter(DossierFilter dossierFilter, Pageable pageable) {
-        Dossier dossierEx = new Dossier();
-        dossierEx.setYear(dossierFilter.getYearFilter());
-        dossierEx.setStatusDossier(dossierFilter.getStatusDossier());
-        dossierEx.setStatusDossierAmenagement(dossierFilter.getStatusDossierAmenagement());
-        Individu individuEx = new Individu();
-        individuEx.setGender(dossierFilter.getGender());
-        dossierEx.setIndividu(individuEx);
-        Example<Dossier> dossierExample = Example.of(dossierEx);
-        Page<Dossier> dossiers = dossierRepository.findAll(dossierExample, pageable);
-        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
-        for(Dossier dossier : dossiers) {
-            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
-            dossierIndividuDto.setId(dossier.getId());
-            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
-            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
-            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
-            dossierIndividuDto.setName(dossier.getIndividu().getName());
-            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
-            dossierIndividuDto.setType(dossier.getType());
-            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
-            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
-            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
-            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
-            dossierIndividuDtos.add(dossierIndividuDto);
-        }
-        return new PageImpl<>(dossierIndividuDtos, pageable, dossierIndividuDtos.size());
-    }
+//    @Transactional
+//    public Page<DossierIndividuClassDto> findDossierByDossierFilter(DossierFilter dossierFilter, Pageable pageable) {
+//        Dossier dossierEx = new Dossier();
+//        dossierEx.setYear(dossierFilter.getYearFilter());
+//        dossierEx.setStatusDossier(dossierFilter.getStatusDossier());
+//        dossierEx.setStatusDossierAmenagement(dossierFilter.getStatusDossierAmenagement());
+//        Individu individuEx = new Individu();
+//        individuEx.setGender(dossierFilter.getGender());
+//        dossierEx.setIndividu(individuEx);
+//        Example<Dossier> dossierExample = Example.of(dossierEx);
+//        Page<Dossier> dossiers = dossierRepository.findAll(dossierExample, pageable);
+//        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
+//        for(Dossier dossier : dossiers) {
+//            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
+//            dossierIndividuDto.setId(dossier.getId());
+//            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
+//            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
+//            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
+//            dossierIndividuDto.setName(dossier.getIndividu().getName());
+//            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
+//            dossierIndividuDto.setType(dossier.getType());
+//            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
+//            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
+//            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
+//            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
+//            dossierIndividuDtos.add(dossierIndividuDto);
+//        }
+//        return new PageImpl<>(dossierIndividuDtos, pageable, dossierIndividuDtos.size());
+//    }
 
     public boolean isDossierOfThisYear(Dossier dossier) {
         return isDossierOfThisYear(dossier.getId());
@@ -304,9 +303,17 @@ public class DossierService {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Dossier> cq = cb.createQuery(Dossier.class);
         Root<Dossier> dossierRoot = cq.from(Dossier.class);
-        Predicate statusDossier = cb.equal(dossierRoot.get("statusDossier"), dossierFilter.getStatusDossier());
-        cq.where(statusDossier);
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
+
+        List<Predicate> statusDossierPredicates = new ArrayList<>();
+        for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
+                statusDossierPredicates.add(cb.equal(dossierRoot.get("statusDossier"), statusDossier));
+        }
+        Predicate statusDossierPredicate = cb.or(statusDossierPredicates.toArray(Predicate[]::new));
+
+        Predicate predicate = cb.and(statusDossierPredicate);
+        cq.where(predicate);
+
         try {
             cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
         } catch (Exception e) {
