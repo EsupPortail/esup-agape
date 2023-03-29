@@ -80,7 +80,7 @@ public class DossierController {
         return "dossiers/list";
     }
 
-    @PostMapping("/filter")
+    @GetMapping("/filter")
     public String listFilter(
             @Valid DossierFilter dossierFilter,
             @PageableDefault(sort = "id") Pageable pageable, Model model) {
@@ -92,7 +92,8 @@ public class DossierController {
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
-        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
+//        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
+        model.addAttribute("dossiers", dossierService.superFilter(dossierFilter, pageable));
 
 //        return "dossiers/list";
         return "dossiers/list-filter";

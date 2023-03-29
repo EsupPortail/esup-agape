@@ -21,8 +21,6 @@ public interface DossierIndividuDto {
 
     LocalDate getDateOfBirth();
 
-    String getSex();
-
     TypeIndividu getType();
 
     StatusDossier getStatusDossier();

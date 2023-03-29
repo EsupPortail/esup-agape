@@ -7,7 +7,7 @@ import org.esupportail.esupagape.entity.enums.TypeIndividu;
 
 import java.time.LocalDate;
 
-public class DossierIndividuClassDto {
+public class DossierIndividuClassDto implements DossierIndividuDto {
 
     private Long id;
 
