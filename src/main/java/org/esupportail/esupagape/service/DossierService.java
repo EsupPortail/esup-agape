@@ -189,6 +189,9 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getFormAddress())) {
                     dossier.setFormAddress(dossierInfos.getFormAddress());
                 }
+                if (StringUtils.hasText(dossierInfos.getNiveauEtudes())) {
+                    dossier.setNiveauEtudes(dossierInfos.getNiveauEtudes());
+                }
             }
         }
     }

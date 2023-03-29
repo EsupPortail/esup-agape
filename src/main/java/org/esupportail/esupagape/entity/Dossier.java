@@ -66,6 +66,7 @@ public class Dossier {
 
     private String libelleFormationPrec;
 
+    private String niveauEtudes;
 //    private String site;
 
     private String formAddress;
@@ -252,6 +253,14 @@ public class Dossier {
 
     public void setLibelleFormationPrec(String libelleFormationPrec) {
         this.libelleFormationPrec = libelleFormationPrec;
+    }
+
+    public String getNiveauEtudes() {
+        return niveauEtudes;
+    }
+
+    public void setNiveauEtudes(String niveauEtudes) {
+        this.niveauEtudes = niveauEtudes;
     }
 
     public String getFormAddress() {

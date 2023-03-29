@@ -4,6 +4,7 @@ public class DossierInfos {
 
     String codComposante;
     String composante;
+    String niveauEtudes;
     String libelleFormation;
     String libelleFormationPrec;
     String etablissement;
@@ -29,6 +30,14 @@ public class DossierInfos {
 
     public void setComposante(String composante) {
         this.composante = composante;
+    }
+
+    public String getNiveauEtudes() {
+        return niveauEtudes;
+    }
+
+    public void setNiveauEtudes(String niveauEtudes) {
+        this.niveauEtudes = niveauEtudes;
     }
 
     public String getLibelleFormation() {

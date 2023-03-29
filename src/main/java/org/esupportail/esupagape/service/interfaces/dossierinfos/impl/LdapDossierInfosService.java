@@ -38,6 +38,9 @@ public class LdapDossierInfosService implements DossierInfosService {
                     dossierInfos.setComposante(organizationalUnitLdap.getDescription());
                     dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
                     dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
+                    if(personLdap.getSupannEtuCursusAnnee() != null){
+                        dossierInfos.setNiveauEtudes(personLdap.getSupannEtuCursusAnnee().get(0).substring(personLdap.getSupannEtuCursusAnnee().get(0).lastIndexOf("}") + 1));
+                    }
                 } catch (AgapeJpaException e) {
                     logger.debug(e.getMessage());
                 }
