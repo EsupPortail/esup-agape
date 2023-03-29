@@ -4,6 +4,7 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.CsvImportService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.stereotype.Controller;
@@ -31,15 +32,18 @@ public class AdminController {
 
     private final CsvImportService csvImportService;
 
+    private final SiseService siseService;
+
     public AdminController(
             IndividuService individuService,
             DossierService dossierService,
             UtilsService utilsService,
-            CsvImportService csvImportService) {
+            CsvImportService csvImportService, SiseService siseService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.utilsService = utilsService;
         this.csvImportService = csvImportService;
+        this.siseService = siseService;
     }
 
     @GetMapping
@@ -66,6 +70,13 @@ public class AdminController {
     public String syncDossier(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des dossiers est terminée"));
         dossierService.syncAllDossiers();
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/refresh-sise")
+    public String refrechSise(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Fichier SISE actualisé"));
+        siseService.refreshAll();
         return "redirect:/admin";
     }
 

@@ -88,12 +88,12 @@ public class LdapPersonService {
         }
     }
 
-    public OrganizationalUnitLdap getEtablissement(String supannEtablissement) throws AgapeJpaException {
+    public OrganizationalUnitLdap getEtablissement(String supannEtablissement) {
         List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefIdAndSupannTypeEntite(supannEtablissement, "Etablissement");
         if(organizationalUnitLdaps.size() > 0) {
             return organizationalUnitLdaps.get(0);
         } else {
-            throw new AgapeJpaException(supannEtablissement + " not fount in OU");
+            return null;
         }
     }
 

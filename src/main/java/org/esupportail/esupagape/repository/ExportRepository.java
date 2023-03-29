@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.repository;
 
-import org.esupportail.esupagape.dtos.csvs.DossierCompletCSVDto;
+import org.esupportail.esupagape.dtos.csvs.DossierCompletCsvDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +35,5 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             left join d.typeSuiviHandisup t
             where (:year is null or d.year = :year)
              order by i.dateOfBirth desc """)
-    List<DossierCompletCSVDto> findByYearForCSV(Integer year);
+    List<DossierCompletCsvDto> findByYearForCSV(Integer year);
 }

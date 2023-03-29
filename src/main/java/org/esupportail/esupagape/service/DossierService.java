@@ -192,6 +192,9 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getNiveauEtudes())) {
                     dossier.setNiveauEtudes(dossierInfos.getNiveauEtudes());
                 }
+                if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
+                    dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
+                }
             }
         }
     }

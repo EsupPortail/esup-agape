@@ -13,7 +13,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import java.util.Set;
 
-public interface DossierCompletCSVDto {
+public interface DossierCompletCsvDto {
 
     Gender getGender();
 
