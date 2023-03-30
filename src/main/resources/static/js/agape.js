@@ -129,6 +129,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     });
 
+    document.querySelectorAll(".agape-slim-select-sm").forEach(function (element) {
+        if(element.id !== '') {
+            console.info("enable slimselect on : " + element.id);
+            let slimSelect = new SlimSelect({
+                select: '#' + element.id,
+                settings: {
+                    showSearch: false,
+                    placeholderText: 'Choisir',
+                }
+            });
+            //Hack slimselect required
+            element.style.display = "block";
+            element.style.position = "absolute";
+            element.style.marginTop = "15px";
+            element.style.opacity = 0;
+            element.style.zIndex = -1;
+            let slimId = slimSelect.settings.id;
+            let slimSelectDivs = document.querySelectorAll("div[data-id='" + slimId + "']");
+            slimSelectDivs.forEach(function(slimSelectDiv) {
+                let test = slimSelectDiv.querySelector(".ss-arrow");
+                if(test == null) {
+                    slimSelectDiv.classList.remove("form-select")
+                }
+                test.remove();
+            });
+
+        }
+    });
+
     //Gestion du formulaire enquete
     let codMeae = document.getElementById("codMeae")
     if(codMeae != null) {

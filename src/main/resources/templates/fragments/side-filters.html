@@ -6,7 +6,7 @@
     <div class="p-2">
         <span class="fs-6 card text-bg-primary ps-3">Filtres avancés</span>
     </div>
-    <form th:action="@{/dossiers/filter}" th:method="get" th:object="${dossierFilter}">
+    <form th:action="@{/dossiers/filter}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1">
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Année universitaire</label>
             <select class="form-select form-select-sm" th:field="*{yearFilter}">
@@ -61,8 +61,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Statut dossier</label>
-            <select class="form-select form-select-sm" th:field="*{statusDossier}" multiple>
-                <option value="">Choisir</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{statusDossier}" multiple>
                 <option th:each="enumStatusDossier: ${statusDossiers}"
                         th:value="${enumStatusDossier}"
                         th:text="#{'dossier.statusDossier.' + ${enumStatusDossier}}"></option>

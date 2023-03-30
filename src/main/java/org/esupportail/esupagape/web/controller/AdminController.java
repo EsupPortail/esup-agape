@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Controller
@@ -75,8 +76,12 @@ public class AdminController {
 
     @GetMapping("/refresh-sise")
     public String refrechSise(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", new Message("success", "Fichier SISE actualisé"));
-        siseService.refreshAll();
+        try {
+            siseService.refreshAll();
+            redirectAttributes.addFlashAttribute("message", new Message("success", "Fichier SISE actualisé"));
+        } catch (FileNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Erreur lors de l'actualisation SISE : " + e.getMessage()));
+        }
         return "redirect:/admin";
     }
 

@@ -86,6 +86,10 @@ select[disabled] > option {
     /* Identifiant pour les slimselect */
 }
 
+.agape-slim-select-sm {
+    /* Identifiant pour les slimselect */
+}
+
 .agape-slim-select-search {
     /* Identifiant pour les slimselect */
 }
@@ -116,10 +120,6 @@ select[disabled] > option {
     --ss-spacing-l: 22px;
 }
 
-.ss-value-text {
-    font-size: 1rem !important;
-}
-
 .ss-placeholder {
     color: initial !important;
 }
@@ -131,8 +131,8 @@ select[disabled] > option {
 }
 
 .ss-value-text {
-    font-size: initial !important;
-    line-height: 24px !important;
+    font-size: 14px !important;
+    line-height: 14px !important;
 }
 
 .float-buttons {
