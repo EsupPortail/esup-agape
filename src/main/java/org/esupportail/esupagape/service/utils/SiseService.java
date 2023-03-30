@@ -4,6 +4,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import org.esupportail.esupagape.dtos.csvs.SiseDiplomeCsvDto;
 import org.esupportail.esupagape.dtos.csvs.SiseSecteurDisciplinaireCsvDto;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
@@ -11,14 +13,18 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SiseService {
 
-    List<SiseDiplomeCsvDto> siseDiplomeCsvDtos;
+    private static final Logger logger = LoggerFactory.getLogger(SiseService.class);
 
-    List<SiseSecteurDisciplinaireCsvDto> siseSecteurDisciplinaireCsvDtos;
+    Map<String, String> siseDiplomeCache = new HashMap<>();
+
+    Map<String, String> siseSecteurDisciplinaireCache = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -27,20 +33,37 @@ public class SiseService {
             if(fileDiplome.length() == 0) {
                 fileDiplome = refreshSiseCsv("N_DIPLOME_SISE");
             }
-            siseDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileDiplome)).withType(SiseDiplomeCsvDto.class).withSeparator(';').build().parse();
+            refreshDiplomeCache(fileDiplome);
             File fileSecteurDisciplinaire = new File("N_SECTEUR_DISCIPLINAIRE_SISE.csv");
             if(fileSecteurDisciplinaire.length() == 0) {
                 fileSecteurDisciplinaire = refreshSiseCsv("N_SECTEUR_DISCIPLINAIRE_SISE");
             }
-            siseSecteurDisciplinaireCsvDtos = new CsvToBeanBuilder(new FileReader(fileSecteurDisciplinaire)).withType(SiseSecteurDisciplinaireCsvDto.class).withSeparator(';').build().parse();
+            refreshSeteurDisciplinaireCache(fileSecteurDisciplinaire);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            logger.error("error on init SISE files");
         }
     }
 
-    public void refreshAll() {
-        refreshSiseCsv("N_DIPLOME_SISE");
-        refreshSiseCsv("N_SECTEUR_DISCIPLINAIRE_SISE");
+    public void refreshAll() throws FileNotFoundException {
+        refreshDiplomeCache(refreshSiseCsv("N_DIPLOME_SISE"));
+        refreshSeteurDisciplinaireCache(refreshSiseCsv("N_SECTEUR_DISCIPLINAIRE_SISE"));
+
+    }
+
+    private void refreshDiplomeCache(File file) throws FileNotFoundException {
+        File fileDiplome = new File("N_DIPLOME_SISE.csv");
+        List<SiseDiplomeCsvDto> siseDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileDiplome)).withType(SiseDiplomeCsvDto.class).withSeparator(';').build().parse();
+        for(SiseDiplomeCsvDto siseDiplomeCsvDto : siseDiplomeCsvDtos) {
+            siseDiplomeCache.put(siseDiplomeCsvDto.diplomeSise, siseDiplomeCsvDto.libelle);
+        }
+    }
+
+    private void refreshSeteurDisciplinaireCache(File file) throws FileNotFoundException {
+        File fileSecteurDisciplinaire = new File("N_SECTEUR_DISCIPLINAIRE_SISE.csv");
+        List<SiseSecteurDisciplinaireCsvDto> siseSecteurDisciplinaireCsvDtos = new CsvToBeanBuilder(new FileReader(fileSecteurDisciplinaire)).withType(SiseSecteurDisciplinaireCsvDto.class).withSeparator(';').build().parse();
+        for(SiseSecteurDisciplinaireCsvDto siseSecteurDisciplinaireCsvDto : siseSecteurDisciplinaireCsvDtos) {
+            siseSecteurDisciplinaireCache.put(siseSecteurDisciplinaireCsvDto.secteurDisciplinaireSise, siseSecteurDisciplinaireCsvDto.libelle);
+        }
     }
 
     private File refreshSiseCsv(String type) {
@@ -69,11 +92,11 @@ public class SiseService {
     }
 
     public String getLibelleDiplome(String code) {
-        return siseDiplomeCsvDtos.stream().filter(s -> s.diplomeSise.equals(code)).findFirst().orElse(new SiseDiplomeCsvDto()).libelle;
+        return siseDiplomeCache.get(code);
     }
 
     public String getLibelleSecteurDisciplinaire(String code) {
-        return siseSecteurDisciplinaireCsvDtos.stream().filter(s -> s.secteurDisciplinaireSise.equals(code)).findFirst().orElse(new SiseSecteurDisciplinaireCsvDto()).libelle;
+        return siseSecteurDisciplinaireCache.get(code);
     }
 
 }
