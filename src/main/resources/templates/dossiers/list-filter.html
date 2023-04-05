@@ -61,10 +61,8 @@
                                                                                             class="badge text-bg-import"></span></td>
                             <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}"><span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}"
                                                                                                  class="badge text-bg-info"></span></td>
-                            <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}">
-                                <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}" class="badge text-bg-warning"></span></td>
-                            <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}">
-                                <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}" class="badge text-bg-light"></span></td>
+                            <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI}">
+                                <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI}}" class="badge text-bg-warning"></span></td>
                             <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}">
                                 <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
                             <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">

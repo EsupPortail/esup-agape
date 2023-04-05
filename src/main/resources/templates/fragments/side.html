@@ -36,16 +36,17 @@
                             <span th:case="${currentDossier.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-import"></span>
                             <span th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"
                                     th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
-                                    class="badge text-bg-info"></span> <span th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_PHYSIQUE}}"
-                                class="badge text-bg-warning"></span> <span th:case="${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI_ENTRETIEN_TELEPHONIQUE_MAIL}}"
-                                class="badge text-bg"
-                                style="background-color:#d3d3d3;"></span> <span th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"
+                                    class="badge text-bg-info"></span>
+                            <span th:case="${currentDossier.statusDossier.ACCUEILLI}"
+                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI}}"
+                                class="badge text-bg-warning"></span>
+                            <span th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"
                                 th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}"
-                                class="badge text-bg-dark"></span> <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"
+                                class="badge text-bg-dark"></span>
+                            <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"
                                 th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}"
-                                class="badge text-bg-primary"></span> <span th:case="${currentDossier.statusDossier.DESINSCRIT}"
+                                class="badge text-bg-primary"></span>
+                            <span th:case="${currentDossier.statusDossier.DESINSCRIT}"
                                 th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.DESINSCRIT}}"
                                 class="badge text-bg-danger"></span>
                         </th:block>
