@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 public class Entretien
@@ -33,9 +32,6 @@ public class Entretien
 
     @ManyToOne(optional = false)
     private Dossier dossier;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> attachments;
 
     public Long getId() {
         return id;
@@ -85,11 +81,4 @@ public class Entretien
         this.dossier = dossier;
     }
 
-    public List<Document> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<Document> attachments) {
-        this.attachments = attachments;
-    }
 }
