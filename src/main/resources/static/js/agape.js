@@ -151,8 +151,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 let test = slimSelectDiv.querySelector(".ss-arrow");
                 if(test == null) {
                     slimSelectDiv.classList.remove("form-select")
+                } else {
+                    test.remove();
                 }
-                test.remove();
             });
 
         }
