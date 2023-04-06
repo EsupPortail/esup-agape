@@ -18,7 +18,7 @@ public class DossierFilter {
     private LocalDate dateOfBirth;
     private String fixCP;
     private List<StatusDossier> statusDossier;
-    private StatusDossierAmenagement statusDossierAmenagement;
+    private List<StatusDossierAmenagement> statusDossierAmenagement;
     private Mdph mdph;
     private Boolean suiviHandisup;
     private Boolean finished;
@@ -87,11 +87,11 @@ public class DossierFilter {
         this.statusDossier = statusDossier;
     }
 
-    public StatusDossierAmenagement getStatusDossierAmenagement() {
+    public List<StatusDossierAmenagement> getStatusDossierAmenagement() {
         return statusDossierAmenagement;
     }
 
-    public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {
+    public void setStatusDossierAmenagement(List<StatusDossierAmenagement> statusDossierAmenagement) {
         this.statusDossierAmenagement = statusDossierAmenagement;
     }
 

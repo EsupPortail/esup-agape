@@ -69,8 +69,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Statut dossier aménagement</label>
-            <select th:field="*{statusDossierAmenagement}" class="form-select form-select-sm" >
-                <option value="">Choisir</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{statusDossierAmenagement}" multiple>
                 <option th:each="enumStatusDossierAmenagement: ${statusDossierAmenagements}"
                         th:value="${enumStatusDossierAmenagement}"
                         th:text="#{'dossier.statusDossierAmenagement.' + ${enumStatusDossierAmenagement}}"></option>

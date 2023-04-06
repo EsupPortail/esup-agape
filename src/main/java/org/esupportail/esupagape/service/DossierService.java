@@ -321,6 +321,13 @@ public class DossierService {
         }
         predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
 
+        List<Predicate> statusDossierAmenagementPredicates = new ArrayList<>();
+        for(StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
+            statusDossierAmenagementPredicates.add(cb.equal(dossierRoot.get("statusDossierAmenagement"), statusDossierAmenagement));
+        }
+        predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
+
+
 
 
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
