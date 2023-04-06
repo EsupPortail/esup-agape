@@ -322,6 +322,7 @@ public class DossierService {
         predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
 
 
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
@@ -339,7 +340,6 @@ public class DossierService {
         int totalRows = query.getResultList().size();
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
-        //        cq.multiselect(product.get("id"), product.get("name"), product.get("unitPrice"));
         List<Dossier> resultList = query.getResultList();
         List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
         for(Dossier dossier : resultList) {
