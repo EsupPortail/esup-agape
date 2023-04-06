@@ -31,23 +31,6 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
 
     private Gender gender;
 
-    public DossierIndividuClassDto() {
-    }
-
-    public DossierIndividuClassDto(Long id, String numEtu, String codeIne, String firstName, String name, LocalDate dateOfBirth, TypeIndividu type, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Long individuId, Gender gender) {
-        this.id = id;
-        this.numEtu = numEtu;
-        this.codeIne = codeIne;
-        this.firstName = firstName;
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.type = type;
-        this.statusDossier = statusDossier;
-        this.statusDossierAmenagement = statusDossierAmenagement;
-        this.individuId = individuId;
-        this.gender = gender;
-    }
-
     public Long getId() {
         return id;
     }

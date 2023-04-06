@@ -87,7 +87,7 @@ public class SiseService {
             try {
                 new FileOutputStream(file).write(new FileInputStream(backup).readAllBytes());
             } catch (IOException e) {
-                throw new AgapeIOException("unable to backup");
+                throw new AgapeIOException("unable to restore");
             }
         }
         return file;

@@ -52,23 +52,20 @@ begin
                                                                                                                                                     version                 integer,
                                                                                                                                                    premiere_inscription     boolean,
                                                                                                                                                    type_individu            integer
-                    )
+                    ) where id_user = e.id
                     loop
-                        if d.id_user = e.id then
 -- BOUCLE SUR LES DOSSIER
                             type = 'INCONNU';
                             if d.type_individu = 0 then type = 'LYCEEN'; end if;
                             if d.type_individu = 1 then type = 'ETUDIANT'; end if;
                             if d.type_individu = 2 then type = 'HORS_UNIV'; end if;
-                            for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint)
+                            for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint) where dossier = d.id
                             loop
-                                if ds.dossier = d.id then
                                     if ds.statut_dossier = 7 or ds.statut_dossier = 1487 then new_status_dossier = 'ACCUEILLI'; end if;
                                     if ds.statut_dossier = 8 or ds.statut_dossier = 131589 then new_status_dossier = 'SUIVI'; end if;
                                     if ds.statut_dossier = 1488 then new_status_dossier = 'IMPOSSIBLE_A_CONTACTER'; end if;
                                     if ds.statut_dossier = 82731 then new_status_dossier = 'IMPORTE'; end if;
                                     if ds.statut_dossier = 104328 then new_status_dossier = 'RECU_PAR_LA_MEDECINE_PREVENTIVE'; end if;
-                                end if;
                             end loop;
                             if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
                             new_id_dossier = nextval('hibernate_sequence');
@@ -87,7 +84,6 @@ begin
                                         (nextval('hibernate_sequence'), c.compte_rendu, c.date_contact, c.interlocuteur, 'RENDEZ_VOUS', new_id_dossier);
                                 end if;
                             end loop;
-                        end if;
                     end loop;
             end if;
         end loop;

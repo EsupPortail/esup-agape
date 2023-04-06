@@ -306,18 +306,23 @@ public class DossierService {
 
     @Transactional
     public Page<DossierIndividuClassDto> superFilter(DossierFilter dossierFilter, Pageable pageable) {
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Dossier> cq = cb.createQuery(Dossier.class);
         Root<Dossier> dossierRoot = cq.from(Dossier.class);
+
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
+
+        List<Predicate> predicates = new ArrayList<>();
 
         List<Predicate> statusDossierPredicates = new ArrayList<>();
         for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
                 statusDossierPredicates.add(cb.equal(dossierRoot.get("statusDossier"), statusDossier));
         }
-        Predicate statusDossierPredicate = cb.or(statusDossierPredicates.toArray(Predicate[]::new));
+        predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
 
-        Predicate predicate = cb.and(statusDossierPredicate);
+
+        Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
         try {
