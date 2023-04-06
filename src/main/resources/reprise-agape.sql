@@ -5,12 +5,20 @@ declare
     d record;
     ds record;
     c record;
+    ct record;
+    am record;
+    amt record;
+    l record;
     new_id_user bigint;
     new_id_dossier bigint;
     type varchar(255);
     gender varchar(255);
     new_status_dossier varchar(255);
     rdv varchar(255);
+    autorisation varchar(255);
+    amenagement_text text;
+    status_dossier_amenagement varchar(255);
+    status_amenagement varchar(255);
 begin
     for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 1000') as e1(
                                                                                                                id                       bigint,
@@ -54,36 +62,101 @@ begin
                                                                                                                                                    type_individu            integer
                     ) where id_user = e.id
                     loop
--- BOUCLE SUR LES DOSSIER
-                            type = 'INCONNU';
-                            if d.type_individu = 0 then type = 'LYCEEN'; end if;
-                            if d.type_individu = 1 then type = 'ETUDIANT'; end if;
-                            if d.type_individu = 2 then type = 'HORS_UNIV'; end if;
-                            for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint) where dossier = d.id
+-- BOUCLE SUR LES DOSSIERS
+                        type = 'INCONNU';
+                        if d.type_individu = 0 then type = 'LYCEEN'; end if;
+                        if d.type_individu = 1 then type = 'ETUDIANT'; end if;
+                        if d.type_individu = 2 then type = 'HORS_UNIV'; end if;
+                        for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint) where dossier = d.id
+                        loop
+                                if ds.statut_dossier = 7 or ds.statut_dossier = 1487 then new_status_dossier = 'ACCUEILLI'; end if;
+                                if ds.statut_dossier = 8 or ds.statut_dossier = 131589 then new_status_dossier = 'SUIVI'; end if;
+                                if ds.statut_dossier = 1488 then new_status_dossier = 'IMPOSSIBLE_A_CONTACTER'; end if;
+                                if ds.statut_dossier = 82731 then new_status_dossier = 'IMPORTE'; end if;
+                                if ds.statut_dossier = 104328 then new_status_dossier = 'RECU_PAR_LA_MEDECINE_PREVENTIVE'; end if;
+                        end loop;
+                        if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
+                        new_id_dossier = nextval('hibernate_sequence');
+                        insert into dossier (id, year, individu_id, type, status_dossier) values
+                            (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier);
+-- BOUCLE SUR LES CONTACTS
+                        for c in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact') as c1(id                     bigint,
+                                                                                                                                                           compte_rendu           text,
+                                                                                                                                                           date_contact           timestamp,
+                                                                                                                                                           fonction_interlocuteur varchar(255),
+                                                                                                                                                           id_dossier             bigint,
+                                                                                                                                                           interlocuteur          varchar(255),
+                                                                                                                                                           version                integer) where id_dossier = d.id
+                        loop
+                            for ct in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact_type_contact') as ct1(contact bigint, type_contact bigint) where contact = c.id
                             loop
-                                    if ds.statut_dossier = 7 or ds.statut_dossier = 1487 then new_status_dossier = 'ACCUEILLI'; end if;
-                                    if ds.statut_dossier = 8 or ds.statut_dossier = 131589 then new_status_dossier = 'SUIVI'; end if;
-                                    if ds.statut_dossier = 1488 then new_status_dossier = 'IMPOSSIBLE_A_CONTACTER'; end if;
-                                    if ds.statut_dossier = 82731 then new_status_dossier = 'IMPORTE'; end if;
-                                    if ds.statut_dossier = 104328 then new_status_dossier = 'RECU_PAR_LA_MEDECINE_PREVENTIVE'; end if;
+                                    if ct.type_contact = 1 then rdv = 'MAIL'; end if;
+                                    if ct.type_contact = 2 then rdv = 'TEL'; end if;
+                                    if ct.type_contact = 3 then rdv = 'COURRIER'; end if;
+                                    if ct.type_contact = 5 then rdv = 'RENDEZ_VOUS'; end if;
                             end loop;
-                            if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
-                            new_id_dossier = nextval('hibernate_sequence');
-                            insert into dossier (id, year, individu_id, type, status_dossier) values
-                                (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier);
-                            for c in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact') as c1(id                     bigint,
-                                                                                                                                                               compte_rendu           text,
-                                                                                                                                                               date_contact           timestamp,
-                                                                                                                                                               fonction_interlocuteur varchar(255),
-                                                                                                                                                               id_dossier             bigint,
-                                                                                                                                                               interlocuteur          varchar(255),
-                                                                                                                                                               version                integer)
-                            loop
-                                if c.id_dossier = d.id then
-                                    insert into entretien (id, compte_rendu, date, interlocuteur, type_contact, dossier_id) values
-                                        (nextval('hibernate_sequence'), c.compte_rendu, c.date_contact, c.interlocuteur, 'RENDEZ_VOUS', new_id_dossier);
-                                end if;
-                            end loop;
+                            insert into entretien (id, compte_rendu, date, interlocuteur, type_contact, dossier_id) values
+                                (nextval('hibernate_sequence'), c.compte_rendu, c.date_contact, c.interlocuteur, rdv, new_id_dossier);
+                        end loop;
+-- BOUCLE SUR LES AMENAGEMENTS
+                        for am in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from amenagement') as am1(
+                                                                                                                                                                 id                  bigint,
+                                                                                                                                                                 accord              varchar(255),
+                                                                                                                                                                 autres_amenagements text,
+                                                                                                                                                                 autres_temp_majore  text,
+                                                                                                                                                                 date_create         timestamp,
+                                                                                                                                                                 date_debut          timestamp,
+                                                                                                                                                                 date_fin            timestamp,
+                                                                                                                                                                 date_update         timestamp,
+                                                                                                                                                                 date_visa           timestamp,
+                                                                                                                                                                 id_dossier          bigint,
+                                                                                                                                                                 nom_medecin         varchar(255),
+                                                                                                                                                                 statut              varchar(255),
+                                                                                                                                                                 temp_majore         varchar(255),
+                                                                                                                                                                 version             integer,
+                                                                                                                                                                 nom_valideur        varchar(255),
+                                                                                                                                                                 autres_type_epreuve text,
+                                                                                                                                                                 amenagement_premier text,
+                                                                                                                                                                 date_refus          timestamp,
+                                                                                                                                                                 motif_refus         text,
+                                                                                                                                                                 login_medecin       varchar(255),
+                                                                                                                                                                 login_valideur      varchar(255),
+                                                                                                                                                                 statut_mail         boolean,
+                                                                                                                                                                 statut_mail_scol    boolean) where id_dossier = d.id
+                        loop
+                            status_amenagement = 'BROUILLON';
+                            if am.statut = 'suprime' then status_amenagement = 'SUPPRIME'; end if;
+                            if am.statut = 'refusAdministration' then status_amenagement = 'REFUSE_ADMINISTRATION'; end if;
+                            if am.statut = 'visaAdministration' then status_amenagement = 'VISE_ADMINISTRATION'; end if;
+                            if am.statut = 'valideMedecin' then status_amenagement = 'VALIDE_MEDECIN'; end if;
+                            autorisation = 'NC';
+                            if am.accord = 'oui' then autorisation = 'OUI'; end if;
+                            if am.accord = 'non' then autorisation = 'NON'; end if;
+                            amenagement_text = '';
+                            for amt in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from amenagement_amenagements') as amt1(amenagement bigint, amenagements bigint) where amenagement = am.id
+                                loop
+                                    for l in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from libelle') as l1(dtype          varchar(31),
+                                                                                                                                                                       id             bigint,
+                                                                                                                                                                       actif          boolean,
+                                                                                                                                                                       code_libelle   varchar(255),
+                                                                                                                                                                       nom_libelle    varchar(255),
+                                                                                                                                                                       rubrique       varchar(255),
+                                                                                                                                                                       version        integer,
+                                                                                                                                                                       a              varchar(255),
+                                                                                                                                                                       b              varchar(255),
+                                                                                                                                                                       c              varchar(255),
+                                                                                                                                                                       so             varchar(255),
+                                                                                                                                                                       parent_libelle bigint) where id = amt.amenagements
+                                    loop
+                                        amenagement_text := l.nom_libelle || '\n';
+                                    end loop;
+                                end loop;
+                            insert into amenagement (id, administration_date, amenagement_text, autorisation, autres_temps_majores,
+                                                     autres_type_epreuve, create_date, delete_date, end_date, mail_individu, mail_medecin,
+                                                     mail_valideur, motif_refus, nom_medecin, nom_valideur, status_amenagement, temps_majore,
+                                                     type_amenagement, valide_medecin_date, dossier_id)
+                            values (nextval('hibernate_sequence'), am.date_visa, amenagement_text, autorisation, am.autres_temp_majore, am.autres_type_epreuve, am.date_create, am.date_refus, am.date_fin, am.statut_mail, am.login_medecin, am.login_valideur, am.motif_refus, am.nom_medecin, am.nom_valideur, status_amenagement, am.temp_majore, '', am.date_update, new_id_dossier);
+                        end loop;
                     end loop;
             end if;
         end loop;
