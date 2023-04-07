@@ -31,7 +31,7 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
             d.resultatTotal as resultatTotal,
             d.suiviHandisup as suiviHandisup
             from Dossier d join Individu i on d.individu.id = i.id
-            left join d.classification c
+            left join d.classifications c
             left join d.typeSuiviHandisup t
             where (:year is null or d.year = :year)
              order by i.dateOfBirth desc """)

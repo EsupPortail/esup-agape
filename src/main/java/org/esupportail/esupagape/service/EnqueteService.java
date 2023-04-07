@@ -205,26 +205,26 @@ public class EnqueteService {
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
-            if (dossier.getClassification().size() > 2) {
+            if (dossier.getClassifications().size() > 2) {
                 enquete.setCodHd(CodHd.PTA);
-                if (dossier.getClassification().contains(Classification.TEMPORAIRE)) {
+                if (dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 }
-            } else if (dossier.getClassification().size() == 2 && dossier.getClassification().contains(Classification.TEMPORAIRE)) {
-                for (Classification classification : dossier.getClassification()) {
+            } else if (dossier.getClassifications().size() == 2 && dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
+                for (Classification classification : dossier.getClassifications()) {
                     if (classification.equals(Classification.TEMPORAIRE)) {
                         enquete.setHdTmp(true);
                     } else {
                         enquete.setCodHd(getClassificationEnqueteMap().get(classification));
                     }
                 }
-            } else if (dossier.getClassification().size() == 2) {
+            } else if (dossier.getClassifications().size() == 2) {
                 enquete.setCodHd(CodHd.PTA);
-            } else if (dossier.getClassification().size() == 1) {
-                if (dossier.getClassification().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
+            } else if (dossier.getClassifications().size() == 1) {
+                if (dossier.getClassifications().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 } else {
-                    enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassification().stream().toList().get(0)));
+                    enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassifications().stream().toList().get(0)));
                 }
             }
         }

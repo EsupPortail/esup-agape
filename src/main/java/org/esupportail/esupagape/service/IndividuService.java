@@ -155,8 +155,8 @@ public class IndividuService {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
         if(individuInfos.getHandicap() != null) {
-            if(dossier.getClassification().size() == 0) {
-                dossier.getClassification().add(individuInfos.getHandicap());
+            if(dossier.getClassifications().size() == 0) {
+                dossier.getClassifications().add(individuInfos.getHandicap());
             }
         }
     }

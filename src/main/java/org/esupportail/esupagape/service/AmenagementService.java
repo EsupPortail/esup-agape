@@ -145,15 +145,15 @@ public class AmenagementService {
     private static void updateClassification(Amenagement amenagement) {
         if (amenagement.getDossier().getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             if (amenagement.getAutorisation().equals(Autorisation.OUI)) {
-                amenagement.getDossier().setClassification(amenagement.getClassification());
+                amenagement.getDossier().setClassifications(amenagement.getClassification());
             }
             if (amenagement.getAutorisation().equals(Autorisation.NON)) {
-                amenagement.getDossier().getClassification().clear();
-                amenagement.getDossier().getClassification().add(Classification.REFUS);
+                amenagement.getDossier().getClassifications().clear();
+                amenagement.getDossier().getClassifications().add(Classification.REFUS);
             }
             if (amenagement.getAutorisation().equals(Autorisation.NC)) {
-                amenagement.getDossier().getClassification().clear();
-                amenagement.getDossier().getClassification().add(Classification.NON_COMMUNIQUE);
+                amenagement.getDossier().getClassifications().clear();
+                amenagement.getDossier().getClassifications().add(Classification.NON_COMMUNIQUE);
             }
         }
     }

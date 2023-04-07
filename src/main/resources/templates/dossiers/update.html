@@ -31,13 +31,13 @@
                                         <select multiple
                                                 id="classification"
                                                 disabled
-                                                th:field="*{classification}"
+                                                th:field="*{classifications}"
                                                 size="1"
                                                 type="text"
                                                 class="agape-slim-select-search"
-                                                th:value="${currentDossier.classification}">
+                                                th:value="${currentDossier.classifications}">
                                             <option type="text"
-                                                    th:checked="${currentDossier.classification.contains(classification)}"
+                                                    th:checked="${currentDossier.classifications.contains(classification)}"
                                                     th:each="classification : ${classifications}"
                                                     th:text="#{'dossier.classification.' +${classification}}"
                                                     th:value="${classification}"></option>

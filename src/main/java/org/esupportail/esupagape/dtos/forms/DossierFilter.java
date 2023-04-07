@@ -25,7 +25,7 @@ public class DossierFilter {
     private Mdph mdph;
     private Boolean suiviHandisup;
     private Boolean finished;
-    private TypFrmn typFrmn;
+    private List<TypFrmn> typFrmn;
     private ModFrmn modFrmn;
     private List<Classification> classification;
     private String codComposante;
@@ -122,11 +122,11 @@ public class DossierFilter {
         this.finished = finished;
     }
 
-    public TypFrmn getTypFrmn() {
+    public List<TypFrmn> getTypFrmn() {
         return typFrmn;
     }
 
-    public void setTypFrmn(TypFrmn typFrmn) {
+    public void setTypFrmn(List<TypFrmn> typFrmn) {
         this.typFrmn = typFrmn;
     }
 

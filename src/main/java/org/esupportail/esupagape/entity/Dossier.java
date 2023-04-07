@@ -30,7 +30,7 @@ public class Dossier {
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Classification> classification;
+    private Set<Classification> classifications;
 
     @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -152,12 +152,12 @@ public class Dossier {
         this.autorisation = autorisation;
     }
 
-    public Set<Classification> getClassification() {
-        return classification;
+    public Set<Classification> getClassifications() {
+        return classifications;
     }
 
-    public void setClassification(Set<Classification> classification) {
-        this.classification = classification;
+    public void setClassifications(Set<Classification> classifications) {
+        this.classifications = classifications;
     }
 
     public Set<TypeSuiviHandisup> getTypeSuiviHandisup() {
