@@ -10,6 +10,7 @@ import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
@@ -357,7 +358,13 @@ public class DossierService {
             predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
         }
 
-
+        List<Predicate> classificationPredicates = new ArrayList<>();
+        for (Classification classification : dossierFilter.getClassification()) {
+            classificationPredicates.add(cb.equal(dossierRoot.get("classification"), classification));
+        }
+        if(classificationPredicates.size() > 0) {
+           predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
+        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 

@@ -10,9 +10,7 @@ import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class DossierFilter {
 
@@ -29,7 +27,7 @@ public class DossierFilter {
     private Boolean finished;
     private TypFrmn typFrmn;
     private ModFrmn modFrmn;
-    private Set<Classification> classification = new HashSet<>();
+    private List<Classification> classification;
     private String codComposante;
     private String codFil;
     private String codFmt;
@@ -140,11 +138,11 @@ public class DossierFilter {
         this.modFrmn = modFrmn;
     }
 
-    public Set<Classification> getClassification() {
+    public List<Classification> getClassification() {
         return classification;
     }
 
-    public void setClassification(Set<Classification> classification) {
+    public void setClassification(List<Classification> classification) {
         this.classification = classification;
     }
 
