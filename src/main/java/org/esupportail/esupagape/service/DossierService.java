@@ -10,6 +10,7 @@ import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
@@ -35,9 +36,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DossierService {
@@ -331,6 +341,23 @@ public class DossierService {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> typePredicates = new ArrayList<>();
+        for (TypeIndividu type : dossierFilter.getType()) {
+            typePredicates.add(cb.equal(dossierRoot.get("type"), type));
+        }
+        if(typePredicates.size() > 0) {
+            predicates.add(cb.or(typePredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> genderPredicates = new ArrayList<>();
+        for (Gender gender : dossierFilter.getGender()) {
+            genderPredicates.add(cb.equal(dossierIndividuJoin.get("gender"), gender));
+        }
+        if(genderPredicates.size() > 0) {
+            predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
+        }
+
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
@@ -341,6 +368,7 @@ public class DossierService {
         }
         try {
             cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierIndividuJoin, cb));
+
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }

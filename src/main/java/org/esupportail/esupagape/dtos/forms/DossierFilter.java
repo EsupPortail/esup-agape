@@ -1,6 +1,11 @@
 package org.esupportail.esupagape.dtos.forms;
 
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
@@ -13,8 +18,8 @@ public class DossierFilter {
 
     private Integer yearFilter;
     private Boolean newDossier;
-    private TypeIndividu type;
-    private Gender gender;
+    private List<TypeIndividu> type;
+    private List<Gender> gender;
     private LocalDate dateOfBirth;
     private String fixCP;
     private List<StatusDossier> statusDossier;
@@ -47,19 +52,19 @@ public class DossierFilter {
         this.newDossier = newDossier;
     }
 
-    public TypeIndividu getType() {
+    public List<TypeIndividu> getType() {
         return type;
     }
 
-    public void setType(TypeIndividu type) {
+    public void setType(List<TypeIndividu> type) {
         this.type = type;
     }
 
-    public Gender getGender() {
+    public List<Gender> getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(List<Gender> gender) {
         this.gender = gender;
     }
 

@@ -1,10 +1,11 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.RentreeProchaine;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -29,7 +30,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -77,6 +85,8 @@ public class DossierController {
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
+        model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("genders", Gender.values());
         return "dossiers/list";
     }
 
@@ -92,6 +102,10 @@ public class DossierController {
         model.addAttribute("statusDossierList", StatusDossier.values());
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
+        model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("genders", Gender.values());
+
+
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
         model.addAttribute("dossiers", dossierService.superFilter(dossierFilter, pageable));
 
