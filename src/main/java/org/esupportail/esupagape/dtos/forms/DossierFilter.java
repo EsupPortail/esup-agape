@@ -30,7 +30,7 @@ public class DossierFilter {
     private List<Classification> classifications;
     private List<String> composante;
     private List<String> secteurDisciplinaire;
-    private String codFmt;
+    private List<String> libelleFormation;
     private List<String> niveauEtudes;
     private String resultatTotal;
 
@@ -162,12 +162,12 @@ public class DossierFilter {
         this.secteurDisciplinaire = secteurDisciplinaire;
     }
 
-    public String getCodFmt() {
-        return codFmt;
+    public List<String> getLibelleFormation() {
+        return libelleFormation;
     }
 
-    public void setCodFmt(String codFmt) {
-        this.codFmt = codFmt;
+    public void setLibelleFormation(List<String> libelleFormation) {
+        this.libelleFormation = libelleFormation;
     }
 
     public List<String> getNiveauEtudes() {

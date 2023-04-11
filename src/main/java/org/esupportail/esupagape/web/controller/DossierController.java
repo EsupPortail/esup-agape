@@ -92,6 +92,7 @@ public class DossierController {
         model.addAttribute("composantes", dossierService.getAllComposantes());
         model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
+        model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         return "dossiers/list";
     }
 
@@ -114,6 +115,8 @@ public class DossierController {
         model.addAttribute("composantes", dossierService.getAllComposantes());
         model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
+        model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
+
 
 
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));

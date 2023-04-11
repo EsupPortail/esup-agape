@@ -239,9 +239,11 @@ public class DossierService {
     public List<String> getAllNiveauEtudes() {
         return dossierRepository.findAllNiveaux();
     }
-
     public List<String> getAllSecteurDisciplinaire() {
         return dossierRepository.findAllSecteurDisciplinaire();
+    }
+    public List<String> getAllLibelleFormation() {
+        return dossierRepository.findAllLibelleFormation();
     }
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
@@ -390,7 +392,7 @@ public class DossierService {
             classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
         }
         if(classificationPredicates.size() > 0) {
-           predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
+            predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
         }
 
         List<Predicate> composantePredicates = new ArrayList<>();
@@ -415,6 +417,14 @@ public class DossierService {
         }
         if (secteurDisciplinairePredicates.size() > 0) {
             predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> libelleFormationPredicates = new ArrayList<>();
+        for (String libelleFormation : dossierFilter.getLibelleFormation()) {
+            libelleFormationPredicates.add(cb.equal(cb.literal(libelleFormation), dossierRoot.get("libelleFormation")));
+        }
+        if(libelleFormationPredicates.size() > 0) {
+            predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
         }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);

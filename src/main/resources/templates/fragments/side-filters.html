@@ -141,12 +141,10 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Formation</label>
-            <select class="form-select form-select-sm" name="yearFilter">
-                <option value="">Choisir</option>
-                <option th:selected="${yearFilter == year.number}"
-                        th:each="year : ${years}"
-                        th:value="${year.number}"
-                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{libelleFormation}" multiple>
+                <option th:each="libelleFormation : ${libelleFormations}"
+                        th:value="${libelleFormation}"
+                        th:text="${libelleFormation}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
