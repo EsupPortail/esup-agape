@@ -354,7 +354,7 @@ public class DossierService {
         for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
             statusDossierPredicates.add(cb.equal(cb.literal(statusDossier), dossierRoot.get("statusDossier")));
         }
-        if(statusDossierPredicates.size() >0 ) {
+        if(statusDossierPredicates.size() > 0 ) {
             predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
         }
 
@@ -362,7 +362,7 @@ public class DossierService {
         for(StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
             statusDossierAmenagementPredicates.add(cb.equal(cb.literal(statusDossierAmenagement), dossierRoot.get("statusDossierAmenagement")));
         }
-        if(statusDossierAmenagementPredicates.size() >0 ) {
+        if(statusDossierAmenagementPredicates.size() > 0 ) {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
 
@@ -451,6 +451,14 @@ public class DossierService {
         }
         if(mdphPredicates.size() > 0) {
             predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> suiviHandisupPredicates = new ArrayList<>();
+        for (Boolean suiviHandisup : dossierFilter.getSuiviHandisup()) {
+            suiviHandisupPredicates.add(cb.equal(cb.literal(suiviHandisup), dossierRoot.get("suiviHandisup")));
+        }
+        if(suiviHandisupPredicates.size() > 0) {
+            predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
         }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
