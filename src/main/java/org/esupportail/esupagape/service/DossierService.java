@@ -246,6 +246,9 @@ public class DossierService {
     public List<String> getAllLibelleFormation() {
         return dossierRepository.findAllLibelleFormation();
     }
+    public List<String> getAllFixCP() {
+        return dossierRepository.findAllFixCP();
+    }
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
@@ -379,6 +382,13 @@ public class DossierService {
             predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> fixCPPredicates = new ArrayList<>();
+        for (String fixCP : dossierFilter.getFixCP()) {
+            fixCPPredicates.add(cb.equal(cb.literal(fixCP), dossierIndividuJoin.get("fixCP")));
+        }
+        if(fixCPPredicates.size() > 0) {
+            predicates.add(cb.or(fixCPPredicates.toArray(Predicate[]::new)));
+        }
         List<Predicate> typeFormationPredicates = new ArrayList<>();
         for (TypFrmn typFrmn : dossierFilter.getTypFrmn()) {
             typeFormationPredicates.add(cb.equal(cb.literal(typFrmn), dossierRoot.get("typeFormation")));

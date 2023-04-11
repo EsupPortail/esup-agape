@@ -94,6 +94,7 @@ public class DossierController {
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
+        model.addAttribute("fixCPs", dossierService.getAllFixCP());
         return "dossiers/list";
     }
 
@@ -118,6 +119,7 @@ public class DossierController {
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
+        model.addAttribute("fixCPs", dossierService.getAllFixCP());
 
 
 

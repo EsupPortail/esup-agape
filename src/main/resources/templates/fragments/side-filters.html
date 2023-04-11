@@ -50,10 +50,10 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Code postal</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{fixCP}" multiple>
+                <option th:each="fixCP : ${fixCPs}"
+                        th:value="${fixCP}"
+                        th:text="${fixCP}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">

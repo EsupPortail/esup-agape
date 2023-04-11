@@ -19,7 +19,7 @@ public class DossierFilter {
     private List<TypeIndividu> type;
     private List<Gender> gender;
     private LocalDate dateOfBirth;
-    private String fixCP;
+    private List<String> fixCP;
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
     private List<Mdph> mdph;
@@ -74,11 +74,11 @@ public class DossierFilter {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getFixCP() {
+    public List<String> getFixCP() {
         return fixCP;
     }
 
-    public void setFixCP(String fixCP) {
+    public void setFixCP(List<String> fixCP) {
         this.fixCP = fixCP;
     }
 

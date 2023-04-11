@@ -52,4 +52,6 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     @Query("select distinct d.libelleFormation as libForm from Dossier d group by d.libelleFormation")
     List<String> findAllLibelleFormation();
+    @Query("select distinct i.fixCP as fixCP from Individu i group by i.fixCP order by fixCP asc")
+    List<String> findAllFixCP();
 }
