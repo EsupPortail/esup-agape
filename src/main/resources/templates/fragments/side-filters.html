@@ -132,10 +132,11 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Discipline</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{secteurDisciplinaire}" multiple>
+                <option th:each="secteurDisciplinaire : ${secteurDisciplinaires}"
+                        th:if="${secteurDisciplinaire != null && !secteurDisciplinaire.isEmpty()}"
+                        th:value="${secteurDisciplinaire}"
+                        th:text="${secteurDisciplinaire}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">

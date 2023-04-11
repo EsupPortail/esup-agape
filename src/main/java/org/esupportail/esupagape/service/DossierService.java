@@ -237,7 +237,11 @@ public class DossierService {
         return dossierRepository.findAllComposantes();
     }
     public List<String> getAllNiveauEtudes() {
-        return  dossierRepository.findAllNiveaux();
+        return dossierRepository.findAllNiveaux();
+    }
+
+    public List<String> getAllSecteurDisciplinaire() {
+        return dossierRepository.findAllSecteurDisciplinaire();
     }
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
@@ -405,6 +409,13 @@ public class DossierService {
             predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> secteurDisciplinairePredicates = new ArrayList<>();
+        for (String secteurDisciplinaire : dossierFilter.getSecteurDisciplinaire()) {
+            secteurDisciplinairePredicates.add(cb.equal(cb.literal(secteurDisciplinaire), dossierRoot.get("secteurDisciplinaire")));
+        }
+        if (secteurDisciplinairePredicates.size() > 0) {
+            predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
+        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 

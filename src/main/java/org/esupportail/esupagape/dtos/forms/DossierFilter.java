@@ -29,7 +29,7 @@ public class DossierFilter {
     private List<ModFrmn> modFrmn;
     private List<Classification> classifications;
     private List<String> composante;
-    private String codFil;
+    private List<String> secteurDisciplinaire;
     private String codFmt;
     private List<String> niveauEtudes;
     private String resultatTotal;
@@ -154,12 +154,12 @@ public class DossierFilter {
         this.composante = composante;
     }
 
-    public String getCodFil() {
-        return codFil;
+    public List<String> getSecteurDisciplinaire() {
+        return secteurDisciplinaire;
     }
 
-    public void setCodFil(String codFil) {
-        this.codFil = codFil;
+    public void setSecteurDisciplinaire(List<String> secteurDisciplinaire) {
+        this.secteurDisciplinaire = secteurDisciplinaire;
     }
 
     public String getCodFmt() {
