@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DossierFilter {
 
-    private Integer yearFilter;
+    private List<Integer> year;
     private Boolean newDossier;
     private List<TypeIndividu> type;
     private List<Gender> gender;
@@ -34,12 +34,12 @@ public class DossierFilter {
     private List<String> niveauEtudes;
     private String resultatTotal;
 
-    public Integer getYearFilter() {
-        return yearFilter;
+    public List<Integer> getYear() {
+        return year;
     }
 
-    public void setYearFilter(Integer yearFilter) {
-        this.yearFilter = yearFilter;
+    public void setYear(List<Integer> year) {
+        this.year = year;
     }
 
     public Boolean getNewDossier() {

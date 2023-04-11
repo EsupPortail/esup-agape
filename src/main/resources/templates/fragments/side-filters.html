@@ -9,7 +9,7 @@
     <form th:action="@{/dossiers/filter}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1">
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Année universitaire</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{yearFilter}" multiple>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{year}" multiple>
                 <option th:each="year : ${years}"
                         th:value="${year.number}"
                         th:text="${year.number} + ' - ' + ${year.number + 1} ">

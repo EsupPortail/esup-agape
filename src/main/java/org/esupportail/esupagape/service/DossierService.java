@@ -339,6 +339,14 @@ public class DossierService {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        List<Predicate> yearPredicates = new ArrayList<>();
+        for(Integer year : dossierFilter.getYear()) {
+            yearPredicates.add(cb.equal(cb.literal(year), dossierRoot.get("year")));
+        }
+        if(yearPredicates.size() >0 ) {
+            predicates.add(cb.or(yearPredicates.toArray(Predicate[]::new)));
+        }
+
         List<Predicate> statusDossierPredicates = new ArrayList<>();
         for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
             statusDossierPredicates.add(cb.equal(cb.literal(statusDossier), dossierRoot.get("statusDossier")));
