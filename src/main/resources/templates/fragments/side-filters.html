@@ -74,7 +74,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">MDPH</label>
+            <label class="input-group-text col-6">Suivi MDPH</label>
             <select class="form-select form-select-sm" name="newFilter">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
@@ -143,6 +143,7 @@
             <label class="input-group-text col-6">Formation</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{libelleFormation}" multiple>
                 <option th:each="libelleFormation : ${libelleFormations}"
+                        th:if="${libelleFormation != null && !libelleFormation.isEmpty()}"
                         th:value="${libelleFormation}"
                         th:text="${libelleFormation}"></option>
             </select>
