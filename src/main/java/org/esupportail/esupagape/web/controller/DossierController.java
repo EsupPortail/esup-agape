@@ -89,6 +89,7 @@ public class DossierController {
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
+        model.addAttribute("composantes", dossierService.getAllComposantes());
         return "dossiers/list";
     }
 
@@ -108,6 +109,7 @@ public class DossierController {
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
+        model.addAttribute("composantes", dossierService.getAllComposantes());
 
 
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));

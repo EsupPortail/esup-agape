@@ -28,7 +28,7 @@ public class DossierFilter {
     private List<TypFrmn> typFrmn;
     private List<ModFrmn> modFrmn;
     private List<Classification> classifications;
-    private String codComposante;
+    private List<String> composante;
     private String codFil;
     private String codFmt;
     private String codSco;
@@ -146,12 +146,12 @@ public class DossierFilter {
         this.classifications = classifications;
     }
 
-    public String getCodComposante() {
-        return codComposante;
+    public List<String> getComposante() {
+        return composante;
     }
 
-    public void setCodComposante(String codComposante) {
-        this.codComposante = codComposante;
+    public void setComposante(List<String> composante) {
+        this.composante = composante;
     }
 
     public String getCodFil() {
