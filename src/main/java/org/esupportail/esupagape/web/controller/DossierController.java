@@ -86,6 +86,7 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
         model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
         return "dossiers/list";
@@ -104,6 +105,7 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
         model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
 

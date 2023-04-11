@@ -107,7 +107,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Modalité formation</label>
-            <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm">
+            <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm agape-slim-select-sm" multiple>
                 <option value="">Choisir</option>
                 <option th:each="modeFormation : ${modFrmns}"
                         th:value="${modeFormation}"
@@ -116,7 +116,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Classification</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{classification}" multiple>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{classifications}" multiple>
                 <option th:each="classification : ${classifications}"
                         th:value="${classification}"
                         th:text="#{'dossier.classification.' +${classification}}"></option>

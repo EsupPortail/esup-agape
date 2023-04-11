@@ -11,6 +11,7 @@ import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
@@ -354,9 +355,16 @@ public class DossierService {
             predicates.add(cb.or(typeFormationPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> modeFormationPredicates = new ArrayList<>();
+        for (ModFrmn modFrmn : dossierFilter.getModFrmn()) {
+            modeFormationPredicates.add(cb.equal(cb.literal(modFrmn), dossierRoot.get("modeFormation")));
+        }
+        if(modeFormationPredicates.size() > 0) {
+            predicates.add(cb.or(modeFormationPredicates.toArray(Predicate[]::new)));
+        }
 
         List<Predicate> classificationPredicates = new ArrayList<>();
-        for (Classification classification : dossierFilter.getClassification()) {
+        for (Classification classification : dossierFilter.getClassifications()) {
             Expression<Collection<Classification>> classifications = dossierRoot.get( "classifications" );
             classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
         }

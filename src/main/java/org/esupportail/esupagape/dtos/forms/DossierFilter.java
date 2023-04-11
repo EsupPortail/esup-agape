@@ -26,8 +26,8 @@ public class DossierFilter {
     private Boolean suiviHandisup;
     private Boolean finished;
     private List<TypFrmn> typFrmn;
-    private ModFrmn modFrmn;
-    private List<Classification> classification;
+    private List<ModFrmn> modFrmn;
+    private List<Classification> classifications;
     private String codComposante;
     private String codFil;
     private String codFmt;
@@ -130,20 +130,20 @@ public class DossierFilter {
         this.typFrmn = typFrmn;
     }
 
-    public ModFrmn getModFrmn() {
+    public List<ModFrmn> getModFrmn() {
         return modFrmn;
     }
 
-    public void setModFrmn(ModFrmn modFrmn) {
+    public void setModFrmn(List<ModFrmn> modFrmn) {
         this.modFrmn = modFrmn;
     }
 
-    public List<Classification> getClassification() {
-        return classification;
+    public List<Classification> getClassifications() {
+        return classifications;
     }
 
-    public void setClassification(List<Classification> classification) {
-        this.classification = classification;
+    public void setClassifications(List<Classification> classifications) {
+        this.classifications = classifications;
     }
 
     public String getCodComposante() {
