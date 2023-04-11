@@ -52,6 +52,7 @@
             <label class="input-group-text col-6">Code postal</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{fixCP}" multiple>
                 <option th:each="fixCP : ${fixCPs}"
+                        th:if="${fixCP != null && !fixCP.isEmpty()}"
                         th:value="${fixCP}"
                         th:text="${fixCP}"></option>
             </select>
