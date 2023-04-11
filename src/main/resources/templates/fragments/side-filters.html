@@ -8,7 +8,7 @@
     </div>
     <form th:action="@{/dossiers/filter}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1">
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Année universitaire</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Année universitaire</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{year}" multiple>
                 <option th:each="year : ${years}"
                         th:value="${year.number}"
@@ -17,7 +17,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Nouveau dossier</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Nouveau dossier</label>
             <select class="form-select form-select-sm" name="newFilter">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
@@ -41,7 +41,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Année de naissance</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Année de naissance</label>
             <select class="form-select form-select-sm">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
@@ -66,7 +66,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Statut dossier aménagement</label>
+            <label class="input-group-text col-6" style="white-space: pre-line;">Statut dossier<br>aménagement</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{statusDossierAmenagement}" multiple>
                 <option th:each="enumStatusDossierAmenagement: ${statusDossierAmenagements}"
                         th:value="${enumStatusDossierAmenagement}"
@@ -83,22 +83,22 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Suivi handisup</label>
-            <select  class="form-select form-select-sm agape-slim-select-sm" th:field="*{suiviHandisup}">
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{suiviHandisup}" multiple>
+                <!--<option value="">Choisir</option>-->
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6" style="white-space: pre-line">Enquête terminée</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{finished}">
                 <option value="">Choisir</option>
                 <option value="true">Oui</option>
                 <option value="false">Non</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Enquête terminée</label>
-            <select class="form-select form-select-sm" name="enqueteFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
-            </select>
-        </div>
-        <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Type formation</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Type formation</label>
             <select th:field="*{typFrmn}" class="form-select form-select-sm agape-slim-select-sm" multiple >
                 <option th:each="typeFormation : ${typFrmns}"
                         th:value="${typeFormation}"
@@ -106,7 +106,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Modalité formation</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Modalité formation</label>
             <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm agape-slim-select-sm" multiple>
                 <option th:each="modeFormation : ${modFrmns}"
                         th:value="${modeFormation}"
