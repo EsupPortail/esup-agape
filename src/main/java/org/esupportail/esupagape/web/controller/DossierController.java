@@ -93,6 +93,7 @@ public class DossierController {
         model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
+        model.addAttribute("mdphs", Mdph.values());
         return "dossiers/list";
     }
 
@@ -116,6 +117,7 @@ public class DossierController {
         model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
+        model.addAttribute("mdphs", Mdph.values());
 
 
 

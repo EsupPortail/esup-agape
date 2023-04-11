@@ -12,6 +12,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
@@ -425,6 +426,13 @@ public class DossierService {
         }
         if(libelleFormationPredicates.size() > 0) {
             predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> mdphPredicates = new ArrayList<>();
+        for (Mdph mdph : dossierFilter.getMdph()) {
+            mdphPredicates.add(cb.equal(cb.literal(mdph), dossierRoot.get("mdph")));
+        }
+        if(mdphPredicates.size() > 0) {
+            predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
         }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);

@@ -22,7 +22,7 @@ public class DossierFilter {
     private String fixCP;
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
-    private Mdph mdph;
+    private List<Mdph> mdph;
     private Boolean suiviHandisup;
     private Boolean finished;
     private List<TypFrmn> typFrmn;
@@ -98,11 +98,11 @@ public class DossierFilter {
         this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
-    public Mdph getMdph() {
+    public List<Mdph> getMdph() {
         return mdph;
     }
 
-    public void setMdph(Mdph mdph) {
+    public void setMdph(List<Mdph> mdph) {
         this.mdph = mdph;
     }
 
