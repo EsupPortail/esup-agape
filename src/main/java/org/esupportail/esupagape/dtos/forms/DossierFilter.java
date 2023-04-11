@@ -31,7 +31,7 @@ public class DossierFilter {
     private List<String> composante;
     private String codFil;
     private String codFmt;
-    private String codSco;
+    private List<String> niveauEtudes;
     private String resultatTotal;
 
     public Integer getYearFilter() {
@@ -170,12 +170,12 @@ public class DossierFilter {
         this.codFmt = codFmt;
     }
 
-    public String getCodSco() {
-        return codSco;
+    public List<String> getNiveauEtudes() {
+        return niveauEtudes;
     }
 
-    public void setCodSco(String codSco) {
-        this.codSco = codSco;
+    public void setNiveauEtudes(List<String> niveauEtudes) {
+        this.niveauEtudes = niveauEtudes;
     }
 
     public String getResultatTotal() {

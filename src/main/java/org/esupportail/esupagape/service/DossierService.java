@@ -236,7 +236,9 @@ public class DossierService {
     public List<ComposanteDto> getAllComposantes() {
         return dossierRepository.findAllComposantes();
     }
-
+    public List<String> getAllNiveauEtudes() {
+        return  dossierRepository.findAllNiveaux();
+    }
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
@@ -394,6 +396,15 @@ public class DossierService {
         if(composantePredicates.size() > 0) {
             predicates.add(cb.or(composantePredicates.toArray(Predicate[]::new)));
         }
+
+        List<Predicate> niveauEtudesPredicates = new ArrayList<>();
+        for (String niveauEtudes : dossierFilter.getNiveauEtudes()) {
+            niveauEtudesPredicates.add(cb.equal(cb.literal(niveauEtudes), dossierRoot.get("niveauEtudes")));
+        }
+        if(niveauEtudesPredicates.size() > 0) {
+            predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
+        }
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 

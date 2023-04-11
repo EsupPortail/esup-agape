@@ -108,7 +108,6 @@
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Modalité formation</label>
             <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm agape-slim-select-sm" multiple>
-                <option value="">Choisir</option>
                 <option th:each="modeFormation : ${modFrmns}"
                         th:value="${modeFormation}"
                         th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
@@ -125,8 +124,8 @@
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Composante</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{composante}" multiple>
-
                 <option th:each="composante: ${composantes}"
+                        th:if="${composante.cod != null && !composante.cod.isEmpty()}"
                         th:value="${composante.cod}"
                         th:text="${composante.libelle}"></option>
             </select>
@@ -151,12 +150,11 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Niveau</label>
-            <select class="form-select form-select-sm" name="yearFilter">
-                <option value="">Choisir</option>
-                <option th:selected="${yearFilter == year.number}"
-                        th:each="year : ${years}"
-                        th:value="${year.number}"
-                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{niveauEtudes}" multiple>
+                <option th:each="niveauEtudes : ${niveauEtudes}"
+                        th:if="${niveauEtudes != null && !niveauEtudes.isEmpty()}"
+                        th:value="${niveauEtudes}"
+                        th:text="${niveauEtudes}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">

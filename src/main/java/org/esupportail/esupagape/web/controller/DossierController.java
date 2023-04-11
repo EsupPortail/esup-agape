@@ -90,6 +90,7 @@ public class DossierController {
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         return "dossiers/list";
     }
 
@@ -110,6 +111,7 @@ public class DossierController {
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
 
 
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
