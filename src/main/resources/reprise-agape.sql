@@ -8,6 +8,8 @@ declare
     ct record;
     am record;
     amt record;
+    aidesm record;
+    aidesml record;
     l record;
     new_id_user bigint;
     new_id_dossier bigint;
@@ -20,6 +22,7 @@ declare
     status_dossier_amenagement varchar(255);
     status_amenagement varchar(255);
     type_amenagement varchar(255);
+    type_aide_materiel varchar(255);
 begin
     for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 100') as e1(
                                                                                                                id                       bigint,
@@ -167,9 +170,29 @@ begin
                             end if;
                         end loop;
                     end loop;
+                for aidesm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aide_materielle') as aidesm1(id               bigint,
+                                                                                                                                                                     commentaires     varchar(255),
+                                                                                                                                                                     couts            integer,
+                                                                                                                                                                     date_debut       timestamp,
+                                                                                                                                                                     date_fin         timestamp,
+                                                                                                                                                                     id_dossier       bigint,
+                                                                                                                                                                     type_aide        integer,
+                                                                                                                                                                     version          integer,
+                                                                                                                                                                     libelle_materiel bigint) where id_dossier = d.id
+                    loop
+                        type_aide_materiel = '';
+                        for aidesml in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aide_materielle_libelle_materiel') as aidesml1(aide_materielle bigint, libelle_materiel bigint)
+                            loop
+                                if aidesml.libelle_materiel = 28 then type_aide_materiel = 'RECHARGEMENT_LEOCARTE'; end if;
+                                if aidesml.libelle_materiel = 30 then type_aide_materiel = 'LOGICIEL_ADAPTE'; end if;
+                                if aidesml.libelle_materiel = 10357 then type_aide_materiel = 'TRANSCRIPTIONS_BRAILLE'; end if;
+                            end loop;
+                        insert into aide_materielle (id, comment, cost, end_date, start_date, type_aide_materielle, dossier_id)
+                            values (nextval('hibernate_sequence'), aidesm.commentaires, aidesm.couts, aidesm.date_fin, aidesm.date_debut, type_aide_materiel, new_id_dossier);
+                    end loop;
             end if;
         end loop;
-end;
+end
 $BODY$
     language plpgsql;
 do $$ begin
