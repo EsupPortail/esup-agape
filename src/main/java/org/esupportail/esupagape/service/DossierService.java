@@ -201,6 +201,9 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
                     dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
                 }
+                if(StringUtils.hasText(dossierInfos.getResultatAnn())) {
+                    dossier.setResultatTotal(dossierInfos.getResultatAnn());
+                }
             }
         }
     }
@@ -468,6 +471,10 @@ public class DossierService {
                 suiviHandisupPredicates.add(cb.isNull(dossierRoot.get("suiviHandisup")));
             }
             predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
+        }
+
+        if(StringUtils.hasText(dossierFilter.getResultatTotal())) {
+            predicates.add(cb.equal(cb.literal(dossierFilter.getResultatTotal()), dossierRoot.get("resultatTotal")));
         }
 
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));

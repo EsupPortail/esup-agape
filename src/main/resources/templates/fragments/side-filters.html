@@ -160,10 +160,10 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Résultat</label>
-            <select class="form-select form-select-sm" name="newFilter">
+            <select class="form-select form-select-sm" th:field="*{resultatTotal}">
                 <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+                <option value="Admis">Admis</option>
+                <option value="Ajourné">Ajourné</option>
             </select>
         </div>
     <input class="btn btn-success float-end" type="submit" value="Filtrer">
