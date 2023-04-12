@@ -95,6 +95,7 @@ public class DossierController {
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("fixCPs", dossierService.getAllFixCP());
+        //model.addAttribute("dateOfBirths", dossierService.getAllDateOfBirth());
         return "dossiers/list";
     }
 
@@ -120,6 +121,7 @@ public class DossierController {
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("fixCPs", dossierService.getAllFixCP());
+       // model.addAttribute("dateOfBirths", dossierService.getAllDateOfBirth());
 
 
 

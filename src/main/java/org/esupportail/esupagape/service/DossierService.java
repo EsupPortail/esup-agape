@@ -249,6 +249,8 @@ public class DossierService {
     public List<String> getAllFixCP() {
         return dossierRepository.findAllFixCP();
     }
+
+    /*public List<LocalDate> getAllDateOfBirth() {return dossierRepository.findAllDateOfBirth(); }*/
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
@@ -346,7 +348,7 @@ public class DossierService {
         for(Integer year : dossierFilter.getYear()) {
             yearPredicates.add(cb.equal(cb.literal(year), dossierRoot.get("year")));
         }
-        if(yearPredicates.size() >0 ) {
+        if(yearPredicates.size() > 0 ) {
             predicates.add(cb.or(yearPredicates.toArray(Predicate[]::new)));
         }
 
@@ -381,6 +383,14 @@ public class DossierService {
         if(genderPredicates.size() > 0) {
             predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
         }
+
+       /* List<Predicate> dateOfBirthPredicates = new ArrayList<>();
+        for (LocalDate dateOfBirth : dossierFilter.getDateOfBirth()) {
+            dateOfBirthPredicates.add(cb.equal(cb.literal(dateOfBirth), dossierIndividuJoin.get("dateOfBirth")));
+        }
+        if(dateOfBirthPredicates.size() > 0) {
+            predicates.add(cb.or(dateOfBirthPredicates.toArray(Predicate[]::new)));
+        }*/
 
         List<Predicate> fixCPPredicates = new ArrayList<>();
         for (String fixCP : dossierFilter.getFixCP()) {
@@ -460,6 +470,7 @@ public class DossierService {
         if(suiviHandisupPredicates.size() > 0) {
             predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
         }
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
