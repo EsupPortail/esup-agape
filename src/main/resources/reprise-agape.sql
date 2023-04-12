@@ -19,8 +19,9 @@ declare
     amenagement_text text;
     status_dossier_amenagement varchar(255);
     status_amenagement varchar(255);
+    type_amenagement varchar(255);
 begin
-    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 1000') as e1(
+    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 100') as e1(
                                                                                                                id                       bigint,
                                                                                                                adresse_annuelle         varchar(255),
                                                                                                                adresse_fixe             varchar(255),
@@ -77,8 +78,8 @@ begin
                         end loop;
                         if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
                         new_id_dossier = nextval('hibernate_sequence');
-                        insert into dossier (id, year, individu_id, type, status_dossier) values
-                            (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier);
+                        insert into dossier (id, year, individu_id, type, status_dossier, status_dossier_amenagement) values
+                            (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier, 'NON');
 -- BOUCLE SUR LES CONTACTS
                         for c in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact') as c1(id                     bigint,
                                                                                                                                                            compte_rendu           text,
@@ -148,14 +149,22 @@ begin
                                                                                                                                                                        so             varchar(255),
                                                                                                                                                                        parent_libelle bigint) where id = amt.amenagements
                                     loop
-                                        amenagement_text := l.nom_libelle || '\n';
+                                        amenagement_text := amenagement_text || l.nom_libelle || chr(10);
                                     end loop;
                                 end loop;
+                            type_amenagement = 'DATE';
+                            if am.date_fin > '01-01-2024' then type_amenagement = 'CURSUS'; end if;
                             insert into amenagement (id, administration_date, amenagement_text, autorisation, autres_temps_majores,
                                                      autres_type_epreuve, create_date, delete_date, end_date, mail_individu, mail_medecin,
                                                      mail_valideur, motif_refus, nom_medecin, nom_valideur, status_amenagement, temps_majore,
                                                      type_amenagement, valide_medecin_date, dossier_id)
-                            values (nextval('hibernate_sequence'), am.date_visa, amenagement_text, autorisation, am.autres_temp_majore, am.autres_type_epreuve, am.date_create, am.date_refus, am.date_fin, am.statut_mail, am.login_medecin, am.login_valideur, am.motif_refus, am.nom_medecin, am.nom_valideur, status_amenagement, am.temp_majore, '', am.date_update, new_id_dossier);
+                            values (nextval('hibernate_sequence'), am.date_visa, amenagement_text, autorisation, am.autres_temp_majore, am.autres_type_epreuve, am.date_create, am.date_refus, am.date_fin, am.statut_mail, am.login_medecin, am.login_valideur, am.motif_refus, am.nom_medecin, am.nom_valideur, status_amenagement, upper(am.temp_majore), 'CURSUS', am.date_update, new_id_dossier);
+                            if am.statut = 'valideMedecin' then
+                                update dossier set status_dossier_amenagement = 'EN_ATTENTE' where id = new_id_dossier;
+                            end if;
+                            if am.statut = 'visaAdministration' then
+                                update dossier set status_dossier_amenagement = 'VALIDE' where id = new_id_dossier;
+                            end if;
                         end loop;
                     end loop;
             end if;

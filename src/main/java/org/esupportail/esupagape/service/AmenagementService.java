@@ -265,8 +265,8 @@ public class AmenagementService {
         certificatPdf.setTempsMajore(messageSource.getMessage("amenagement.tempsMajore." + amenagement.getTempsMajore().name(), null, Locale.getDefault()));
         StringBuilder amenagementsWithNumbers = new StringBuilder();
         int i = 1;
-        for(String line : amenagement.getAmenagementText().split("\r\n")) {
-            amenagementsWithNumbers.append(i).append(" - ").append(line).append("\r\n");
+        for(String line : amenagement.getAmenagementText().split("\n")) {
+            amenagementsWithNumbers.append(i).append(" - ").append(line).append("\n");
             i++;
         }
         certificatPdf.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
