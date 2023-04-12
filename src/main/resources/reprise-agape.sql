@@ -14,6 +14,8 @@ declare
     contrata record;
     aidant record;
     contratf record;
+    contratp record;
+    periode record;
 
     new_id_user bigint;
     new_id_dossier bigint;
@@ -29,8 +31,10 @@ declare
     status_amenagement varchar(255);
     type_amenagement varchar(255);
     type_aide_materiel varchar(255);
+    mois varchar(255);
+    mois_paye varchar(255);
 begin
-    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 100') as e1(
+    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant order by id desc limit 1000') as e1(
                                                                                                                id                       bigint,
                                                                                                                adresse_annuelle         varchar(255),
                                                                                                                adresse_fixe             varchar(255),
@@ -69,8 +73,7 @@ begin
                                                                                                                                                    id_user                  bigint,
                                                                                                                                                     version                 integer,
                                                                                                                                                    premiere_inscription     boolean,
-                                                                                                                                                   type_individu            integer
-                    ) where id_user = e.id
+                                                                                                                                                   type_individu            integer) where id_user = e.id and annee = '2021'
                     loop
 -- BOUCLE SUR LES DOSSIERS
                         type = 'INCONNU';
@@ -227,6 +230,47 @@ begin
                                 if contratf.fonctions = 93 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'PRENEUR_NOTES'); end if;
                                 if contratf.fonctions = 94 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_ACC'); end if;
                                 if contratf.fonctions = 95 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_PEDAGO'); end if;
+                            end loop;
+                        for periode in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from periode') as periode1(id            bigint,
+                                                                                                                                                                               cout          integer,
+                                                                                                                                                                               id_contrat    bigint,
+                                                                                                                                                                               mois          integer,
+                                                                                                                                                                               mois_paye     integer,
+                                                                                                                                                                               nb_heures     double precision,
+                                                                                                                                                                               rendu_le      timestamp,
+                                                                                                                                                                               semestre      integer,
+                                                                                                                                                                               version       integer,
+                                                                                                                                                                               feuille_heure bigint,
+                                                                                                                                                                               planning      bigint) where id_contrat = contrata.id
+                            loop
+                                if periode.mois = 0 then mois = 'JANUARY'; end if;
+                                if periode.mois = 1 then mois = 'FEBRUARY'; end if;
+                                if periode.mois = 2 then mois = 'MARCH'; end if;
+                                if periode.mois = 3 then mois = 'APRIL'; end if;
+                                if periode.mois = 4 then mois = 'MAY'; end if;
+                                if periode.mois = 5 then mois = 'JUNE'; end if;
+                                if periode.mois = 6 then mois = 'JULY'; end if;
+                                if periode.mois = 7 then mois = 'AUGUST'; end if;
+                                if periode.mois = 8 then mois = 'SEPTEMBER'; end if;
+                                if periode.mois = 9 then mois = 'OCTOBER'; end if;
+                                if periode.mois = 10 then mois = 'NOVEMBER'; end if;
+                                if periode.mois = 11 then mois = 'DECEMBER'; end if;
+
+                                if periode.mois_paye = 0 then mois_paye = 'JANUARY'; end if;
+                                if periode.mois_paye = 1 then mois_paye = 'FEBRUARY'; end if;
+                                if periode.mois_paye = 2 then mois_paye = 'MARCH'; end if;
+                                if periode.mois_paye = 3 then mois_paye = 'APRIL'; end if;
+                                if periode.mois_paye = 4 then mois_paye = 'MAY'; end if;
+                                if periode.mois_paye = 5 then mois_paye = 'JUNE'; end if;
+                                if periode.mois_paye = 6 then mois_paye = 'JULY'; end if;
+                                if periode.mois_paye = 7 then mois_paye = 'AUGUST'; end if;
+                                if periode.mois_paye = 8 then mois_paye = 'SEPTEMBER'; end if;
+                                if periode.mois_paye = 9 then mois_paye = 'OCTOBER'; end if;
+                                if periode.mois_paye = 10 then mois_paye = 'NOVEMBER'; end if;
+                                if periode.mois_paye = 11 then mois_paye = 'DECEMBER'; end if;
+
+                                insert into periode_aide_humaine (id, cost, mois, mois_paye, nb_heures, registration_date, aide_humaine_id, feuille_heures_id, planning_id)
+                                    values (nextval('hibernate_sequence'), periode.cout, mois, mois_paye, periode.nb_heures, periode.rendu_le, new_id_aide_humaine, null, null);
                             end loop;
                     end loop;
             end if;
