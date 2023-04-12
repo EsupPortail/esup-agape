@@ -10,6 +10,7 @@ import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
@@ -168,7 +169,7 @@ public class IndividuService {
         for (Individu individu : individus) {
             try {
                 syncIndividu(individu.getId());
-            } catch (AgapeException e) {
+            } catch (AgapeRuntimeException e) {
                 logger.warn(e.getMessage());
             }
         }

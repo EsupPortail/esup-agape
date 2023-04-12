@@ -3,7 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -67,7 +67,7 @@ public class IndividuController {
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId();
-        } catch (AgapeException e) {
+        } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }
@@ -83,7 +83,7 @@ public class IndividuController {
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId();
-        } catch (AgapeException e) {
+        } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
         }

@@ -2,14 +2,18 @@ package org.esupportail.esupagape.web.controller;
 
 import org.esupportail.esupagape.service.ExportService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -61,17 +65,22 @@ public class ExportsController {
     }
 
     @GetMapping("/export-enquete-to-csv")
-    public void exportEnqueteToCsv(
+    public ResponseEntity<Void> exportEnqueteToCsv(
             @RequestParam(required = false) Integer year,
-            HttpServletResponse response) {
+            HttpServletResponse response, RedirectAttributes redirectAttributes) {
         String fileName = "enquetes.csv";
         response.setContentType("text/csv");
         response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-        try (Writer writer = response.getWriter()) {
+        try {
+            Writer writer = response.getWriter();
             exportService.findEnqueteByYearForCSV(year, writer);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/exports");
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
     }
 

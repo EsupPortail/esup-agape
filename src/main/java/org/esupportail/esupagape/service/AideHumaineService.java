@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.TypeDocument;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AideHumaineRepository;
 import org.esupportail.esupagape.repository.DocumentRepository;
@@ -75,7 +76,7 @@ public class AideHumaineService {
             throw new AgapeYearException();
         }
         if(aideHumaineToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeException("Impossible de modifier un dossier d'une année précédente");
+            throw new AgapeRuntimeException("Impossible de modifier un dossier d'une année précédente");
         }
         aideHumaineRepository.deleteById(aideHumaineId);
     }

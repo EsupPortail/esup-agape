@@ -6,6 +6,7 @@ import org.apache.commons.csv.QuoteMode;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.csvs.EnqueteExportCsv;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.ExportRepository;
 import org.slf4j.Logger;
@@ -96,9 +97,12 @@ public class ExportService {
     }};
 
     @Transactional
-    public void findEnqueteByYearForCSV(Integer year, Writer writer) {
+    public void findEnqueteByYearForCSV(Integer year, Writer writer) throws AgapeException {
         List<EnqueteExportCsv> enqueteExportCsvs = new ArrayList<>();
         List<Enquete> enquetes = enqueteService.findAllByDossierYear(year);
+        if(enquetes.stream().anyMatch(enquete -> enquete.getFinished() == null || !enquete.getFinished())) {
+            throw new AgapeException("Certaines enquêtes ne sont pas complètes");
+        }
         int id = 1;
         for(Enquete enquete : enquetes) {
             EnqueteExportCsv enqueteExportCsv = new EnqueteExportCsv(

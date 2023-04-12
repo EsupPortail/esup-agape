@@ -42,9 +42,13 @@ public class AmenagementController {
     }
 
     @PostMapping("/create")
-    public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap) {
+    public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         amenagement.setId(null);
-        amenagementService.create(amenagement, dossierId, personLdap);
+        try {
+            amenagementService.create(amenagement, dossierId, personLdap);
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
         return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
     }
 

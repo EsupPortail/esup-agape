@@ -83,7 +83,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) {
+    public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
         Dossier dossier = dossierService.getById(idDossier);
         if(dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();

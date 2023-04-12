@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.exception;
 
-public class AgapeYearException extends AgapeException {
+public class AgapeYearException extends AgapeRuntimeException {
 
     String message;
 
