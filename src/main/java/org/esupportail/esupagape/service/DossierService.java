@@ -331,6 +331,7 @@ public class DossierService {
 
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
         Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
+//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -476,6 +477,10 @@ public class DossierService {
         if(StringUtils.hasText(dossierFilter.getResultatTotal())) {
             predicates.add(cb.equal(cb.literal(dossierFilter.getResultatTotal()), dossierRoot.get("resultatTotal")));
         }
+
+//        if(dossierFilter.getNewDossier() != null && dossierFilter.getNewDossier()) {
+//            predicates.add(cb.lessThan(cb.count(dossierIndividuJoin.get("dossiers")), 2L));
+//        }
 
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);

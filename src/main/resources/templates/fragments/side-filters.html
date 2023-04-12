@@ -18,7 +18,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6" style="white-space: pre-line">Nouveau dossier</label>
-            <select class="form-select form-select-sm" name="newFilter">
+            <select class="form-select form-select-sm" th:field="*{newDossier}">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
                 <option value="0">Non</option>
