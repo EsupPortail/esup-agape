@@ -22,7 +22,7 @@ public class DossierFilter {
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
     private List<Mdph> mdph;
-    private List<Boolean> suiviHandisup;
+    private Boolean suiviHandisup;
     private Boolean finished;
     private List<TypFrmn> typFrmn;
     private List<ModFrmn> modFrmn;
@@ -105,11 +105,11 @@ public class DossierFilter {
         this.mdph = mdph;
     }
 
-    public List<Boolean> getSuiviHandisup() {
+    public Boolean getSuiviHandisup() {
         return suiviHandisup;
     }
 
-    public void setSuiviHandisup(List<Boolean> suiviHandisup) {
+    public void setSuiviHandisup(Boolean suiviHandisup) {
         this.suiviHandisup = suiviHandisup;
     }
 

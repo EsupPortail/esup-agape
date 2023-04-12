@@ -84,15 +84,15 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Suivi handisup</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{suiviHandisup}" multiple>
-                <!--<option value="">Choisir</option>-->
+            <select class="form-select form-select-sm" th:field="*{suiviHandisup}">
+                <option value="">Choisir</option>
                 <option value="true">Oui</option>
                 <option value="false">Non</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6" style="white-space: pre-line">Enquête terminée</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{finished}">
+            <select class="form-select form-select-sm" th:field="*{finished}">
                 <option value="">Choisir</option>
                 <option value="true">Oui</option>
                 <option value="false">Non</option>

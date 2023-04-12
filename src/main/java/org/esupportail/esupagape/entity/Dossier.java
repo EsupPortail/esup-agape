@@ -95,6 +95,9 @@ public class Dossier {
     @ManyToOne
     private Individu individu;
 
+    @OneToOne(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    private Enquete enquete;
+
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Entretien> entretiens = new ArrayList<>();
 
@@ -366,6 +369,14 @@ public class Dossier {
 
     public void setIndividu(Individu individu) {
         this.individu = individu;
+    }
+
+    public Enquete getEnquete() {
+        return enquete;
+    }
+
+    public void setEnquete(Enquete enquete) {
+        this.enquete = enquete;
     }
 
     public List<Entretien> getEntretiens() {

@@ -9,6 +9,7 @@ import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
@@ -326,6 +327,7 @@ public class DossierService {
         Root<Dossier> dossierRoot = cq.from(Dossier.class);
 
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
+        Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -447,12 +449,24 @@ public class DossierService {
         if(mdphPredicates.size() > 0) {
             predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
         }
-
-        List<Predicate> suiviHandisupPredicates = new ArrayList<>();
-        for (Boolean suiviHandisup : dossierFilter.getSuiviHandisup()) {
-            suiviHandisupPredicates.add(cb.equal(cb.literal(suiviHandisup), dossierRoot.get("suiviHandisup")));
+        if(dossierFilter.getFinished() != null) {
+            List<Predicate> finishedPredicates = new ArrayList<>();
+            if (dossierFilter.getFinished()) {
+                finishedPredicates.add(cb.or(cb.isTrue(dossierEnqueteJoin.get("finished"))));
+            } else {
+                finishedPredicates.add(cb.or(cb.isFalse(dossierEnqueteJoin.get("finished"))));
+                finishedPredicates.add(cb.or(cb.isNull(dossierEnqueteJoin.get("finished"))));
+            }
+            predicates.add(cb.or(finishedPredicates.toArray(Predicate[]::new)));
         }
-        if(suiviHandisupPredicates.size() > 0) {
+        if(dossierFilter.getSuiviHandisup() != null) {
+            List<Predicate> suiviHandisupPredicates = new ArrayList<>();
+            if(dossierFilter.getSuiviHandisup()) {
+                suiviHandisupPredicates.add(cb.isTrue(dossierRoot.get("suiviHandisup")));
+            } else {
+                suiviHandisupPredicates.add(cb.isFalse(dossierRoot.get("suiviHandisup")));
+                suiviHandisupPredicates.add(cb.isNull(dossierRoot.get("suiviHandisup")));
+            }
             predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
         }
 
