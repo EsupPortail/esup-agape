@@ -37,15 +37,16 @@
             <select th:field="*{gender}" class="form-select form-select-sm agape-slim-select-sm" multiple>
                 <option th:each="gender : ${genders}"
                     th:text="#{'individu.gender.' +${gender}}"
-                    th:value="${gender}">></option>
+                    th:value="${gender}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6" style="white-space: pre-line">Année de naissance</label>
-            <select class="form-select form-select-sm">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+           <select  th:field="*{dateOfBirth}" class="form-select form-select-sm agape-slim-select-sm" multiple>
+                <option th:each="dateOfBirth : ${dateOfBirths}"
+                        th:if="${dateOfBirth != null}"
+                        th:value="${dateOfBirth}"
+                        th:text="${#temporals.format(dateOfBirth, 'yyyy')}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">

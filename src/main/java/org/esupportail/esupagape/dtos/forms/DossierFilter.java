@@ -18,7 +18,7 @@ public class DossierFilter {
     private Boolean newDossier;
     private List<TypeIndividu> type;
     private List<Gender> gender;
-    private LocalDate dateOfBirth;
+    private List<LocalDate> dateOfBirth;
     private List<String> fixCP;
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
@@ -66,11 +66,11 @@ public class DossierFilter {
         this.gender = gender;
     }
 
-    public LocalDate getDateOfBirth() {
+    public List<LocalDate> getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(List<LocalDate> dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
