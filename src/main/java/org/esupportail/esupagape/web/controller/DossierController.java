@@ -86,8 +86,15 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
         model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
+        model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
+        model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
+        model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
+        model.addAttribute("mdphs", Mdph.values());
+        model.addAttribute("fixCPs", dossierService.getAllFixCP());
         return "dossiers/list";
     }
 
@@ -104,8 +111,16 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeIndividuList", TypeIndividu.values());
         model.addAttribute("typFrmns", TypFrmn.values());
+        model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
+        model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
+        model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
+        model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
+        model.addAttribute("mdphs", Mdph.values());
+        model.addAttribute("fixCPs", dossierService.getAllFixCP());
+
 
 
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));

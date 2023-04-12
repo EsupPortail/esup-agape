@@ -8,8 +8,8 @@
     </div>
     <form th:action="@{/dossiers/filter}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1">
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Année universitaire</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{yearFilter}" multiple>
+            <label class="input-group-text col-6" style="white-space: pre-line">Année universitaire</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{year}" multiple>
                 <option th:each="year : ${years}"
                         th:value="${year.number}"
                         th:text="${year.number} + ' - ' + ${year.number + 1} ">
@@ -17,7 +17,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Nouveau dossier</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Nouveau dossier</label>
             <select class="form-select form-select-sm" name="newFilter">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
@@ -27,8 +27,7 @@
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Type individu</label>
             <select  class="form-select form-select-sm agape-slim-select-sm" th:field="*{type}" multiple>
-                <option th:selected="${typeIndividu == enumType}"
-                        th:each="enumType : ${typeIndividuList}"
+                <option th:each="enumType : ${typeIndividuList}"
                         th:value="${enumType}"
                         th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
             </select>
@@ -42,7 +41,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Année de naissance</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Année de naissance</label>
             <select class="form-select form-select-sm">
                 <option value="">Choisir</option>
                 <option value="1">Oui</option>
@@ -51,10 +50,11 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Code postal</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{fixCP}" multiple>
+                <option th:each="fixCP : ${fixCPs}"
+                        th:if="${fixCP != null && !fixCP.isEmpty()}"
+                        th:value="${fixCP}"
+                        th:text="${fixCP}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
@@ -66,7 +66,7 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Statut dossier aménagement</label>
+            <label class="input-group-text col-6" style="white-space: pre-line;">Statut dossier<br>aménagement</label>
             <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{statusDossierAmenagement}" multiple>
                 <option th:each="enumStatusDossierAmenagement: ${statusDossierAmenagements}"
                         th:value="${enumStatusDossierAmenagement}"
@@ -74,31 +74,31 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">MDPH</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <label class="input-group-text col-6">Suivi MDPH</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{mdph}" multiple>
+                <option th:each="mdph : ${mdphs}"
+                        th:value="${mdph}"
+                        th:text="#{'dossier.mdph.' +${mdph}}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Suivi handisup</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{suiviHandisup}" multiple>
+                <!--<option value="">Choisir</option>-->
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Enquête terminée</label>
-            <select class="form-select form-select-sm" name="enqueteFilter">
+            <label class="input-group-text col-6" style="white-space: pre-line">Enquête terminée</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{finished}">
                 <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Type formation</label>
+            <label class="input-group-text col-6" style="white-space: pre-line">Type formation</label>
             <select th:field="*{typFrmn}" class="form-select form-select-sm agape-slim-select-sm" multiple >
                 <option th:each="typeFormation : ${typFrmns}"
                         th:value="${typeFormation}"
@@ -106,9 +106,8 @@
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <label class="input-group-text col-6">Modalité formation</label>
-            <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm">
-                <option value="">Choisir</option>
+            <label class="input-group-text col-6" style="white-space: pre-line">Modalité formation</label>
+            <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm agape-slim-select-sm" multiple>
                 <option th:each="modeFormation : ${modFrmns}"
                         th:value="${modeFormation}"
                         th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
@@ -116,7 +115,7 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Classification</label>
-            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{classification}" multiple>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{classifications}" multiple>
                 <option th:each="classification : ${classifications}"
                         th:value="${classification}"
                         th:text="#{'dossier.classification.' +${classification}}"></option>
@@ -124,38 +123,38 @@
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Composante</label>
-            <select type="text" class="form-select form-select-sm">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{composante}" multiple>
+                <option th:each="composante: ${composantes}"
+                        th:if="${composante.cod != null && !composante.cod.isEmpty()}"
+                        th:value="${composante.cod}"
+                        th:text="${composante.libelle}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Discipline</label>
-            <select class="form-select form-select-sm" name="newFilter">
-                <option value="">Choisir</option>
-                <option value="1">Oui</option>
-                <option value="0">Non</option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{secteurDisciplinaire}" multiple>
+                <option th:each="secteurDisciplinaire : ${secteurDisciplinaires}"
+                        th:if="${secteurDisciplinaire != null && !secteurDisciplinaire.isEmpty()}"
+                        th:value="${secteurDisciplinaire}"
+                        th:text="${secteurDisciplinaire}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Formation</label>
-            <select class="form-select form-select-sm" name="yearFilter">
-                <option value="">Choisir</option>
-                <option th:selected="${yearFilter == year.number}"
-                        th:each="year : ${years}"
-                        th:value="${year.number}"
-                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{libelleFormation}" multiple>
+                <option th:each="libelleFormation : ${libelleFormations}"
+                        th:if="${libelleFormation != null && !libelleFormation.isEmpty()}"
+                        th:value="${libelleFormation}"
+                        th:text="${libelleFormation}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text col-6">Niveau</label>
-            <select class="form-select form-select-sm" name="yearFilter">
-                <option value="">Choisir</option>
-                <option th:selected="${yearFilter == year.number}"
-                        th:each="year : ${years}"
-                        th:value="${year.number}"
-                        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{niveauEtudes}" multiple>
+                <option th:each="niveauEtudes : ${niveauEtudes}"
+                        th:if="${niveauEtudes != null && !niveauEtudes.isEmpty()}"
+                        th:value="${niveauEtudes}"
+                        th:text="${niveauEtudes}"></option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">

@@ -14,32 +14,32 @@ import java.util.List;
 
 public class DossierFilter {
 
-    private Integer yearFilter;
+    private List<Integer> year;
     private Boolean newDossier;
     private List<TypeIndividu> type;
     private List<Gender> gender;
     private LocalDate dateOfBirth;
-    private String fixCP;
+    private List<String> fixCP;
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
-    private Mdph mdph;
-    private Boolean suiviHandisup;
+    private List<Mdph> mdph;
+    private List<Boolean> suiviHandisup;
     private Boolean finished;
     private List<TypFrmn> typFrmn;
-    private ModFrmn modFrmn;
-    private List<Classification> classification;
-    private String codComposante;
-    private String codFil;
-    private String codFmt;
-    private String codSco;
+    private List<ModFrmn> modFrmn;
+    private List<Classification> classifications;
+    private List<String> composante;
+    private List<String> secteurDisciplinaire;
+    private List<String> libelleFormation;
+    private List<String> niveauEtudes;
     private String resultatTotal;
 
-    public Integer getYearFilter() {
-        return yearFilter;
+    public List<Integer> getYear() {
+        return year;
     }
 
-    public void setYearFilter(Integer yearFilter) {
-        this.yearFilter = yearFilter;
+    public void setYear(List<Integer> year) {
+        this.year = year;
     }
 
     public Boolean getNewDossier() {
@@ -74,11 +74,11 @@ public class DossierFilter {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getFixCP() {
+    public List<String> getFixCP() {
         return fixCP;
     }
 
-    public void setFixCP(String fixCP) {
+    public void setFixCP(List<String> fixCP) {
         this.fixCP = fixCP;
     }
 
@@ -98,19 +98,19 @@ public class DossierFilter {
         this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
-    public Mdph getMdph() {
+    public List<Mdph> getMdph() {
         return mdph;
     }
 
-    public void setMdph(Mdph mdph) {
+    public void setMdph(List<Mdph> mdph) {
         this.mdph = mdph;
     }
 
-    public Boolean getSuiviHandisup() {
+    public List<Boolean> getSuiviHandisup() {
         return suiviHandisup;
     }
 
-    public void setSuiviHandisup(Boolean suiviHandisup) {
+    public void setSuiviHandisup(List<Boolean> suiviHandisup) {
         this.suiviHandisup = suiviHandisup;
     }
 
@@ -130,52 +130,52 @@ public class DossierFilter {
         this.typFrmn = typFrmn;
     }
 
-    public ModFrmn getModFrmn() {
+    public List<ModFrmn> getModFrmn() {
         return modFrmn;
     }
 
-    public void setModFrmn(ModFrmn modFrmn) {
+    public void setModFrmn(List<ModFrmn> modFrmn) {
         this.modFrmn = modFrmn;
     }
 
-    public List<Classification> getClassification() {
-        return classification;
+    public List<Classification> getClassifications() {
+        return classifications;
     }
 
-    public void setClassification(List<Classification> classification) {
-        this.classification = classification;
+    public void setClassifications(List<Classification> classifications) {
+        this.classifications = classifications;
     }
 
-    public String getCodComposante() {
-        return codComposante;
+    public List<String> getComposante() {
+        return composante;
     }
 
-    public void setCodComposante(String codComposante) {
-        this.codComposante = codComposante;
+    public void setComposante(List<String> composante) {
+        this.composante = composante;
     }
 
-    public String getCodFil() {
-        return codFil;
+    public List<String> getSecteurDisciplinaire() {
+        return secteurDisciplinaire;
     }
 
-    public void setCodFil(String codFil) {
-        this.codFil = codFil;
+    public void setSecteurDisciplinaire(List<String> secteurDisciplinaire) {
+        this.secteurDisciplinaire = secteurDisciplinaire;
     }
 
-    public String getCodFmt() {
-        return codFmt;
+    public List<String> getLibelleFormation() {
+        return libelleFormation;
     }
 
-    public void setCodFmt(String codFmt) {
-        this.codFmt = codFmt;
+    public void setLibelleFormation(List<String> libelleFormation) {
+        this.libelleFormation = libelleFormation;
     }
 
-    public String getCodSco() {
-        return codSco;
+    public List<String> getNiveauEtudes() {
+        return niveauEtudes;
     }
 
-    public void setCodSco(String codSco) {
-        this.codSco = codSco;
+    public void setNiveauEtudes(List<String> niveauEtudes) {
+        this.niveauEtudes = niveauEtudes;
     }
 
     public String getResultatTotal() {

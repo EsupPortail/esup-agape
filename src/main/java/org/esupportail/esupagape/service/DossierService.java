@@ -10,7 +10,13 @@ import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.Mdph;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
@@ -34,9 +40,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DossierService {
@@ -220,7 +237,18 @@ public class DossierService {
     public List<ComposanteDto> getAllComposantes() {
         return dossierRepository.findAllComposantes();
     }
-
+    public List<String> getAllNiveauEtudes() {
+        return dossierRepository.findAllNiveaux();
+    }
+    public List<String> getAllSecteurDisciplinaire() {
+        return dossierRepository.findAllSecteurDisciplinaire();
+    }
+    public List<String> getAllLibelleFormation() {
+        return dossierRepository.findAllLibelleFormation();
+    }
+    public List<String> getAllFixCP() {
+        return dossierRepository.findAllFixCP();
+    }
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);
@@ -314,11 +342,19 @@ public class DossierService {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        List<Predicate> yearPredicates = new ArrayList<>();
+        for(Integer year : dossierFilter.getYear()) {
+            yearPredicates.add(cb.equal(cb.literal(year), dossierRoot.get("year")));
+        }
+        if(yearPredicates.size() >0 ) {
+            predicates.add(cb.or(yearPredicates.toArray(Predicate[]::new)));
+        }
+
         List<Predicate> statusDossierPredicates = new ArrayList<>();
         for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
             statusDossierPredicates.add(cb.equal(cb.literal(statusDossier), dossierRoot.get("statusDossier")));
         }
-        if(statusDossierPredicates.size() >0 ) {
+        if(statusDossierPredicates.size() > 0 ) {
             predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
         }
 
@@ -326,7 +362,7 @@ public class DossierService {
         for(StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
             statusDossierAmenagementPredicates.add(cb.equal(cb.literal(statusDossierAmenagement), dossierRoot.get("statusDossierAmenagement")));
         }
-        if(statusDossierAmenagementPredicates.size() >0 ) {
+        if(statusDossierAmenagementPredicates.size() > 0 ) {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
 
@@ -346,6 +382,13 @@ public class DossierService {
             predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> fixCPPredicates = new ArrayList<>();
+        for (String fixCP : dossierFilter.getFixCP()) {
+            fixCPPredicates.add(cb.equal(cb.literal(fixCP), dossierIndividuJoin.get("fixCP")));
+        }
+        if(fixCPPredicates.size() > 0) {
+            predicates.add(cb.or(fixCPPredicates.toArray(Predicate[]::new)));
+        }
         List<Predicate> typeFormationPredicates = new ArrayList<>();
         for (TypFrmn typFrmn : dossierFilter.getTypFrmn()) {
             typeFormationPredicates.add(cb.equal(cb.literal(typFrmn), dossierRoot.get("typeFormation")));
@@ -354,17 +397,69 @@ public class DossierService {
             predicates.add(cb.or(typeFormationPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> modeFormationPredicates = new ArrayList<>();
+        for (ModFrmn modFrmn : dossierFilter.getModFrmn()) {
+            modeFormationPredicates.add(cb.equal(cb.literal(modFrmn), dossierRoot.get("modeFormation")));
+        }
+        if(modeFormationPredicates.size() > 0) {
+            predicates.add(cb.or(modeFormationPredicates.toArray(Predicate[]::new)));
+        }
 
         List<Predicate> classificationPredicates = new ArrayList<>();
-        for (Classification classification : dossierFilter.getClassification()) {
+        for (Classification classification : dossierFilter.getClassifications()) {
             Expression<Collection<Classification>> classifications = dossierRoot.get( "classifications" );
             classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
         }
         if(classificationPredicates.size() > 0) {
-           predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
+            predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
         }
 
+        List<Predicate> composantePredicates = new ArrayList<>();
+        for (String codComposante : dossierFilter.getComposante()) {
+            composantePredicates.add(cb.equal(cb.literal(codComposante), dossierRoot.get("codComposante")));
+        }
+        if(composantePredicates.size() > 0) {
+            predicates.add(cb.or(composantePredicates.toArray(Predicate[]::new)));
+        }
 
+        List<Predicate> niveauEtudesPredicates = new ArrayList<>();
+        for (String niveauEtudes : dossierFilter.getNiveauEtudes()) {
+            niveauEtudesPredicates.add(cb.equal(cb.literal(niveauEtudes), dossierRoot.get("niveauEtudes")));
+        }
+        if(niveauEtudesPredicates.size() > 0) {
+            predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> secteurDisciplinairePredicates = new ArrayList<>();
+        for (String secteurDisciplinaire : dossierFilter.getSecteurDisciplinaire()) {
+            secteurDisciplinairePredicates.add(cb.equal(cb.literal(secteurDisciplinaire), dossierRoot.get("secteurDisciplinaire")));
+        }
+        if (secteurDisciplinairePredicates.size() > 0) {
+            predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> libelleFormationPredicates = new ArrayList<>();
+        for (String libelleFormation : dossierFilter.getLibelleFormation()) {
+            libelleFormationPredicates.add(cb.equal(cb.literal(libelleFormation), dossierRoot.get("libelleFormation")));
+        }
+        if(libelleFormationPredicates.size() > 0) {
+            predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> mdphPredicates = new ArrayList<>();
+        for (Mdph mdph : dossierFilter.getMdph()) {
+            mdphPredicates.add(cb.equal(cb.literal(mdph), dossierRoot.get("mdph")));
+        }
+        if(mdphPredicates.size() > 0) {
+            predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> suiviHandisupPredicates = new ArrayList<>();
+        for (Boolean suiviHandisup : dossierFilter.getSuiviHandisup()) {
+            suiviHandisupPredicates.add(cb.equal(cb.literal(suiviHandisup), dossierRoot.get("suiviHandisup")));
+        }
+        if(suiviHandisupPredicates.size() > 0) {
+            predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
+        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
