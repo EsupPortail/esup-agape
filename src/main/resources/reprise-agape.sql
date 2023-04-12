@@ -11,8 +11,13 @@ declare
     aidesm record;
     aidesml record;
     l record;
+    contrata record;
+    aidant record;
+    contratf record;
+
     new_id_user bigint;
     new_id_dossier bigint;
+    new_id_aide_humaine bigint;
     type varchar(255);
     gender varchar(255);
     new_status_dossier varchar(255);
@@ -20,6 +25,7 @@ declare
     autorisation varchar(255);
     amenagement_text text;
     status_dossier_amenagement varchar(255);
+    status_dossier_aide_humaine varchar(255);
     status_amenagement varchar(255);
     type_amenagement varchar(255);
     type_aide_materiel varchar(255);
@@ -170,6 +176,7 @@ begin
                             end if;
                         end loop;
                     end loop;
+-- BOUCLE SUR LES AIDES MATERIELLES
                 for aidesm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aide_materielle') as aidesm1(id               bigint,
                                                                                                                                                                      commentaires     varchar(255),
                                                                                                                                                                      couts            integer,
@@ -189,6 +196,38 @@ begin
                             end loop;
                         insert into aide_materielle (id, comment, cost, end_date, start_date, type_aide_materielle, dossier_id)
                             values (nextval('hibernate_sequence'), aidesm.commentaires, aidesm.couts, aidesm.date_fin, aidesm.date_debut, type_aide_materiel, new_id_dossier);
+                    end loop;
+-- BOUCLE SUR LES AIDES HUMAINES
+                for contrata in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contrat') as contrata1( id             bigint,
+                                                                                                                                                                date_contrat   timestamp,
+                                                                                                                                                                id_dossier     bigint,
+                                                                                                                                                                statut_dossier integer,
+                                                                                                                                                                type_contrat   integer,
+                                                                                                                                                                version        integer,
+                                                                                                                                                                aidant         bigint) where id_dossier = d.id
+                    loop
+
+                        new_id_aide_humaine = nextval('hibernate_sequence');
+                        for aidant in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aidant') as aidant1(id             bigint,
+                                                                                                                                                                    date_naissance timestamp,
+                                                                                                                                                                    email          varchar(255),
+                                                                                                                                                                    nom            varchar(255),
+                                                                                                                                                                    num_etudiant   varchar(255),
+                                                                                                                                                                    prenom         varchar(255),
+                                                                                                                                                                    tel            varchar(255),
+                                                                                                                                                                    version        integer) where id = contrata.aidant
+                            loop
+                                if contrata.statut_dossier = 0 then status_dossier_aide_humaine = 'EN_COURS'; end if;
+                                if contrata.statut_dossier = 1 then status_dossier_aide_humaine = 'COMPLET'; end if;
+                                insert into aide_humaine (id, date_of_birth_aidant, email_aidant, first_name_aidant, name_aidant, num_etu_aidant, phone_aidant, start_date, status_aide_humaine, dossier_id)
+                                values (new_id_aide_humaine, aidant.date_naissance, aidant.email, aidant.prenom, aidant.nom, aidant.num_etudiant, aidant.tel, contrata.date_contrat, status_dossier_aide_humaine, new_id_dossier);
+                            end loop;
+                        for contratf in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contrat_fonctions') as contratf1(contrat bigint, fonctions bigint) where contrat = contrata.id
+                            loop
+                                if contratf.fonctions = 93 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'PRENEUR_NOTES'); end if;
+                                if contratf.fonctions = 94 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_ACC'); end if;
+                                if contratf.fonctions = 95 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_PEDAGO'); end if;
+                            end loop;
                     end loop;
             end if;
         end loop;

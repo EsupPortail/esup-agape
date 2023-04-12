@@ -94,8 +94,8 @@ public class DossierController {
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
-        model.addAttribute("fixCPs", dossierService.getAllFixCP());
-        //model.addAttribute("dateOfBirths", dossierService.getAllDateOfBirth());
+        model.addAttribute("fixCPs", individuService.getAllFixCP());
+        model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
         return "dossiers/list";
     }
 
@@ -120,8 +120,8 @@ public class DossierController {
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
         model.addAttribute("mdphs", Mdph.values());
-        model.addAttribute("fixCPs", dossierService.getAllFixCP());
-       // model.addAttribute("dateOfBirths", dossierService.getAllDateOfBirth());
+        model.addAttribute("fixCPs", individuService.getAllFixCP());
+        model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
 
 
 

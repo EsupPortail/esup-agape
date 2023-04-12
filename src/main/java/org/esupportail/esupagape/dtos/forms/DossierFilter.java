@@ -9,7 +9,6 @@ import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class DossierFilter {
@@ -18,7 +17,7 @@ public class DossierFilter {
     private Boolean newDossier;
     private List<TypeIndividu> type;
     private List<Gender> gender;
-    private List<LocalDate> dateOfBirth;
+    private List<Integer> yearOfBirth;
     private List<String> fixCP;
     private List<StatusDossier> statusDossier;
     private List<StatusDossierAmenagement> statusDossierAmenagement;
@@ -66,12 +65,12 @@ public class DossierFilter {
         this.gender = gender;
     }
 
-    public List<LocalDate> getDateOfBirth() {
-        return dateOfBirth;
+    public List<Integer> getYearOfBirth() {
+        return yearOfBirth;
     }
 
-    public void setDateOfBirth(List<LocalDate> dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setYearOfBirth(List<Integer> yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 
     public List<String> getFixCP() {

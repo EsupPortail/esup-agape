@@ -364,4 +364,13 @@ public class IndividuService {
         Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
         return agePeriod.getYears();
     }
+
+    public List<String> getAllFixCP() {
+        return individuRepository.findAllFixCP();
+    }
+
+    public List<Integer> getAllDateOfBirth() {
+        return individuRepository.findAllDateOfBirthDistinct();
+    }
+
 }
