@@ -10,42 +10,6 @@
                 <form th:action="@{/dossiers}" method="get">
                     <div class="row">
                         <div class="col-2 mt-1" style="width: 350px;">
-                            <div class="input-group">
-                                <label class="input-group-text">Année universitaire</label>
-                                <select class="form-select" name="yearFilter" onchange="this.form.submit();">
-                                    <option disabled selected value="">Choisir</option>
-                                    <option th:selected="${yearFilter == year.number}"
-                                            th:each="year : ${years}"
-                                            th:value="${year.number}"
-                                            th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2 mt-1" style="width: 330px;">
-                            <div class="input-group">
-                                <label class="input-group-text" th:for="typeIndividu">Type d'individus</label>
-                                <select id="typeIndividu" class="form-select" name="typeIndividu" onchange="this.form.submit();">
-                                    <option disabled selected value="">Choisir</option>
-                                    <option th:selected="${typeIndividu == enumType}"
-                                            th:each="enumType : ${typeIndividuList}"
-                                            th:value="${enumType}"
-                                            th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2 mt-1" style="width: 350px;">
-                            <div class="input-group">
-                                <label class="input-group-text" th:for="statusDossier">Statut</label>
-                                <select id="statusDossier" class="form-select" name="statusDossier" onchange="this.form.submit();">
-                                    <option value="">Choisir</option>
-                                    <option th:selected="${statusDossier == enumStatus}"
-                                            th:each="enumStatus : ${statusDossierList}"
-                                            th:value="${enumStatus}"
-                                            th:text="#{'dossier.statusDossier.' + ${enumStatus}}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2 mt-1" style="width: 350px;">
                             <input class="form-control" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}">
                         </div>
                         <div class="col-3 mt-1 mb-1" style="white-space: nowrap;">
@@ -54,7 +18,6 @@
                             <a class="btn btn-primary" th:href="@{/individus/create}">Ajouter un individu</a>
 <!--                            <a class="btn btn-primary" th:href="@{exports/export-to-csv(year=${yearFilter})}">-->
 <!--                                Exporter les dossiers</a>-->
-                            <a role="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#filtersDiv" aria-controls="filtersDiv">Filters avancés</a>
                         </div>
                     </div>
                 </form>
