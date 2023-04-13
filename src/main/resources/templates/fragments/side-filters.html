@@ -166,6 +166,24 @@
                 <option value="Ajourné">Ajourné</option>
             </select>
         </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6"  style="white-space: pre-line"> Type d'aides matérielles</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{typeAideMaterielle}" multiple>
+                <option th:each="typeAideMaterielle : ${typeAideMaterielles}"
+                        th:if="${typeAideMaterielle != null}"
+                        th:value="${typeAideMaterielle}"
+                        th:text="#{'aides.typeAideMaterielle.' +${typeAideMaterielle}}"></option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <label class="input-group-text col-6"  style="white-space: pre-line">Fonctions de l'aidant</label>
+            <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{fonctionAidants}" multiple>
+                <option th:each="fonctionAidant : ${fonctionAidants}"
+                        th:if="${fonctionAidant != null}"
+                        th:value="${fonctionAidant}"
+                        th:text="#{'aides.fonctionAidant.' +${fonctionAidant}}"></option>
+            </select>
+        </div>
     <input class="btn btn-success float-end" type="submit" value="Filtrer">
 </form>
 </div>

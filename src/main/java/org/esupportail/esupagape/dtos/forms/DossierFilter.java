@@ -1,10 +1,12 @@
 package org.esupportail.esupagape.dtos.forms;
 
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
@@ -32,6 +34,8 @@ public class DossierFilter {
     private List<String> libelleFormation;
     private List<String> niveauEtudes;
     private String resultatTotal;
+    private List<TypeAideMaterielle> typeAideMaterielle;
+    private List<FonctionAidant> fonctionAidants;
 
     public List<Integer> getYear() {
         return year;
@@ -183,5 +187,21 @@ public class DossierFilter {
 
     public void setResultatTotal(String resultatTotal) {
         this.resultatTotal = resultatTotal;
+    }
+
+    public List<TypeAideMaterielle> getTypeAideMaterielle() {
+        return typeAideMaterielle;
+    }
+
+    public void setTypeAideMaterielle(List<TypeAideMaterielle> typeAideMaterielle) {
+        this.typeAideMaterielle = typeAideMaterielle;
+    }
+
+    public List<FonctionAidant> getFonctionAidants() {
+        return fonctionAidants;
+    }
+
+    public void setFonctionAidants(List<FonctionAidant> fonctionAidants) {
+        this.fonctionAidants = fonctionAidants;
     }
 }

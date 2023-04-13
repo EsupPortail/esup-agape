@@ -5,12 +5,14 @@ import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Etat;
+import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.RentreeProchaine;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.Taux;
+import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
@@ -96,6 +98,8 @@ public class DossierController {
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("fixCPs", individuService.getAllFixCP());
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
+        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
+        model.addAttribute("fonctionAidants", FonctionAidant.values());
         return "dossiers/list";
     }
 
@@ -122,6 +126,8 @@ public class DossierController {
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("fixCPs", individuService.getAllFixCP());
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
+        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
+        model.addAttribute("fonctionAidants", FonctionAidant.values());
 
 
 

@@ -7,15 +7,19 @@ import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
+import org.esupportail.esupagape.entity.AideHumaine;
+import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.Mdph;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
@@ -380,7 +384,9 @@ public class DossierService {
 
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
         Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
-//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
+        Join<Dossier, AideMaterielle> dossierAideMaterielleJoin = dossierRoot.join("aidesMaterielles", JoinType.LEFT);
+        Join<Dossier, AideHumaine> dossierAideHumaineJoin = dossierRoot.join("aidesHumaines", JoinType.LEFT);
+;//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -530,7 +536,29 @@ public class DossierService {
 //        if(dossierFilter.getNewDossier() != null && dossierFilter.getNewDossier()) {
 //            predicates.add(cb.lessThan(cb.count(dossierIndividuJoin.get("dossiers")), 2L));
 //        }
+        List<Predicate> typeAideMateriellePredicates = new ArrayList<>();
+        for (TypeAideMaterielle typeAideMaterielle: dossierFilter.getTypeAideMaterielle()) {
+            typeAideMateriellePredicates.add(cb.equal(cb.literal(typeAideMaterielle), dossierAideMaterielleJoin.get("typeAideMaterielle")));
+        }
+        if(typeAideMateriellePredicates.size() > 0) {
+            predicates.add(cb.or(typeAideMateriellePredicates.toArray(Predicate[]::new)));
+        }
 
+        /*List<Predicate> fonctionAidantPredicates = new ArrayList<>();
+        for (FonctionAidant fonctionAidant : dossierFilter.getFonctionAidants()) {
+            fonctionAidantPredicates.add(cb.equal(cb.literal(fonctionAidant), dossierAideHumaineJoin.get("fonctionAidant")));
+        }
+        if(fonctionAidantPredicates.size() > 0) {
+            predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
+        }*/
+        List<Predicate> fonctionAidantPredicates = new ArrayList<>();
+        for (FonctionAidant fonctionAidant : dossierFilter.getFonctionAidants()) {
+            Expression<Collection<FonctionAidant>> fonctionAidants =  dossierAideHumaineJoin.get( "fonctionAidants" );
+            fonctionAidantPredicates.add(cb.isMember(cb.literal(fonctionAidant), fonctionAidants));
+        }
+        if(fonctionAidantPredicates.size() > 0) {
+            predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
+        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
