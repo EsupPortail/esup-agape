@@ -129,6 +129,7 @@ public class DossierController {
         model.addAttribute("dossiers", dossierService.dossierIndividuClassDtoPage(dossierFilter, pageable));
         model.addAttribute("mails", String.join(";", dossierService.filteredEmails(dossierFilter)));
 
+
 //        return "dossiers/list";
         return "dossiers/list-filter";
     }
