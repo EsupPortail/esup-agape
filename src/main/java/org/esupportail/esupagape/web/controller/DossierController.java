@@ -126,7 +126,8 @@ public class DossierController {
 
 
 //        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
-        model.addAttribute("dossiers", dossierService.superFilter(dossierFilter, pageable));
+        model.addAttribute("dossiers", dossierService.dossierIndividuClassDtoPage(dossierFilter, pageable));
+        model.addAttribute("mails", String.join(";", dossierService.filteredEmails(dossierFilter)));
 
 //        return "dossiers/list";
         return "dossiers/list-filter";

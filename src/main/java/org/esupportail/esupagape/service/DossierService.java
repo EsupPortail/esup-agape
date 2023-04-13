@@ -41,6 +41,7 @@ import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DossierService {
@@ -323,7 +324,39 @@ public class DossierService {
     }
 
     @Transactional
-    public Page<DossierIndividuClassDto> superFilter(DossierFilter dossierFilter, Pageable pageable) {
+    public Page<DossierIndividuClassDto> dossierIndividuClassDtoPage(DossierFilter dossierFilter, Pageable pageable) {
+        TypedQuery<Dossier> query = superFilter(dossierFilter, pageable);
+        int totalRows = query.getResultList().size();
+        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        query.setMaxResults(pageable.getPageSize());
+        List<Dossier> resultList = query.getResultList();
+        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
+        for(Dossier dossier : resultList) {
+            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
+            dossierIndividuDto.setId(dossier.getId());
+            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
+            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
+            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
+            dossierIndividuDto.setName(dossier.getIndividu().getName());
+            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
+            dossierIndividuDto.setType(dossier.getType());
+            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
+            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
+            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
+            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
+            dossierIndividuDtos.add(dossierIndividuDto);
+        }
+        return new PageImpl<>(dossierIndividuDtos, pageable, totalRows);
+    }
+
+    @Transactional
+    public List<String> filteredEmails(DossierFilter dossierFilter) {
+        TypedQuery<Dossier> query = superFilter(dossierFilter, Pageable.unpaged());
+        List<Dossier> dossiers = query.getResultList();
+        return dossiers.stream().map(dossier -> dossier.getIndividu().getEmailEtu()).collect(Collectors.toList());
+    }
+
+    public TypedQuery<Dossier> superFilter(DossierFilter dossierFilter, Pageable pageable) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Dossier> cq = cb.createQuery(Dossier.class);
@@ -496,28 +529,7 @@ public class DossierService {
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }
-        TypedQuery<Dossier> query = em.createQuery(cq);
-        int totalRows = query.getResultList().size();
-        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        query.setMaxResults(pageable.getPageSize());
-        List<Dossier> resultList = query.getResultList();
-        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
-        for(Dossier dossier : resultList) {
-            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
-            dossierIndividuDto.setId(dossier.getId());
-            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
-            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
-            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
-            dossierIndividuDto.setName(dossier.getIndividu().getName());
-            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
-            dossierIndividuDto.setType(dossier.getType());
-            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
-            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
-            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
-            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
-            dossierIndividuDtos.add(dossierIndividuDto);
-        }
-        return new PageImpl<>(dossierIndividuDtos, pageable, totalRows);
+        return em.createQuery(cq);
     }
 
 }

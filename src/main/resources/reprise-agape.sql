@@ -16,6 +16,7 @@ declare
     contratf record;
     contratp record;
     periode record;
+    enquete record;
 
     new_id_user bigint;
     new_id_dossier bigint;
@@ -272,6 +273,41 @@ begin
                                 insert into periode_aide_humaine (id, cost, mois, mois_paye, nb_heures, registration_date, aide_humaine_id, feuille_heures_id, planning_id)
                                     values (nextval('hibernate_sequence'), periode.cout, mois, mois_paye, periode.nb_heures, periode.rendu_le, new_id_aide_humaine, null, null);
                             end loop;
+                    end loop;
+-- BOUCLE SUR LES ENQUETES
+                for enquete in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from enquete') as enquete1(id_        bigint,
+                                                                                                                                                               aidhnat    text,
+                                                                                                                                                               an         varchar(255),
+                                                                                                                                                               autaa      text,
+                                                                                                                                                               autae      text,
+                                                                                                                                                               codaml     integer,
+                                                                                                                                                               codeurh    integer,
+                                                                                                                                                               codfil     integer,
+                                                                                                                                                               codfmt     integer,
+                                                                                                                                                               codhd      integer,
+                                                                                                                                                               codmeaa    integer,
+                                                                                                                                                               codmeae    integer,
+                                                                                                                                                               codmeahf   integer,
+                                                                                                                                                               codpfas    integer,
+                                                                                                                                                               codpfpp    integer,
+                                                                                                                                                               codsco     integer,
+                                                                                                                                                               com        text,
+                                                                                                                                                               dja_cop    varchar(255),
+                                                                                                                                                               hdtmp      boolean,
+                                                                                                                                                               id         varchar(255),
+                                                                                                                                                               id_dossier bigint,
+                                                                                                                                                               interph    integer,
+                                                                                                                                                               modfrmn    integer,
+                                                                                                                                                               newid      varchar(255),
+                                                                                                                                                               newnum     varchar(255),
+                                                                                                                                                               nfic       varchar(255),
+                                                                                                                                                               numetu     varchar(255),
+                                                                                                                                                               sexe       integer,
+                                                                                                                                                               typefrmn   integer,
+                                                                                                                                                               version    integer)
+                    loop
+                        insert into enquete (id, aidhnat, an, autaa, autae, cod_fil, cod_fmt, cod_hd, cod_pfas, cod_pfpp, cod_sco, codeurh, com, finished, hd_tmp, interph, mod_frmn, sexe, typ_frmn, dossier_id)
+                            values (nextval('hibernate_sequence'), enquete.aidhnat, enquete.an, );
                     end loop;
             end if;
         end loop;
