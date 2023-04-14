@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ public class Individu {
 
     private String nationalite;
 
-    @NotNull(message = "La date de naissance doit être renseignée")
     @Past(message = "La date de naissance doit être dans le passé.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;

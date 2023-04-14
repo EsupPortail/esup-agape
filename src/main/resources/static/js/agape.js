@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             },
             events: {
                 afterChange: (newVals) => {
-                    if(newVals.filter((v) => v.value === "AAo").length > 0) {
+                    if(newVals.filter((v) => v.value === "AAO").length > 0) {
                         document.getElementById("autAADiv").classList.remove("d-none");
                     } else {
                         document.getElementById("autAADiv").classList.add("d-none");

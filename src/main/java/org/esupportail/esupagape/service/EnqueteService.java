@@ -195,10 +195,10 @@ public class EnqueteService {
                 }
             }
             if (StringUtils.hasText(enquete.getAutAE())) {
-                enquete.getCodMeae().add(CodMeae.AEo);
+                enquete.getCodMeae().add(CodMeae.AEO);
                 enquete.getCodMeae().remove(CodMeae.AE0);
             } else {
-                enquete.getCodMeae().remove(CodMeae.AEo);
+                enquete.getCodMeae().remove(CodMeae.AEO);
             }
             if(enquete.getCodMeae().isEmpty()) {
                 enquete.getCodMeae().add(CodMeae.AE0);

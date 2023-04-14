@@ -60,6 +60,7 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     StatusDossierAmenagement statusDossierAmenagement;
 
+    @Column(columnDefinition = "TEXT")
     private String commentaire;
 
     private String libelleFormation;

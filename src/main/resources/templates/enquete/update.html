@@ -280,7 +280,7 @@
                                                             th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></option>
                                                 </select>
                                             </div>
-                                            <div id="autAADiv" th:class="${enquete.codMeaa.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).AAo) ? '' : 'd-none'}">
+                                            <div id="autAADiv" th:class="${enquete.codMeaa.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeaa).AAO) ? '' : 'd-none'}">
                                                 <label th:for="autAA" class="mt-1 form-label">Autres (à préciser)</label>
                                                 <div>
                                                     <textarea th:field="*{autAA}" class="form-control"></textarea>
