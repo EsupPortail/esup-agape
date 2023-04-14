@@ -222,7 +222,7 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
                     dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
                 }
-                if(StringUtils.hasText(dossierInfos.getResultatAnn())) {
+                if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
                 }
             }
@@ -251,12 +251,15 @@ public class DossierService {
     public List<ComposanteDto> getAllComposantes() {
         return dossierRepository.findAllComposantes();
     }
+
     public List<String> getAllNiveauEtudes() {
         return dossierRepository.findAllNiveaux();
     }
+
     public List<String> getAllSecteurDisciplinaire() {
         return dossierRepository.findAllSecteurDisciplinaire();
     }
+
     public List<String> getAllLibelleFormation() {
         return dossierRepository.findAllLibelleFormation();
     }
@@ -351,7 +354,7 @@ public class DossierService {
         query.setMaxResults(pageable.getPageSize());
         List<Dossier> resultList = query.getResultList();
         List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
-        for(Dossier dossier : resultList) {
+        for (Dossier dossier : resultList) {
             DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
             dossierIndividuDto.setId(dossier.getId());
             dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
@@ -386,129 +389,34 @@ public class DossierService {
         Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
         Join<Dossier, AideMaterielle> dossierAideMaterielleJoin = dossierRoot.join("aidesMaterielles", JoinType.LEFT);
         Join<Dossier, AideHumaine> dossierAideHumaineJoin = dossierRoot.join("aidesHumaines", JoinType.LEFT);
-;//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
+        ;//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
         List<Predicate> yearPredicates = new ArrayList<>();
-        for(Integer year : dossierFilter.getYear()) {
+        for (Integer year : dossierFilter.getYear()) {
             yearPredicates.add(cb.equal(cb.literal(year), dossierRoot.get("year")));
         }
-        if(yearPredicates.size() > 0 ) {
+        if (yearPredicates.size() > 0) {
             predicates.add(cb.or(yearPredicates.toArray(Predicate[]::new)));
         }
 
         List<Predicate> statusDossierPredicates = new ArrayList<>();
-        for(StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
+        for (StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
             statusDossierPredicates.add(cb.equal(cb.literal(statusDossier), dossierRoot.get("statusDossier")));
         }
-        if(statusDossierPredicates.size() > 0 ) {
+        if (statusDossierPredicates.size() > 0) {
             predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
         }
 
         List<Predicate> statusDossierAmenagementPredicates = new ArrayList<>();
-        for(StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
+        for (StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
             statusDossierAmenagementPredicates.add(cb.equal(cb.literal(statusDossierAmenagement), dossierRoot.get("statusDossierAmenagement")));
         }
-        if(statusDossierAmenagementPredicates.size() > 0 ) {
+        if (statusDossierAmenagementPredicates.size() > 0) {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
-
-        List<Predicate> typePredicates = new ArrayList<>();
-        for (TypeIndividu type : dossierFilter.getType()) {
-            typePredicates.add(cb.equal(cb.literal(type), dossierRoot.get("type")));
-        }
-        if(typePredicates.size() > 0) {
-            predicates.add(cb.or(typePredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> genderPredicates = new ArrayList<>();
-        for (Gender gender : dossierFilter.getGender()) {
-            genderPredicates.add(cb.equal(cb.literal(gender), dossierIndividuJoin.get("gender")));
-        }
-        if(genderPredicates.size() > 0) {
-            predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> yearOfBirthPredicates = new ArrayList<>();
-        for (Integer yearOfBirth : dossierFilter.getYearOfBirth()) {
-            yearOfBirthPredicates.add(cb.between(dossierIndividuJoin.get("dateOfBirth"), LocalDate.of(yearOfBirth, 1, 1), LocalDate.of(yearOfBirth, 12, 31)));
-        }
-        if(yearOfBirthPredicates.size() > 0) {
-            predicates.add(cb.or(yearOfBirthPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> fixCPPredicates = new ArrayList<>();
-        for (String fixCP : dossierFilter.getFixCP()) {
-            fixCPPredicates.add(cb.equal(cb.literal(fixCP), dossierIndividuJoin.get("fixCP")));
-        }
-        if(fixCPPredicates.size() > 0) {
-            predicates.add(cb.or(fixCPPredicates.toArray(Predicate[]::new)));
-        }
-        List<Predicate> typeFormationPredicates = new ArrayList<>();
-        for (TypFrmn typFrmn : dossierFilter.getTypFrmn()) {
-            typeFormationPredicates.add(cb.equal(cb.literal(typFrmn), dossierRoot.get("typeFormation")));
-        }
-        if(typeFormationPredicates.size() > 0) {
-            predicates.add(cb.or(typeFormationPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> modeFormationPredicates = new ArrayList<>();
-        for (ModFrmn modFrmn : dossierFilter.getModFrmn()) {
-            modeFormationPredicates.add(cb.equal(cb.literal(modFrmn), dossierRoot.get("modeFormation")));
-        }
-        if(modeFormationPredicates.size() > 0) {
-            predicates.add(cb.or(modeFormationPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> classificationPredicates = new ArrayList<>();
-        for (Classification classification : dossierFilter.getClassifications()) {
-            Expression<Collection<Classification>> classifications = dossierRoot.get( "classifications" );
-            classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
-        }
-        if(classificationPredicates.size() > 0) {
-            predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> composantePredicates = new ArrayList<>();
-        for (String codComposante : dossierFilter.getComposante()) {
-            composantePredicates.add(cb.equal(cb.literal(codComposante), dossierRoot.get("codComposante")));
-        }
-        if(composantePredicates.size() > 0) {
-            predicates.add(cb.or(composantePredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> niveauEtudesPredicates = new ArrayList<>();
-        for (String niveauEtudes : dossierFilter.getNiveauEtudes()) {
-            niveauEtudesPredicates.add(cb.equal(cb.literal(niveauEtudes), dossierRoot.get("niveauEtudes")));
-        }
-        if(niveauEtudesPredicates.size() > 0) {
-            predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> secteurDisciplinairePredicates = new ArrayList<>();
-        for (String secteurDisciplinaire : dossierFilter.getSecteurDisciplinaire()) {
-            secteurDisciplinairePredicates.add(cb.equal(cb.literal(secteurDisciplinaire), dossierRoot.get("secteurDisciplinaire")));
-        }
-        if (secteurDisciplinairePredicates.size() > 0) {
-            predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
-        }
-
-        List<Predicate> libelleFormationPredicates = new ArrayList<>();
-        for (String libelleFormation : dossierFilter.getLibelleFormation()) {
-            libelleFormationPredicates.add(cb.equal(cb.literal(libelleFormation), dossierRoot.get("libelleFormation")));
-        }
-        if(libelleFormationPredicates.size() > 0) {
-            predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
-        }
-        List<Predicate> mdphPredicates = new ArrayList<>();
-        for (Mdph mdph : dossierFilter.getMdph()) {
-            mdphPredicates.add(cb.equal(cb.literal(mdph), dossierRoot.get("mdph")));
-        }
-        if(mdphPredicates.size() > 0) {
-            predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
-        }
-        if(dossierFilter.getFinished() != null) {
+        if (dossierFilter.getFinished() != null) {
             List<Predicate> finishedPredicates = new ArrayList<>();
             if (dossierFilter.getFinished()) {
                 finishedPredicates.add(cb.or(cb.isTrue(dossierEnqueteJoin.get("finished"))));
@@ -518,9 +426,32 @@ public class DossierService {
             }
             predicates.add(cb.or(finishedPredicates.toArray(Predicate[]::new)));
         }
-        if(dossierFilter.getSuiviHandisup() != null) {
+        List<Predicate> classificationPredicates = new ArrayList<>();
+        for (Classification classification : dossierFilter.getClassifications()) {
+            Expression<Collection<Classification>> classifications = dossierRoot.get("classifications");
+            classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
+        }
+        if (classificationPredicates.size() > 0) {
+            predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> typePredicates = new ArrayList<>();
+        for (TypeIndividu type : dossierFilter.getType()) {
+            typePredicates.add(cb.equal(cb.literal(type), dossierRoot.get("type")));
+        }
+        if (typePredicates.size() > 0) {
+            predicates.add(cb.or(typePredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> mdphPredicates = new ArrayList<>();
+        for (Mdph mdph : dossierFilter.getMdph()) {
+            mdphPredicates.add(cb.equal(cb.literal(mdph), dossierRoot.get("mdph")));
+        }
+        if (mdphPredicates.size() > 0) {
+            predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
+        }
+
+        if (dossierFilter.getSuiviHandisup() != null) {
             List<Predicate> suiviHandisupPredicates = new ArrayList<>();
-            if(dossierFilter.getSuiviHandisup()) {
+            if (dossierFilter.getSuiviHandisup()) {
                 suiviHandisupPredicates.add(cb.isTrue(dossierRoot.get("suiviHandisup")));
             } else {
                 suiviHandisupPredicates.add(cb.isFalse(dossierRoot.get("suiviHandisup")));
@@ -528,37 +459,99 @@ public class DossierService {
             }
             predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
         }
+        List<Predicate> composantePredicates = new ArrayList<>();
+        for (String codComposante : dossierFilter.getComposante()) {
+            composantePredicates.add(cb.equal(cb.literal(codComposante), dossierRoot.get("codComposante")));
+        }
+        if (composantePredicates.size() > 0) {
+            predicates.add(cb.or(composantePredicates.toArray(Predicate[]::new)));
+        }
 
-        if(StringUtils.hasText(dossierFilter.getResultatTotal())) {
+        List<Predicate> secteurDisciplinairePredicates = new ArrayList<>();
+        for (String secteurDisciplinaire : dossierFilter.getSecteurDisciplinaire()) {
+            secteurDisciplinairePredicates.add(cb.equal(cb.literal(secteurDisciplinaire), dossierRoot.get("secteurDisciplinaire")));
+        }
+        if (secteurDisciplinairePredicates.size() > 0) {
+            predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> libelleFormationPredicates = new ArrayList<>();
+        for (String libelleFormation : dossierFilter.getLibelleFormation()) {
+            libelleFormationPredicates.add(cb.equal(cb.literal(libelleFormation), dossierRoot.get("libelleFormation")));
+        }
+        if (libelleFormationPredicates.size() > 0) {
+            predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> niveauEtudesPredicates = new ArrayList<>();
+        for (String niveauEtudes : dossierFilter.getNiveauEtudes()) {
+            niveauEtudesPredicates.add(cb.equal(cb.literal(niveauEtudes), dossierRoot.get("niveauEtudes")));
+        }
+        if (niveauEtudesPredicates.size() > 0) {
+            predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
+        }
+        List<Predicate> typeFormationPredicates = new ArrayList<>();
+        for (TypFrmn typFrmn : dossierFilter.getTypFrmn()) {
+            typeFormationPredicates.add(cb.equal(cb.literal(typFrmn), dossierRoot.get("typeFormation")));
+        }
+        if (typeFormationPredicates.size() > 0) {
+            predicates.add(cb.or(typeFormationPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> modeFormationPredicates = new ArrayList<>();
+        for (ModFrmn modFrmn : dossierFilter.getModFrmn()) {
+            modeFormationPredicates.add(cb.equal(cb.literal(modFrmn), dossierRoot.get("modeFormation")));
+        }
+        if (modeFormationPredicates.size() > 0) {
+            predicates.add(cb.or(modeFormationPredicates.toArray(Predicate[]::new)));
+        }
+        if (StringUtils.hasText(dossierFilter.getResultatTotal())) {
             predicates.add(cb.equal(cb.literal(dossierFilter.getResultatTotal()), dossierRoot.get("resultatTotal")));
         }
 
-//        if(dossierFilter.getNewDossier() != null && dossierFilter.getNewDossier()) {
-//            predicates.add(cb.lessThan(cb.count(dossierIndividuJoin.get("dossiers")), 2L));
-//        }
+
+        List<Predicate> genderPredicates = new ArrayList<>();
+        for (Gender gender : dossierFilter.getGender()) {
+            genderPredicates.add(cb.equal(cb.literal(gender), dossierIndividuJoin.get("gender")));
+        }
+        if (genderPredicates.size() > 0) {
+            predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> yearOfBirthPredicates = new ArrayList<>();
+        for (Integer yearOfBirth : dossierFilter.getYearOfBirth()) {
+            yearOfBirthPredicates.add(cb.between(dossierIndividuJoin.get("dateOfBirth"), LocalDate.of(yearOfBirth, 1, 1), LocalDate.of(yearOfBirth, 12, 31)));
+        }
+        if (yearOfBirthPredicates.size() > 0) {
+            predicates.add(cb.or(yearOfBirthPredicates.toArray(Predicate[]::new)));
+        }
+
+        List<Predicate> fixCPPredicates = new ArrayList<>();
+        for (String fixCP : dossierFilter.getFixCP()) {
+            fixCPPredicates.add(cb.equal(cb.literal(fixCP), dossierIndividuJoin.get("fixCP")));
+        }
+        if (fixCPPredicates.size() > 0) {
+            predicates.add(cb.or(fixCPPredicates.toArray(Predicate[]::new)));
+        }
+
+
         List<Predicate> typeAideMateriellePredicates = new ArrayList<>();
-        for (TypeAideMaterielle typeAideMaterielle: dossierFilter.getTypeAideMaterielle()) {
+        for (TypeAideMaterielle typeAideMaterielle : dossierFilter.getTypeAideMaterielle()) {
             typeAideMateriellePredicates.add(cb.equal(cb.literal(typeAideMaterielle), dossierAideMaterielleJoin.get("typeAideMaterielle")));
         }
-        if(typeAideMateriellePredicates.size() > 0) {
+        if (typeAideMateriellePredicates.size() > 0) {
             predicates.add(cb.or(typeAideMateriellePredicates.toArray(Predicate[]::new)));
         }
 
-        /*List<Predicate> fonctionAidantPredicates = new ArrayList<>();
-        for (FonctionAidant fonctionAidant : dossierFilter.getFonctionAidants()) {
-            fonctionAidantPredicates.add(cb.equal(cb.literal(fonctionAidant), dossierAideHumaineJoin.get("fonctionAidant")));
-        }
-        if(fonctionAidantPredicates.size() > 0) {
-            predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
-        }*/
         List<Predicate> fonctionAidantPredicates = new ArrayList<>();
         for (FonctionAidant fonctionAidant : dossierFilter.getFonctionAidants()) {
-            Expression<Collection<FonctionAidant>> fonctionAidants =  dossierAideHumaineJoin.get( "fonctionAidants" );
+            Expression<Collection<FonctionAidant>> fonctionAidants = dossierAideHumaineJoin.get("fonctionAidants");
             fonctionAidantPredicates.add(cb.isMember(cb.literal(fonctionAidant), fonctionAidants));
         }
-        if(fonctionAidantPredicates.size() > 0) {
+        if (fonctionAidantPredicates.size() > 0) {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
         }
+        //        if(dossierFilter.getNewDossier() != null && dossierFilter.getNewDossier()) {
+//            predicates.add(cb.lessThan(cb.count(dossierIndividuJoin.get("dossiers")), 2L));
+//        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
