@@ -38,10 +38,12 @@ public class LdapDossierInfosService implements DossierInfosService {
             if (personLdaps.size() > 0) {
                 PersonLdap personLdap = personLdaps.get(0);
                 try {
-                    OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
-                    dossierInfos.setCodComposante(organizationalUnitLdap.getSupannCodeEntite());
-                    dossierInfos.setComposante(organizationalUnitLdap.getDescription());
-                    dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
+                    if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
+                        OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
+                        dossierInfos.setCodComposante(organizationalUnitLdap.getSupannCodeEntite());
+                        dossierInfos.setComposante(organizationalUnitLdap.getDescription());
+                        dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
+                    }
                     OrganizationalUnitLdap organizationalUnitLdapEtab = ldapPersonService.getEtablissement(personLdap.getSupannEtablissement());
                     if(organizationalUnitLdapEtab != null) {
                         dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
