@@ -2,7 +2,7 @@ build-test:
   stage: deploy
   script:
     - mvn clean package -Dspring.config.location=/opt/esup-agape-test/application-test.properties
-    - scp -o StrictHostKeyChecking=no target/esup-agape-test.war gitlab-runner@aibes:/home/gitlab-ci
+    - scp -o StrictHostKeyChecking=no target/esup-agape.war gitlab-runner@aibes:/home/gitlab-ci
     - ssh -tt -o StrictHostKeyChecking=no gitlab-ci@aibes sudo systemctl stop esup-agape-test.service
     - ssh -tt -o StrictHostKeyChecking=no gitlab-ci@aibes rm -f /opt/esup-agape-test/esup-agape.war
     - ssh -tt -o StrictHostKeyChecking=no gitlab-ci@aibes cp /home/gitlab-ci/esup-agape.war /opt/esup-agape-test/
