@@ -12,6 +12,12 @@ public class IndexController {
 
     @GetMapping
     public String index(HttpServletRequest httpServletRequest) {
+        if(httpServletRequest.isUserInRole("ROLE_ADMIN")
+                || httpServletRequest.isUserInRole("ROLE_MANAGER")
+                || httpServletRequest.isUserInRole("ROLE_ESPACE_HANDI")
+                || httpServletRequest.isUserInRole("ROLE_MEDECIN")) {
+            return "redirect:/dossiers";
+        }
         if(httpServletRequest.isUserInRole("ROLE_SCOLARITE")) {
             return "redirect:/scolarite/amenagements";
         }
