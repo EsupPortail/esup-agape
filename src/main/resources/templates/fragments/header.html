@@ -15,16 +15,16 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
-                        <li class="nav-item">
+                        <li class="nav-item"  sec:authorize="!hasRole('ROLE_ADMINISTRATIF') and !hasRole('ROLE_SCOLARITE')">
                             <a class="nav-link active text-light" aria-current="page" th:href="@{/dossiers}">Dossiers</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMINISTRATIF') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
                             <a class="nav-link text-light" th:href="@{/administratif/amenagements}">Administratif</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_SCOLARITE') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
                             <a class="nav-link text-light" th:href="@{/scolarite/amenagements}">Scolarité</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown"  sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                             <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Outils
                             </a>

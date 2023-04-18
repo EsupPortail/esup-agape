@@ -3,18 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.Etat;
-import org.esupportail.esupagape.entity.enums.FonctionAidant;
-import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.RentreeProchaine;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.Taux;
-import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
-import org.esupportail.esupagape.entity.enums.TypeSuiviHandisup;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -32,17 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -141,7 +124,10 @@ public class DossierController {
     }
 
     @GetMapping("/{dossierId}")
-    public String update(@PathVariable Long dossierId, Model model) {
+    public String update(@PathVariable Long dossierId, Model model, HttpServletRequest httpServletRequest) {
+        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")) {
+            return "redirect:/dossiers/"+ dossierId +"/amenagements";
+        }
         Dossier dossier = dossierService.getById(dossierId);
         model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
         model.addAttribute("classifications", Classification.values());
