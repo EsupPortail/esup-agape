@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<footer th:fragment="black" class="footer fixed-bottom mt-auto py-3 bg-dark hidden-print text-center">
+    <span class="text-white" th:text="#{application.footer} + ' - ' + ${currentYear} + ' - ' + ${versionApp}"></span>
+</footer>
+</html>

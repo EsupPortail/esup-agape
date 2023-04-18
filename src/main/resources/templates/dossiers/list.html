@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:sd="http://www.w3.org/1999/xhtml">
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side-filters :: side-filters"></div>
+            <div class="agape-content agape-content-side">
+                <!--                    <h1 class="" th:text="'Liste des dossiers ' + ${yearFilter}"></h1>-->
+                <form th:action="@{/dossiers}" method="get">
+                    <div class="row">
+                        <div class="col-2 mt-1" style="width: 350px;">
+                            <input class="form-control" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}">
+                        </div>
+                        <div class="col-3 mt-1 mb-1" style="white-space: nowrap;">
+                            <input class="btn btn-success" type="submit" value="Rechercher">
+                            <a class="btn btn-secondary d-none d-sm-inline-block" id="btnClear" th:href="@{/dossiers}">Effacer</a>
+                            <a class="btn btn-primary" th:href="@{/individus/create}">Ajouter un individu</a>
+<!--                            <a class="btn btn-primary" th:href="@{exports/export-to-csv(year=${yearFilter})}">-->
+<!--                                Exporter les dossiers</a>-->
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-sm table-responsive table-striped mt-1" style="width: 100%">
+                    <thead class="text-center  table-secondary">
+                        <tr class="text-start">
+                            <th scope="col" style="width: 100px;">
+                                <a class="sorted" sd:pagination-sort="numEtu">Numéro étudiant</a>
+                            </th>
+                            <th scope="col" class="d-none d-xxl-table-cell" style="width: 115px;">
+                                <a class="sorted" sd:pagination-sort="numEtu">Code INE</a>
+                            </th>
+                            <th scope="col" class="d-none d-lg-table-cell" style="width: 71px;">
+                                <a class="sorted" sd:pagination-sort="gender">Genre</a>
+                            </th>
+                            <th scope="col" style="width: 150px;">
+                                <a class="sorted" sd:pagination-sort="name">Nom</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
+                                <a class="sorted" sd:pagination-sort="firstName">Prénom</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
+                                <a class="sorted" sd:pagination-sort="dateOfBirth">Date de naissance</a>
+                            </th>
+                            <th scope="col" class=" d-none d-lg-table-cell" style="width: 100px;">
+                                <a class="sorted" sd:pagination-sort="type">Type Individu</a>
+                            </th>
+                            <th scope="col" style="width: 203px;">
+                                <a class="sorted" sd:pagination-sort="statusDossier">Statut du dossier</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 131px;">
+                                <a class="sorted" sd:pagination-sort="statusDossierAmenagement">Statut des aménagements</a>
+                            </th>
+                            <th scope="col" style="width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle text-start">
+                            <td th:utext="${dossierIndividuDto.numEtu}"></td>
+                            <td th:utext="${dossierIndividuDto.codeIne}" class="d-none d-xxl-table-cell"></td>
+                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none d-lg-table-cell"></td>
+                            <td th:utext="${#strings.toUpperCase(dossierIndividuDto.name)}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></td>
+                            <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell"></td>
+                            <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell"></td>
+                            <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
+                            <th:block th:switch="${dossierIndividuDto.statusDossier}">
+                                <td th:case="${dossierIndividuDto.statusDossier.SUIVI}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI}}" class="badge text-bg-warning"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-dark"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.DESINSCRIT}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.DESINSCRIT}}" class="badge text-bg-danger"></span></td>
+                            </th:block>
+                            <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
+                                    class="d-none d-sm-none d-md-table-cell"></td>
+                            <td>
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item border-0 p-1 bg-transparent">
+                                        <a class="btn btn-info" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="fa-regular fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-danger">
+                                            <i class="fa-solid fa-user-xmark"></i></a>
+                                        <div class="modal modal-warning fade in" th:id="'modal-warning-individu-' + ${dossierIndividuDto.id}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/admin/delete-individu/{id}(id=${dossierIndividuDto.individuId})}" th:method="delete">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Suppression d'un individu</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet individu : <br>
+                                                                <p th:text="${dossierIndividuDto.name} + ' ' + ${dossierIndividuDto.firstName}" class="fw-bold"></p>
+                                                                <p>Attention cette suppression est irreversible !</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
+                                                                Annuler
+                                                            </button>
+                                                            <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
+                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-danger">
+                                            <i class="fa-solid fa-trash"></i></a>
+                                        <div class="modal modal-warning fade in" th:id="'modal-warning-dossier-' + ${dossierIndividuDto.id}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/dossiers/delete-dossier/{id}(id=${dossierIndividuDto.id})}" th:method="delete">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Suppression d'un dossier</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de ce dossier : <br>
+                                                                <span th:text="'Dossier:' + ' ' + ${dossierIndividuDto.id} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
+                                                                        class="font-weight-bold"></span> ?
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
+                                                                Annuler
+                                                            </button>
+                                                            <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav id="pagination" aria-label="pagination">
+                    <div class="col-lg-12 text-center">
+                        <div sd:pagination-summary="">info</div>
+                    </div>
+                    <ul class="d-print-none pagination justify-content-center " sd:pagination="full"></ul>
+                </nav>
+                <div class="alert alert-warning" th:if="${dossiers.isEmpty()}">Aucun individu ne correspond à votre recherche
+                </div>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+    </body>
+</html>

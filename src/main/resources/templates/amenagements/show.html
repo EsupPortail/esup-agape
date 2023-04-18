@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="amenagement" type="org.esupportail.esupagape.entity.Amenagement"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content agape-content-side">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" class="text-center ">Liste des aménagements</a>
+                </li>
+            </ol>
+        </nav>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='amenagements')"></div>
+        <div class="m-3">
+            <h4>Vue d’un aménagement</h4>
+            <hr>
+        </div>
+        <div class="col-12 text-center" style="height: 90%">
+            <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+            <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+        </div>
+        <div class="col-12">
+            <div class="float-buttons">
+                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
+                    <i class="fa-solid fa-book-medical" style="font-size: 22px"></i>
+                </a>
+                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                    <i class="fa-solid fa-certificate" style="font-size: 22px"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
+</html>

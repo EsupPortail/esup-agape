@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="aideMaterielle" type="org.esupportail.esupagape.entity.AideMaterielle"*/-->
+<div th:fragment="show" class="modal fade" th:id="'show-aide-materielle-' + ${aideMaterielle.id}" tabindex="-1" th:aria-labelledby="'show-aide-materielle-label' + ${aideMaterielle.id}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" th:id="'show-aide-materielle-label' + ${aideMaterielle.id}">Détail aide matériel</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:id="'form-aide-materielle-' + ${aideMaterielle.id}" th:method="put" th:action="@{/dossiers/{id}/aides/aides-materielles/{aideMaterielleId}/update(id=${currentDossier.id}, aideMaterielleId=${aideMaterielle.id})}" th:object="${aideMaterielle}">
+                <div class="modal-body">
+                    <div class="row">
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label" for="typeAideMaterielle">Type</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
+                                        <div class="form-check">
+                                            <input id="typeAideMaterielle" th:checked="${aideMaterielle.typeAideMaterielle == typeAideMaterielle}" class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" disabled required>
+                                            <label class="form-check-label" th:text="#{'aides.typeAideMaterielle.' + ${typeAideMaterielle}}"></label>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label" for="start-date">Date de début</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <input id="start-date" type="datetime-local" class="form-control" th:name="startDate" th:value="${aideMaterielle.startDate}" disabled required>
+                                </div>
+                            </div>
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label" for="end-date">Date de fin</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${aideMaterielle.endDate}" disabled required>
+                                </div>
+                            </div>
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label" for="cost">Cout en euros</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <input id="cost" type="number" min="0" class="form-control" th:name="cost" th:value="${aideMaterielle.cost}" disabled required>
+                                </div>
+                            </div>
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label" id="comment" for="comment">Commentaire</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <textarea th:id="'comment-' + ${aideMaterielle.id}" class="form-control" th:name="comment" th:value="${aideMaterielle.comment}" th:text="${aideMaterielle.comment}" disabled></textarea>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-inline">
+                        <button th:id="'close-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button th:if="${currentYear == currentDossier.year}" role="button" onclick="unlockForm(this);" th:id="'unlock-aide-materielle-' + ${aideMaterielle.id}" type="button" class="btn btn-warning">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <input onclick="lockForm();" th:id="'lock-aide-materielle-' + ${aideMaterielle.id}" type="button" value="Annuler" class="btn btn-danger d-none">
+                        <input  th:if="${currentYear == currentDossier.year}" th:id="'submit-aide-materielle-' + ${aideMaterielle.id}" type="submit" value="Enregister" class="btn btn-success d-none">
+                    </div>
+                </div>
+                <script th:if="${lastEdit == aideMaterielle.id}">
+                    document.getElementById('show-aide-materielle-[[${aideMaterielle.id}]]').classList.toggle("fade");
+                    new bootstrap.Modal(document.getElementById('show-aide-materielle-[[${aideMaterielle.id}]]')).show();
+                    document.getElementById('show-aide-materielle-[[${aideMaterielle.id}]]').classList.toggle("fade");
+                </script>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

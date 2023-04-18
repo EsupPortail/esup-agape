@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="amenagement" type="org.esupportail.esupagape.entity.Amenagement"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div th:replace="fragments/side :: side"></div>
+    <div class="agape-content agape-content-side">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" class="text-center ">Liste des aménagements</a>
+                </li>
+            </ol>
+        </nav>
+        <div th:replace="fragments/tabs-years :: tabs-years"></div>
+        <div th:replace="fragments/tabs-content :: tabs-content(active='amenagements')"></div>
+        <div class="m-3">
+            <h4>Modification d’un aménagement</h4>
+            <hr>
+            <form id="amenagement" th:method="put"
+                  th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
+                  th:object="${amenagement}">
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label" for="typeAmenagement">Type d’aménagement</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <select id="typeAmenagement" type="text" class="form-select" name="typeAmenagement"
+                                        th:value="${typeAmenagement}">
+                                    <option value="" disabled selected>Choisir</option>
+                                    <option th:each="typeAmenagement : ${typeAmenagements}"
+                                            th:text="#{'amenagement.typeAmenagement.' +${typeAmenagement}}"
+                                            th:value="${typeAmenagement}"
+                                            th:selected="${typeAmenagement.equals(amenagement.typeAmenagement)}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="amenagement-end-date" class="row mb-1 align-items-baseline" th:classappend="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? '' : 'd-none'">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="end-date" class="form-label">Date de fin</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="end-date" type="date" class="form-control" th:name="endDate"
+                                       th:value="${#temporals.format(amenagement.endDate, 'yyyy-MM-dd')}">
+                                <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error"
+                                   th:errors="*{endDate}"></p>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Types d’épreuves</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                            <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
+                                <th:block th:each="typeEpreuve : ${typeEpreuves}">
+                                    <option th:id="${typeEpreuve}" th:value="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></option>
+                                </th:block>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="autre-typeEpreuve" class="form-label">Autre type d’épreuve</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="autre-typeEpreuve" type="text" class="form-control"
+                                       th:field="*{autresTypeEpreuve}">
+                                <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error"
+                                   th:errors="*{autresTypeEpreuve}"></p>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label" for="typeAmenagement">Temp majoré</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <select id="tempsMajore" type="text" class="form-select" name="tempsMajore"
+                                        th:value="${amenagement.tempsMajore}">
+                                    <option value="" disabled selected>Choisir</option>
+                                    <option th:each="tempsMajore : ${tempsMajores}"
+                                            th:text="#{'amenagement.tempsMajore.' +${tempsMajore}}"
+                                            th:value="${tempsMajore}"
+                                            th:selected="${tempsMajore.equals(amenagement.tempsMajore)}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="autre-typeEpreuve" class="form-label">Autres temps majorés</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input id="autres-temp-majore" type="text" class="form-control"
+                                       th:field="*{autresTempsMajores}">
+                                <p th:if="${#fields.hasErrors('autresTempsMajores')}" th:errorclass="error"
+                                   th:errors="*{autresTempsMajores}"></p>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label th:for="amenagementText" class="form-label">Aménagement</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <div class="agape-amenagement-textarea-wrapper">
+                                    <textarea id="amenagementText" type="text" rows="7"
+                                              class="form-control agape-amenagement-textarea"
+                                              th:field="*{amenagementText}"></textarea>
+                                </div>
+                                <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error"
+                                   th:errors="*{amenagementText}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-6">
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Autorisation de transmission</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <th:block th:each="autorisation : ${autorisations}">
+                                    <div class="form-check">
+                                        <input th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}"
+                                               name="autorisation" type="radio" class="form-check-input"
+                                               th:field="*{autorisation}" th:value="${autorisation}" required>
+                                        <label class="form-check-label" th:for="${autorisation}"
+                                               th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div id="classificationDiv" class="d-none">
+                            <div class="row mb-1 align-items-baseline">
+                                <div class="col-4" style="width: 250px;">
+                                    <label class="form-label select-label" th:for="classification">Classification du
+                                        handicap</label>
+                                </div>
+                                <div class="col-12 col-xxl-8">
+                                    <select multiple id="classification" th:field="*{classification}" size="1"
+                                            type="text" class="agape-slim-select-search"
+                                            th:value="${currentDossier.classifications}">
+                                        <option type="text"
+                                                th:checked="${currentDossier.classifications.contains(classification)}"
+                                                th:each="classification : ${classifications}"
+                                                th:text="#{'dossier.classification.' +${classification}}"
+                                                th:value="${classification}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="float-buttons">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                            <button type="submit" class="btn btn-success" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                                <i class="fa-solid fa-save"></i>
+                            </button>
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
+                                <i class="fa-solid fa-book-medical" style="font-size: 22px"></i>
+                            </a>
+                            <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                                <i class="fa-solid fa-certificate" style="font-size: 22px"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="validationModalLabel">Envoi à l’administration</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:method="post"
+                  th:action="@{/dossiers/{id}/amenagements/{amenagementId}/validation-medecin(id=${currentDossier.id},amenagementId=${amenagement.id})}">
+                <div class="modal-body">
+                    Merci de confirmer l’envoi de l’aménagement à l’administration
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: black"></footer>
+<div th:replace="fragments/flash :: flash"></div>
+</body>
+</html>

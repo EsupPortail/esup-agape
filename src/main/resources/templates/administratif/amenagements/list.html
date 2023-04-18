@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+<head th:replace="fragments/head :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<main class="d-inline-flex">
+    <div class="agape-side bg-light position-sticky me-2">
+        <a href="/administratif/amenagements?porte=0" class="btn  ms-3 mt-3" th:classappend="${!porte ? 'btn-secondary' : 'btn-light'}">Aménagements à valider <div class="badge bg-danger" th:text="${nbAmenagementsToValidate}"></div></a>
+        <a href="/administratif/amenagements?porte=1" class="btn  ms-3 mt-3" th:classappend="${porte ? 'btn-secondary' : 'btn-light'}">Aménagements portables <div class="badge bg-danger" th:text="${nbAmenagementsToPorte}"></div></a>
+    </div>
+    <div class="agape-content agape-content-side">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <span th:if="${porte}">Aménagements pouvants beneficier d'une portabilitée</span>
+                    <span th:if="${!porte}" th:text="'Liste des aménagements ' + ${currentYear}"></span>
+
+                </li>
+            </ol>
+        </nav>
+        <div class="m-3">
+            <div class="row">
+                <div class="col-12">
+                    <form th:action="@{/administratif/amenagements}" method="get">
+                        <div class="row mt-1 mb-2 g-1">
+                            <div class="col-2" style="width: 350px;">
+                                <div class="input-group">
+                                    <label class="input-group-text">À renouveler</label>
+                                    <select class="form-select" name="porte">
+                                        <option disabled selected value="">Choisir</option>
+                                        <option th:selected="${!porte}"
+                                                th:value="0"
+                                                >Non</option>
+                                        <option th:selected="${porte}"
+                                                th:value="1"
+                                        >Oui</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2" style="width: 350px;">
+                                <div class="input-group">
+                                    <label class="input-group-text">Année universitaire</label>
+                                    <select class="form-select" name="yearFilter">
+                                        <option disabled selected value="">Choisir</option>
+                                        <option th:selected="${yearFilter == year.number}"
+                                                th:each="year : ${years}"
+                                                th:value="${year.number}"
+                                                th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2" style="min-width: 500px;">
+                                <div class="input-group">
+                                    <label class="input-group-text" th:for="codComposante">Composante</label>
+                                    <select id="codComposante" class="form-select" name="codComposante">
+                                        <option value="">Choisir</option>
+                                        <option th:selected="${codComposante == composante.cod}"
+                                                th:each="composante: ${composantes}"
+                                                th:if="${composante.cod != null && !composante.cod.isEmpty()}"
+                                                th:value="${composante.cod}"
+                                                th:text="${composante.libelle}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2" style="min-width: 500px;">
+                                <div class="input-group">
+                                    <label class="input-group-text" th:for="statusAmenagement">Statut de l'aménagement</label>
+                                    <select id="statusAmenagement" class="form-select" name="statusAmenagement">
+                                        <option value="">Choisir</option>
+                                        <option th:selected="${enumStatusAmenagement == statusAmenagement}"
+                                                th:each="enumStatusAmenagement: ${statusAmenagements}"
+                                                th:value="${enumStatusAmenagement}"
+                                                th:text="#{'amenagement.statusAmenagement.' + ${enumStatusAmenagement}}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+                                <input class="btn btn-success" type="submit" value="Rechercher">
+                                <a class="btn btn-secondary" id="btnClear" th:href="@{/administratif/amenagements}">Effacer</a>
+                            </div>
+                        </div>
+                    </form>
+                    <table class="table table-striped table-responsive">
+                        <thead class="text-center table-info">
+                            <tr class="text-start">
+                                <th>Composante</th>
+                                <th><a class="sorted" sd:pagination-sort="createDate">Date de création</a> </th>
+                                <th><a class="sorted" sd:pagination-sort="endDate">Type d’aménagement</a></th>
+                                <th>Nom</th>
+                                <th>Temps majoré</th>
+                                <th>Nom médecin</th>
+                                <th><a class="sorted" sd:pagination-sort="statusAmenagement">Statut</a></th>
+                                <th>Mail individu</th>
+                                <th style="width: 200px;">Voir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <th:block th:each="amenagement : ${amenagements}">
+                                <tr>
+                                    <td th:text="${amenagement.dossier.composante}"></td>
+                                    <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${amenagement.endDate != null} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                    <td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + amenagement.dossier.individu.firstName}"></td>
+                                    <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></td>
+                                    <td th:text="${amenagement.nomMedecin}"></td>
+                                    <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                    <td th:text="${amenagement.mailIndividu} == false ? 'Oui': 'Non'"></td>
+                                    <td style="width: 100px;">
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item border-0 p-1 bg-transparent">
+                                                <a class="btn btn-info" th:href="@{/administratif/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="fa-solid fa-eye"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                    <nav id="pagination" aria-label="pagination">
+                        <div class="col-lg-12 text-center">
+                            <div sd:pagination-summary="">info</div>
+                        </div>
+                        <ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
+                    </nav>
+                    <div class="alert alert-warning" th:if="${amenagements.isEmpty()}">Aucun aménagement ne correspond à votre recherche
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer :: black"></footer>
+</body>
+</html>

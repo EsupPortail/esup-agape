@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="aideMaterielles" type="java.util.List<org.esupportail.esupagape.entity.AideMaterielle>"*/-->
+    <!--/*@thymesVar id="aideHumaines" type="java.util.List<org.esupportail.esupagape.entity.AideHumaine>"*/-->
+
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side :: side"></div>
+            <div class="agape-content agape-content-side">
+                <div class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">Aides</li>
+                    </ol>
+                </div>
+                <div th:replace="fragments/tabs-years :: tabs-years"></div>
+                <div th:replace="fragments/tabs-content :: tabs-content(active='aides')"></div>
+                <div class="m-3">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="clearfix w-100">
+                                <h4 class="float-start">Aides matérielles</h4>
+                                <button th:if="${currentYear == currentDossier.year}" title="Ajouter une aide materielle" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-materielle-modal">
+                                    <i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <hr>
+                            <table class="table table-striped table-responsive mx-auto mt-4">
+                                <thead class="text-start mt-2 mb-2 table-info">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Date de fin</th>
+                                        <th>Coût</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <th:block th:each="aideMaterielle : ${aideMaterielles}">
+                                        <tr>
+                                            <td th:text="#{'aides.typeAideMaterielle.' + ${aideMaterielle.typeAideMaterielle}}"></td>
+                                            <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${aideMaterielle.cost}"></td>
+                                            <td>
+                                                <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-eye"></i>
+                                                </button>
+                                                <div th:replace="aides/modal-show-aide-materielle :: show"></div>
+                                            </td>
+                                            <td>
+                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
+                                                </button>
+                                                <div class="modal fade" th:if="${currentYear == currentDossier.year}"
+                                                        th:id="'delete-aide-materielle-' + ${aideMaterielle.id}"
+                                                        tabindex="-1"
+                                                        th:aria-labelledby="'delete-aide-materielle-label' + ${aideMaterielle.id}"
+                                                        aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form th:method="delete"
+                                                                th:action="@{/dossiers/{id}/aides/aides-materielles/{aideMaterielleId}/delete(id=${currentDossier.id}, aideMaterielleId=${aideMaterielle.id})}"
+                                                                th:object="${newAideMaterielle}">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" th:id="'delete-aide-materielle-label' + ${aideMaterielle.id}">Confirmer la suppression de l’aide</h1>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+                                                                    Confirmer vous la suppression de cette aide ?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td></td>
+                                        <td th:text="${total}"></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div th:replace="aides/modal-create-aide-materielle :: create"></div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="clearfix w-100">
+                                <h4 class="float-start">Aides humaines</h4>
+                                <button th:if="${currentYear == currentDossier.year}" title="Ajouter une aide humaine" class="btn btn-primary float-end circle-btn" data-bs-toggle="modal" data-bs-target="#add-aide-humaine-modal">
+                                    <i class="fa-solid fa-plus"></i></button>
+                            </div>
+                            <hr>
+
+                            <table class="table table-striped table-responsive mx-auto mt-4">
+                                <thead class="text-start mt-2 mb-2 table-info">
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Date début</th>
+                                        <th>Fonction aidant</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th colspan="2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <th:block th:each="aideHumaine : ${aideHumaines}">
+                                        <tr>
+                                            <td th:text="#{'aides.statusAideHumaine.' + ${aideHumaine.statusAideHumaine}}"></td>
+                                            <td th:text="${#temporals.format(aideHumaine.startDate, 'dd/MM/yyyy')}"></td>
+                                            <td>
+                                                <ul th:each="fonctionAidant : ${aideHumaine.fonctionAidants}">
+                                                    <li th:text="#{'aides.fonctionAidant.' + ${fonctionAidant}}"></li>
+                                                </ul>
+                                            </td>
+                                            <td th:text="${aideHumaine.nameAidant}"></td>
+                                            <td th:text="${aideHumaine.firstNameAidant}"></td>
+                                            <td>
+                                                <a class="btn btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="fa-solid fa-eye"></i></a>
+                                            </td>
+                                            <td>
+                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
+                                                </button>
+                                                <div class="modal fade" th:if="${currentYear == currentDossier.year}"
+                                                        th:id="'delete-aide-humaine-' + ${aideHumaine.id}"
+                                                        tabindex="-1"
+                                                        th:aria-labelledby="'delete-aide-humaine-label' + ${aideHumaine.id}"
+                                                        aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form th:method="delete"
+                                                                th:action="@{/dossiers/{id}/aides/aides-humaines/{aideHumaineId}/delete(id=${currentDossier.id}, aideHumaineId=${aideHumaine.id})}"
+                                                                th:object="${newAideHumaine}">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" th:id="'delete-aide-humaine-label' + ${aideHumaine.id}">Confirmer la suppression de l’aide</h1>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+                                                                    Confirmer vous la suppression de cette aide ?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </tbody>
+                            </table>
+                            <div th:replace="aides/modal-create-aide-humaine :: create"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
+</html>

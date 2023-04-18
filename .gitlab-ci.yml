@@ -1,0 +1,12 @@
+build-test:
+  stage: deploy
+  script:
+    - mvn clean package -Dspring.config.location=/opt/esup-agape-test/application-test.properties
+    - sudo systemctl stop esup-agape-test.service
+    - rm -f /opt/esup-agape-test/esup-agape.war
+    - cp target/esup-agape-test.war /opt/esup-agape-test/
+    - sudo systemctl restart esup-agape-test.service
+  only:
+    - test
+  tags:
+    - test
