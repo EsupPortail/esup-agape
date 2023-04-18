@@ -232,6 +232,7 @@
     </dependencies>
 
     <build>
+        <finalName>esup-agape</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
