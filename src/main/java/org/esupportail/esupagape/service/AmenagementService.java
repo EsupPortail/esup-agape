@@ -324,17 +324,28 @@ public class AmenagementService {
             if(datas.containsKey(fieldName)) {
                 pdField.setValue(datas.get(fieldName));
             }
-            if(pdField instanceof PDSignatureField && pdField.getPartialName().equals("signatureValideur")) {
+            if(pdField instanceof PDSignatureField) {
                 PDSignature pdSignature = new PDSignature();
                 Calendar calendar = Calendar.getInstance();
+                String date;
+                String validator;
                 try {
-                    calendar.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datas.get("administrationDate")));
+                    if (fieldName.equals("signatureValideur")) {
+                        date = datas.get("administrationDate");
+                        validator = datas.get("nomValideur");
+                    } else if (fieldName.equals("signatureMedecin")){
+                        date = datas.get("valideMedecinDate");
+                        validator = datas.get("nomMedecin");
+                    } else {
+                        continue;
+                    }
+                    calendar.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(date));
                 } catch (ParseException e) {
                     throw new AgapeRuntimeException(e.getMessage());
                 }
                 pdSignature.setSignDate(calendar);
                 SignatureOptions signatureOptions = new SignatureOptions();
-                signatureOptions.setVisualSignature(createVisualSignatureTemplate(pdDocument, pdField.getWidgets().get(0).getRectangle(), pdSignature, datas));
+                signatureOptions.setVisualSignature(createVisualSignatureTemplate(pdDocument, pdField.getWidgets().get(0).getRectangle(), pdSignature, validator, date, fieldName));
                 signatureOptions.setPage(0);
                 pdDocument.addSignature(pdSignature, signatureOptions);
                 ((PDSignatureField) pdField).setValue(pdSignature);
@@ -369,7 +380,7 @@ public class AmenagementService {
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
-    private InputStream createVisualSignatureTemplate(PDDocument srcDoc, PDRectangle rect, PDSignature signature, Map<String, String> datas) throws IOException
+    private InputStream createVisualSignatureTemplate(PDDocument srcDoc, PDRectangle rect, PDSignature signature, String date, String validator, String fieldName) throws IOException
     {
         try (PDDocument doc = new PDDocument())
         {
@@ -437,7 +448,7 @@ public class AmenagementService {
                 cs.fill();
                 cs.saveGraphicsState();
                 cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
-                ClassPathResource noImg = new ClassPathResource("/static/images/signature-valideur.png");
+                ClassPathResource noImg = new ClassPathResource("/static/images/" + fieldName + ".png");
                 PDImageXObject img = PDImageXObject.createFromFileByExtension(noImg.getFile(), doc);
                 cs.drawImage(img, rect.getWidth() / 2, 0);
                 cs.restoreGraphicsState();
@@ -448,8 +459,7 @@ public class AmenagementService {
                 cs.setNonStrokingColor(Color.black);
                 cs.newLineAtOffset(fontSize, height - leading);
                 cs.setLeading(leading);
-                String date = new SimpleDateFormat("dd/MM/yyyy").format(signature.getSignDate().getTime());
-                cs.showText("Valideur: " + datas.get("nomValideur"));
+                cs.showText(validator);
                 cs.newLine();
                 cs.showText("le : " + date);
                 cs.endText();
