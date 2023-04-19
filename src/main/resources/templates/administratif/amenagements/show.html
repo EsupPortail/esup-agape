@@ -39,9 +39,9 @@
                     <dt class="col-sm-2">Formation précédente</dt>
                     <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
                 </dl>
-                <div class="col-12 text-center" style="height: 90%">
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                <div class="col-12 text-center" style="height: calc(100vh - 240px);">
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                 </div>
             </div>
         </main>
@@ -73,8 +73,7 @@
                         <h1 class="modal-title fs-5" id="validationModalLabel">Valider l’aménagement d’examen</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form th:method="post"
-                          th:action="@{/administratif/amenagements/{amenagementId}/validation(amenagementId=${amenagement.id})}">
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/validation(amenagementId=${amenagement.id})}">
                         <div class="modal-body">
                             Merci de confirmer la validation de l’aménagement
                         </div>
@@ -93,8 +92,7 @@
                         <h1 class="modal-title fs-5" id="refusModalLabel">Refuser l’aménagement d’examen</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form th:method="post"
-                          th:action="@{/administratif/amenagements/{amenagementId}/refus(amenagementId=${amenagement.id})}">
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/refus(amenagementId=${amenagement.id})}">
                         <div class="modal-body">
                             Merci de confirmer le refus de l’aménagement et de préciser un motif
                             <textarea name="motif" required class="form-control"></textarea>

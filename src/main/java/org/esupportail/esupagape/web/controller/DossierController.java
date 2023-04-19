@@ -125,7 +125,9 @@ public class DossierController {
 
     @GetMapping("/{dossierId}")
     public String update(@PathVariable Long dossierId, Model model, HttpServletRequest httpServletRequest) {
-        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")) {
+        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")
+                && !httpServletRequest.isUserInRole("MANAGER")
+                && !httpServletRequest.isUserInRole("ADMIN")) {
             return "redirect:/dossiers/"+ dossierId +"/amenagements";
         }
         Dossier dossier = dossierService.getById(dossierId);

@@ -4,12 +4,27 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
+import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceDictionary;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
+import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
+import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureOptions;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
+import org.apache.pdfbox.util.Matrix;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
@@ -17,6 +32,7 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -28,29 +44,35 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class AmenagementService {
 
+    private final ApplicationProperties applicationProperties;
     private final AmenagementRepository amenagementRepository;
     private final DossierService dossierService;
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
     private final UtilsService utilsService;
 
-
-    public AmenagementService(AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService) {
+    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService) {
+        this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
         this.objectMapper = objectMapper;
@@ -200,11 +222,15 @@ public class AmenagementService {
             throw new AgapeYearException();
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
-            amenagement.setAdministrationDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
-            amenagement.setNomValideur(personLdap.getDisplayName());
-            amenagement.setMailValideur(personLdap.getMail());
-            amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+
+            } else {
+                amenagement.setAdministrationDate(LocalDateTime.now());
+                amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
+                amenagement.setNomValideur(personLdap.getDisplayName());
+                amenagement.setMailValideur(personLdap.getMail());
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+            }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
@@ -298,6 +324,22 @@ public class AmenagementService {
             if(datas.containsKey(fieldName)) {
                 pdField.setValue(datas.get(fieldName));
             }
+            if(pdField instanceof PDSignatureField && pdField.getPartialName().equals("signatureValideur")) {
+                PDSignature pdSignature = new PDSignature();
+                Calendar calendar = Calendar.getInstance();
+                try {
+                    calendar.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datas.get("administrationDate")));
+                } catch (ParseException e) {
+                    throw new AgapeRuntimeException(e.getMessage());
+                }
+                pdSignature.setSignDate(calendar);
+                SignatureOptions signatureOptions = new SignatureOptions();
+                signatureOptions.setVisualSignature(createVisualSignatureTemplate(pdDocument, pdField.getWidgets().get(0).getRectangle(), pdSignature, datas));
+                signatureOptions.setPage(0);
+                pdDocument.addSignature(pdSignature, signatureOptions);
+                ((PDSignatureField) pdField).setValue(pdSignature);
+                ((PDSignatureField) pdField).setDefaultValue(pdSignature);
+            }
         }
         pdAcroForm.flatten();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -325,6 +367,97 @@ public class AmenagementService {
         currentDossier.setAmenagementPorte(amenagement);
         currentDossier.setMailValideurPortabilite(personLdap.getMail());
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
+    }
+
+    private InputStream createVisualSignatureTemplate(PDDocument srcDoc, PDRectangle rect, PDSignature signature, Map<String, String> datas) throws IOException
+    {
+        try (PDDocument doc = new PDDocument())
+        {
+            PDPage page = new PDPage(srcDoc.getPage(0).getMediaBox());
+            doc.addPage(page);
+            PDAcroForm acroForm = new PDAcroForm(doc);
+            doc.getDocumentCatalog().setAcroForm(acroForm);
+            PDSignatureField signatureField = new PDSignatureField(acroForm);
+            PDAnnotationWidget widget = signatureField.getWidgets().get(0);
+            List<PDField> acroFormFields = acroForm.getFields();
+            acroForm.setSignaturesExist(true);
+            acroForm.setAppendOnly(true);
+            acroForm.getCOSObject().setDirect(true);
+            acroFormFields.add(signatureField);
+
+            widget.setRectangle(rect);
+
+            // from PDVisualSigBuilder.createHolderForm()
+            PDStream stream = new PDStream(doc);
+            PDFormXObject form = new PDFormXObject(stream);
+            PDResources res = new PDResources();
+            form.setResources(res);
+            form.setFormType(1);
+            PDRectangle bbox = new PDRectangle(rect.getWidth(), rect.getHeight());
+            float height = bbox.getHeight();
+            Matrix initialScale = null;
+            switch (srcDoc.getPage(0).getRotation())
+            {
+                case 90:
+                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
+                    initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(), bbox.getHeight() / bbox.getWidth());
+                    height = bbox.getWidth();
+                    break;
+                case 180:
+                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
+                    break;
+                case 270:
+                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
+                    initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(), bbox.getHeight() / bbox.getWidth());
+                    height = bbox.getWidth();
+                    break;
+                case 0:
+                default:
+                    break;
+            }
+            form.setBBox(bbox);
+            PDFont font = PDType1Font.HELVETICA;
+
+            // from PDVisualSigBuilder.createAppearanceDictionary()
+            PDAppearanceDictionary appearance = new PDAppearanceDictionary();
+            appearance.getCOSObject().setDirect(true);
+            PDAppearanceStream appearanceStream = new PDAppearanceStream(form.getCOSObject());
+            appearance.setNormalAppearance(appearanceStream);
+            widget.setAppearance(appearance);
+
+            try (PDPageContentStream cs = new PDPageContentStream(doc, appearanceStream))
+            {
+                if (initialScale != null)
+                {
+                    cs.transform(initialScale);
+                }
+                Color color = new Color(0x00AAFFAA, true);
+                cs.setNonStrokingColor(color);
+                cs.addRect(-5000, -5000, 10000, 10000);
+                cs.fill();
+                cs.saveGraphicsState();
+                cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
+                ClassPathResource noImg = new ClassPathResource("/static/images/signature-valideur.png");
+                PDImageXObject img = PDImageXObject.createFromFileByExtension(noImg.getFile(), doc);
+                cs.drawImage(img, rect.getWidth() / 2, 0);
+                cs.restoreGraphicsState();
+                float fontSize = 10;
+                float leading = fontSize * 1.5f;
+                cs.beginText();
+                cs.setFont(font, fontSize);
+                cs.setNonStrokingColor(Color.black);
+                cs.newLineAtOffset(fontSize, height - leading);
+                cs.setLeading(leading);
+                String date = new SimpleDateFormat("dd/MM/yyyy").format(signature.getSignDate().getTime());
+                cs.showText("Valideur: " + datas.get("nomValideur"));
+                cs.newLine();
+                cs.showText("le : " + date);
+                cs.endText();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            doc.save(baos);
+            return new ByteArrayInputStream(baos.toByteArray());
+        }
     }
 
 }

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +151,7 @@ public class AmenagementAdministratifController {
     public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_" + amenagementId + ".pdf\"");
+        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"avis_" + amenagementId + ".pdf\"");
         amenagementService.getAvis(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);
