@@ -100,7 +100,7 @@ public class WebSecurityConfig {
                 .antMatchers("/images", "/images/**").permitAll()
                 .antMatchers("/js", "/js/**").permitAll()
                 .antMatchers("/").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
-                .antMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("USER")
+                .antMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
                 .antMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/individus", "/individus/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
                 .antMatchers("/dossiers").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
