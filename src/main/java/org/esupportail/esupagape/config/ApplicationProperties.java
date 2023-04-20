@@ -36,6 +36,16 @@ public class ApplicationProperties {
      */
     private String esupSignatureUrl = "";
 
+    /**
+     * Id du circuit des avis
+     */
+    private String esupSignatureAvisWorkflowId = "";
+
+    /**
+     * Id du circuit des certificats
+     */
+    private String esupSignatureCertificatsWorkflowId = "";
+
     String papercutAuthToken;
 
     String papercutServer;
@@ -84,6 +94,22 @@ public class ApplicationProperties {
 
     public void setEsupSignatureUrl(String esupSignatureUrl) {
         this.esupSignatureUrl = esupSignatureUrl;
+    }
+
+    public String getEsupSignatureAvisWorkflowId() {
+        return esupSignatureAvisWorkflowId;
+    }
+
+    public void setEsupSignatureAvisWorkflowId(String esupSignatureAvisWorkflowId) {
+        this.esupSignatureAvisWorkflowId = esupSignatureAvisWorkflowId;
+    }
+
+    public String getEsupSignatureCertificatsWorkflowId() {
+        return esupSignatureCertificatsWorkflowId;
+    }
+
+    public void setEsupSignatureCertificatsWorkflowId(String esupSignatureCertificatsWorkflowId) {
+        this.esupSignatureCertificatsWorkflowId = esupSignatureCertificatsWorkflowId;
     }
 
     public String getPapercutAuthToken() {

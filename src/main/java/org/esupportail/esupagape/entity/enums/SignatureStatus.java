@@ -1,2 +1,5 @@
-package org.esupportail.esupagape.entity.enums;public enum SignatureStatus {
+package org.esupportail.esupagape.entity.enums;
+
+public enum SignatureStatus {
+    PENDING, REFUSED, COMPLETED
 }

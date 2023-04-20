@@ -75,6 +75,16 @@ public class Amenagement {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime deleteDate;
 
+    private String medecinSignatureId;
+
+    @Enumerated(EnumType.STRING)
+    private SignatureStatus medecinSignatureStatus;
+
+    private String valideurSignatureId;
+
+    @Enumerated(EnumType.STRING)
+    private SignatureStatus valideurSignatureStatus;
+
     public Long getId() {
         return id;
     }
@@ -249,5 +259,37 @@ public class Amenagement {
 
     public void setDeleteDate(LocalDateTime deleteDate) {
         this.deleteDate = deleteDate;
+    }
+
+    public String getMedecinSignatureId() {
+        return medecinSignatureId;
+    }
+
+    public void setMedecinSignatureId(String medecinSignatureId) {
+        this.medecinSignatureId = medecinSignatureId;
+    }
+
+    public SignatureStatus getMedecinSignatureStatus() {
+        return medecinSignatureStatus;
+    }
+
+    public void setMedecinSignatureStatus(SignatureStatus medecinSignatureStatus) {
+        this.medecinSignatureStatus = medecinSignatureStatus;
+    }
+
+    public String getValideurSignatureId() {
+        return valideurSignatureId;
+    }
+
+    public void setValideurSignatureId(String valideurSignatureId) {
+        this.valideurSignatureId = valideurSignatureId;
+    }
+
+    public SignatureStatus getValideurSignatureStatus() {
+        return valideurSignatureStatus;
+    }
+
+    public void setValideurSignatureStatus(SignatureStatus valideurSignatureStatus) {
+        this.valideurSignatureStatus = valideurSignatureStatus;
     }
 }
