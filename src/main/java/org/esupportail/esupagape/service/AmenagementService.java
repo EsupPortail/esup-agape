@@ -216,7 +216,7 @@ public class AmenagementService {
             amenagement.setMailMedecin(personLdap.getMail());
             if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
                 try {
-                    byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+                    byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                     esupSignatureService.send(id, generateDocument(amenagement, modelBytes), EsupSignatureService.TypeWorkflow.CERTIFICAT);
                 } catch (IOException e) {
                     throw new AgapeException("Envoi vers esup-signature impossible", e);
@@ -270,7 +270,13 @@ public class AmenagementService {
             throw new AgapeException("Le certificat ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-        httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
+        byte[] certificat;
+        if(amenagement.getCertificat() != null ) {
+            certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+        } else {
+            certificat = generateDocument(amenagement, modelBytes);
+        }
+        httpServletResponse.getOutputStream().write(certificat);
     }
 
     @Transactional
@@ -334,7 +340,7 @@ public class AmenagementService {
             if(datas.containsKey(fieldName)) {
                 pdField.setValue(datas.get(fieldName));
             }
-            if(pdField instanceof PDSignatureField) {
+            if(pdField instanceof PDSignatureField && !StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
                 PDSignature pdSignature = new PDSignature();
                 Calendar calendar = Calendar.getInstance();
                 String date;
@@ -479,4 +485,11 @@ public class AmenagementService {
         }
     }
 
+    public String getEsupSignatureStatus(Long amenagementId) {
+        return esupSignatureService.getStatus(amenagementId, EsupSignatureService.TypeWorkflow.CERTIFICAT);
+    }
+
+    public void getCompletedCertificat(Long amenagementId) {
+        esupSignatureService.getLastPdf(amenagementId, EsupSignatureService.TypeWorkflow.CERTIFICAT);
+    }
 }

@@ -12,10 +12,10 @@
                 <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
-                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
                     <i class="fa-solid fa-check"></i>
                 </button>
-                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
@@ -40,8 +40,24 @@
                     <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
                 </dl>
                 <div class="col-12 text-center" style="height: calc(100vh - 240px);">
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <th:block  th:if="${esupSignaturePresent}">
+                        <h1>La validation du certificat est prise en charge par Esup-Signature</h1>
+                        <div class="alert alert-warning" th:if="${esupSignatureStatus.equals('PENDING')}">
+                            Statut Esup-Signature : En cours de signature
+                        </div>
+                        <div class="alert alert-danger" th:if="${esupSignatureStatus.equals('REFUSE')}">
+                            Statut Esup-Signature : Refusé
+                        </div>
+                        <div class="alert alert-success" th:if="${esupSignatureStatus.equals('COMPLETED')}">
+                            Statut Esup-Signature : Validé
+                        </div>
+                        <div class="alert alert-primary" th:if="${esupSignatureStatus.equals('DOWNLOADED')}">
+                            Statut Esup-Signature : Récupéré
+                        </div>
+                    </th:block>
+                    <embed th:if="${!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    <embed th:if="${amenagement.certificat != null || (!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+
                 </div>
             </div>
         </main>
@@ -52,8 +68,7 @@
                         <h1 class="modal-title fs-5" id="porteModalLabel">Porté un aménagement d’examen d’une année antérieure</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form th:method="post"
-                          th:action="@{/administratif/amenagements/{amenagementId}/porte(amenagementId=${amenagement.id})}">
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/porte(amenagementId=${amenagement.id})}">
                         <div class="modal-body">
                             Merci de confirmer la portabilité de l’aménagement
                         </div>
@@ -107,5 +122,6 @@
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
     </body>
 </html>

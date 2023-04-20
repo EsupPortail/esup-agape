@@ -25,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +106,8 @@ public class AmenagementAdministratifController {
         } catch (AgapeJpaException e) {
             dossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.AJOUT_MANUEL);
         }
+        model.addAttribute("esupSignatureStatus", amenagementService.getEsupSignatureStatus(amenagementId));
+        amenagementService.getCompletedCertificat(amenagementId);
         model.addAttribute("currentDossier", dossier);
         model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));
         return "administratif/amenagements/show";
@@ -127,6 +128,10 @@ public class AmenagementAdministratifController {
     @PostMapping("/{amenagementId}/validation")
     public String validation(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "La validation se fait par Esup-Signature"));
+                return "redirect:/administratif/amenagements/" + amenagementId;
+            }
             amenagementService.validationAdministration(amenagementId, personLdap);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
         } catch (AgapeException e) {
@@ -138,6 +143,10 @@ public class AmenagementAdministratifController {
     @PostMapping("/{amenagementId}/refus")
     public String refus(@PathVariable Long amenagementId, @RequestParam String motif, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "Le refus se fait par Esup-Signature"));
+                return "redirect:/administratif/amenagements/" + amenagementId;
+            }
             amenagementService.refusAdministration(amenagementId, personLdap, motif);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
         } catch (AgapeException e) {

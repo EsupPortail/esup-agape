@@ -5,6 +5,8 @@ import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.enums.SignatureStatus;
+import org.esupportail.esupagape.entity.enums.StatusAmenagement;
+import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.DocumentService;
@@ -79,18 +81,27 @@ public class EsupSignatureService {
             }
             if(typeWorkflow.equals(TypeWorkflow.AVIS)) {
                 amenagement.setAvisSignatureId(signRequestId);
+                amenagement.setAvisSignatureStatus(SignatureStatus.PENDING);
             } else {
                 amenagement.setCertificatSignatureId(signRequestId);
+                amenagement.setCertificatSignatureStatus(SignatureStatus.PENDING);
             }
         }
     }
 
+    @Transactional
     public void getLastPdf(Long amenagementId, TypeWorkflow typeWorkflow) {
         Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
+            if(!amenagement.getAvisSignatureStatus().equals(SignatureStatus.COMPLETED)) {
+                return;
+            }
             signId = amenagement.getAvisSignatureId();
         } else {
+            if(!amenagement.getCertificatSignatureStatus().equals(SignatureStatus.COMPLETED)) {
+                return;
+            }
             signId = amenagement.getCertificatSignatureId();
         }
         RestTemplate restTemplate = new RestTemplate();
@@ -103,25 +114,48 @@ public class EsupSignatureService {
         } else {
             amenagement.setCertificat(document);
         }
+        amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
     }
 
-    public void getStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
+    @Transactional
+    public String getStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
         Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
+            if(amenagement.getAvisSignatureStatus().equals(SignatureStatus.DOWNLOADED)) {
+                return "DOWNLOADED";
+            }
             signId = amenagement.getAvisSignatureId();
         } else {
+            if(amenagement.getCertificatSignatureStatus().equals(SignatureStatus.DOWNLOADED)) {
+                return "DOWNLOADED";
+            }
             signId = amenagement.getCertificatSignatureId();
         }
         RestTemplate restTemplate = new RestTemplate();
         String urlStatus = String.format("%s/ws/signrequests/status/%s", applicationProperties.getEsupSignatureUrl(), signId);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(urlStatus, String.class);
-        String status = responseEntity.getBody().toUpperCase();
+        SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntity.getBody().toUpperCase());
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
-            amenagement.setAvisSignatureStatus(SignatureStatus.valueOf(status));
+            amenagement.setAvisSignatureStatus(signatureStatus);
+            if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
+                amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
+            } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
+                amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+            }
         } else {
-            amenagement.setCertificatSignatureStatus(SignatureStatus.valueOf(status));
+            amenagement.setCertificatSignatureStatus(signatureStatus);
+            if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
+                amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+            } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
+                amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+            }
         }
+        return signatureStatus.name();
     }
 
     public void deletePDF(Long amenagementId, TypeWorkflow typeWorkflow) {
