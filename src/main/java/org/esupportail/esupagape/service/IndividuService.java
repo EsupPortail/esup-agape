@@ -391,6 +391,9 @@ public class IndividuService {
                 individu.setEppn("example@univ-rouen.fr");
                 individu.setEmailEtu("exampleetu@univ-rouen.fr");
                 individu.setContactPhone("0000000000");
+                individu.setFixAddress("");
+                individu.setFixCity("");
+                individu.setFixCP(individu.getFixCP().substring(0,2));
                 dossierService.anonymiseDossiers(individu);
             }
         }
