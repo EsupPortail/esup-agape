@@ -387,11 +387,11 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="anonymiseModalLabel">Anonymisation de l'individu: <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h1>
+                        <h1 class="modal-title fs-5" id="anonymiseModalLabel">Anonymisation des données l'individu: <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Les champs suivants seront anonymisés: </p>
+                        <p>Les données suivantes seront anonymisées: </p>
                         <ul><li>- Nom</li>
                             <li>- Prénom</li>
                             <li>- Date de naissance</li>
@@ -400,7 +400,7 @@
                             <li>- Téléphone</li></ul>
                     </div>
                     <div class="modal-footer">
-                        <th:block> <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="get">
+                        <th:block> <form onsubmit="return confirm('Confirmez l\' anonymisation des données de cet individu ');"th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="get">
                             <button type="submit" class="btn btn-danger">Anonymiser</button>
                         </form>
                         </th:block>
