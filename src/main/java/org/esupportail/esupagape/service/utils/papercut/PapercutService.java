@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.esupportail.esupagape.service.utils;
+package org.esupportail.esupagape.service.utils.papercut;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.slf4j.Logger;

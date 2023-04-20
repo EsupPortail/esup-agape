@@ -4,7 +4,10 @@
 <body>
 <header th:replace="fragments/header :: header"></header>
 <main>
-    <h1 class="title-create text-center mt-5">Ajout d'un individu</h1>
+    <div style="height: 60px;"></div>
+    <h1 class="title-create text-center" th:unless="${bindingResultError}">Ajout d’un individu</h1>
+    <h1 class="title-create text-center" th:if="${bindingResultError}">Erreur lors de l’ajout d’un individu</h1>
+    <p class="title-create text-center" th:if="${bindingResultError}">Merci de vérifier la bonne saisie des informations</p>
     <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">

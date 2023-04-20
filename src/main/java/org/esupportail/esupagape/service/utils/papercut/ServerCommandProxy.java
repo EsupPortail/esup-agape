@@ -2,7 +2,7 @@
  * (c) Copyright 1999-2012 PaperCut Software International Pty Ltd.
  */
 
-package org.esupportail.esupagape.service.utils;
+package org.esupportail.esupagape.service.utils.papercut;
 
 import org.apache.xmlrpc.XmlRpc;
 import org.apache.xmlrpc.XmlRpcClient;
