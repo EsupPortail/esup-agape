@@ -8,9 +8,9 @@
                 <button title="Actualiser les filtres" class="btn btn-success me-3" onclick="document.getElementById('filter-form').submit();">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
-                <div class="d-inline-flex">
+                <div class="d-inline-flex align-middle">
                     <form id="search-form" th:action="@{/dossiers}" method="get">
-                        <input class="form-control" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="50" th:value="${fullTextSearch}">
+                        <input class="form-control" type="text" placeholder="nom, prénom, numéro étudiant" name="fullTextSearch" id="fullTextSearch" size="25" th:value="${fullTextSearch}">
                     </form>
                 </div>
                 <button title="Rechercher" class="btn btn-success" onclick="document.getElementById('search-form').submit();">
