@@ -350,14 +350,13 @@
                                 <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i>
                                 </button>
                                 <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
-                                <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'"><i class="fa-solid fa-refresh"
-                                        style="font-size: 20px;"></i></a>
-                                <button title="Anonymiser cet individu" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#anonymiseModal" type="button"><i class="fa-solid fa-glasses"></i></button>
-
+                                <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
+                                    <i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
+                                </a>
+                                <button title="Anonymiser cet individu" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#anonymiseModal" type="button" sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <i class="fa-solid fa-glasses"></i>
+                                </button>
                             </div>
-                            <!--                            <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">-->
-                            <!--                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">-->
-                            <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
                     </form>
 
@@ -395,12 +394,15 @@
                     </div>
                     <div class="modal-body">
                         <p>Les champs suivants seront anonymisés: </p>
-                        <ul><li>- Nom</li>
+                        <ul>
+                            <li>- Numéro d’étudiant</li>
+                            <li>- Nom</li>
                             <li>- Prénom</li>
                             <li>- Date de naissance</li>
                             <li>- Login</li>
                             <li>- Email universitaire</li>
-                            <li>- Téléphone</li></ul>
+                            <li>- Téléphone</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <th:block> <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="get">

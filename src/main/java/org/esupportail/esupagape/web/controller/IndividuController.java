@@ -29,7 +29,6 @@ public class IndividuController {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IndividuService individuService;
-
     private final DossierService dossierService;
     private final IndividuRepository individuRepository;
 
@@ -39,7 +38,7 @@ public class IndividuController {
         this.individuRepository = individuRepository;
     }
 
-    @GetMapping("{individuId}")
+    @GetMapping("/{individuId}/redirect")
     public String showRedirect(@PathVariable Long individuId) {
         List<Dossier> dossiers = dossierService.getAllByIndividu(individuId);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
@@ -107,8 +106,9 @@ public class IndividuController {
     @GetMapping("/{individuId}/anonymise")
     public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
         individuService.anonymiseIndividu(individuId);
-        return "redirect:/";
+        return "redirect:/individus/" + individuId + "/redirect";
     }
+
 }
 
 

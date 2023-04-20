@@ -195,6 +195,7 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
+        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         if (dossier.getAmenagements().size() == 0) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
@@ -567,6 +568,14 @@ public class DossierService {
             logger.debug(e.getMessage());
         }
         return em.createQuery(cq);
+    }
+
+    @Transactional
+    public void anonymiseDossiers(Individu individu) {
+        List<Dossier> dossiers = dossierRepository.findAllByIndividuId(individu.getId());
+        for(Dossier dossier : dossiers) {
+            dossier.setStatusDossier(StatusDossier.ANONYMOUS);
+        }
     }
 
 }

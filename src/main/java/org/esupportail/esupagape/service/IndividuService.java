@@ -100,6 +100,7 @@ public class IndividuService {
     public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
         Dossier dossier = dossierService.getCurrent(id);
+        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
         if(dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
             dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
@@ -382,19 +383,19 @@ public class IndividuService {
 
 
     @Transactional
-    public Individu anonymiseIndividu(Long individuId) {
+    public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);{
             if (individu != null) {
                 int yearOfBirth = individu.getDateOfBirth().getYear();
+                individu.setNumEtu("00000000");
                 individu.setName("Anonyme");
                 individu.setFirstName("Anonyme");
                 individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
                 individu.setEppn("example@univ-rouen.fr");
                 individu.setEmailEtu("exampleetu@univ-rouen.fr");
                 individu.setContactPhone("0000000000");
-                individu = individuRepository.save(individu);
+                dossierService.anonymiseDossiers(individu);
             }
-            return individu;
         }
     }
 }

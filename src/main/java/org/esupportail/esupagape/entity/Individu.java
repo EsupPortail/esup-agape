@@ -33,7 +33,7 @@ public class Individu {
     @NotEmpty(message = "Le nom doit être renseigné")
     private String name;
 
-   @NotEmpty(message = "Le prénom doit être renseigné")
+    @NotEmpty(message = "Le prénom doit être renseigné")
     private String firstName;
 
     private String sex;

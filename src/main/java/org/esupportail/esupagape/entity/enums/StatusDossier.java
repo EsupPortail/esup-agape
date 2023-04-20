@@ -7,5 +7,6 @@ public enum StatusDossier {
     SUIVI,
     IMPOSSIBLE_A_CONTACTER,
     RECU_PAR_LA_MEDECINE_PREVENTIVE,
-    DESINSCRIT;
+    DESINSCRIT,
+    ANONYMOUS
 }
