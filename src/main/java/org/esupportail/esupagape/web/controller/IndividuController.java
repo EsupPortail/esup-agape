@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
+import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -30,10 +31,12 @@ public class IndividuController {
     private final IndividuService individuService;
 
     private final DossierService dossierService;
+    private final IndividuRepository individuRepository;
 
-    public IndividuController(IndividuService individuService, DossierService dossierService) {
+    public IndividuController(IndividuService individuService, DossierService dossierService, IndividuRepository individuRepository) {
         this.individuService = individuService;
         this.dossierService = dossierService;
+        this.individuRepository = individuRepository;
     }
 
     @GetMapping("{individuId}")
@@ -94,5 +97,18 @@ public class IndividuController {
     public ResponseEntity<byte[]> getPhoto(@PathVariable("id") Long id) {
         return individuService.getPhoto(id);
     }
+    @GetMapping("/{id}")
+    public String getIndividu(@PathVariable("id") Long id, Model model) {
+        Individu individu = individuRepository.findById(id).orElse(null);
+        model.addAttribute("individu", individu);
+        return "individu";
+    }
 
+    @GetMapping("/{individuId}/anonymise")
+    public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
+        individuService.anonymiseIndividu(individuId);
+        return "redirect:/";
+    }
 }
+
+

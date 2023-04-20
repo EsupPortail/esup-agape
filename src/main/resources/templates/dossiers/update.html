@@ -349,13 +349,15 @@
                                 <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
                                 <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'"><i class="fa-solid fa-refresh"
                                         style="font-size: 20px;"></i></a>
+                                <button title="Anonymiser cet individu" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#anonymiseModal" type="button"><i class="fa-solid fa-glasses"></i></button>
+
                             </div>
                             <!--                            <input onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">-->
                             <!--                            <input onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">-->
                             <!--                            <input id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">-->
                         </div>
-
                     </form>
+
                 </div>
             </div>
         </main>
@@ -381,6 +383,34 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="anonymiseModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="anonymiseModalLabel">Anonymisation de l'individu: <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Les champs suivants seront anonymisés: </p>
+                        <ul><li>- Nom</li>
+                            <li>- Prénom</li>
+                            <li>- Date de naissance</li>
+                            <li>- Login</li>
+                            <li>- Email universitaire</li>
+                            <li>- Téléphone</li></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <th:block> <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="get">
+                            <button type="submit" class="btn btn-danger">Anonymiser</button>
+                        </form>
+                        </th:block>
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="pjModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

@@ -22,7 +22,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -374,4 +380,21 @@ public class IndividuService {
         return individuRepository.findAllDateOfBirthDistinct();
     }
 
+
+    @Transactional
+    public Individu anonymiseIndividu(Long individuId) {
+        Individu individu = individuRepository.findById(individuId).orElse(null);{
+            if (individu != null) {
+                int yearOfBirth = individu.getDateOfBirth().getYear();
+                individu.setName("Anonyme");
+                individu.setFirstName("Anonyme");
+                individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
+                individu.setEppn("example@univ-rouen.fr");
+                individu.setEmailEtu("exampleetu@univ-rouen.fr");
+                individu.setContactPhone("0000000000");
+                individu = individuRepository.save(individu);
+            }
+            return individu;
+        }
+    }
 }
