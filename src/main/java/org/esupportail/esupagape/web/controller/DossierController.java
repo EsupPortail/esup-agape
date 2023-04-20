@@ -130,7 +130,7 @@ public class DossierController {
         } catch (AgapeJpaException e) {
             throw new RuntimeException(e);
         }
-        redirectAttributes.addFlashAttribute("message", new Message("success", "Synchonisation effectuée"));
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Synchronisation effectuée"));
         return "redirect:/dossiers/" + dossierId;
     }
 
