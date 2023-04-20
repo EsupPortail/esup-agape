@@ -22,12 +22,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +38,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -387,7 +383,8 @@ public class IndividuService {
         Individu individu = individuRepository.findById(individuId).orElse(null);{
             if (individu != null) {
                 int yearOfBirth = individu.getDateOfBirth().getYear();
-                individu.setNumEtu("00000000");
+                individu.setNumEtu("Anonyme" + individu.getId());
+                individu.setCodeIne("Anonyme" + individu.getId());
                 individu.setName("Anonyme");
                 individu.setFirstName("Anonyme");
                 individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
@@ -398,4 +395,15 @@ public class IndividuService {
             }
         }
     }
+
+    @Transactional
+    public void anonymiseAll() {
+        List<Individu> individus = individuRepository.findAll();
+        for(Individu individu : individus) {
+            if(individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
+                anonymiseIndividu(individu.getId());
+            }
+        }
+    }
+
 }

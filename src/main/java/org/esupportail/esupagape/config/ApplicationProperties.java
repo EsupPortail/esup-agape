@@ -31,6 +31,10 @@ public class ApplicationProperties {
     private String mappingPhotoIdToLdapField;
 
     /**
+     * Délai avant anonymisation des individus (en années)
+     */
+    private Integer anonymiseDelay = 3;
+    /**
      * Adresse de l'instance esup-signature
      * Ex : https://esup-signature.univ-ville.fr
      */
@@ -86,6 +90,14 @@ public class ApplicationProperties {
 
     public void setMappingPhotoIdToLdapField(String mappingPhotoIdToLdapField) {
         this.mappingPhotoIdToLdapField = mappingPhotoIdToLdapField;
+    }
+
+    public Integer getAnonymiseDelay() {
+        return anonymiseDelay;
+    }
+
+    public void setAnonymiseDelay(Integer anonymiseDelay) {
+        this.anonymiseDelay = anonymiseDelay;
     }
 
     public String getEsupSignatureUrl() {

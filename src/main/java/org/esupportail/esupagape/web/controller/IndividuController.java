@@ -45,7 +45,7 @@ public class IndividuController {
         if (!dossiers.isEmpty()) {
             return "redirect:/dossiers/" + dossiers.get(0).getId();
         }
-        return "redirect:/individus";
+        return "redirect:/dossiers";
     }
 
     @GetMapping("/create")
@@ -63,12 +63,14 @@ public class IndividuController {
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResultError", true);
+            model.addAttribute("individu", new Individu());
+            model.addAttribute("genders", Gender.values());
             return "individus/create";
         }
         try {
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId();
+            return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
@@ -84,10 +86,10 @@ public class IndividuController {
             individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId();
+            return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
-            return "redirect:/individus/create";
+            return "redirect:/dossiers";
         }
     }
 
@@ -96,14 +98,8 @@ public class IndividuController {
     public ResponseEntity<byte[]> getPhoto(@PathVariable("id") Long id) {
         return individuService.getPhoto(id);
     }
-    @GetMapping("/{id}")
-    public String getIndividu(@PathVariable("id") Long id, Model model) {
-        Individu individu = individuRepository.findById(id).orElse(null);
-        model.addAttribute("individu", individu);
-        return "individu";
-    }
 
-    @GetMapping("/{individuId}/anonymise")
+    @PostMapping("/{individuId}/anonymise")
     public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
         individuService.anonymiseIndividu(individuId);
         return "redirect:/individus/" + individuId + "/redirect";
