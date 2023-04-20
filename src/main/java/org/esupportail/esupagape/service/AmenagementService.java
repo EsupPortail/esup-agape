@@ -36,6 +36,7 @@ import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.EsupSignatureService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
@@ -70,14 +71,16 @@ public class AmenagementService {
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
     private final UtilsService utilsService;
+    private final EsupSignatureService esupSignatureService;
 
-    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService) {
+    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService) {
         this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
         this.objectMapper = objectMapper;
         this.messageSource = messageSource;
         this.utilsService = utilsService;
+        this.esupSignatureService = esupSignatureService;
     }
 
     public Amenagement getById(Long id) {
@@ -201,7 +204,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void validationMedecin(Long id) throws AgapeException {
+    public void validationMedecin(Long id, PersonLdap personLdap) throws AgapeException {
         Amenagement amenagement = getById(id);
         if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -210,6 +213,15 @@ public class AmenagementService {
             amenagement.setValideMedecinDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
+            amenagement.setMailMedecin(personLdap.getMail());
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                try {
+                    byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+                    esupSignatureService.send(id, generateDocument(amenagement, modelBytes), EsupSignatureService.TypeWorkflow.CERTIFICAT);
+                } catch (IOException e) {
+                    throw new AgapeException("Envoi vers esup-signature impossible", e);
+                }
+            }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
         }
@@ -222,9 +234,7 @@ public class AmenagementService {
             throw new AgapeYearException();
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
-            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
-
-            } else {
+            if(!StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
                 amenagement.setAdministrationDate(LocalDateTime.now());
                 amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                 amenagement.setNomValideur(personLdap.getDisplayName());
@@ -438,8 +448,7 @@ public class AmenagementService {
 
             try (PDPageContentStream cs = new PDPageContentStream(doc, appearanceStream))
             {
-                if (initialScale != null)
-                {
+                if (initialScale != null) {
                     cs.transform(initialScale);
                 }
                 Color color = new Color(0x00AAFFAA, true);

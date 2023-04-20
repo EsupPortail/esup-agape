@@ -75,15 +75,21 @@ public class Amenagement {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime deleteDate;
 
-    private String medecinSignatureId;
+    private String avisSignatureId;
 
     @Enumerated(EnumType.STRING)
-    private SignatureStatus medecinSignatureStatus;
+    private SignatureStatus avisSignatureStatus;
 
-    private String valideurSignatureId;
+    private String certificatSignatureId;
 
     @Enumerated(EnumType.STRING)
-    private SignatureStatus valideurSignatureStatus;
+    private SignatureStatus certificatSignatureStatus;
+
+    @ManyToOne
+    private Document avis;
+
+    @ManyToOne
+    private Document certificat;
 
     public Long getId() {
         return id;
@@ -261,35 +267,51 @@ public class Amenagement {
         this.deleteDate = deleteDate;
     }
 
-    public String getMedecinSignatureId() {
-        return medecinSignatureId;
+    public String getAvisSignatureId() {
+        return avisSignatureId;
     }
 
-    public void setMedecinSignatureId(String medecinSignatureId) {
-        this.medecinSignatureId = medecinSignatureId;
+    public void setAvisSignatureId(String avisSignatureId) {
+        this.avisSignatureId = avisSignatureId;
     }
 
-    public SignatureStatus getMedecinSignatureStatus() {
-        return medecinSignatureStatus;
+    public SignatureStatus getAvisSignatureStatus() {
+        return avisSignatureStatus;
     }
 
-    public void setMedecinSignatureStatus(SignatureStatus medecinSignatureStatus) {
-        this.medecinSignatureStatus = medecinSignatureStatus;
+    public void setAvisSignatureStatus(SignatureStatus avisSignatureStatus) {
+        this.avisSignatureStatus = avisSignatureStatus;
     }
 
-    public String getValideurSignatureId() {
-        return valideurSignatureId;
+    public String getCertificatSignatureId() {
+        return certificatSignatureId;
     }
 
-    public void setValideurSignatureId(String valideurSignatureId) {
-        this.valideurSignatureId = valideurSignatureId;
+    public void setCertificatSignatureId(String certificatSignatureId) {
+        this.certificatSignatureId = certificatSignatureId;
     }
 
-    public SignatureStatus getValideurSignatureStatus() {
-        return valideurSignatureStatus;
+    public SignatureStatus getCertificatSignatureStatus() {
+        return certificatSignatureStatus;
     }
 
-    public void setValideurSignatureStatus(SignatureStatus valideurSignatureStatus) {
-        this.valideurSignatureStatus = valideurSignatureStatus;
+    public void setCertificatSignatureStatus(SignatureStatus certificatSignatureStatus) {
+        this.certificatSignatureStatus = certificatSignatureStatus;
+    }
+
+    public Document getAvis() {
+        return avis;
+    }
+
+    public void setAvis(Document avis) {
+        this.avis = avis;
+    }
+
+    public Document getCertificat() {
+        return certificat;
+    }
+
+    public void setCertificat(Document certificat) {
+        this.certificat = certificat;
     }
 }

@@ -4,6 +4,9 @@ import org.esupportail.esupagape.annotation.AgapeLdapAttributExist;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ConfigurationProperties(prefix="application")
 @Validated
 public class ApplicationProperties {
@@ -50,15 +53,20 @@ public class ApplicationProperties {
      */
     private String esupSignatureCertificatsWorkflowId = "";
 
-    String papercutAuthToken;
+    /**
+     * Adresse email du valideur
+     */
+    private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
-    String papercutServer;
+    private String papercutAuthToken;
 
-    String papercutScheme = "http";
+    private String papercutServer;
 
-    int papercutPort;
+    private String papercutScheme = "http";
 
-    String papercutAccountName = "";
+    private int papercutPort;
+
+    private String papercutAccountName = "";
 
     public String getCodeEtab() {
         return codeEtab;
@@ -122,6 +130,14 @@ public class ApplicationProperties {
 
     public void setEsupSignatureCertificatsWorkflowId(String esupSignatureCertificatsWorkflowId) {
         this.esupSignatureCertificatsWorkflowId = esupSignatureCertificatsWorkflowId;
+    }
+
+    public List<String> getEsupSignatureValideursEmails() {
+        return esupSignatureValideursEmails;
+    }
+
+    public void setEsupSignatureValideursEmails(List<String> esupSignatureValideursEmails) {
+        this.esupSignatureValideursEmails = esupSignatureValideursEmails;
     }
 
     public String getPapercutAuthToken() {

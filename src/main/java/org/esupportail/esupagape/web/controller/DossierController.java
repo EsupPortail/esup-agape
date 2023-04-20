@@ -175,7 +175,7 @@ public class DossierController {
     public String getLastFileFromSignRequest(
             @PathVariable Long dossierId,
             @PathVariable("attachmentId") Long attachmentId,
-            RedirectAttributes redirectAttributes) throws AgapeException {
+            RedirectAttributes redirectAttributes) {
         dossierService.deleteAttachment(dossierId, attachmentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId;
