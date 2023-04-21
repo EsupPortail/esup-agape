@@ -143,29 +143,20 @@
                                                 th:text="${currentDossier.commentaire}"></textarea>
                                     </div>
                                 </div>
-                                <div class="row mb-1 align-items-baseline mt-5" >
+                                <div class="row mb-1 align-items-baseline mt-5">
                                     <div class="col-4" style="width: 250px;">
                                         <label class="form-label" for="EmployeeYes">Étudiant(e) salarié(e)</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <h1></h1>
-                                        <input disabled
-                                                class="form-check-input"
-                                                type="radio" name="employee"
-                                                id="EmployeeYes" value="true" th:checked="${currentDossier.employee == true}" >
+                                        <input disabled class="form-check-input" type="radio" name="employee" id="EmployeeYes" value="true" th:checked="${currentDossier.employee == true}">
                                         <label class="form-check-label" for="EmployeeYes">
                                             Oui
                                         </label>
 
-                                        <input disabled
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="employee"
-                                                id="EmployeeNo"
-                                                value="false"
-                                                th:checked="${currentDossier.employee == false}">
+                                        <input disabled class="form-check-input" type="radio" name="employee" id="EmployeeNo" value="false" th:checked="${currentDossier.employee == false}">
                                         <label class="form-check-label me-5" for="EmployeeNo">
-                                           Non
+                                            Non
                                         </label>
 
                                     </div>
@@ -209,17 +200,17 @@
                                     <div class="col-12 col-xxl-8">
                                         <div class="input-group">
                                             <input disabled
-                                                id="niveauEtudes"
-                                                name="niveauEtudes"
-                                                type="text"
-                                                class="form-control"
-                                                th:value="${currentDossier.niveauEtudes}"
-                                                th:readonly="${currentDossier.niveauEtudes != ''}">
+                                                    id="niveauEtudes"
+                                                    name="niveauEtudes"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.niveauEtudes}"
+                                                    th:readonly="${currentDossier.niveauEtudes != ''}">
                                             <a onclick="toggleInputLock('niveauEtudes');"
-                                                role="button"
-                                                id="niveauEtudesEdit"
-                                                class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                    role="button"
+                                                    id="niveauEtudesEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
@@ -232,17 +223,17 @@
                                     <div class="col-12 col-xxl-8">
                                         <div class="input-group">
                                             <input disabled
-                                                   id="secteurDisciplinaire"
-                                                   name="secteurDisciplinaire"
-                                                   type="text"
-                                                   class="form-control"
-                                                   th:value="${currentDossier.secteurDisciplinaire}"
-                                                   th:readonly="${currentDossier.secteurDisciplinaire != ''}">
+                                                    id="secteurDisciplinaire"
+                                                    name="secteurDisciplinaire"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.secteurDisciplinaire}"
+                                                    th:readonly="${currentDossier.secteurDisciplinaire != ''}">
                                             <a onclick="toggleInputLock('secteurDisciplinaire');"
-                                               role="button"
-                                               id="secteurDisciplinaireEdit"
-                                               class="btn btn-light border-secondary border-opacity-25 d-none"
-                                               th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                    role="button"
+                                                    id="secteurDisciplinaireEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
@@ -353,7 +344,12 @@
                                 <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
                                     <i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
                                 </a>
-                                <button title="Anonymiser cet individu" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#anonymiseModal" type="button" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <button title="Anonymiser les données de l'individu"
+                                        class="btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#anonymiseIndividuModalToggle"
+                                        type="button"
+                                        sec:authorize="hasRole('ROLE_ADMIN')">
                                     <i class="fa-solid fa-glasses"></i>
                                 </button>
                             </div>
@@ -363,7 +359,6 @@
                 </div>
             </div>
         </main>
-
         <div class="modal fade" id="notesModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -380,37 +375,6 @@
                         <p>Resultat annuel : <b th:text="${extendedInfos.resultatAnn}"></b></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="anonymiseModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="anonymiseModalLabel">Anonymisation des données l'individu: <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Les données suivantes seront anonymisées: </p>
-                        <ul>
-                            <li>- Numéro d’étudiant</li>
-                            <li>- Nom</li>
-                            <li>- Prénom</li>
-                            <li>- Date de naissance</li>
-                            <li>- Login</li>
-                            <li>- Email universitaire</li>
-                            <li>- Téléphone</li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <th:block>
-                            <form onsubmit="return confirm('Confirmez l\' anonymisation des données de cet individu ');" th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="post">
-                                <button type="submit" class="btn btn-danger">Anonymiser</button>
-                            </form>
-                        </th:block>
-
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     </div>
                 </div>
@@ -488,6 +452,78 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="anonymiseIndividuModalToggle" aria-hidden="true" aria-labelledby="anonymiseIndividuModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="anonymiseModalLabel">Anonymisation des données de l'individu:
+                            <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Les données suivantes seront anonymisées:</p>
+                        <ul>
+                            <li>- Numéro d’étudiant</li>
+                            <li>- Nom</li>
+                            <li>- Prénom</li>
+                            <li>- Date de naissance</li>
+                            <li>- Login</li>
+                            <li>- Email universitaire</li>
+                            <li>- Téléphone</li>
+                            <li>- Adresse</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button class="btn btn-danger" data-bs-target="#anonymiseIndividuModalToggle2" data-bs-toggle="modal">Anonymiser</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="anonymiseIndividuModalToggle2" aria-hidden="true" aria-labelledby="anonymiseIndividuModalToggleLabel2" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <th:block th:if="${currentDossier.individu.fixCP} != null">
+                        <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5">
+                                Anonymisation des données de l'individu : <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger text-center">Confirmez-vous l'anonymisation des données ? <br>Cette action est irréversible.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline pull-left btn-danger" >
+                                Anonymiser
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                    </th:block>
+                    <th:block th:if="${currentDossier.individu.fixCP} == null">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5">
+                                Anonymisation des données de l'individu : <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning text-center">Synchroniser les données de l'individu pour pouvoir l'anonymiser !
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Annuler
+                            </button>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Open first modal</button>-->
 
         <script>
             const modalWarning = document.getElementById('modal-warning')
