@@ -42,6 +42,7 @@
                                         <th class="d-none d-lg-table-cell d-xl-table-cell">Aménagements</th>
                                         <th>Nom du médecin</th>
                                         <th>Statut aménagement</th>
+                                        <th>Motif du refus</th>
                                         <th style="width: 200px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -51,11 +52,14 @@
                                             <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
                                             <td th:text="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                             <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}" class=" d-none d-lg-table-cell d-xl-table-cell"></td>
-                                            <td th:text="${amenagement.amenagementText}" class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;"></td>
+                                            <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;">
+                                                <pre th:text="${amenagement.amenagementText}"></pre>
+                                            </td>
                                             <td th:text="${amenagement.nomMedecin}"></td>
                                             <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                            <td th:text="${amenagement.motifRefus}"></td>
                                             <td>
-                                                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+                                                <a th:if="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
                                                         th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
                                                         class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
                                                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) && currentYear == currentDossier.year}"
@@ -74,7 +78,7 @@
                                                             <form th:action="@{/dossiers/{id}/amenagements/{amenagementId}/delete(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
                                                                     th:method="delete">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title fs-5" th:id="'delete-amenagement-label' + ${amenagement.id}">Suppression d'un entretien</h5>
+                                                                    <h5 class="modal-title fs-5" th:id="'delete-amenagement-label' + ${amenagement.id}">Suppression d’un aménagement</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">

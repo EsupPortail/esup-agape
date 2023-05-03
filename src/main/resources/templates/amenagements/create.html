@@ -40,7 +40,7 @@
                                                 th:value="${typeAmenagement}"
                                                 validationMessage="Veuillez sélectionner un type d'aménagement"
                                                 required>
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:each="typeAmenagement : ${typeAmenagements}"
                                                     th:text="#{'amenagement.typeAmenagement.' +${typeAmenagement}}"
                                                     th:value="${typeAmenagement}"></option>
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="tempsMajore" type="text" class="form-select" name="tempsMajore" th:value="${amenagement.tempsMajore}" required>
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:each="tempsMajore : ${tempsMajores}"
                                                     th:text="#{'amenagement.tempsMajore.' +${tempsMajore}}"
                                                     th:value="${tempsMajore}"

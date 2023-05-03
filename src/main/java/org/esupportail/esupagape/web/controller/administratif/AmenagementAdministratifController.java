@@ -133,7 +133,7 @@ public class AmenagementAdministratifController {
                 return "redirect:/administratif/amenagements/" + amenagementId;
             }
             amenagementService.validationAdministration(amenagementId, personLdap);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été validé"));
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
@@ -148,7 +148,7 @@ public class AmenagementAdministratifController {
                 return "redirect:/administratif/amenagements/" + amenagementId;
             }
             amenagementService.refusAdministration(amenagementId, personLdap, motif);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+            redirectAttributes.addFlashAttribute("message", new Message("warning", "Le refus a bien été pris en compte"));
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }

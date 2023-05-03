@@ -30,7 +30,7 @@
                                 <div class="input-group">
                                     <label class="input-group-text">À renouveler</label>
                                     <select class="form-select" name="porte">
-                                        <option disabled selected value="">Choisir</option>
+                                        <option disabled selected hidden value="">Choisir</option>
                                         <option th:selected="${!porte}"
                                                 th:value="0"
                                                 >Non</option>
@@ -44,7 +44,7 @@
                                 <div class="input-group">
                                     <label class="input-group-text">Année universitaire</label>
                                     <select class="form-select" name="yearFilter">
-                                        <option disabled selected value="">Choisir</option>
+                                        <option disabled selected hidden value="">Choisir</option>
                                         <option th:selected="${yearFilter == year.number}"
                                                 th:each="year : ${years}"
                                                 th:value="${year.number}"

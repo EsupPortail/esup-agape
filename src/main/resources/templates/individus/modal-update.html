@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-12 col-xxl-8">
                             <select th:disabled="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}" id="type" name="type" type="text" class="form-select" th:value="${currentDossier.type}">
-                                <option value="" disabled selected>Choisir</option>
+                                <option value="" disabled selected hidden>Choisir</option>
                                 <option  th:selected="${currentDossier.type == typeIndividu}" th:each="typeIndividu : ${typeIndividus}" th:text="#{'dossier.typeIndividu.' +${typeIndividu}}" th:value="${typeIndividu}"></option>
                             </select>
                         </div>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="col-12 col-xxl-8">
                             <select id="statusDossier" name="statusDossier" type="text" class="form-select">
-                                <option value="" disabled selected>Choisir</option>
+                                <option value="" disabled selected hidden>Choisir</option>
                                 <option th:selected="${currentDossier.statusDossier == statusDossier}" th:each="statusDossier : ${statusDossiers}" th:text="#{'dossier.statusDossier.' +${statusDossier}}" th:value="${statusDossier}"></option>
                             </select>
                         </div>

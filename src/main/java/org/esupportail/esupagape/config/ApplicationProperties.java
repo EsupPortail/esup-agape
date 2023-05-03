@@ -37,6 +37,7 @@ public class ApplicationProperties {
      * Délai avant anonymisation des individus (en années)
      */
     private Integer anonymiseDelay = 3;
+
     /**
      * Adresse de l'instance esup-signature
      * Ex : https://esup-signature.univ-ville.fr

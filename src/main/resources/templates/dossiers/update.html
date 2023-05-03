@@ -54,7 +54,7 @@
                                 <!--                        </div>-->
                                 <!--                        <div class="col-12 col-xxl-8">-->
                                 <!--                        <select disabled id="etat" name="etat" type="text" class="form-select" th:value="${currentDossier.etat}">-->
-                                <!--                            <option value="" disabled selected>Choisir</option>-->
+                                <!--                            <option value="" disabled selected hidden>Choisir</option>-->
                                 <!--                            <option th:selected="${currentDossier.etat == etat}" th:each="etat : ${etats}" th:text="#{'dossier.etat.' +${etat}}" th:value="${etat}"></option>-->
                                 <!--                        </select>-->
                                 <!--                        </div>-->
@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
                                         </select>
                                     </div>
@@ -76,7 +76,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select disabled id="taux" name="taux" type="text" class="form-select" th:value="${currentDossier.taux}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${currentDossier.taux == taux}" th:each="taux : ${tauxs}" th:text="#{'dossier.taux.' +${taux}}" th:value="${taux}"></option>
                                         </select>
                                     </div>
@@ -171,7 +171,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select disabled id="typeFormation" name="typeFormation" type="text" class="form-select" th:value="${currentDossier.typeFormation}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${currentDossier.typeFormation == typeFormation}"
                                                     th:each="typeFormation : ${typeFormations}"
                                                     th:text="#{'enquete.typFrmn.' +${typeFormation}}"
@@ -185,7 +185,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select disabled id="modeFormation" name="modeFormation" type="text" class="form-select" th:value="${currentDossier.modeFormation}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${currentDossier.modeFormation == modeFormation}"
                                                     th:each="modeFormation : ${modeFormations}"
                                                     th:text="#{'enquete.modFrmn.' +${modeFormation}}"
@@ -317,7 +317,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select disabled id="rentreeProchaine" name="rentreeProchaine" type="text" class="form-select" th:value="${currentDossier.rentreeProchaine}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}"
                                                     th:each="rentreeProchaine : ${rentreeProchaines}"
                                                     th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}"

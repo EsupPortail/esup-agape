@@ -258,6 +258,7 @@ public class AmenagementService {
             amenagement.setNomValideur(personLdap.getDisplayName());
             amenagement.setMailValideur(personLdap.getMail());
             amenagement.setMotifRefus(motif);
+            amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
@@ -282,7 +283,7 @@ public class AmenagementService {
     @Transactional
     public void getAvis(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
-        if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) && !amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+        if(!(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) || amenagement.getStatusAmenagement().equals(StatusAmenagement.REFUSE_ADMINISTRATION))) {
             throw new AgapeException("L'avis ne peut pas être émis");
         }
         byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();

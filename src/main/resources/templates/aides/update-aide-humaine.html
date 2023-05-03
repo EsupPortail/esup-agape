@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="">
                                         <select disabled id="statusAideHumaine" name="statusAideHumaine" type="text" class="form-select" th:value="${aideHumaine.statusAideHumaine}">
-                                            <option value="" disabled selected>Choisir</option>
+                                            <option value="" disabled selected hidden>Choisir</option>
                                             <option th:selected="${aideHumaine.statusAideHumaine == statusAideHumaine}"
                                                     th:each="statusAideHumaine : ${statusAideHumaines}"
                                                     th:text="#{'aides.statusAideHumaine.' + ${statusAideHumaine}}"
@@ -229,7 +229,7 @@
                                             </td>
                                             <td>
                                                 <select required th:id="'periode-' + ${periodeAideHumaineEntry.key} + '-moisPaye'" name="moisPaye" class="form-select form-select-sm" disabled>
-                                                    <option disabled selected value="">Choisir</option>
+                                                    <option disabled selected hidden value="">Choisir</option>
                                                     <th:block th:each="month : ${T(java.time.Month).values()}">
                                                         <option th:value="${month}"
                                                                 th:text="${#strings.capitalize(month.getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).FRANCE))}"

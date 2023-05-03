@@ -100,7 +100,7 @@ public class AmenagementController {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
 
-        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
     }
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
