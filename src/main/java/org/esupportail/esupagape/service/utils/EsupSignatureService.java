@@ -1,5 +1,7 @@
 package org.esupportail.esupagape.service.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
@@ -24,7 +26,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EsupSignatureService {
@@ -140,8 +144,8 @@ public class EsupSignatureService {
             return "PENDING";
         } else {
             String urlStatus = String.format("%s/ws/signrequests/status/%s", applicationProperties.getEsupSignatureUrl(), signId);
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(urlStatus, String.class);
-            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntity.getBody().toUpperCase());
+            ResponseEntity<String> responseEntityStatus = restTemplate.getForEntity(urlStatus, String.class);
+            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase());
             if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
                 amenagement.setAvisSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
@@ -157,6 +161,16 @@ public class EsupSignatureService {
                     amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                     amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
+                    String urlSignRequest = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
+                    ResponseEntity<String> responseEntitySignRequest = restTemplate.getForEntity(urlSignRequest, String.class);
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, Object> signRequestMap;
+                    try {
+                        signRequestMap = mapper.readValue(responseEntitySignRequest.getBody(), Map.class);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    amenagement.setMotifRefus(((HashMap<String, Object>)((ArrayList) signRequestMap.get("comments")).get(0)).get("text").toString());
                     amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
                     amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
