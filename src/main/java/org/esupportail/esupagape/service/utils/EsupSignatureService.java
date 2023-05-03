@@ -9,6 +9,7 @@ import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.enums.SignatureStatus;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.DocumentService;
@@ -103,7 +104,7 @@ public class EsupSignatureService {
             }
             signId = amenagement.getAvisSignatureId();
         } else {
-            if (amenagement.getCertificatSignatureStatus() == null || !amenagement.equals(SignatureStatus.COMPLETED)) {
+            if (amenagement.getCertificatSignatureStatus() == null || !amenagement.getCertificatSignatureStatus().equals(SignatureStatus.COMPLETED)) {
                 return;
             }
             signId = amenagement.getCertificatSignatureId();
@@ -115,10 +116,12 @@ public class EsupSignatureService {
         Document document = documentService.createDocument(new ByteArrayInputStream(pdf), "Avis_" + amenagementId, "application/pdf", amenagementId, Amenagement.class.getTypeName(), amenagement.getDossier());
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             amenagement.setAvis(document);
+            amenagement.setAvisSignatureStatus(SignatureStatus.DOWNLOADED);
+            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
         } else {
             amenagement.setCertificat(document);
+            amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
         }
-        amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
     }
     
     @Transactional
@@ -127,10 +130,9 @@ public class EsupSignatureService {
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             SignatureStatus avisSignatureStatus = amenagement.getAvisSignatureStatus();
-            if (avisSignatureStatus == null || !avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
+            if (avisSignatureStatus == null || avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
                 return "DOWNLOADED";
             }
-
             signId = amenagement.getAvisSignatureId();
         } else {
             SignatureStatus certificatSignatureStatus = amenagement.getCertificatSignatureStatus();
@@ -205,7 +207,4 @@ public class EsupSignatureService {
         return strEmails;
     }
 
-    public enum TypeWorkflow {
-        AVIS, CERTIFICAT
-    }
 }

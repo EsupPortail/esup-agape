@@ -181,7 +181,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="validationModalLabel">Envoi à l’administration</h1>
+                <h1 class="modal-title fs-5" id="validationModalLabel">
+                    <span th:if="${esupSignatureAvisWorkflow}">
+                        Signer puis envoyer à l’administration
+                    </span>
+                    <span th:unless="${esupSignatureAvisWorkflow}">
+                        Envoi à l’administration
+                    </span>
+                </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:method="post"

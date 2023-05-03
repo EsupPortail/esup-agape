@@ -211,19 +211,40 @@ public class AmenagementService {
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagement.setValideMedecinDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
             amenagement.setMailMedecin(personLdap.getMail());
-            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
-                try {
-                    byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-                    esupSignatureService.send(id, generateDocument(amenagement, modelBytes), EsupSignatureService.TypeWorkflow.CERTIFICAT);
-                } catch (IOException e) {
-                    throw new AgapeException("Envoi vers esup-signature impossible", e);
-                }
+            if(!StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId()) && StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
+                sendToCertificatWorkflow(id);
+            } else if(StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
+                sendToAvisWorkflow(id);
+                amenagement.setStatusAmenagement(StatusAmenagement.ENVOYE);
+            } else {
+                amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
+        }
+    }
+
+    @Transactional
+    public void sendToCertificatWorkflow(Long id) throws AgapeException {
+        Amenagement amenagement = getById(id);
+        try {
+            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT), TypeWorkflow.CERTIFICAT);
+        } catch (IOException e) {
+            throw new AgapeException("Envoi vers esup-signature impossible", e);
+        }
+    }
+
+    @Transactional
+    public void sendToAvisWorkflow(Long id) throws AgapeException {
+        Amenagement amenagement = getById(id);
+        try {
+            byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS), TypeWorkflow.AVIS);
+        } catch (IOException e) {
+            throw new AgapeException("Envoi vers esup-signature impossible", e);
         }
     }
 
@@ -270,12 +291,12 @@ public class AmenagementService {
         if(!amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             throw new AgapeException("Le certificat ne peut pas être émis");
         }
-        byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
         byte[] certificat;
         if(amenagement.getCertificat() != null ) {
             certificat = amenagement.getCertificat().getInputStream().readAllBytes();
         } else {
-            certificat = generateDocument(amenagement, modelBytes);
+            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
         }
         httpServletResponse.getOutputStream().write(certificat);
     }
@@ -286,11 +307,17 @@ public class AmenagementService {
         if(!(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) || amenagement.getStatusAmenagement().equals(StatusAmenagement.REFUSE_ADMINISTRATION))) {
             throw new AgapeException("L'avis ne peut pas être émis");
         }
-        byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
-        httpServletResponse.getOutputStream().write(generateDocument(amenagement, modelBytes));
+        byte[] avis;
+        if(amenagement.getAvis() != null ) {
+            avis = amenagement.getAvis().getInputStream().readAllBytes();
+        } else {
+            byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+            avis = generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS);
+        }
+        httpServletResponse.getOutputStream().write(avis);
     }
 
-    private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes) throws IOException {
+    private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow) throws IOException {
         CertificatPdf certificatPdf = new CertificatPdf();
         certificatPdf.setName(amenagement.getDossier().getIndividu().getName());
         certificatPdf.setFirstname(amenagement.getDossier().getIndividu().getFirstName());
@@ -319,8 +346,7 @@ public class AmenagementService {
         certificatPdf.setAmenagementText(amenagementsWithNumbers.toString());
         certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-            //ajouter des données du visa
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) && typeWorkflow.equals(TypeWorkflow.CERTIFICAT)) {
             certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
@@ -343,16 +369,16 @@ public class AmenagementService {
             if(datas.containsKey(fieldName)) {
                 pdField.setValue(datas.get(fieldName));
             }
-            if(pdField instanceof PDSignatureField && !StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+            if(pdField instanceof PDSignatureField) {
                 PDSignature pdSignature = new PDSignature();
                 Calendar calendar = Calendar.getInstance();
                 String date;
                 String validator;
                 try {
-                    if (fieldName.equals("signatureValideur")) {
+                    if (fieldName.equals("signatureValideur") && !StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                         date = datas.get("administrationDate");
                         validator = datas.get("nomValideur");
-                    } else if (fieldName.equals("signatureMedecin")){
+                    } else if (fieldName.equals("signatureMedecin") && !StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
                         date = datas.get("valideMedecinDate");
                         validator = datas.get("nomMedecin");
                     } else {
@@ -488,11 +514,11 @@ public class AmenagementService {
         }
     }
 
-    public String getEsupSignatureStatus(Long amenagementId) {
-        return esupSignatureService.getStatus(amenagementId, EsupSignatureService.TypeWorkflow.CERTIFICAT);
+    public String getEsupSignatureStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
+        return esupSignatureService.getStatus(amenagementId, typeWorkflow);
     }
 
-    public void getCompletedCertificat(Long amenagementId) {
-        esupSignatureService.getLastPdf(amenagementId, EsupSignatureService.TypeWorkflow.CERTIFICAT);
+    public void getCompletedSignature(Long amenagementId, TypeWorkflow typeWorkflow) {
+        esupSignatureService.getLastPdf(amenagementId, typeWorkflow);
     }
 }
