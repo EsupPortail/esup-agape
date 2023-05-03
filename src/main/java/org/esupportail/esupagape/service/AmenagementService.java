@@ -308,8 +308,10 @@ public class AmenagementService {
         StringBuilder amenagementsWithNumbers = new StringBuilder();
         int i = 1;
         for(String line : amenagement.getAmenagementText().split("\n")) {
-            amenagementsWithNumbers.append(i).append(" - ").append(line).append("\n");
-            i++;
+            if (!amenagement.getAmenagementText().isEmpty()) {
+                amenagementsWithNumbers.append(i).append(" - ").append(line).append("\n");
+                i++;
+            }
         }
         certificatPdf.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         certificatPdf.setAutresTempsMajores(amenagement.getAutresTempsMajores());
