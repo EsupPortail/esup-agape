@@ -106,18 +106,6 @@ public class AmenagementAdministratifController {
         } catch (AgapeJpaException e) {
             dossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.AJOUT_MANUEL);
         }
-        if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
-            if (amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
-                amenagementService.getEsupSignatureStatus(amenagementId, TypeWorkflow.CERTIFICAT);
-                amenagementService.getCompletedSignature(amenagementId, TypeWorkflow.CERTIFICAT);
-            } else if (amenagement.getStatusAmenagement().equals(StatusAmenagement.ENVOYE)) {
-                amenagementService.getEsupSignatureStatus(amenagementId, TypeWorkflow.AVIS);
-                amenagementService.getCompletedSignature(amenagementId, TypeWorkflow.AVIS);
-                if(amenagement.getCertificatSignatureStatus() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
-                    amenagementService.sendToCertificatWorkflow(amenagementId);
-                }
-            }
-        }
         model.addAttribute("currentDossier", dossier);
         model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));
         return "administratif/amenagements/show";

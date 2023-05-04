@@ -38,6 +38,8 @@ import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.EsupSignatureService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -64,6 +66,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AmenagementService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AmenagementService.class);
 
     private final ApplicationProperties applicationProperties;
     private final AmenagementRepository amenagementRepository;
@@ -514,11 +518,39 @@ public class AmenagementService {
         }
     }
 
-    public String getEsupSignatureStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
-        return esupSignatureService.getStatus(amenagementId, typeWorkflow);
+    public SignatureStatus checkEsupSignatureStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
+        SignatureStatus signatureStatus = esupSignatureService.getStatus(amenagementId, typeWorkflow);
+        if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
+            esupSignatureService.getLastPdf(amenagementId, typeWorkflow);
+        }
+        return signatureStatus;
     }
 
-    public void getCompletedSignature(Long amenagementId, TypeWorkflow typeWorkflow) {
-        esupSignatureService.getLastPdf(amenagementId, typeWorkflow);
+    @Transactional
+    public void syncEsupSignature(Long amenagementId) throws AgapeException {
+        Amenagement amenagement = getById(amenagementId);
+        if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+            if (amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
+                if(amenagement.getCertificatSignatureStatus() == null) {
+                    sendToCertificatWorkflow(amenagementId);
+                }
+                checkEsupSignatureStatus(amenagementId, TypeWorkflow.CERTIFICAT);
+            } else if (amenagement.getStatusAmenagement().equals(StatusAmenagement.ENVOYE)) {
+                SignatureStatus signatureStatus = checkEsupSignatureStatus(amenagementId, TypeWorkflow.AVIS);
+                if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
+                    sendToCertificatWorkflow(amenagementId);
+                }
+            }
+        }
+    }
+
+    public void syncAllEsupSignature() throws AgapeException {
+        List<Amenagement> amenagements = new ArrayList<>();
+        amenagements.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.ENVOYE));
+        amenagements.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN));
+        logger.debug(amenagements.size() + " aménagements à synchroniser");
+        for(Amenagement amenagement : amenagements) {
+            syncEsupSignature(amenagement.getId());
+        }
     }
 }

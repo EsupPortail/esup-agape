@@ -117,7 +117,6 @@ public class EsupSignatureService {
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             amenagement.setAvis(document);
             amenagement.setAvisSignatureStatus(SignatureStatus.DOWNLOADED);
-            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
         } else {
             amenagement.setCertificat(document);
             amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
@@ -125,25 +124,25 @@ public class EsupSignatureService {
     }
     
     @Transactional
-    public String getStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
+    public SignatureStatus getStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
         Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             SignatureStatus avisSignatureStatus = amenagement.getAvisSignatureStatus();
             if (avisSignatureStatus == null || avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
-                return "DOWNLOADED";
+                return SignatureStatus.DOWNLOADED;
             }
             signId = amenagement.getAvisSignatureId();
         } else {
             SignatureStatus certificatSignatureStatus = amenagement.getCertificatSignatureStatus();
             if (certificatSignatureStatus != null && certificatSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
-                return "DOWNLOADED";
+                return SignatureStatus.DOWNLOADED;
             }
             signId = amenagement.getCertificatSignatureId();
         }
         RestTemplate restTemplate = new RestTemplate();
         if (signId == null || signId.isEmpty()) {
-            return "PENDING";
+            return SignatureStatus.PENDING;
         } else {
             String urlStatus = String.format("%s/ws/signrequests/status/%s", applicationProperties.getEsupSignatureUrl(), signId);
             ResponseEntity<String> responseEntityStatus = restTemplate.getForEntity(urlStatus, String.class);
@@ -177,7 +176,7 @@ public class EsupSignatureService {
                     amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
             }
-            return signatureStatus.name();
+            return signatureStatus;
         }
     }
     public void deletePDF(Long amenagementId, TypeWorkflow typeWorkflow) {
