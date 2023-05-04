@@ -121,6 +121,7 @@ public class EsupSignatureService {
             amenagement.setCertificat(document);
             amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
         }
+        deletePDF(amenagementId, typeWorkflow);
     }
     
     @Transactional
@@ -129,14 +130,14 @@ public class EsupSignatureService {
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             SignatureStatus avisSignatureStatus = amenagement.getAvisSignatureStatus();
-            if (avisSignatureStatus == null || avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
-                return SignatureStatus.DOWNLOADED;
+            if (avisSignatureStatus != null && avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
+                return avisSignatureStatus;
             }
             signId = amenagement.getAvisSignatureId();
         } else {
             SignatureStatus certificatSignatureStatus = amenagement.getCertificatSignatureStatus();
             if (certificatSignatureStatus != null && certificatSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
-                return SignatureStatus.DOWNLOADED;
+                return certificatSignatureStatus;
             }
             signId = amenagement.getCertificatSignatureId();
         }
