@@ -55,7 +55,6 @@ import java.awt.geom.AffineTransform;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -359,20 +358,32 @@ public class AmenagementService {
     }
 
     private byte[] generatePdf(Map<String, String> datas, byte[] model) throws IOException {
-        PDDocument pdDocument = PDDocument.load(model);
-        PDAcroForm pdAcroForm = pdDocument.getDocumentCatalog().getAcroForm();
+        byte[] savedPdf;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PDDocument modelDocument = PDDocument.load(model);
+        PDAcroForm pdAcroForm = modelDocument.getDocumentCatalog().getAcroForm();
         byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
-        PDFont pdFont = PDTrueTypeFont.load(pdDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
+        PDFont pdFont = PDTrueTypeFont.load(modelDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
         PDResources resources = pdAcroForm.getDefaultResources();
         resources.put(COSName.getPDFName("LiberationSans"), pdFont);
         pdAcroForm.setDefaultResources(resources);
-        List<PDField> fields = pdAcroForm.getFields();
-        for(PDField pdField : fields) {
+        List<String> fieldsNames = pdAcroForm.getFields().stream().map(PDField::getFullyQualifiedName).toList();
+        int rotation = modelDocument.getPage(0).getRotation();
+        PDRectangle pageRectangle = modelDocument.getPage(0).getMediaBox().createRetranslatedRectangle();
+        modelDocument.save(out);
+        modelDocument.close();
+        savedPdf = out.toByteArray();
+        for(String fieldName : fieldsNames) {
+            PDDocument toFillDocument = PDDocument.load(savedPdf);
+            PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
             pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
-            String fieldName = pdField.getPartialName();
             if(datas.containsKey(fieldName)) {
                 pdField.setValue(datas.get(fieldName));
             }
+            out = new ByteArrayOutputStream();
+            toFillDocument.save(out);
+            toFillDocument.close();
+            savedPdf = out.toByteArray();
             if(pdField instanceof PDSignatureField) {
                 PDSignature pdSignature = new PDSignature();
                 Calendar calendar = Calendar.getInstance();
@@ -394,16 +405,24 @@ public class AmenagementService {
                 }
                 pdSignature.setSignDate(calendar);
                 SignatureOptions signatureOptions = new SignatureOptions();
-                signatureOptions.setVisualSignature(createVisualSignatureTemplate(pdDocument, pdField.getWidgets().get(0).getRectangle(), pdSignature, validator, date, fieldName));
+                byte[] visualSignature = createVisualSignatureTemplate(rotation, pageRectangle, pdField.getWidgets().get(0).getRectangle(), validator, date, fieldName);
+                signatureOptions.setVisualSignature(new ByteArrayInputStream(visualSignature));
                 signatureOptions.setPage(0);
-                pdDocument.addSignature(pdSignature, signatureOptions);
-                ((PDSignatureField) pdField).setValue(pdSignature);
-                ((PDSignatureField) pdField).setDefaultValue(pdSignature);
+                PDDocument toSignDocument = PDDocument.load(savedPdf);
+                toSignDocument.addSignature(pdSignature, signatureOptions);
+                ((PDSignatureField) toSignDocument.getDocumentCatalog().getAcroForm().getField(fieldName)).setValue(pdSignature);
+                ((PDSignatureField) toSignDocument.getDocumentCatalog().getAcroForm().getField(fieldName)).setDefaultValue(pdSignature);
+                out = new ByteArrayOutputStream();
+                toSignDocument.save(out);
+                toSignDocument.close();
+                savedPdf = out.toByteArray();
             }
         }
-        pdAcroForm.flatten();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        pdDocument.save(out);
+        PDDocument finishedDocument = PDDocument.load(savedPdf);
+        finishedDocument.getDocumentCatalog().getAcroForm().flatten();
+        out = new ByteArrayOutputStream();
+        finishedDocument.save(out);
+        finishedDocument.close();
         return out.toByteArray();
     }
 
@@ -429,11 +448,11 @@ public class AmenagementService {
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
-    private InputStream createVisualSignatureTemplate(PDDocument srcDoc, PDRectangle rect, PDSignature signature, String date, String validator, String fieldName) throws IOException
+    private byte[] createVisualSignatureTemplate(int rotation, PDRectangle pageRectangle, PDRectangle signRectangle, String date, String validator, String fieldName) throws IOException
     {
         try (PDDocument doc = new PDDocument())
         {
-            PDPage page = new PDPage(srcDoc.getPage(0).getMediaBox());
+            PDPage page = new PDPage(pageRectangle);
             doc.addPage(page);
             PDAcroForm acroForm = new PDAcroForm(doc);
             doc.getDocumentCatalog().setAcroForm(acroForm);
@@ -444,20 +463,16 @@ public class AmenagementService {
             acroForm.setAppendOnly(true);
             acroForm.getCOSObject().setDirect(true);
             acroFormFields.add(signatureField);
-
-            widget.setRectangle(rect);
-
-            // from PDVisualSigBuilder.createHolderForm()
+            widget.setRectangle(signRectangle);
             PDStream stream = new PDStream(doc);
             PDFormXObject form = new PDFormXObject(stream);
             PDResources res = new PDResources();
             form.setResources(res);
             form.setFormType(1);
-            PDRectangle bbox = new PDRectangle(rect.getWidth(), rect.getHeight());
+            PDRectangle bbox = new PDRectangle(signRectangle.getWidth(), signRectangle.getHeight());
             float height = bbox.getHeight();
             Matrix initialScale = null;
-            switch (srcDoc.getPage(0).getRotation())
-            {
+            switch (rotation) {
                 case 90:
                     form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
                     initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(), bbox.getHeight() / bbox.getWidth());
@@ -477,14 +492,11 @@ public class AmenagementService {
             }
             form.setBBox(bbox);
             PDFont font = PDType1Font.HELVETICA;
-
-            // from PDVisualSigBuilder.createAppearanceDictionary()
             PDAppearanceDictionary appearance = new PDAppearanceDictionary();
             appearance.getCOSObject().setDirect(true);
             PDAppearanceStream appearanceStream = new PDAppearanceStream(form.getCOSObject());
             appearance.setNormalAppearance(appearanceStream);
             widget.setAppearance(appearance);
-
             try (PDPageContentStream cs = new PDPageContentStream(doc, appearanceStream))
             {
                 if (initialScale != null) {
@@ -498,7 +510,7 @@ public class AmenagementService {
                 cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
                 ClassPathResource noImg = new ClassPathResource("/static/images/" + fieldName + ".png");
                 PDImageXObject img = PDImageXObject.createFromFileByExtension(noImg.getFile(), doc);
-                cs.drawImage(img, rect.getWidth() / 2, 0);
+                cs.drawImage(img, signRectangle.getWidth() / 2, 0);
                 cs.restoreGraphicsState();
                 float fontSize = 10;
                 float leading = fontSize * 1.5f;
@@ -514,7 +526,8 @@ public class AmenagementService {
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             doc.save(baos);
-            return new ByteArrayInputStream(baos.toByteArray());
+            doc.close();
+            return baos.toByteArray();
         }
     }
 
