@@ -7,20 +7,8 @@ import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
-import org.esupportail.esupagape.entity.AideHumaine;
-import org.esupportail.esupagape.entity.AideMaterielle;
-import org.esupportail.esupagape.entity.Document;
-import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.Enquete;
-import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.FonctionAidant;
-import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.Mdph;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
-import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
+import org.esupportail.esupagape.entity.*;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -46,21 +34,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -195,6 +172,11 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
+        if(dossier.getIndividu().getDossiers().size() > 1) {
+            dossier.setNewDossier(false);
+        } else {
+            dossier.setNewDossier(true);
+        }
         if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         if (dossier.getAmenagements().size() == 0) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
@@ -351,9 +333,10 @@ public class DossierService {
     public Page<DossierIndividuClassDto> dossierIndividuClassDtoPage(DossierFilter dossierFilter, Pageable pageable) {
         TypedQuery<Dossier> query = superFilter(dossierFilter, pageable);
         int totalRows = query.getResultList().size();
+        List<Dossier> resultList;
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
-        List<Dossier> resultList = query.getResultList();
+        resultList = query.getResultList();
         List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
         for (Dossier dossier : resultList) {
             DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
@@ -390,7 +373,6 @@ public class DossierService {
         Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
         Join<Dossier, AideMaterielle> dossierAideMaterielleJoin = dossierRoot.join("aidesMaterielles", JoinType.LEFT);
         Join<Dossier, AideHumaine> dossierAideHumaineJoin = dossierRoot.join("aidesHumaines", JoinType.LEFT);
-        ;//        Join<Individu, List<Dossier>> dossierIndividuDossiersJoin = dossierIndividuJoin.join("dossiers", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -550,9 +532,14 @@ public class DossierService {
         if (fonctionAidantPredicates.size() > 0) {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
         }
-        //        if(dossierFilter.getNewDossier() != null && dossierFilter.getNewDossier()) {
-//            predicates.add(cb.lessThan(cb.count(dossierIndividuJoin.get("dossiers")), 2L));
-//        }
+
+        if(dossierFilter.getNewDossier() != null) {
+            if (dossierFilter.getNewDossier()) {
+                predicates.add(cb.isTrue(dossierRoot.get("newDossier")));
+            } else {
+                predicates.add(cb.isFalse(dossierRoot.get("newDossier")));
+            }
+        }
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
