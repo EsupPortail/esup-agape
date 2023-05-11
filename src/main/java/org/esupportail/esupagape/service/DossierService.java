@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
@@ -17,7 +16,6 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
-import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -51,17 +49,14 @@ public class DossierService {
 
     private final DossierRepository dossierRepository;
 
-    private final IndividuRepository individuRepository;
-
     private final DocumentRepository documentRepository;
 
     private final DocumentService documentService;
 
     private final EntityManager em;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, IndividuRepository individuRepository, DocumentRepository documentRepository, DocumentService documentService, ObjectMapper objectMapper, EntityManager em) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
         this.utilsService = utilsService;
-        this.individuRepository = individuRepository;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
         this.em = em;
