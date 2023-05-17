@@ -68,8 +68,10 @@
                 <embed th:if="${amenagement.certificat != null || (!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
             </th:block>
             <div th:if="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}" class="alert alert-danger">
-                Cet aménagement est expiré. Date de fin <span th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span><br>
-                <span th:text="${amenagement.motifRefus}"></span>
+                Cet aménagement est expiré. Date de fin <span th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).SUPPRIME)}" class="alert alert-danger">
+                Cet aménagement est supprimé
             </div>
         </div>
         <div class="col-12">
