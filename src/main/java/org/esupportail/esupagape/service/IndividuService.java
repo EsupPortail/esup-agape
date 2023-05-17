@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
+import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
@@ -397,6 +398,19 @@ public class IndividuService {
                 individu.setFixAddress("");
                 individu.setFixCity("");
                 individu.setFixCP(individu.getFixCP().substring(0,2));
+                List<Dossier> dossiers = individu.getDossiers();
+                for (Dossier dossier : dossiers) {
+                    List<AideHumaine> aidesHumaines = dossier.getAidesHumaines();
+                    for (AideHumaine aideHumaine : aidesHumaines) {
+                        int aidantYearOfBirth = aideHumaine.getDateOfBirthAidant().getYear();
+                        aideHumaine.setNumEtuAidant("AnonymeAidant" + aideHumaine.getId());
+                        aideHumaine.setNameAidant("AnonymeAidant");
+                        aideHumaine.setFirstNameAidant("AnonymeAidant");
+                        aideHumaine.setDateOfBirthAidant(LocalDate.of(aidantYearOfBirth, Month.FEBRUARY, 1));
+                        aideHumaine.setEmailAidant("exampleAidant@univ-rouen.fr");
+                        aideHumaine.setPhoneAidant("0000000000");
+                    }
+                }
                 dossierService.anonymiseDossiers(individu);
             }
         }
