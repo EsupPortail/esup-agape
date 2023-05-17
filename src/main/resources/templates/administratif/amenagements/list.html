@@ -89,6 +89,7 @@
                                 <th>Composante</th>
                                 <th><a class="sorted" sd:pagination-sort="createDate">Date de création</a> </th>
                                 <th><a class="sorted" sd:pagination-sort="endDate">Type d’aménagement</a></th>
+                                <th>Validité</th>
                                 <th>Nom</th>
                                 <th>Temps majoré</th>
                                 <th>Nom médecin</th>
@@ -103,6 +104,10 @@
                                     <td th:text="${amenagement.dossier.composante}"></td>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${amenagement.endDate != null} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                    <td>
+                                        <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.dossier.statusDossierAmenagement}}"
+                                              th:classappend="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>
+                                    </td>
                                     <td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + amenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
