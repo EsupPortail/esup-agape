@@ -268,6 +268,9 @@ public class IndividuService {
             }
         }
         if (individuTestIsExist != null) {
+            if(individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
+                dossierService.create(individuTestIsExist, StatusDossier.AJOUT_MANUEL);
+            }
             return individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(individu, force);
