@@ -1,6 +1,8 @@
 package org.esupportail.esupagape.web.controller;
 
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.CsvImportService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -29,6 +31,8 @@ public class AdminController {
 
     private final DossierService dossierService;
 
+    private final AmenagementService amenagementService;
+
     private final UtilsService utilsService;
 
     private final CsvImportService csvImportService;
@@ -38,10 +42,11 @@ public class AdminController {
     public AdminController(
             IndividuService individuService,
             DossierService dossierService,
-            UtilsService utilsService,
+            AmenagementService amenagementService, UtilsService utilsService,
             CsvImportService csvImportService, SiseService siseService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
+        this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.csvImportService = csvImportService;
         this.siseService = siseService;
@@ -82,6 +87,13 @@ public class AdminController {
         } catch (FileNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Erreur lors de l'actualisation SISE : " + e.getMessage()));
         }
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/sync-esup-signature")
+    public String syncEsupSignature(RedirectAttributes redirectAttributes) throws AgapeException {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro Esup Signature est terminée"));
+        amenagementService.syncAllAmenagements();
         return "redirect:/admin";
     }
 

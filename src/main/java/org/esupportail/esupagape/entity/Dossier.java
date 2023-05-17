@@ -114,6 +114,8 @@ public class Dossier {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> attachments;
 
+    private Boolean newDossier = true;
+
     public Long getId() {
         return id;
     }
@@ -400,5 +402,13 @@ public class Dossier {
 
     public void setAttachments(List<Document> attachments) {
         this.attachments = attachments;
+    }
+
+    public Boolean getNewDossier() {
+        return newDossier;
+    }
+
+    public void setNewDossier(Boolean newDossier) {
+        this.newDossier = newDossier;
     }
 }

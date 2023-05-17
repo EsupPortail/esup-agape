@@ -4,6 +4,9 @@ import org.esupportail.esupagape.annotation.AgapeLdapAttributExist;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ConfigurationProperties(prefix="application")
 @Validated
 public class ApplicationProperties {
@@ -31,20 +34,40 @@ public class ApplicationProperties {
     private String mappingPhotoIdToLdapField;
 
     /**
+     * Délai avant anonymisation des individus (en années)
+     */
+    private Integer anonymiseDelay = 3;
+
+    /**
      * Adresse de l'instance esup-signature
      * Ex : https://esup-signature.univ-ville.fr
      */
     private String esupSignatureUrl = "";
 
-    String papercutAuthToken;
+    /**
+     * Id du circuit des avis
+     */
+    private String esupSignatureAvisWorkflowId = "";
 
-    String papercutServer;
+    /**
+     * Id du circuit des certificats
+     */
+    private String esupSignatureCertificatsWorkflowId = "";
 
-    String papercutScheme = "http";
+    /**
+     * Adresse email du valideur
+     */
+    private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
-    int papercutPort;
+    private String papercutAuthToken;
 
-    String papercutAccountName = "";
+    private String papercutServer;
+
+    private String papercutScheme = "http";
+
+    private int papercutPort;
+
+    private String papercutAccountName = "";
 
     public String getCodeEtab() {
         return codeEtab;
@@ -78,12 +101,44 @@ public class ApplicationProperties {
         this.mappingPhotoIdToLdapField = mappingPhotoIdToLdapField;
     }
 
+    public Integer getAnonymiseDelay() {
+        return anonymiseDelay;
+    }
+
+    public void setAnonymiseDelay(Integer anonymiseDelay) {
+        this.anonymiseDelay = anonymiseDelay;
+    }
+
     public String getEsupSignatureUrl() {
         return esupSignatureUrl;
     }
 
     public void setEsupSignatureUrl(String esupSignatureUrl) {
         this.esupSignatureUrl = esupSignatureUrl;
+    }
+
+    public String getEsupSignatureAvisWorkflowId() {
+        return esupSignatureAvisWorkflowId;
+    }
+
+    public void setEsupSignatureAvisWorkflowId(String esupSignatureAvisWorkflowId) {
+        this.esupSignatureAvisWorkflowId = esupSignatureAvisWorkflowId;
+    }
+
+    public String getEsupSignatureCertificatsWorkflowId() {
+        return esupSignatureCertificatsWorkflowId;
+    }
+
+    public void setEsupSignatureCertificatsWorkflowId(String esupSignatureCertificatsWorkflowId) {
+        this.esupSignatureCertificatsWorkflowId = esupSignatureCertificatsWorkflowId;
+    }
+
+    public List<String> getEsupSignatureValideursEmails() {
+        return esupSignatureValideursEmails;
+    }
+
+    public void setEsupSignatureValideursEmails(List<String> esupSignatureValideursEmails) {
+        this.esupSignatureValideursEmails = esupSignatureValideursEmails;
     }
 
     public String getPapercutAuthToken() {

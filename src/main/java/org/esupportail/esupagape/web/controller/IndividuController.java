@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
+import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -28,22 +29,23 @@ public class IndividuController {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IndividuService individuService;
-
     private final DossierService dossierService;
+    private final IndividuRepository individuRepository;
 
-    public IndividuController(IndividuService individuService, DossierService dossierService) {
+    public IndividuController(IndividuService individuService, DossierService dossierService, IndividuRepository individuRepository) {
         this.individuService = individuService;
         this.dossierService = dossierService;
+        this.individuRepository = individuRepository;
     }
 
-    @GetMapping("{individuId}")
+    @GetMapping("/{individuId}/redirect")
     public String showRedirect(@PathVariable Long individuId) {
         List<Dossier> dossiers = dossierService.getAllByIndividu(individuId);
         dossiers.sort(Comparator.comparing(Dossier::getYear).reversed());
         if (!dossiers.isEmpty()) {
             return "redirect:/dossiers/" + dossiers.get(0).getId();
         }
-        return "redirect:/individus";
+        return "redirect:/dossiers";
     }
 
     @GetMapping("/create")
@@ -61,12 +63,14 @@ public class IndividuController {
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResultError", true);
+            model.addAttribute("individu", new Individu());
+            model.addAttribute("genders", Gender.values());
             return "individus/create";
         }
         try {
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId();
+            return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
@@ -82,10 +86,10 @@ public class IndividuController {
             individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(individu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId();
+            return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
-            return "redirect:/individus/create";
+            return "redirect:/dossiers";
         }
     }
 
@@ -95,4 +99,12 @@ public class IndividuController {
         return individuService.getPhoto(id);
     }
 
+    @PostMapping("/{individuId}/anonymise")
+    public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
+        individuService.anonymiseIndividu(individuId);
+        return "redirect:/individus/" + individuId + "/redirect";
+    }
+
 }
+
+

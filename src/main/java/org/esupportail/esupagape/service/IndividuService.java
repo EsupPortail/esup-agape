@@ -35,8 +35,10 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,6 +96,7 @@ public class IndividuService {
     public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
         Dossier dossier = dossierService.getCurrent(id);
+        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
         if(dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
             dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
@@ -265,6 +268,9 @@ public class IndividuService {
             }
         }
         if (individuTestIsExist != null) {
+            if(individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
+                dossierService.create(individuTestIsExist, StatusDossier.AJOUT_MANUEL);
+            }
             return individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(individu, force);
@@ -372,6 +378,38 @@ public class IndividuService {
 
     public List<Integer> getAllDateOfBirth() {
         return individuRepository.findAllDateOfBirthDistinct();
+    }
+
+
+    @Transactional
+    public void anonymiseIndividu(Long individuId) {
+        Individu individu = individuRepository.findById(individuId).orElse(null);{
+            if (individu != null) {
+                int yearOfBirth = individu.getDateOfBirth().getYear();
+                individu.setNumEtu("Anonyme" + individu.getId());
+                individu.setCodeIne("Anonyme" + individu.getId());
+                individu.setName("Anonyme");
+                individu.setFirstName("Anonyme");
+                individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
+                individu.setEppn("example@univ-rouen.fr");
+                individu.setEmailEtu("exampleetu@univ-rouen.fr");
+                individu.setContactPhone("0000000000");
+                individu.setFixAddress("");
+                individu.setFixCity("");
+                individu.setFixCP(individu.getFixCP().substring(0,2));
+                dossierService.anonymiseDossiers(individu);
+            }
+        }
+    }
+
+    @Transactional
+    public void anonymiseAll() {
+        List<Individu> individus = individuRepository.findAll();
+        for(Individu individu : individus) {
+            if(individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
+                anonymiseIndividu(individu.getId());
+            }
+        }
     }
 
 }

@@ -75,6 +75,22 @@ public class Amenagement {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime deleteDate;
 
+    private String avisSignatureId;
+
+    @Enumerated(EnumType.STRING)
+    private SignatureStatus avisSignatureStatus;
+
+    private String certificatSignatureId;
+
+    @Enumerated(EnumType.STRING)
+    private SignatureStatus certificatSignatureStatus;
+
+    @ManyToOne
+    private Document avis;
+
+    @ManyToOne
+    private Document certificat;
+
     public Long getId() {
         return id;
     }
@@ -249,5 +265,53 @@ public class Amenagement {
 
     public void setDeleteDate(LocalDateTime deleteDate) {
         this.deleteDate = deleteDate;
+    }
+
+    public String getAvisSignatureId() {
+        return avisSignatureId;
+    }
+
+    public void setAvisSignatureId(String avisSignatureId) {
+        this.avisSignatureId = avisSignatureId;
+    }
+
+    public SignatureStatus getAvisSignatureStatus() {
+        return avisSignatureStatus;
+    }
+
+    public void setAvisSignatureStatus(SignatureStatus avisSignatureStatus) {
+        this.avisSignatureStatus = avisSignatureStatus;
+    }
+
+    public String getCertificatSignatureId() {
+        return certificatSignatureId;
+    }
+
+    public void setCertificatSignatureId(String certificatSignatureId) {
+        this.certificatSignatureId = certificatSignatureId;
+    }
+
+    public SignatureStatus getCertificatSignatureStatus() {
+        return certificatSignatureStatus;
+    }
+
+    public void setCertificatSignatureStatus(SignatureStatus certificatSignatureStatus) {
+        this.certificatSignatureStatus = certificatSignatureStatus;
+    }
+
+    public Document getAvis() {
+        return avis;
+    }
+
+    public void setAvis(Document avis) {
+        this.avis = avis;
+    }
+
+    public Document getCertificat() {
+        return certificat;
+    }
+
+    public void setCertificat(Document certificat) {
+        this.certificat = certificat;
     }
 }

@@ -32,23 +32,22 @@
                     <dt>Statut du dossier</dt>
                     <dd>
                         <th:block th:switch="${currentDossier.statusDossier}">
-                            <span th:case="${currentDossier.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.SUIVI}}" class="badge text-bg-success"></span>
-                            <span th:case="${currentDossier.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}" class="badge text-bg-import"></span>
-                            <span th:case="${currentDossier.statusDossier.AJOUT_MANUEL}"
-                                    th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
-                                    class="badge text-bg-info"></span>
-                            <span th:case="${currentDossier.statusDossier.ACCUEILLI}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI}}"
+                            <span th:case="${currentDossier.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.SUIVI}}"
+                                class="badge text-bg-success"></span>
+                            <span th:case="${currentDossier.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPORTE}}"
+                                class="badge text-bg-import"></span>
+                            <span th:case="${currentDossier.statusDossier.AJOUT_MANUEL}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.AJOUT_MANUEL}}"
+                                class="badge text-bg-info"></span>
+                            <span th:case="${currentDossier.statusDossier.ACCUEILLI}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ACCUEILLI}}"
                                 class="badge text-bg-warning"></span>
-                            <span th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}"
-                                class="badge text-bg-dark"></span>
-                            <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}"
-                                class="badge text-bg-primary"></span>
-                            <span th:case="${currentDossier.statusDossier.DESINSCRIT}"
-                                th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.DESINSCRIT}}"
+                            <span th:case="${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.IMPOSSIBLE_A_CONTACTER}}"
                                 class="badge text-bg-danger"></span>
+                            <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}"
+                                class="badge text-bg-primary"></span>
+                            <span th:case="${currentDossier.statusDossier.DESINSCRIT}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.DESINSCRIT}}"
+                                class="badge text-bg-dark"></span>
+                            <span th:case="${currentDossier.statusDossier.ANONYMOUS}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ANONYMOUS}}"
+                                class="badge text-bg-dark"></span>
                         </th:block>
                     </dd>
                     <dt>Statut aménagement</dt>

@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -91,15 +92,15 @@ public class AmenagementController {
     }
 
     @PostMapping("/{amenagementId}/validation-medecin")
-    public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
+    public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
-            amenagementService.validationMedecin(amenagementId);
+            amenagementService.validationMedecin(amenagementId, personLdap);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
-        } catch (AgapeException e) {
+        } catch (AgapeException | AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
 
-        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
+        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
     }
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")

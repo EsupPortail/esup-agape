@@ -3,6 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
@@ -50,6 +51,7 @@ public class DossierController {
 
     @GetMapping
     public String list(
+            @Valid DossierFilter dossierFilter,
             @RequestParam(required = false) String fullTextSearch,
             @RequestParam(required = false) TypeIndividu typeIndividu,
             @RequestParam(required = false) StatusDossier statusDossier,
@@ -64,7 +66,13 @@ public class DossierController {
         model.addAttribute("typeIndividu", typeIndividu);
         model.addAttribute("statusDossier", statusDossier);
         model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
-        model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
+        if(dossierFilter != null && dossierFilter.getYear() != null) {
+            model.addAttribute("dossiers", dossierService.dossierIndividuClassDtoPage(dossierFilter, pageable));
+            model.addAttribute("mails", String.join(";", dossierService.filteredEmails(dossierFilter)));
+            model.addAttribute("dossierFilter", dossierFilter);
+        } else {
+            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
+        }
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());
         model.addAttribute("statusDossierList", StatusDossier.values());
@@ -83,49 +91,17 @@ public class DossierController {
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
-        return "dossiers/list";
-    }
 
-    @GetMapping("/filter")
-    public String listFilter(
-            @Valid DossierFilter dossierFilter,
-            @PageableDefault(sort = "name") Pageable pageable, Model model) {
-//        if(dossierFilter.getYearFilter() == null) {
-//            dossierFilter.setYearFilter(utilsService.getCurrentYear());
-//        }
-        model.addAttribute("dossierFilter", dossierFilter);
-        model.addAttribute("years", utilsService.getYears());
-        model.addAttribute("statusDossierList", StatusDossier.values());
-        model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
-        model.addAttribute("typeIndividuList", TypeIndividu.values());
-        model.addAttribute("typFrmns", TypFrmn.values());
-        model.addAttribute("modFrmns", ModFrmn.values());
+        model.addAttribute("individu", new Individu());
         model.addAttribute("genders", Gender.values());
-        model.addAttribute("classifications", Classification.values());
-        model.addAttribute("composantes", dossierService.getAllComposantes());
-        model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
-        model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
-        model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
-        model.addAttribute("mdphs", Mdph.values());
-        model.addAttribute("fixCPs", individuService.getAllFixCP());
-        model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
-        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
-        model.addAttribute("fonctionAidants", FonctionAidant.values());
-
-
-
-//        model.addAttribute("dossiers", dossierService.findDossierByDossierFilter(dossierFilter, pageable));
-        model.addAttribute("dossiers", dossierService.dossierIndividuClassDtoPage(dossierFilter, pageable));
-        model.addAttribute("mails", String.join(";", dossierService.filteredEmails(dossierFilter)));
-
-
-//        return "dossiers/list";
-        return "dossiers/list-filter";
+        return "dossiers/list";
     }
 
     @GetMapping("/{dossierId}")
     public String update(@PathVariable Long dossierId, Model model, HttpServletRequest httpServletRequest) {
-        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")) {
+        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")
+                && !httpServletRequest.isUserInRole("MANAGER")
+                && !httpServletRequest.isUserInRole("ADMIN")) {
             return "redirect:/dossiers/"+ dossierId +"/amenagements";
         }
         Dossier dossier = dossierService.getById(dossierId);
@@ -154,7 +130,7 @@ public class DossierController {
         } catch (AgapeJpaException e) {
             throw new RuntimeException(e);
         }
-        redirectAttributes.addFlashAttribute("message", new Message("success", "Synchonisation effectuée"));
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Synchronisation effectuée"));
         return "redirect:/dossiers/" + dossierId;
     }
 
@@ -199,7 +175,7 @@ public class DossierController {
     public String getLastFileFromSignRequest(
             @PathVariable Long dossierId,
             @PathVariable("attachmentId") Long attachmentId,
-            RedirectAttributes redirectAttributes) throws AgapeException {
+            RedirectAttributes redirectAttributes) {
         dossierService.deleteAttachment(dossierId, attachmentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId;

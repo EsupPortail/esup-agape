@@ -96,7 +96,7 @@ public class AmenagementAdministratifController {
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
+    public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
         model.addAttribute("amenagement", amenagement);
@@ -126,8 +126,12 @@ public class AmenagementAdministratifController {
     @PostMapping("/{amenagementId}/validation")
     public String validation(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "La validation se fait par Esup-Signature"));
+                return "redirect:/administratif/amenagements/" + amenagementId;
+            }
             amenagementService.validationAdministration(amenagementId, personLdap);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été validé"));
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
@@ -137,8 +141,12 @@ public class AmenagementAdministratifController {
     @PostMapping("/{amenagementId}/refus")
     public String refus(@PathVariable Long amenagementId, @RequestParam String motif, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
+            if(StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "Le refus se fait par Esup-Signature"));
+                return "redirect:/administratif/amenagements/" + amenagementId;
+            }
             amenagementService.refusAdministration(amenagementId, personLdap, motif);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+            redirectAttributes.addFlashAttribute("message", new Message("warning", "Le refus a bien été pris en compte"));
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
@@ -150,7 +158,7 @@ public class AmenagementAdministratifController {
     public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_" + amenagementId + ".pdf\"");
+        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"avis_" + amenagementId + ".pdf\"");
         amenagementService.getAvis(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);

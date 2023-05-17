@@ -12,10 +12,10 @@ import java.util.List;
 public interface StatistiquesRepository extends JpaRepository<Dossier, Long> {
 
     @Query(value = """
-            select dc.classification as classification, count(dc.classification) as classificationCount from dossier d
-            join dossier_classification dc on d.id = dc.dossier_id
+            select dc.classifications as classifications, count(dc.classifications) as classificationCount from dossier d
+            join dossier_classifications dc on d.id = dc.dossier_id
             where d.year = :year
-            group by dc.classification order by classificationCount desc ;
+            group by dc.classifications order by classificationCount desc ;
             """, nativeQuery = true)
     List<ClassificationChart> countFindClassificationByYear(Integer year);
 

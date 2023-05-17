@@ -17,6 +17,9 @@
                         <li class="breadcrumb-item">
                             <a th:href="@{/dossiers}" class="text-center">Liste des dossiers</a>
                         </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{'/dossiers/' + ${currentDossier.id}}">Dossier <span th:text="${currentDossier.individu.firstName + ' ' + currentDossier.individu.name}"></span></a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Liste des entretiens</li>
                     </ol>
                 </nav>

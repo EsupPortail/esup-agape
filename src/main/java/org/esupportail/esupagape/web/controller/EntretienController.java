@@ -4,7 +4,6 @@ import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.EntretienService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.springframework.data.domain.Page;
@@ -14,12 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -31,11 +25,8 @@ public class EntretienController {
 
     private final EntretienService entretienService;
 
-    private final DocumentService documentService;
-
-    public EntretienController(EntretienService entretienService, DocumentService documentService) {
+    public EntretienController(EntretienService entretienService) {
         this.entretienService = entretienService;
-        this.documentService = documentService;
     }
 
     @GetMapping
