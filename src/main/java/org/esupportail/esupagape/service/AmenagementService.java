@@ -557,13 +557,20 @@ public class AmenagementService {
         }
     }
 
-    public void syncAllEsupSignature() throws AgapeException {
-        List<Amenagement> amenagements = new ArrayList<>();
-        amenagements.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.ENVOYE));
-        amenagements.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN));
-        logger.debug(amenagements.size() + " aménagements à synchroniser");
-        for(Amenagement amenagement : amenagements) {
+    @Transactional
+    public void syncAllAmenagements() throws AgapeException {
+        List<Amenagement> amenagementsToSync = new ArrayList<>();
+        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.ENVOYE));
+        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN));
+        logger.debug(amenagementsToSync.size() + " aménagements à synchroniser");
+        for(Amenagement amenagement : amenagementsToSync) {
             syncEsupSignature(amenagement.getId());
+        }
+        List<Amenagement> amenagementsToExpire = amenagementRepository.findByStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
+        for(Amenagement amenagement : amenagementsToExpire) {
+            if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(LocalDateTime.now().plusDays(1))) {
+                amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+            }
         }
     }
 }

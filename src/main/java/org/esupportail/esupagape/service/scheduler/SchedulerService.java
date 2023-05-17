@@ -35,10 +35,10 @@ public class SchedulerService {
         dossierService.syncAllDossiers();
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 10000)
+    @Scheduled(initialDelay = 1, fixedRate = 300000)
     public void syncEsupSignature() throws AgapeException {
         logger.debug("Synchro Esup Signature");
-        amenagementService.syncAllEsupSignature();
+        amenagementService.syncAllAmenagements();
     }
 
 }

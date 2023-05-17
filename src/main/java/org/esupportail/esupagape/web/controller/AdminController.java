@@ -93,7 +93,7 @@ public class AdminController {
     @GetMapping("/sync-esup-signature")
     public String syncEsupSignature(RedirectAttributes redirectAttributes) throws AgapeException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro Esup Signature est terminée"));
-        amenagementService.syncAllEsupSignature();
+        amenagementService.syncAllAmenagements();
         return "redirect:/admin";
     }
 
