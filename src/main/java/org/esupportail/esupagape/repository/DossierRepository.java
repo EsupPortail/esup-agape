@@ -24,7 +24,8 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch))
             or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%'))
             or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%'))
-            or upper(d.individu.numEtu) = :fullTextSearch)
+            or upper(d.individu.numEtu) = :fullTextSearch
+            or upper (d.individu.codeIne) = :fullTextSearch)
             and (:typeIndividu is null or d.type = :typeIndividu)
             and (:statusDossier is null or d.statusDossier = :statusDossier)
             and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
