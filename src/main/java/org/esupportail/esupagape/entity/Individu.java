@@ -73,6 +73,7 @@ public class Individu {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private LocalDate dateAnonymisation;
 
     @OneToMany(mappedBy = "individu", orphanRemoval = true)
     private List<Dossier> dossiers = new ArrayList<>();
@@ -266,6 +267,13 @@ public class Individu {
        this.gender = gender;
     }
 
+    public LocalDate getDateAnonymisation() {
+        return dateAnonymisation;
+    }
+
+    public void setDateAnonymisation(LocalDate dateAnonymisation) {
+        this.dateAnonymisation = dateAnonymisation;
+    }
 
     public List<Dossier> getDossiers() {
         return dossiers;
