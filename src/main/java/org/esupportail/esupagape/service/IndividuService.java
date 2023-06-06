@@ -97,44 +97,44 @@ public class IndividuService {
     public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
         Dossier dossier = dossierService.getCurrent(id);
-        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
+        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
-        if(dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
+        if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
             dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
             return;
         }
-        if(StringUtils.hasText(individuInfos.getEppn())) {
+        if (StringUtils.hasText(individuInfos.getEppn())) {
             individu.setEppn(individuInfos.getEppn());
         }
-        if(StringUtils.hasText(individuInfos.getName())) {
+        if (StringUtils.hasText(individuInfos.getName())) {
             individu.setName(individuInfos.getName());
         }
-        if(StringUtils.hasText(individuInfos.getFirstName())) {
+        if (StringUtils.hasText(individuInfos.getFirstName())) {
             individu.setFirstName(individuInfos.getFirstName());
         }
-        if(StringUtils.hasText(individuInfos.getGenre())) {
+        if (StringUtils.hasText(individuInfos.getGenre())) {
             individu.setSex(individuInfos.getGenre());
         }
-        if(StringUtils.hasText(individuInfos.getGenre())) {
+        if (StringUtils.hasText(individuInfos.getGenre())) {
             individu.setGender(Gender.valueOf(individuInfos.getGenre()));
         }
-        if(StringUtils.hasText(individuInfos.getNationalite())) {
+        if (StringUtils.hasText(individuInfos.getNationalite())) {
             individu.setNationalite(individuInfos.getNationalite());
         }
-        if(StringUtils.hasText(individuInfos.getEmailEtu())) {
+        if (StringUtils.hasText(individuInfos.getEmailEtu())) {
             individu.setEmailEtu(individuInfos.getEmailEtu());
         }
 
-        if(StringUtils.hasText(individuInfos.getFixAddress())) {
+        if (StringUtils.hasText(individuInfos.getFixAddress())) {
             individu.setFixAddress(individuInfos.getFixAddress());
         }
-        if(StringUtils.hasText(individuInfos.getFixCP())) {
+        if (StringUtils.hasText(individuInfos.getFixCP())) {
             individu.setFixCP(individuInfos.getFixCP());
         }
-        if(StringUtils.hasText(individuInfos.getFixCity())) {
+        if (StringUtils.hasText(individuInfos.getFixCity())) {
             individu.setFixCity(individuInfos.getFixCity());
         }
-        if(StringUtils.hasText(individuInfos.getFixCountry())) {
+        if (StringUtils.hasText(individuInfos.getFixCountry())) {
             individu.setFixCountry(individuInfos.getFixCountry());
         }
      /*   if(StringUtils.hasText(individuInfos.getCurrentAddress())) {
@@ -149,18 +149,18 @@ public class IndividuService {
         if(StringUtils.hasText(individuInfos.getCurrentCountry())) {
             individu.setCurrentCountry(individuInfos.getCurrentCountry());
         }*/
-        if(StringUtils.hasText(individuInfos.getFixPhone())) {
+        if (StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }
 
-        if(StringUtils.hasText(individuInfos.getContactPhone())) {
+        if (StringUtils.hasText(individuInfos.getContactPhone())) {
             individu.setContactPhone(individuInfos.getContactPhone());
         }
-        if(StringUtils.hasText(individuInfos.getPhotoId())) {
+        if (StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
-        if(individuInfos.getHandicap() != null) {
-            if(dossier.getClassifications().size() == 0) {
+        if (individuInfos.getHandicap() != null) {
+            if (dossier.getClassifications().size() == 0) {
                 dossier.getClassifications().add(individuInfos.getHandicap());
             }
         }
@@ -187,17 +187,13 @@ public class IndividuService {
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
-            List<Individu> individusToCreate = individusFromSource.stream().filter(
-                    individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu()))
-                    &&
-                    excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))
-            ).toList();
+            List<Individu> individusToCreate = individusFromSource.stream().filter(individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu())) && excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))).toList();
             individuRepository.saveAll(individusToCreate);
             List<Individu> individusWithoutDossier = new ArrayList<>();
             individusWithoutDossier.addAll(individusToCreate);
             individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
             List<Dossier> dossiers = new ArrayList<>();
-            for(Individu individu : individusWithoutDossier) {
+            for (Individu individu : individusWithoutDossier) {
                 logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
                 Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
@@ -210,8 +206,8 @@ public class IndividuService {
 
     public void save(Individu individuToAdd, String force) throws AgapeJpaException {
         ExcludeIndividu excludeIndividu = null;
-        if(StringUtils.hasText(individuToAdd.getNumEtu())) {
-             excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
+        if (StringUtils.hasText(individuToAdd.getNumEtu())) {
+            excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
             if (force == null && excludeIndividu != null) {
                 throw new AgapeJpaException("L'étudiant est dans la liste d'exclusion");
             }
@@ -269,7 +265,7 @@ public class IndividuService {
             }
         }
         if (individuTestIsExist != null) {
-            if(individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
+            if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
                 dossierService.create(individuTestIsExist, StatusDossier.AJOUT_MANUEL);
             }
             return individuTestIsExist;
@@ -287,7 +283,7 @@ public class IndividuService {
                 break;
             }
         }
-        if(individuFromSources == null) {
+        if (individuFromSources == null) {
             for (IndividuSourceService individuSourceService : individuSourceServices) {
                 individuFromSources = individuSourceService.getIndividuByCodeIne(code);
                 if (individuFromSources != null) {
@@ -325,7 +321,7 @@ public class IndividuService {
         enqueteService.detachAllByDossiers(id);
         if (StringUtils.hasText(individu.getNumEtu())) {
             ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
-            if(excludeIndividu == null) {
+            if (excludeIndividu == null) {
                 excludeIndividu = new ExcludeIndividu();
                 excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
                 excludeIndividuRepository.save(excludeIndividu);
@@ -345,7 +341,7 @@ public class IndividuService {
         MultiValueMap<String, Object> multipartMap = new LinkedMultiValueMap<>();
         HttpEntity<Object> request = new HttpEntity<>(multipartMap, headers);
         Individu individu = getById(id);
-        if(StringUtils.hasText(applicationProperties.getDisplayPhotoUriPattern()) && individu != null && individu.getPhotoId() != null && !individu.getPhotoId().isEmpty()) {
+        if (StringUtils.hasText(applicationProperties.getDisplayPhotoUriPattern()) && individu != null && individu.getPhotoId() != null && !individu.getPhotoId().isEmpty()) {
             String uri = MessageFormat.format(applicationProperties.getDisplayPhotoUriPattern(), individu.getPhotoId());
             try {
                 httpResponse = template.exchange(uri, HttpMethod.GET, request, byte[].class);
@@ -415,7 +411,7 @@ public class IndividuService {
             }
         }
     }*/
-    
+
     @Transactional
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
@@ -437,7 +433,7 @@ public class IndividuService {
             LocalDate currentDate = LocalDate.now();
             LocalDate anonymisationDateLimit = individu.getDateAnonymisation();
 
-            boolean hasHelpPreviousYear = false; //
+            boolean hasHelpPreviousYear = false;
 
 
             if (anonymisationDateLimit != null) {
@@ -447,17 +443,11 @@ public class IndividuService {
                         LocalDate startDate = LocalDate.from(aideHumaine.getStartDate());
                         if (startDate != null && startDate.getYear() == anonymisationDateLimit.getYear() - 1) {
                             hasHelpPreviousYear = true;
-                            break;
+
                         }
-                    }
-                    if (hasHelpPreviousYear) {
-                        break;
                     }
                 }
             }
-            individu.setDateAnonymisation(currentDate);
-            dossierService.anonymiseDossiers(individu);
-
             if (!hasHelpPreviousYear && dossiers.size() > 1) {
                 for (Dossier dossier : dossiers) {
                     List<AideHumaine> aidesHumaines = dossier.getAidesHumaines();
@@ -472,14 +462,16 @@ public class IndividuService {
                     }
                 }
             }
+            individu.setDateAnonymisation(currentDate);
+            dossierService.anonymiseDossiers(individu);
         }
     }
 
     @Transactional
     public void anonymiseAll() {
         List<Individu> individus = individuRepository.findAll();
-        for(Individu individu : individus) {
-            if(individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
+        for (Individu individu : individus) {
+            if (individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
                 anonymiseIndividu(individu.getId());
             }
         }
