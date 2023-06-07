@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,4 +56,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.libelleFormation as libForm from Dossier d group by d.libelleFormation")
     List<String> findAllLibelleFormation();
 
+
+    @Query("Select d from Dossier d where  d.statusDossier = 'DESINSCRIT' AND d.unsubscribeDate < :date")
+    List<Dossier> findUnsubscribeDossier(@Param("date")LocalDate date);
 }

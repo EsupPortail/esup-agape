@@ -181,7 +181,7 @@ public class DossierController {
         return "redirect:/dossiers/" + dossierId;
     }
 
-    @DeleteMapping(value = "/{dossierId}/delete")
+    @DeleteMapping(value = "/{dossierId}/delete-unsubscribe")
     public String deleteUnsubscribeDossier(@PathVariable Long dossierId) {
         dossierService.deleteUnsubscribeDossier(dossierId);
         return "redirect:/dossiers/";
