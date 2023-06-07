@@ -355,6 +355,10 @@
                             </div>
                         </div>
                     </form>
+                    <form th:action="@{/dossiers/{id}/delete(id=${currentDossier.id})}"
+                          th:method="delete">  <button type="submit" class="btn btn-outline pull-left btn-danger">
+                        Supprimer
+                    </button></form>
 
                 </div>
             </div>
@@ -483,6 +487,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="anonymiseIndividuModalToggle2" aria-hidden="true" aria-labelledby="anonymiseIndividuModalToggleLabel2" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -527,7 +532,6 @@
             </div>
         </div>
         <!-- <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Open first modal</button>-->
-
         <script>
             const modalWarning = document.getElementById('modal-warning')
             const formModalWarning = document.getElementById('form-modal-warning')

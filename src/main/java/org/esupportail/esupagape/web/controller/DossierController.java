@@ -180,4 +180,10 @@ public class DossierController {
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId;
     }
+
+    @DeleteMapping(value = "/{dossierId}/delete")
+    public String deleteUnsubscribeDossier(@PathVariable Long dossierId) {
+        dossierService.deleteUnsubscribeDossier(dossierId);
+        return "redirect:/dossiers/";
+    }
 }

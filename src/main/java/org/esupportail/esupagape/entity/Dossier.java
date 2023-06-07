@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -115,6 +116,8 @@ public class Dossier {
     private List<Document> attachments;
 
     private Boolean newDossier = true;
+
+    private LocalDate unsubscribeDate;
 
     public Long getId() {
         return id;
@@ -411,4 +414,13 @@ public class Dossier {
     public void setNewDossier(Boolean newDossier) {
         this.newDossier = newDossier;
     }
+
+    public LocalDate getUnsubscribeDate() {
+        return unsubscribeDate;
+    }
+
+    public void setUnsubscribeDate(LocalDate unsubscribeDate) {
+        this.unsubscribeDate = unsubscribeDate;
+    }
+
 }
