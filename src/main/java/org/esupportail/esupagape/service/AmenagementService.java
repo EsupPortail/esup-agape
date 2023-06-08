@@ -508,7 +508,7 @@ public class AmenagementService {
                 cs.fill();
                 cs.saveGraphicsState();
                 cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
-                ClassPathResource noImg = new ClassPathResource("static/images/" + fieldName + ".png");
+                ClassPathResource noImg = new ClassPathResource("/static/images/" + fieldName + ".png");
                 PDImageXObject img = PDImageXObject.createFromFileByExtension(noImg.getFile(), doc);
                 cs.drawImage(img, signRectangle.getWidth() / 2, 0);
                 cs.restoreGraphicsState();
