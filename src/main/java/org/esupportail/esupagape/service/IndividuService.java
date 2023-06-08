@@ -250,9 +250,15 @@ public class IndividuService {
         if (StringUtils.hasText(individu.getNumEtu())) {
             individuTestIsExist = getIndividu(individu.getNumEtu());
             if (individuTestIsExist == null) {
-                return createFromSources(individu.getNumEtu(), force);
+                individuTestIsExist = createFromSources(individu.getNumEtu(), force);
+            }
+        } else if (StringUtils.hasText(individu.getCodeIne())) {
+            individuTestIsExist = getIndividu(individu.getCodeIne());
+            if (individuTestIsExist == null) {
+                individuTestIsExist = createFromSources(individu.getCodeIne(), force);
             }
         } else if (StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null) {
+            individu.setCodeIne(null);
             individuTestIsExist = getIndividu(individu.getName(), individu.getFirstName(), individu.getDateOfBirth());
             if (individuTestIsExist == null) {
                 Individu newIndividu = createFromSources(individu.getName(), individu.getFirstName(), individu.getDateOfBirth(), force);
@@ -292,6 +298,10 @@ public class IndividuService {
             }
         }
         if (individuFromSources != null) {
+            Individu individuTestIsExist = getIndividu(individuFromSources.getNumEtu());
+            if(individuTestIsExist != null) {
+                return individuTestIsExist;
+            }
             save(individuFromSources, force);
         }
         return individuFromSources;

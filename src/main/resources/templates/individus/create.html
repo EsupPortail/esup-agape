@@ -5,9 +5,10 @@
 <header th:replace="fragments/header :: header"></header>
 <main>
     <div style="height: 60px;"></div>
-    <h1 class="title-create text-center" th:unless="${bindingResultError}">Ajout d’un individu</h1>
-    <h1 class="title-create text-center" th:if="${bindingResultError}">Erreur lors de l’ajout d’un individu</h1>
-    <p class="title-create text-center" th:if="${bindingResultError}">Merci de vérifier la bonne saisie des informations</p>
+    <h1 class="title-create text-center" th:unless="${bindingResult != null}">Ajout d’un individu</h1>
+    <h1 class="title-create text-center" th:if="${bindingResult != null}">Erreur lors de l’ajout d’un individu</h1>
+    <p class="title-create text-center" th:if="${bindingResult != null}">Merci de vérifier la bonne saisie des informations</p>
+    <p class="title-create text-center text-danger" th:text="${bindingResult.getAllErrors().get(0).getDefaultMessage()}"></p>
     <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -16,7 +17,7 @@
                     Ajout par numéro d’étudiant ou par code INE
                 </button>
             </h2>
-            <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
+            <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResult == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
                 <div class="accordion-body">
                     <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
                         <div class="row">
@@ -46,7 +47,7 @@
                     Ajout par code Ine /nom / prénom / date de naissance
                 </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResultError != null ? 'show' : ''}" aria-labelledby="headingTwo"
+            <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResult != null ? 'show' : ''}" aria-labelledby="headingTwo"
                  data-bs-parent="#accordionCreateIndividu">
                 <div class="accordion-body">
                     <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
