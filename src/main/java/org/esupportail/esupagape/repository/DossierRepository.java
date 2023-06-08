@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +26,8 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch))
             or upper(concat(d.individu.name, ' ', d.individu.firstName)) like upper(concat('%', :fullTextSearch, '%'))
             or upper(concat(d.individu.firstName, ' ', d.individu.name)) like upper(concat('%', :fullTextSearch, '%'))
-            or upper(d.individu.numEtu) = :fullTextSearch)
+            or upper(d.individu.numEtu) = :fullTextSearch
+            or upper (d.individu.codeIne) = :fullTextSearch)
             and (:typeIndividu is null or d.type = :typeIndividu)
             and (:statusDossier is null or d.statusDossier = :statusDossier)
             and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
@@ -53,4 +56,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.libelleFormation as libForm from Dossier d group by d.libelleFormation")
     List<String> findAllLibelleFormation();
 
+
+    @Query("Select d from Dossier d where  d.statusDossier = 'DESINSCRIT' AND d.unsubscribeDate < :date")
+    List<Dossier> findUnsubscribeDossier(@Param("date")LocalDate date);
 }

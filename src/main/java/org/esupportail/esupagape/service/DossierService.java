@@ -560,6 +560,22 @@ public class DossierService {
         }
     }
 
+    @Transactional
+    public void deleteUnsubscribeDossier(Long id) {
+        Dossier dossier = getById(id);
+        if (dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
+        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
+            LocalDate currentDate = LocalDate.now();
+            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
+
+            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
+                dossierRepository.deleteById(id);
+            }
+        }
+    }
 }
 
 

@@ -461,13 +461,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Les données suivantes seront anonymisées:</p>
+                        <label th:for="anonymisationDate" class="form-label">Date de l’anonymisation</label>
+                        <input id="anonymisationDate" type="datetime-local" class="form-control" th:name="anonymisationDate" th:value="${now}" required>
+                        <p class="mt-3">Les données suivantes seront anonymisées:</p>
                         <ul>
-                            <li>- Numéro d’étudiant</li>
+                            <li>- Numéro d’étudiant/N° INE</li>
                             <li>- Nom</li>
                             <li>- Prénom</li>
                             <li>- Date de naissance</li>
                             <li>- Login</li>
+                            <li>- Nationalité</li>
                             <li>- Email universitaire</li>
                             <li>- Téléphone</li>
                             <li>- Adresse</li>
@@ -484,7 +487,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <th:block th:if="${currentDossier.individu.fixCP} != null">
-                        <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" method="post">
+                        <form th:action="@{/individus/{individuId}/anonymise(individuId=${currentDossier.individu.id})}" th:method="post">
                         <div class="modal-header">
                             <h5 class="modal-title fs-5">
                                 Anonymisation des données de l'individu : <span th:text="|${currentDossier.individu.name} (Id: ${currentDossier.individu.id})|"></span></h5>
