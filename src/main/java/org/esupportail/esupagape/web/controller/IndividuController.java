@@ -62,7 +62,7 @@ public class IndividuController {
                          Model model,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("bindingResultError", true);
+            model.addAttribute("bindingResult", bindingResult);
             model.addAttribute("individu", new Individu());
             model.addAttribute("genders", Gender.values());
             return "individus/create";
@@ -85,8 +85,13 @@ public class IndividuController {
             Individu individu = new Individu();
             individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(individu, force);
-            logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId() + "/redirect";
+            if(individuOk != null) {
+                logger.info("Nouvel étudiant" + individuOk.getId());
+                return "redirect:/individus/" + individuOk.getId() + "/redirect";
+            } else {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "Individu non trouvé dans les référentiels"));
+                return "redirect:/dossiers/";
+            }
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/dossiers";
