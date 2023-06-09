@@ -235,7 +235,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         }
     }
 
-    private static void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
+    private void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
                 dossier.setClassifications(selectedClassifications);
