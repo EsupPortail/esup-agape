@@ -267,6 +267,7 @@ public class AmenagementService {
                 amenagement.setNomValideur(personLdap.getDisplayName());
                 amenagement.setMailValideur(personLdap.getMail());
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                //TODO : appel sendFile
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");

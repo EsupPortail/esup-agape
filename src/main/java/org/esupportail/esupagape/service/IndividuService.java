@@ -160,7 +160,7 @@ public class IndividuService {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
         if (individuInfos.getHandicap() != null) {
-            if (dossier.getClassifications().size() == 0) {
+            if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
                 dossier.getClassifications().add(individuInfos.getHandicap());
             }
         }
