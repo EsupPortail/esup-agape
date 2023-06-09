@@ -211,38 +211,41 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
 }
 
     @Transactional
-public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
-    Amenagement amenagementToUpdate = getById(amenagementId);
-    if (amenagementToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
-        throw new AgapeYearException();
-    }
-    if (amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
-        amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
-        amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
-        amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
-        amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
-        amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
-        amenagementToUpdate.setEndDate(amenagement.getEndDate());
-        amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
-        amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
+    public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
+        Amenagement amenagementToUpdate = getById(amenagementId);
+        if (amenagementToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        if (amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+            amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
+            amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
+            amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
+            amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
+            amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
+            amenagementToUpdate.setEndDate(amenagement.getEndDate());
+            amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
+            amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
 
-        Set<Classification> selectedClassifications = amenagement.getClassification();
-        updateClassification(amenagementToUpdate.getDossier(), selectedClassifications);
-        amenagementRepository.save(amenagementToUpdate);
-    }
-}
+            Set<Classification> selectedClassifications = amenagement.getClassification();
+            amenagementToUpdate.setClassification(selectedClassifications);
 
-    private void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
+            updateClassification(amenagementToUpdate.getDossier(), selectedClassifications);
+
+            amenagementRepository.save(amenagementToUpdate);
+        }
+    }
+
+    private static void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
-            if (selectedClassifications.contains(Classification.REFUS)) {
-                dossier.setClassifications(Collections.singleton(Classification.REFUS));
-            } else if (selectedClassifications.contains(Classification.NON_COMMUNIQUE)) {
-                dossier.setClassifications(Collections.singleton(Classification.NON_COMMUNIQUE));
-            } else {
+            if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
                 dossier.setClassifications(selectedClassifications);
+            } else {
+                dossier.setClassifications(Collections.emptySet());
             }
         }
     }
+
+
 
     public Page<Amenagement> findAllPaged(Pageable pageable) {
         return amenagementRepository.findAll(pageable);
