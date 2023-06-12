@@ -113,7 +113,7 @@ public class AmenagementService {
         return null;
     }
 
-    @Transactional
+   /* @Transactional
     public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
         Dossier dossier = dossierService.getById(idDossier);
         if(dossier.getYear() != utilsService.getCurrentYear()) {
@@ -130,7 +130,7 @@ public class AmenagementService {
         amenagement.setMailMedecin(personLdap.getMail());
         updateClassification(amenagement);
         amenagementRepository.save(amenagement);
-    }
+    }*/
 
     @Transactional
     public void deleteAmenagement(Long amenagementId) {
@@ -154,7 +154,7 @@ public class AmenagementService {
         }
     }
 
-    @Transactional
+/*    @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
         if(amenagementToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
@@ -187,7 +187,65 @@ public class AmenagementService {
                 amenagement.getDossier().getClassifications().add(Classification.NON_COMMUNIQUE);
             }
         }
+    }*/
+@Transactional
+public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
+    Dossier dossier = dossierService.getById(idDossier);
+    if (dossier.getYear() != utilsService.getCurrentYear()) {
+        throw new AgapeYearException();
     }
+    if (amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
+        throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
+    }
+    if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+        dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+    }
+    amenagement.setDossier(dossier);
+    amenagement.setNomMedecin(personLdap.getDisplayName());
+    amenagement.setMailMedecin(personLdap.getMail());
+
+    Set<Classification> selectedClassifications = amenagement.getClassification();
+    updateClassification(dossier, selectedClassifications);
+
+    amenagementRepository.save(amenagement);
+}
+
+    @Transactional
+    public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
+        Amenagement amenagementToUpdate = getById(amenagementId);
+        if (amenagementToUpdate.getDossier().getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        if (amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+            amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
+            amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
+            amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
+            amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
+            amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
+            amenagementToUpdate.setEndDate(amenagement.getEndDate());
+            amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
+            amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
+
+            Set<Classification> selectedClassifications = amenagement.getClassification();
+            amenagementToUpdate.setClassification(selectedClassifications);
+
+            updateClassification(amenagementToUpdate.getDossier(), selectedClassifications);
+
+            amenagementRepository.save(amenagementToUpdate);
+        }
+    }
+
+    private void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
+        if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
+            if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
+                dossier.setClassifications(selectedClassifications);
+            } else {
+                dossier.setClassifications(Collections.emptySet());
+            }
+        }
+    }
+
+
 
     public Page<Amenagement> findAllPaged(Pageable pageable) {
         return amenagementRepository.findAll(pageable);
