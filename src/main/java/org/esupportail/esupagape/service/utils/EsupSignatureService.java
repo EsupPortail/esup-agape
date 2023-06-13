@@ -13,6 +13,7 @@ import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.DocumentService;
+import org.esupportail.esupagape.service.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.MessagingException;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,10 +42,13 @@ public class EsupSignatureService {
     private final AmenagementRepository amenagementRepository;
     private final DocumentService documentService;
 
-    public EsupSignatureService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DocumentService documentService) {
+    private final MailService mailService;
+
+    public EsupSignatureService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DocumentService documentService, MailService mailService) {
         this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.documentService = documentService;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -162,6 +167,11 @@ public class EsupSignatureService {
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
                     amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                     amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                    try {
+                        mailService.sendFile("Test", amenagement);
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
                     String urlSignRequest = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
                     ResponseEntity<String> responseEntitySignRequest = restTemplate.getForEntity(urlSignRequest, String.class);
