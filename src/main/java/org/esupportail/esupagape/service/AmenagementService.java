@@ -28,6 +28,7 @@ import org.apache.pdfbox.util.Matrix;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
+import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
@@ -81,8 +82,9 @@ public class AmenagementService {
     private final UtilsService utilsService;
     private final EsupSignatureService esupSignatureService;
     private final MailService mailService;
+    private final DocumentService documentService;
 
-    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService) {
+    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService) {
         this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
@@ -91,6 +93,7 @@ public class AmenagementService {
         this.utilsService = utilsService;
         this.esupSignatureService = esupSignatureService;
         this.mailService = mailService;
+        this.documentService = documentService;
     }
 
     public Amenagement getById(Long id) {
@@ -287,6 +290,17 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 sendToAvisWorkflow(id);
                 amenagement.setStatusAmenagement(StatusAmenagement.ENVOYE);
             } else {
+                try {
+                    byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+                    Document avis = documentService.createDocument(
+                            new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS)),
+                            "Avis-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
+                            "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                            amenagement.getDossier());
+                    amenagement.setAvis(avis);
+                } catch (IOException e) {
+                    throw new AgapeException("Impossible de générer l'avis");
+                }
                 amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             }
         } else {
@@ -317,7 +331,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     }
 
     @Transactional
-    public void validationAdministration(Long amenagementId, PersonLdap personLdap) throws AgapeException {
+    public void validationAdministration(Long amenagementId, PersonLdap personLdap) throws AgapeException, IOException {
         Amenagement amenagement = getById(amenagementId);
         if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -329,6 +343,13 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 amenagement.setNomValideur(personLdap.getDisplayName());
                 amenagement.setMailValideur(personLdap.getMail());
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+                Document certificat = documentService.createDocument(
+                        new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT)),
+                        "Certificat-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
+                        "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                        amenagement.getDossier());
+                amenagement.setCertificat(certificat);
                 sendAmenagementToIndividu(amenagementId);
             }
         } else {
@@ -663,13 +684,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         if(applicationProperties.getActivateSendEmails() == null || !applicationProperties.getActivateSendEmails()) to = "david.lemaignent@univ-rouen.fr";
         if(amenagement.getIndividuSendDate() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
-                if(amenagement.getCertificat() != null) {
-                    mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
-                } else {
-                    byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-                    byte[] certificatBytes = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
-                    mailService.sendCertificat(new ByteArrayInputStream(certificatBytes), to);
-                }
+                mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
             } catch (MessagingException | IOException e) {
                 logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId);
             }
