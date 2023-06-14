@@ -18,6 +18,7 @@ import org.thymeleaf.context.Context;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
@@ -49,24 +50,26 @@ public class MailService {
     @Resource
     private TemplateEngine templateEngine;
 
-    public void sendFile(String title, String targetUri, Amenagement amenagement) throws MessagingException {
+    public void sendFile(String title, Amenagement amenagement) throws MessagingException {
         if (!checkMailSender()) {
             return;
         }
         final Context ctx = new Context(Locale.FRENCH);
         ctx.setVariable("nom", "toto");
+        ctx.setVariable("amenagement", amenagement);
         setTemplate(ctx);
         MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
         String htmlContent = templateEngine.process("mail/email-file.html", ctx);
         addInLineImages(mimeMessage, htmlContent);
         mimeMessage.setSubject("Nouveau document signé à télécharger : " + title);
-        mimeMessage.setFrom(applicationProperties.getApplicationEmail());
-        mimeMessage.setTo(targetUri.replace("mailto:", "").split(","));
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage.getMimeMessage(), true, "utf8");
-        helper.addAttachment("certificat amenagement.pdf", new InputStreamResource(amenagement.getCertificat().getInputStream()));
+        mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
+        mimeMessage.setTo(new InternetAddress("fabienne.berges@univ-rouen.fr"));
+        if (amenagement.getCertificat() != null) {
+            mimeMessage.addAttachment("certificat_amenagement.pdf", new InputStreamResource(amenagement.getCertificat().getInputStream()));
+        }
         mailSender.send(mimeMessage.getMimeMessage());
-
     }
+
 
     private void addInLineImages(MimeMessageHelper mimeMessage, String htmlContent) throws MessagingException {
         mimeMessage.setText(htmlContent, true);
@@ -131,4 +134,5 @@ public class MailService {
         baos.close();
         return out;
     }
+
 }

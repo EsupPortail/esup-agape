@@ -366,7 +366,7 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Resultats</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" th:if="${extendedInfos != null}">
                         <p>Note du semestre 1 : <b th:text="${extendedInfos.noteS1}"></b></p>
                         <p>Resultat du semestre 1 : <b th:text="${extendedInfos.resultatS1}"></b></p>
                         <p>Note du semestre 2 : <b th:text="${extendedInfos.noteS2}"></b></p>
