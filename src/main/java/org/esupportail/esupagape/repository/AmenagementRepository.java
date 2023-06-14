@@ -19,6 +19,8 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
 
     List<Amenagement> findByStatusAmenagement(StatusAmenagement statusAmenagement);
 
+    List<Amenagement> findByStatusAmenagementAndDossierYear(StatusAmenagement statusAmenagement, int year);
+
     @Query(value = "select a from Amenagement a join Dossier d on a.dossier = d " +
             "where " +
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +

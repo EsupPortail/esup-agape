@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class AmenagementController {
     }
 
     @GetMapping("{amenagementId}/show")
-    public String show(@PathVariable Long amenagementId, Model model) {
+    public String show(@PathVariable Long amenagementId, Model model) throws MessagingException {
         setModel(model);
         model.addAttribute("amenagement",amenagementService.getById(amenagementId));
         model.addAttribute("currentDossier",amenagementService.getById(amenagementId).getDossier());

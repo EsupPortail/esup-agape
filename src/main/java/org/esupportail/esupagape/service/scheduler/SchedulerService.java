@@ -48,6 +48,7 @@ public class SchedulerService {
     public void syncEsupSignature() throws AgapeException {
         logger.debug("Synchro Esup Signature");
         amenagementService.syncAllAmenagements();
+        amenagementService.sendAllCertificats();
     }
 
 @Scheduled(initialDelay = 1, fixedRate = 30000)

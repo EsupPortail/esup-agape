@@ -73,6 +73,9 @@ public class Amenagement {
     private LocalDateTime administrationDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime individuSendDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime deleteDate;
 
     private String avisSignatureId;
@@ -257,6 +260,14 @@ public class Amenagement {
 
     public void setAdministrationDate(LocalDateTime administrationDate) {
         this.administrationDate = administrationDate;
+    }
+
+    public LocalDateTime getIndividuSendDate() {
+        return individuSendDate;
+    }
+
+    public void setIndividuSendDate(LocalDateTime individuSendDate) {
+        this.individuSendDate = individuSendDate;
     }
 
     public LocalDateTime getDeleteDate() {

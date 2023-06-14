@@ -1,16 +1,16 @@
 package org.esupportail.esupagape.service.mail;
 
+import org.apache.commons.io.FileUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
-import org.esupportail.esupagape.entity.Amenagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -23,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,24 +51,25 @@ public class MailService {
     @Resource
     private TemplateEngine templateEngine;
 
-    public void sendFile(String title, Amenagement amenagement) throws MessagingException {
+    @Transactional
+    public void sendCertificat(InputStream inputStream) throws MessagingException, IOException {
         if (!checkMailSender()) {
             return;
         }
         final Context ctx = new Context(Locale.FRENCH);
-        ctx.setVariable("nom", "toto");
-        ctx.setVariable("amenagement", amenagement);
         setTemplate(ctx);
         MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
-        String htmlContent = templateEngine.process("mail/email-file.html", ctx);
+        String htmlContent = templateEngine.process("mail/email-certificat.html", ctx);
         addInLineImages(mimeMessage, htmlContent);
-        mimeMessage.setSubject("Nouveau document signé à télécharger : " + title);
+        mimeMessage.setSubject("Certificat d'aménagement");
         mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
-        mimeMessage.setTo(new InternetAddress("fabienne.berges@univ-rouen.fr"));
-        if (amenagement.getCertificat() != null) {
-            mimeMessage.addAttachment("certificat_amenagement.pdf", new InputStreamResource(amenagement.getCertificat().getInputStream()));
-        }
+        mimeMessage.setTo(new InternetAddress("david.lemaignent@univ-rouen.fr"));
+        File tmpDir = Files.createTempDirectory("esupagape").toFile();
+        File certificatFile = new File(tmpDir + "/certificat.pdf");
+        FileUtils.copyInputStreamToFile(inputStream, certificatFile);
+        mimeMessage.addAttachment("certificat_amenagement.pdf", certificatFile);
         mailSender.send(mimeMessage.getMimeMessage());
+
     }
 
 
