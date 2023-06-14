@@ -567,15 +567,20 @@ public class DossierService {
         if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
-        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
-            LocalDate currentDate = LocalDate.now();
-            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
-
-            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
-                dossierRepository.deleteById(id);
-            }
+        int nbdossiers = 2;
+        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbdossiers).count();
+        if(countDossiers == 0) {
+            dossierRepository.deleteById(id);
         }
+
+//        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
+//        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
+//            LocalDate currentDate = LocalDate.now();
+//            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
+//
+//            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
+//            }
+//        }
     }
 }
 

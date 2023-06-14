@@ -57,10 +57,8 @@ public class SchedulerService {
         LocalDate twoYearsAgo = currentDate.minusYears(2);
 
         List<Dossier> dossiers = dossierRepository.findUnsubscribeDossier(twoYearsAgo);
-
         for (Dossier dossier : dossiers) {
             dossierService.deleteUnsubscribeDossier(dossier.getId());
-
         }
     }
 }
