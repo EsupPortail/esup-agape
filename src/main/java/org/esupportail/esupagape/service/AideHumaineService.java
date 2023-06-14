@@ -165,10 +165,6 @@ public class AideHumaineService {
 
     @Transactional
     public void getDocumentHttpResponse(Long aideHumaineId, HttpServletResponse httpServletResponse, TypeDocument type) throws AgapeIOException {
-        AideHumaine aideHumaine = getById(aideHumaineId);
-        if(aideHumaine.getDossier().getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeYearException();
-        }
         try {
             Document document = getDocumentByType(aideHumaineId, type);
             utilsService.copyFileStreamToHttpResponse(document.getFileName(), document.getContentType(), document.getInputStream(), httpServletResponse);

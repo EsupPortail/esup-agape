@@ -15,7 +15,7 @@
                 <button title="Enquête terminée" th:if="${currentYear == currentDossier.year && enquete.finished != true}" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#finishedModal">
                     <i class="fa-solid fa-check"></i>
                 </button>
-                <button title="Enquête terminée" th:if="${currentYear == currentDossier.year && enquete.finished == true}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unlockModal">
+                <button title="Modifier l'enquête" th:if="${currentYear == currentDossier.year && enquete.finished == true}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unlockModal">
                     <i class="fa-solid fa-pencil"></i>
                 </button>
             </div>
@@ -40,7 +40,7 @@
                             th:method="put"
                             th:action="@{/dossiers/{id}/enquete/{enqueteId}/update(id=${currentDossier.id},enqueteId=${enquete.id})}"
                             th:object="${enquete}">
-                        <fieldset th:disabled="${currentYear == currentDossier.year && enquete.finished == true}">
+                        <fieldset th:disabled="${enquete.finished == true}">
                             <input th:field="*{dossier}" type="hidden" readonly class="form-control">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -74,7 +74,7 @@
                                             <div>
                                                 <select id="typeFormation" name="typFrmn" type="text" class="form-control" disabled>
                                                     <option value="" disabled selected hidden></option>
-                                                    <option th:selected="${currentDossier.typeFormation == typeFormation}"
+                                                    <option th:selected="${currentDossier.typeFormation == typeFormation || enquete.typFrmn == typeFormation}"
                                                             th:each="typeFormation : ${typFrmns}"
                                                             th:value="${typeFormation}"
                                                             th:text="#{'enquete.typFrmn.' +${typeFormation}}"></option>
@@ -86,7 +86,7 @@
                                             <div>
                                                 <select id="modeFormation" name="modFrmn" type="text" class="form-control" disabled>
                                                     <option value="" disabled selected hidden></option>
-                                                    <option th:selected="${currentDossier.modeFormation == modeFormation}"
+                                                    <option th:selected="${currentDossier.modeFormation == modeFormation || enquete.modFrmn == modeFormation}"
                                                             th:each="modeFormation : ${modFrmns}"
                                                             th:value="${modeFormation}"
                                                             th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
@@ -98,7 +98,7 @@
                                             <div>
                                                 <select id="codFil" name="codFil" class="form-select" size="1">
                                                     <option disabled selected hidden value="">Choisir</option>
-                                                    <option th:selected="${enumCodfil == enquete.codFil}"
+                                                    <option th:selected="${enumCodfil.toLowerCase() == enquete.codFil}"
                                                             th:each="enumCodfil : ${codFils}"
                                                             th:value="${enumCodfil}"
                                                             th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>

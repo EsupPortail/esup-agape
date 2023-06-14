@@ -12,7 +12,6 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +33,7 @@ public class WebAppConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addFormatters(registry);
         registry.addFormatterForFieldType(LocalDateTime.class, new Formatter<LocalDateTime>() {
             @Override
-            public LocalDateTime parse(String text, Locale locale) throws ParseException {
+            public LocalDateTime parse(String text, Locale locale) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 DateTimeFormatter formatterWithHour = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
                 try {
