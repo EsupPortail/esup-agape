@@ -52,7 +52,7 @@ public class MailService {
     private TemplateEngine templateEngine;
 
     @Transactional
-    public void sendCertificat(InputStream inputStream) throws MessagingException, IOException {
+    public void sendCertificat(InputStream inputStream, String to) throws MessagingException, IOException {
         if (!checkMailSender()) {
             return;
         }
@@ -63,7 +63,7 @@ public class MailService {
         addInLineImages(mimeMessage, htmlContent);
         mimeMessage.setSubject("Certificat d'aménagement");
         mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
-        mimeMessage.setTo(new InternetAddress("david.lemaignent@univ-rouen.fr"));
+        mimeMessage.setTo(new InternetAddress(to));
         File tmpDir = Files.createTempDirectory("esupagape").toFile();
         File certificatFile = new File(tmpDir + "/certificat.pdf");
         FileUtils.copyInputStreamToFile(inputStream, certificatFile);

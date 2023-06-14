@@ -25,8 +25,6 @@ public class Amenagement {
     @Enumerated(EnumType.STRING)
     private StatusAmenagement statusAmenagement = StatusAmenagement.BROUILLON;
 
-    private Boolean mailIndividu = false;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime endDate;
 
@@ -124,14 +122,6 @@ public class Amenagement {
 
     public void setStatusAmenagement(StatusAmenagement statusAmenagement) {
         this.statusAmenagement = statusAmenagement;
-    }
-
-    public Boolean getMailIndividu() {
-        return mailIndividu;
-    }
-
-    public void setMailIndividu(Boolean mailIndividu) {
-        this.mailIndividu = mailIndividu;
     }
 
     public LocalDateTime getEndDate() {

@@ -112,7 +112,7 @@
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
-                                    <td th:text="${amenagement.mailIndividu} == false ? 'Oui': 'Non'"></td>
+                                    <td th:text="${amenagement.individuSendDate != null} ? ${#temporals.format(amenagement.individuSendDate, 'dd/MM/yyyy')}: 'Non envoyé'"></td>
                                     <td style="width: 100px;">
                                         <ul class="list-group list-group-horizontal">
                                             <li class="list-group-item border-0 p-1 bg-transparent">

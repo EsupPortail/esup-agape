@@ -648,7 +648,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     public void sendAllCertificats() {
         List<Amenagement> amenagementsToSync = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
         for(Amenagement amenagement : amenagementsToSync) {
-            if (!amenagement.getMailIndividu()) {
+            if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId());
             }
         }
@@ -658,19 +658,20 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     @Transactional
     public void sendAmenagementToIndividu(long amenagementId) {
         Amenagement amenagement = getById(amenagementId);
-        if(!amenagement.getMailIndividu() && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+        String to = amenagement.getDossier().getIndividu().getEmailEtu();
+        if(applicationProperties.getActivateSendEmails() == null || !applicationProperties.getActivateSendEmails()) to = "david.lemaignent@univ-rouen.fr";
+        if(amenagement.getIndividuSendDate() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
                 if(amenagement.getCertificat() != null) {
-                    mailService.sendCertificat(amenagement.getCertificat().getInputStream());
+                    mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
                 } else {
                     byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                     byte[] certificatBytes = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
-                    mailService.sendCertificat(new ByteArrayInputStream(certificatBytes));
+                    mailService.sendCertificat(new ByteArrayInputStream(certificatBytes), to);
                 }
             } catch (MessagingException | IOException e) {
                 logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId);
             }
-            amenagement.setMailIndividu(true);
             amenagement.setIndividuSendDate(LocalDateTime.now());
         }
     }

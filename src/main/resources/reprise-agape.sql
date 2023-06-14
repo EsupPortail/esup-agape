@@ -43,7 +43,7 @@ declare
     new_id_periode bigint;
     new_id_feuille bigint;
     new_id_planing bigint;
-
+    dateenvoi date;
 
     numetunew varchar(255);
     type varchar(255);
@@ -240,7 +240,7 @@ begin
                                                                                                                                                                  statut_mail_scol    boolean) where id_dossier = d.id
                         loop
                             status_amenagement = 'BROUILLON';
-                            if am.statut = 'suprime' then status_amenagement = 'SUPPRIME'; end if;
+                            if am.statut = 'supprime' then status_amenagement = 'SUPPRIME'; end if;
                             if am.statut = 'refusAdministration' then status_amenagement = 'REFUSE_ADMINISTRATION'; end if;
                             if am.statut = 'visaAdministration' then status_amenagement = 'VISE_ADMINISTRATION'; end if;
                             if am.statut = 'valideMedecin' then status_amenagement = 'VALIDE_MEDECIN'; end if;
@@ -270,11 +270,13 @@ begin
                             if am.date_fin > '01-01-2024' then type_amenagement = 'CURSUS'; end if;
                             tempsmajorenew = upper(am.temp_majore);
                             if upper(am.temp_majore) = 'AUTRE' then tempsmajorenew = 'AUCUN'; end if;
+                            dateenvoi = null;
+                            if am.statut_mail = true then dateenvoi = now();
                             insert into amenagement (id, administration_date, amenagement_text, autorisation, autres_temps_majores,
-                                                     autres_type_epreuve, create_date, delete_date, end_date, mail_individu, mail_medecin,
+                                                     autres_type_epreuve, create_date, delete_date, end_date, individu_send_date, mail_medecin,
                                                      mail_valideur, motif_refus, nom_medecin, nom_valideur, status_amenagement, temps_majore,
                                                      type_amenagement, valide_medecin_date, dossier_id)
-                                values (nextval('hibernate_sequence'), am.date_visa, amenagement_text, autorisation, am.autres_temp_majore, am.autres_type_epreuve, am.date_create, am.date_refus, am.date_fin, am.statut_mail, am.login_medecin, am.login_valideur, am.motif_refus, am.nom_medecin, am.nom_valideur, status_amenagement, tempsmajorenew, 'CURSUS', am.date_update, new_id_dossier);
+                                values (nextval('hibernate_sequence'), am.date_visa, amenagement_text, autorisation, am.autres_temp_majore, am.autres_type_epreuve, am.date_create, am.date_refus, am.date_fin, dateenvoi, am.login_medecin, am.login_valideur, am.motif_refus, am.nom_medecin, am.nom_valideur, status_amenagement, tempsmajorenew, 'CURSUS', am.date_update, new_id_dossier);
                             if am.statut = 'valideMedecin' then
                                 update dossier set status_dossier_amenagement = 'EN_ATTENTE' where id = new_id_dossier;
                             end if;
