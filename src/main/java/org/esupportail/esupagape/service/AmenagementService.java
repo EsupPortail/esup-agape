@@ -630,15 +630,16 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     @Transactional
     public void syncAllAmenagements() throws AgapeException {
         List<Amenagement> amenagementsToSync = new ArrayList<>();
-        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.ENVOYE));
-        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN));
-        logger.debug(amenagementsToSync.size() + " aménagements à synchroniser");
+        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.ENVOYE, utilsService.getCurrentYear()));
+        amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VALIDE_MEDECIN, utilsService.getCurrentYear()));
+        logger.info(amenagementsToSync.size() + " aménagements à synchroniser");
         for(Amenagement amenagement : amenagementsToSync) {
             syncEsupSignature(amenagement.getId());
         }
-        List<Amenagement> amenagementsToExpire = amenagementRepository.findByStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
+        List<Amenagement> amenagementsToExpire = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
         for(Amenagement amenagement : amenagementsToExpire) {
-            if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(LocalDateTime.now().plusDays(1))) {
+            LocalDateTime now = LocalDateTime.now().minusDays(1);
+            if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now)) {
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             }
         }
