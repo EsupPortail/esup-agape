@@ -16,6 +16,8 @@
         <td style="width:100%; padding:10px;background-color:#f8f9fa;">
             <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">Bonjour</p>
             <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">Un document signé vous est destiné, pour y accéder cliquez sur le lien ci-dessous</p>
+            <p><a th:href="@{http://localhost:8080/administratif/amenagements/{id}/get-certificat(id=${amenagement.id})}">Télécharger le certificat</a>
+            </p>
         </td>
     </tr>
     <tr>

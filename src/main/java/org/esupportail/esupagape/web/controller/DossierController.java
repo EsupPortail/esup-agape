@@ -105,7 +105,7 @@ public class DossierController {
             return "redirect:/dossiers/"+ dossierId +"/amenagements";
         }
         Dossier dossier = dossierService.getById(dossierId);
-        model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
+        //model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
         model.addAttribute("rentreeProchaines", RentreeProchaine.values());

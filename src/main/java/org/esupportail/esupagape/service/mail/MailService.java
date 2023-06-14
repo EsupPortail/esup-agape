@@ -56,6 +56,7 @@ public class MailService {
         }
         final Context ctx = new Context(Locale.FRENCH);
         ctx.setVariable("nom", "toto");
+        ctx.setVariable("amenagement", amenagement);
         setTemplate(ctx);
         MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
         String htmlContent = templateEngine.process("mail/email-file.html", ctx);
@@ -68,6 +69,8 @@ public class MailService {
         }
         mailSender.send(mimeMessage.getMimeMessage());
     }
+
+
     private void addInLineImages(MimeMessageHelper mimeMessage, String htmlContent) throws MessagingException {
         mimeMessage.setText(htmlContent, true);
         mimeMessage.addInline("logo", new ClassPathResource("/static/images/logo.png", MailService.class));
@@ -131,4 +134,5 @@ public class MailService {
         baos.close();
         return out;
     }
+
 }
