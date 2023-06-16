@@ -19,6 +19,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     });
 
+    //Affichage des notes
+    let notesModal = document.querySelector("#notesModal");
+    notesModal.addEventListener('shown.bs.modal', function() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/dossiers/notes/' + notesModal.getAttribute("ea-dossier-id"), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.querySelector("#notesBody").innerHTML = xhr.responseText;
+                } else {
+                    console.error('Une erreur s\'est produite.');
+                }
+            }
+        };
+        xhr.send();
+    });
+
     //Activation suiviHandiSup
     let suiviHandisupOui = document.getElementById("suiviHandisupOui");
     if(suiviHandisupOui != null) {
