@@ -52,7 +52,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -685,7 +684,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         if(amenagement.getIndividuSendDate() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
                 mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
-            } catch (MessagingException | IOException e) {
+            } catch (Exception e) {
                 logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId);
             }
             amenagement.setIndividuSendDate(LocalDateTime.now());
