@@ -28,11 +28,11 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
-    @ElementCollection(targetClass = Classification.class)
+    @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
 
-    @ElementCollection(targetClass = TypeSuiviHandisup.class)
+    @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<TypeSuiviHandisup> typeSuiviHandisup;
 
