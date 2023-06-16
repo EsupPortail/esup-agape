@@ -2,13 +2,9 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.charts.ClassificationChart;
 import org.esupportail.esupagape.dtos.charts.ComposanteChart;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.repository.StatistiquesRepository;
-import org.esupportail.esupagape.service.utils.chartjs.Chart;
-import org.esupportail.esupagape.service.utils.chartjs.Data;
-import org.esupportail.esupagape.service.utils.chartjs.Dataset;
-import org.esupportail.esupagape.service.utils.chartjs.Doughnut;
-import org.esupportail.esupagape.service.utils.chartjs.Line;
-import org.esupportail.esupagape.service.utils.chartjs.Options;
+import org.esupportail.esupagape.service.utils.chartjs.*;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +34,24 @@ public class StatistiquesService {
 
         return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
     }*/
+    /*public Chart getClassificationChart(Integer year) {
+        List<ClassificationChart> classificationCharts = statistiquesRepository.countFindClassificationByYear(year);
+        List<String> classificationCounts = classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList());
+        List<String> percentages = new ArrayList<>();
+        double sum = classificationCounts.stream().mapToDouble(Double::parseDouble).sum();
+        for (String count : classificationCounts) {
+            double percentage = Double.parseDouble(count) * 100 / sum;
+            percentages.add(String.format("%.2f%%", percentage));
+        }
+        Dataset dataset = new Dataset("Nombre d'individus par classification", classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList()), null, 4, null, null, percentages);
+        dataset.addDataLabels(percentages);
+        List<String> labels = new ArrayList<>();
+
+        labels.addAll(classificationCharts.stream().map(c -> c.getClassification().name()).toList());
+
+        return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
+    }*/
+
     public Chart getClassificationChart(Integer year) {
         List<ClassificationChart> classificationCharts = statistiquesRepository.countFindClassificationByYear(year);
         List<String> classificationCounts = classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList());
@@ -47,14 +61,26 @@ public class StatistiquesService {
             double percentage = Double.parseDouble(count) * 100 / sum;
             percentages.add(String.format("%.2f%%", percentage));
         }
-        Dataset dataset = new Dataset("Nombre d'individus", classificationCounts, null, 4, null, null, percentages);
-        dataset.addDataLabels(percentages);
-        List<String> labels = new ArrayList<>();
 
-            labels.addAll(classificationCharts.stream().map(ClassificationChart::getClassification).toList());
+        Dataset dataset = new Dataset("Nombre d'individus par classification",
+                classificationCharts.stream().map(ClassificationChart::getClassificationCount).collect(Collectors.toList()),
+                null, 4, null, null, percentages);
+        dataset.addDataLabels(percentages);
+
+        List<String> labels = new ArrayList<>();
+        for (ClassificationChart chart : classificationCharts) {
+            Classification classification = chart.getClassification();
+            if (classification != null) {
+                labels.add(classification.name());
+            } else {
+                labels.add("N/A");
+            }
+        }
 
         return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
     }
+
+
 
     public Chart getComposanteChart(Integer year) {
         List<ComposanteChart> composanteCharts = statistiquesRepository.countFindComposanteByYear(year);
@@ -66,8 +92,8 @@ public class StatistiquesService {
             percentages.add(String.format("%.2f%%", percentage));
         }
 
-        Dataset dataset = new Dataset("Nombre d'individus", composanteCharts.stream().map(ComposanteChart::getComposanteCount).collect(Collectors.toList()), null, 4, null, null,percentages);
-        dataset.addDatalabels(percentages);
+        Dataset dataset = new Dataset("Nombre d'individus par composante", composanteCharts.stream().map(ComposanteChart::getComposanteCount).collect(Collectors.toList()), null, 4, null, null,percentages);
+        dataset.getDataLabels(percentages);
         List<String> labels = new ArrayList<>();
         labels.addAll(composanteCharts.stream().map(ComposanteChart::getComposante).toList());
         return new Doughnut(new Data(labels, Collections.singletonList(dataset)));
