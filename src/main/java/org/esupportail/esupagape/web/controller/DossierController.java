@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -98,14 +97,9 @@ public class DossierController {
     }
 
     @GetMapping("/{dossierId}")
-    public String update(@PathVariable Long dossierId, Model model, HttpServletRequest httpServletRequest) {
-        if(httpServletRequest.isUserInRole("ROLE_MEDECIN")
-                && !httpServletRequest.isUserInRole("MANAGER")
-                && !httpServletRequest.isUserInRole("ADMIN")) {
-            return "redirect:/dossiers/"+ dossierId +"/amenagements";
-        }
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDCIN')")
+    public String update(@PathVariable Long dossierId, Model model) {
         Dossier dossier = dossierService.getById(dossierId);
-        //model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
         model.addAttribute("classifications", Classification.values());
         model.addAttribute("typeSuiviHandisups", TypeSuiviHandisup.values());
         model.addAttribute("rentreeProchaines", RentreeProchaine.values());
@@ -115,7 +109,6 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagements", StatusDossierAmenagement.values());
         model.addAttribute("typeFormations", TypFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
-//        model.addAttribute("currentDossier", dossierService.getById(id));
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
         model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
         model.addAttribute("attachments", dossierService.getAttachments(dossier.getId()));
@@ -123,6 +116,7 @@ public class DossierController {
     }
 
     @GetMapping("/{dossierId}/sync")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
         dossierService.syncDossier(dossierId);
         try {
@@ -135,25 +129,28 @@ public class DossierController {
     }
 
     @PutMapping("/{dossierId}")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long dossierId, @Valid Dossier dossier) {
         dossierService.update(dossierId, dossier);
         return "redirect:/dossiers/" + dossierId;
     }
 
     @PutMapping("/{dossierId}/update-dossier-individu")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long dossierId, @Valid DossierIndividuForm dossierIndividuForm) {
         dossierService.updateDossierIndividu(dossierId, dossierIndividuForm);
         return "redirect:/dossiers/" + dossierId;
     }
 
-    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/delete-dossier/{dossierId}")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String deleteDossier(@PathVariable Long dossierId) {
         dossierService.deleteDossier(dossierId);
         return "redirect:/dossiers";
     }
 
     @PostMapping("/{dossierId}/add-attachments")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String addAttachments(
             @PathVariable Long dossierId,
             @RequestParam("multipartFiles") MultipartFile[] multipartFiles,
@@ -164,6 +161,7 @@ public class DossierController {
     }
 
     @GetMapping(value = "/{dossierId}/get-attachment/{attachmentId}")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     @ResponseBody
     public ResponseEntity<Void> getLastFileFromSignRequest(
             @PathVariable("attachmentId") Long attachmentId,
@@ -171,7 +169,9 @@ public class DossierController {
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @DeleteMapping(value = "/{dossierId}/delete-attachment/{attachmentId}")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String getLastFileFromSignRequest(
             @PathVariable Long dossierId,
             @PathVariable("attachmentId") Long attachmentId,
@@ -182,8 +182,17 @@ public class DossierController {
     }
 
     @DeleteMapping(value = "/{dossierId}/delete-unsubscribe")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String deleteUnsubscribeDossier(@PathVariable Long dossierId) {
         dossierService.deleteUnsubscribeDossier(dossierId);
         return "redirect:/dossiers/";
+    }
+
+    @GetMapping("/notes/{dossierId}")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+    public String getNotes(@PathVariable Long dossierId, Model model) {
+        Dossier dossier = dossierService.getById(dossierId);
+        model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
+        return "dossiers/notes";
     }
 }
