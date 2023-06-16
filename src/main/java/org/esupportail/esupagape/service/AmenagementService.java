@@ -653,7 +653,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         List<Amenagement> amenagementsToSync = new ArrayList<>();
         amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.ENVOYE, utilsService.getCurrentYear()));
         amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VALIDE_MEDECIN, utilsService.getCurrentYear()));
-        logger.info(amenagementsToSync.size() + " aménagements à synchroniser");
+        logger.debug(amenagementsToSync.size() + " aménagements à synchroniser");
         for(Amenagement amenagement : amenagementsToSync) {
             syncEsupSignature(amenagement.getId());
         }

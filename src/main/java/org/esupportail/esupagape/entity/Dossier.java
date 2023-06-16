@@ -11,15 +11,14 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"individu_id", "year"})
-})
+@Table(
+        uniqueConstraints={@UniqueConstraint(columnNames = {"individu_id", "year"})}
+)
 public class Dossier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
 
     private Integer year;
 
@@ -29,11 +28,11 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
-    @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Classification.class)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
 
-    @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = TypeSuiviHandisup.class)
     @Enumerated(EnumType.STRING)
     private Set<TypeSuiviHandisup> typeSuiviHandisup;
 

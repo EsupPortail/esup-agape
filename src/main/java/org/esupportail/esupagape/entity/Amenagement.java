@@ -16,7 +16,7 @@ public class Amenagement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Dossier dossier;
 
     @Enumerated(EnumType.STRING)
