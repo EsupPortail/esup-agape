@@ -59,6 +59,8 @@ public class ApplicationProperties {
      */
     private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
+    private Boolean activateSendEmails = false;
+
     private String papercutAuthToken;
 
     private String papercutServer;
@@ -139,6 +141,14 @@ public class ApplicationProperties {
 
     public void setEsupSignatureValideursEmails(List<String> esupSignatureValideursEmails) {
         this.esupSignatureValideursEmails = esupSignatureValideursEmails;
+    }
+
+    public Boolean getActivateSendEmails() {
+        return activateSendEmails;
+    }
+
+    public void setActivateSendEmails(Boolean activateSendEmails) {
+        this.activateSendEmails = activateSendEmails;
     }
 
     public String getPapercutAuthToken() {

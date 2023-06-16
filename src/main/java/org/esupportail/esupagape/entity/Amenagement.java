@@ -16,7 +16,7 @@ public class Amenagement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Dossier dossier;
 
     @Enumerated(EnumType.STRING)
@@ -24,8 +24,6 @@ public class Amenagement {
 
     @Enumerated(EnumType.STRING)
     private StatusAmenagement statusAmenagement = StatusAmenagement.BROUILLON;
-
-    private Boolean mailIndividu = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime endDate;
@@ -71,6 +69,9 @@ public class Amenagement {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime administrationDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime individuSendDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime deleteDate;
@@ -121,14 +122,6 @@ public class Amenagement {
 
     public void setStatusAmenagement(StatusAmenagement statusAmenagement) {
         this.statusAmenagement = statusAmenagement;
-    }
-
-    public Boolean getMailIndividu() {
-        return mailIndividu;
-    }
-
-    public void setMailIndividu(Boolean mailIndividu) {
-        this.mailIndividu = mailIndividu;
     }
 
     public LocalDateTime getEndDate() {
@@ -257,6 +250,14 @@ public class Amenagement {
 
     public void setAdministrationDate(LocalDateTime administrationDate) {
         this.administrationDate = administrationDate;
+    }
+
+    public LocalDateTime getIndividuSendDate() {
+        return individuSendDate;
+    }
+
+    public void setIndividuSendDate(LocalDateTime individuSendDate) {
+        this.individuSendDate = individuSendDate;
     }
 
     public LocalDateTime getDeleteDate() {

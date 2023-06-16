@@ -132,7 +132,7 @@ public class AmenagementAdministratifController {
             }
             amenagementService.validationAdministration(amenagementId, personLdap);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été validé"));
-        } catch (AgapeException e) {
+        } catch (AgapeException | IOException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
         return "redirect:/administratif/amenagements/" + amenagementId;

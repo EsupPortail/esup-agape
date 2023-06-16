@@ -13,6 +13,7 @@ import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.DocumentService;
+import org.esupportail.esupagape.service.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -40,10 +41,13 @@ public class EsupSignatureService {
     private final AmenagementRepository amenagementRepository;
     private final DocumentService documentService;
 
-    public EsupSignatureService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DocumentService documentService) {
+    private final MailService mailService;
+
+    public EsupSignatureService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DocumentService documentService, MailService mailService) {
         this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.documentService = documentService;
+        this.mailService = mailService;
     }
 
     @Transactional

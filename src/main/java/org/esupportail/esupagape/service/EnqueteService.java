@@ -184,8 +184,12 @@ public class EnqueteService {
             } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
                 enquete.setSexe("1");
             }
-            enquete.setTypFrmn(dossier.getTypeFormation());
-            enquete.setModFrmn(dossier.getModeFormation());
+            if(enquete.getTypFrmn() == null) {
+                enquete.setTypFrmn(dossier.getTypeFormation());
+            }
+            if(enquete.getModFrmn() == null) {
+                enquete.setModFrmn(dossier.getModeFormation());
+            }
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {
                 enquete.getCodMeae().add(CodMeae.AE4);

@@ -327,48 +327,44 @@ public class DossierService {
 
     @Transactional
     public Page<DossierIndividuClassDto> dossierIndividuClassDtoPage(DossierFilter dossierFilter, Pageable pageable) {
-        TypedQuery<Dossier> query = superFilter(dossierFilter, pageable);
+        TypedQuery<DossierIndividuClassDto> query = superFilter(dossierFilter, pageable);
         int totalRows = query.getResultList().size();
-        List<Dossier> resultList;
-        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        query.setMaxResults(pageable.getPageSize());
-        resultList = query.getResultList();
-        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
-        for (Dossier dossier : resultList) {
-            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
-            dossierIndividuDto.setId(dossier.getId());
-            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
-            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
-            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
-            dossierIndividuDto.setName(dossier.getIndividu().getName());
-            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
-            dossierIndividuDto.setType(dossier.getType());
-            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
-            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
-            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
-            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
-            dossierIndividuDtos.add(dossierIndividuDto);
-        }
-        return new PageImpl<>(dossierIndividuDtos, pageable, totalRows);
+        List<DossierIndividuClassDto> resultList = query.setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+        return new PageImpl<>(resultList, pageable, totalRows);
     }
 
     @Transactional
     public List<String> filteredEmails(DossierFilter dossierFilter) {
-        TypedQuery<Dossier> query = superFilter(dossierFilter, Pageable.unpaged());
-        List<Dossier> dossiers = query.getResultList();
-        return dossiers.stream().map(dossier -> dossier.getIndividu().getEmailEtu()).collect(Collectors.toList());
+        TypedQuery<DossierIndividuClassDto> query = superFilter(dossierFilter, Pageable.unpaged());
+        List<DossierIndividuClassDto> dossiers = query.getResultList();
+        return dossiers.stream().map(DossierIndividuClassDto::getNumEtu).collect(Collectors.toList());
     }
 
-    public TypedQuery<Dossier> superFilter(DossierFilter dossierFilter, Pageable pageable) {
+    public TypedQuery<DossierIndividuClassDto> superFilter(DossierFilter dossierFilter, Pageable pageable) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Dossier> cq = cb.createQuery(Dossier.class);
+        CriteriaQuery<DossierIndividuClassDto> cq = cb.createQuery(DossierIndividuClassDto.class);
         Root<Dossier> dossierRoot = cq.from(Dossier.class);
-
         Join<Dossier, Individu> dossierIndividuJoin = dossierRoot.join("individu", JoinType.INNER);
         Join<Dossier, Enquete> dossierEnqueteJoin = dossierRoot.join("enquete", JoinType.LEFT);
         Join<Dossier, AideMaterielle> dossierAideMaterielleJoin = dossierRoot.join("aidesMaterielles", JoinType.LEFT);
         Join<Dossier, AideHumaine> dossierAideHumaineJoin = dossierRoot.join("aidesHumaines", JoinType.LEFT);
+
+        cq.multiselect(
+                dossierRoot.get("id"),
+                dossierIndividuJoin.get("numEtu"),
+                dossierIndividuJoin.get("codeIne"),
+                dossierIndividuJoin.get("firstName"),
+                dossierIndividuJoin.get("name"),
+                dossierIndividuJoin.get("dateOfBirth"),
+                dossierRoot.get("type"),
+                dossierRoot.get("statusDossier"),
+                dossierRoot.get("statusDossierAmenagement"),
+                dossierIndividuJoin.get("id"),
+                dossierIndividuJoin.get("gender")
+        );
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -396,6 +392,7 @@ public class DossierService {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
         if (dossierFilter.getFinished() != null) {
+
             List<Predicate> finishedPredicates = new ArrayList<>();
             if (dossierFilter.getFinished()) {
                 finishedPredicates.add(cb.or(cb.isTrue(dossierEnqueteJoin.get("finished"))));
@@ -544,12 +541,6 @@ public class DossierService {
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }
-        try {
-            cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierIndividuJoin, cb));
-
-        } catch (Exception e) {
-            logger.debug(e.getMessage());
-        }
         return em.createQuery(cq);
     }
 
@@ -567,15 +558,20 @@ public class DossierService {
         if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
-        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
-            LocalDate currentDate = LocalDate.now();
-            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
-
-            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
-                dossierRepository.deleteById(id);
-            }
+        int nbdossiers = 2;
+        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbdossiers).count();
+        if(countDossiers == 0) {
+            dossierRepository.deleteById(id);
         }
+
+//        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
+//        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
+//            LocalDate currentDate = LocalDate.now();
+//            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
+//
+//            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
+//            }
+//        }
     }
 }
 

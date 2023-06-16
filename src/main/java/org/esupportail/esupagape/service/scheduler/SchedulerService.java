@@ -44,22 +44,21 @@ public class SchedulerService {
         dossierService.syncAllDossiers();
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 300000)
+    @Scheduled(initialDelay = 1, fixedRate = 30000)
     public void syncEsupSignature() throws AgapeException {
         logger.debug("Synchro Esup Signature");
         amenagementService.syncAllAmenagements();
+        amenagementService.sendAllCertificats();
     }
 
-@Scheduled(initialDelay = 1, fixedRate = 300000)
+@Scheduled(initialDelay = 1, fixedRate = 30000)
     public void scheduleDeleteUnsubscribeDossiers() {
         LocalDate currentDate = LocalDate.now();
         LocalDate twoYearsAgo = currentDate.minusYears(2);
 
         List<Dossier> dossiers = dossierRepository.findUnsubscribeDossier(twoYearsAgo);
-
         for (Dossier dossier : dossiers) {
             dossierService.deleteUnsubscribeDossier(dossier.getId());
-
         }
     }
 }
