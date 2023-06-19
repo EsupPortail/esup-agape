@@ -127,7 +127,7 @@ public class StatistiquesService {
 
        public Chart getIndividuLineChart() {
         List<Integer> years = statistiquesRepository.findDistinctYears().stream()
-                .sorted(Collections.reverseOrder())
+                .sorted()
                 .collect(Collectors.toList());
 
         List<String> counts = new ArrayList<>();
