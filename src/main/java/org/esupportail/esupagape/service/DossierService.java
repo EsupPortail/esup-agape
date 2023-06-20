@@ -55,6 +55,7 @@ public class DossierService {
 
     private final EntityManager em;
 
+
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
@@ -552,27 +553,21 @@ public class DossierService {
         }
     }
 
+
     @Transactional
-    public void deleteUnsubscribeDossier(Long id) {
+    public void anonymiseUnsubscribeDossier(Long id) {
         Dossier dossier = getById(id);
         if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        int nbdossiers = 2;
-        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbdossiers).count();
+        int nbDossiers = 2;
+        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers).count();
         if(countDossiers == 0) {
-            dossierRepository.deleteById(id);
+
         }
 
-//        LocalDate unsubscribeDate = dossier.getUnsubscribeDate();
-//        if (dossier.getStatusDossier().equals(StatusDossier.DESINSCRIT) && unsubscribeDate != null) {
-//            LocalDate currentDate = LocalDate.now();
-//            LocalDate unsubscribeDateLimit = currentDate.minusYears(2);
-//
-//            if (unsubscribeDate.isBefore(unsubscribeDateLimit)) {
-//            }
-//        }
     }
+
 }
 
 

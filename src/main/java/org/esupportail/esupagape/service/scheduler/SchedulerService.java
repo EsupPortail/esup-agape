@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.service.scheduler;
 
-import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.AmenagementService;
@@ -11,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @EnableScheduling
 @Service
@@ -33,7 +29,6 @@ public class SchedulerService {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
-
         this.dossierRepository = dossierRepository;
     }
 
@@ -51,14 +46,4 @@ public class SchedulerService {
         amenagementService.sendAllCertificats();
     }
 
-@Scheduled(initialDelay = 1, fixedRate = 30000)
-    public void scheduleDeleteUnsubscribeDossiers() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate twoYearsAgo = currentDate.minusYears(2);
-
-        List<Dossier> dossiers = dossierRepository.findUnsubscribeDossier(twoYearsAgo);
-        for (Dossier dossier : dossiers) {
-            dossierService.deleteUnsubscribeDossier(dossier.getId());
-        }
-    }
 }

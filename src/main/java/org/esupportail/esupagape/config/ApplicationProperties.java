@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @ConfigurationProperties(prefix="application")
 @Validated
 public class ApplicationProperties {
@@ -70,6 +71,8 @@ public class ApplicationProperties {
     private int papercutPort;
 
     private String papercutAccountName = "";
+
+    private String nbDossier;
 
     public String getCodeEtab() {
         return codeEtab;
@@ -189,5 +192,13 @@ public class ApplicationProperties {
 
     public void setPapercutAccountName(String papercutAccountName) {
         this.papercutAccountName = papercutAccountName;
+    }
+
+    public String getNbDossier() {
+        return nbDossier;
+    }
+
+    public void setNbDossier(String nbDossier) {
+        this.nbDossier = nbDossier;
     }
 }
