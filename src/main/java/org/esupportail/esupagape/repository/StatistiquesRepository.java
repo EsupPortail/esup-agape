@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface StatistiquesRepository extends JpaRepository<Dossier, Long> {
 
-    @Query(value = """
-            select dc.classifications as classifications, count(dc.classifications) as classificationCount from dossier d
+   @Query(value = """
+            select dc.classifications as classification, count(dc.classifications) as classificationCount from dossier d
             join dossier_classifications dc on d.id = dc.dossier_id
             where d.year = :year
             group by dc.classifications order by classificationCount desc ;
             """, nativeQuery = true)
     List<ClassificationChart> countFindClassificationByYear(Integer year);
 
-    @Query(value = """
+   @Query(value = """
             select d.composante as composante, count(d.composante) as composanteCount 
             from  Dossier d 
             where d.year = :year

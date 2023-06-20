@@ -680,7 +680,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     public void sendAmenagementToIndividu(long amenagementId) {
         Amenagement amenagement = getById(amenagementId);
         String to = amenagement.getDossier().getIndividu().getEmailEtu();
-        if(applicationProperties.getActivateSendEmails() == null || !applicationProperties.getActivateSendEmails()) to = "david.lemaignent@univ-rouen.fr";
+        if(applicationProperties.getActivateSendEmails() == null || !applicationProperties.getActivateSendEmails()) to = "fabienne.berges@univ-rouen.fr";
         if(amenagement.getIndividuSendDate() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
                 mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
