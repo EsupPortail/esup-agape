@@ -17,8 +17,10 @@ import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -59,9 +61,13 @@ public class IndividuService {
 
     private final ExcludeIndividuRepository excludeIndividuRepository;
 
-    private final DossierService dossierService;
+   // private final DossierService dossierService;
 
     private final EnqueteService enqueteService;
+
+    @Autowired
+    @Lazy
+    private DossierService dossierService;
 
     public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService) {
         this.individuSourceServices = individuSourceServices;
@@ -437,7 +443,9 @@ public class IndividuService {
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
-            individu.setFixCP(individu.getFixCP().substring(0, 2));
+            if(individu.getFixCP() != null) {
+                individu.setFixCP(individu.getFixCP().substring(0, 2));
+            }
 
             List<Dossier> dossiers = individu.getDossiers();
             LocalDate currentDate = LocalDate.now();

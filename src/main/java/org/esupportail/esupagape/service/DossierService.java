@@ -21,6 +21,8 @@ import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosSer
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +56,15 @@ public class DossierService {
     private final DocumentService documentService;
 
     private final EntityManager em;
+
+
+    private IndividuService individuService;
+
+
+    @Autowired
+    public void setIndividuService(@Lazy IndividuService individuService) {
+        this.individuService = individuService;
+    }
 
 
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
@@ -169,12 +180,12 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
-        if(dossier.getIndividu().getDossiers().size() > 1) {
+        if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
         } else {
             dossier.setNewDossier(true);
         }
-        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
+        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         if (dossier.getAmenagements().size() == 0) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
@@ -527,7 +538,7 @@ public class DossierService {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
         }
 
-        if(dossierFilter.getNewDossier() != null) {
+        if (dossierFilter.getNewDossier() != null) {
             if (dossierFilter.getNewDossier()) {
                 predicates.add(cb.isTrue(dossierRoot.get("newDossier")));
             } else {
@@ -548,26 +559,48 @@ public class DossierService {
     @Transactional
     public void anonymiseDossiers(Individu individu) {
         List<Dossier> dossiers = dossierRepository.findAllByIndividuId(individu.getId());
-        for(Dossier dossier : dossiers) {
+        for (Dossier dossier : dossiers) {
             dossier.setStatusDossier(StatusDossier.ANONYMOUS);
         }
     }
 
 
-    @Transactional
-    public void anonymiseUnsubscribeDossier(Long id) {
-        Dossier dossier = getById(id);
-        if (dossier.getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeYearException();
-        }
-        int nbDossiers = 2;
-        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers).count();
-        if(countDossiers == 0) {
+//    @Transactional
+//    public void anonymiseUnsubscribeDossier(Long id) {
+//        Dossier dossier = getById(id);
+////        if (dossier.getYear() != utilsService.getCurrentYear()) {
+////            throw new AgapeYearException();
+////        }
+//
+//        int nbDossiers = 2;
+//        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers).count();
+//        if(countDossiers == 1 && dossier.getStatusDossier() == StatusDossier.DESINSCRIT) {
+//            individuService.anonymiseIndividu(dossier.getIndividu().getId());
+//            dossier.setStatusDossier(StatusDossier.ANONYMOUS);
+//        }
+//    }
 
+    @Transactional
+    public void anonymiseUnsubscribeDossier() {
+        List<Individu> individus = individuService.getAllIndividus();
+
+        for (Individu individu : individus) {
+            List<Dossier> dossiers = individu.getDossiers();
+
+            for (Dossier dossier : dossiers) {
+                int nbDossiers = 2;
+                long countDossiers = dossier.getIndividu().getDossiers().stream()
+                        .filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers)
+                        .count();
+
+                if (countDossiers == 1 && dossier.getStatusDossier() == StatusDossier.DESINSCRIT) {
+                    individuService.anonymiseIndividu(dossier.getIndividu().getId());
+                    dossier.setStatusDossier(StatusDossier.ANONYMOUS);
+                }
+            }
         }
 
     }
-
 }
 
 
