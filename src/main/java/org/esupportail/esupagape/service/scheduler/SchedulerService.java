@@ -46,7 +46,7 @@ public class SchedulerService {
         amenagementService.sendAllCertificats();
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 300000)
+    //@Scheduled(initialDelay = 1, fixedRate = 300000)
     public void anonymiseUnsubscribeDossier() {
         logger.info("Anonymisation des dossiers désinscrits");
         dossierService.anonymiseUnsubscribeDossier();

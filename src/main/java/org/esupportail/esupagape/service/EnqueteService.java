@@ -183,7 +183,11 @@ public class EnqueteService {
                 enquete.setSexe("0");
             } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
                 enquete.setSexe("1");
+            } else if (dossier.getIndividu().getGender().equals(Gender.NE_SAIS_PAS)) {
+                enquete.setSexe("2");
             }
+
+
             if(enquete.getTypFrmn() == null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
