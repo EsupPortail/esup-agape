@@ -79,6 +79,13 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/anonymise-dossiers")
+    public String anonymiseDossiers(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "L'anonymisation des dossiers est terminée"));
+        dossierService.anonymiseUnsubscribeDossier();
+        return "redirect:/admin";
+    }
+
     @GetMapping("/refresh-sise")
     public String refrechSise(RedirectAttributes redirectAttributes) {
         try {

@@ -43,10 +43,10 @@ public class SchedulerService {
     public void syncEsupSignature() throws AgapeException {
         logger.debug("Synchro Esup Signature");
         amenagementService.syncAllAmenagements();
-        amenagementService.sendAllCertificats();
+//        amenagementService.sendAllCertificats();
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 300000)
+    //@Scheduled(initialDelay = 1, fixedRate = 300000)
     public void anonymiseUnsubscribeDossier() {
         logger.info("Anonymisation des dossiers désinscrits");
         dossierService.anonymiseUnsubscribeDossier();

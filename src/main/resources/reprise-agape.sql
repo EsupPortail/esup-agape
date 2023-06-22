@@ -139,6 +139,7 @@ begin
                             end loop;
                         if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
                         commentnew = null;
+                        -- TODO calculer secteur disciplinaire
                         new_id_dossier = nextval('hibernate_sequence');
                         insert into dossier (id, year, individu_id, type, status_dossier, status_dossier_amenagement) values
                             (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier, 'NON');

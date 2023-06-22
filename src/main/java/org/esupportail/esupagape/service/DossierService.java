@@ -585,21 +585,14 @@ public class DossierService {
         List<Individu> individus = individuService.getAllIndividus();
 
         for (Individu individu : individus) {
-            List<Dossier> dossiers = individu.getDossiers();
-
-            for (Dossier dossier : dossiers) {
-                int nbDossiers = 2;
-                long countDossiers = dossier.getIndividu().getDossiers().stream()
-                        .filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers)
-                        .count();
-
-                if (countDossiers == 1 && dossier.getStatusDossier() == StatusDossier.DESINSCRIT) {
-                    individuService.anonymiseIndividu(dossier.getIndividu().getId());
-                    dossier.setStatusDossier(StatusDossier.ANONYMOUS);
-                }
+            int nbDossiers = 2;
+            long countDossiers = individu.getDossiers().stream()
+                    .filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers)
+                    .count();
+            if(countDossiers == 0) {
+                individuService.anonymiseIndividu(individu.getId());
             }
         }
-
     }
 }
 
