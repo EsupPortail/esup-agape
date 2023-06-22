@@ -82,7 +82,7 @@ public class AdminController {
     @GetMapping("/anonymise-dossiers")
     public String anonymiseDossiers(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'anonymisation des dossiers est terminée"));
-        dossierService.anonymiseUnsubscribeDossier();
+        individuService.anonymiseOldDossiers();
         return "redirect:/admin";
     }
 
@@ -100,7 +100,7 @@ public class AdminController {
     @GetMapping("/sync-esup-signature")
     public String syncEsupSignature(RedirectAttributes redirectAttributes) throws AgapeException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro Esup Signature est terminée"));
-        amenagementService.syncAllAmenagements();
+        amenagementService.syncEsupSignatureAmenagements();
         return "redirect:/admin";
     }
 

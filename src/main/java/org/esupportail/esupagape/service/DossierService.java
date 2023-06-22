@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
@@ -21,8 +22,6 @@ import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosSer
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -56,16 +55,6 @@ public class DossierService {
     private final DocumentService documentService;
 
     private final EntityManager em;
-
-
-    private IndividuService individuService;
-
-
-    @Autowired
-    public void setIndividuService(@Lazy IndividuService individuService) {
-        this.individuService = individuService;
-    }
-
 
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
         this.utilsService = utilsService;
@@ -580,20 +569,6 @@ public class DossierService {
 //        }
 //    }
 
-    @Transactional
-    public void anonymiseUnsubscribeDossier() {
-        List<Individu> individus = individuService.getAllIndividus();
-
-        for (Individu individu : individus) {
-            int nbDossiers = 2;
-            long countDossiers = individu.getDossiers().stream()
-                    .filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers)
-                    .count();
-            if(countDossiers == 0) {
-                individuService.anonymiseIndividu(individu.getId());
-            }
-        }
-    }
 }
 
 

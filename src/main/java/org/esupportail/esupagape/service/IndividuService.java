@@ -17,10 +17,8 @@ import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -61,13 +59,9 @@ public class IndividuService {
 
     private final ExcludeIndividuRepository excludeIndividuRepository;
 
-   // private final DossierService dossierService;
-
     private final EnqueteService enqueteService;
 
-    @Autowired
-    @Lazy
-    private DossierService dossierService;
+    private final DossierService dossierService;
 
     public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService) {
         this.individuSourceServices = individuSourceServices;
@@ -495,6 +489,21 @@ public class IndividuService {
         for (Individu individu : individus) {
             if (individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
                 anonymiseIndividu(individu.getId());
+            }
+        }
+    }
+
+    @Transactional
+    public void anonymiseOldDossiers() {
+        if(applicationProperties.getNbDossierNullBeforeAnonymise() > -1) {
+            List<Individu> individus = getAllIndividus();
+            for (Individu individu : individus) {
+                long countDossiers = individu.getDossiers().stream()
+                        .filter(d -> d.getYear() >= utilsService.getCurrentYear() - applicationProperties.getNbDossierNullBeforeAnonymise())
+                        .count();
+                if (countDossiers == 0) {
+                    anonymiseIndividu(individu.getId());
+                }
             }
         }
     }

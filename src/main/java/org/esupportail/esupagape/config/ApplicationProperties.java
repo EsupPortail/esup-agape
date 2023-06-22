@@ -60,6 +60,14 @@ public class ApplicationProperties {
      */
     private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
+    private Boolean enableSchedulerAnonymise = false;
+
+    private Boolean enableSchedulerEsupSignature = false;
+
+    private Boolean enableSchedulerAmenagement = false;
+
+    private Boolean enableSchedulerIndividu = false;
+
     private Boolean activateSendEmails = false;
 
     private String papercutAuthToken;
@@ -72,7 +80,7 @@ public class ApplicationProperties {
 
     private String papercutAccountName = "";
 
-    private String nbDossier;
+    private Integer nbDossierNullBeforeAnonymise = -1;
 
     public String getCodeEtab() {
         return codeEtab;
@@ -146,6 +154,38 @@ public class ApplicationProperties {
         this.esupSignatureValideursEmails = esupSignatureValideursEmails;
     }
 
+    public Boolean getEnableSchedulerAnonymise() {
+        return enableSchedulerAnonymise;
+    }
+
+    public void setEnableSchedulerAnonymise(Boolean enableSchedulerAnonymise) {
+        this.enableSchedulerAnonymise = enableSchedulerAnonymise;
+    }
+
+    public Boolean getEnableSchedulerEsupSignature() {
+        return enableSchedulerEsupSignature;
+    }
+
+    public void setEnableSchedulerEsupSignature(Boolean enableSchedulerEsupSignature) {
+        this.enableSchedulerEsupSignature = enableSchedulerEsupSignature;
+    }
+
+    public Boolean getEnableSchedulerAmenagement() {
+        return enableSchedulerAmenagement;
+    }
+
+    public void setEnableSchedulerAmenagement(Boolean enableSchedulerAmenagement) {
+        this.enableSchedulerAmenagement = enableSchedulerAmenagement;
+    }
+
+    public Boolean getEnableSchedulerIndividu() {
+        return enableSchedulerIndividu;
+    }
+
+    public void setEnableSchedulerIndividu(Boolean enableSchedulerIndividu) {
+        this.enableSchedulerIndividu = enableSchedulerIndividu;
+    }
+
     public Boolean getActivateSendEmails() {
         return activateSendEmails;
     }
@@ -194,11 +234,11 @@ public class ApplicationProperties {
         this.papercutAccountName = papercutAccountName;
     }
 
-    public String getNbDossier() {
-        return nbDossier;
+    public Integer getNbDossierNullBeforeAnonymise() {
+        return nbDossierNullBeforeAnonymise;
     }
 
-    public void setNbDossier(String nbDossier) {
-        this.nbDossier = nbDossier;
+    public void setNbDossierNullBeforeAnonymise(Integer nbDossierNullBeforeAnonymise) {
+        this.nbDossierNullBeforeAnonymise = nbDossierNullBeforeAnonymise;
     }
 }

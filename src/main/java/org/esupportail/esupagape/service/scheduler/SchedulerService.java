@@ -1,7 +1,7 @@
 package org.esupportail.esupagape.service.scheduler;
 
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.exception.AgapeException;
-import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -23,33 +23,47 @@ public class SchedulerService {
 
     private final AmenagementService amenagementService;
 
-    private final DossierRepository dossierRepository;
+    private final ApplicationProperties applicationProperties;
 
-    public SchedulerService(IndividuService individuService, DossierService dossierService, AmenagementService amenagementService, DossierRepository dossierRepository) {
+    public SchedulerService(IndividuService individuService, DossierService dossierService, AmenagementService amenagementService, ApplicationProperties applicationProperties) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
-        this.dossierRepository = dossierRepository;
+        this.applicationProperties = applicationProperties;
     }
 
-    //    @Scheduled(initialDelay = 1, fixedRate = 86400000)
+    @Scheduled(initialDelay = 1, fixedRate = 86400000)
     public void importIndividus() {
-        individuService.importIndividus();
-        individuService.syncAllIndividus();
-        dossierService.syncAllDossiers();
+        if(applicationProperties.getEnableSchedulerIndividu()) {
+            logger.info("Synchro individus");
+            individuService.importIndividus();
+            individuService.syncAllIndividus();
+            dossierService.syncAllDossiers();
+        }
     }
 
     @Scheduled(initialDelay = 1, fixedRate = 30000)
     public void syncEsupSignature() throws AgapeException {
-        logger.debug("Synchro Esup Signature");
-        amenagementService.syncAllAmenagements();
-//        amenagementService.sendAllCertificats();
+        if(applicationProperties.getEnableSchedulerEsupSignature()) {
+            logger.info("Synchro Esup Signature");
+            amenagementService.syncEsupSignatureAmenagements();
+        }
     }
 
-    //@Scheduled(initialDelay = 1, fixedRate = 300000)
-    public void anonymiseUnsubscribeDossier() {
-        logger.info("Anonymisation des dossiers désinscrits");
-        dossierService.anonymiseUnsubscribeDossier();
+    @Scheduled(initialDelay = 1, fixedRate = 30000)
+    public void syncAmenagements() {
+        if(applicationProperties.getEnableSchedulerAmenagement()) {
+            logger.info("Synchro Aménagements");
+            amenagementService.syncAllAmenagements();
+        }
+    }
+
+    @Scheduled(initialDelay = 1, fixedRate = 300000)
+    public void anonymiseOldDossiers() {
+        if(applicationProperties.getEnableSchedulerAnonymise()) {
+            logger.info("Anonymisation des anciens dossiers ");
+            individuService.anonymiseOldDossiers();
+        }
     }
 
 }
