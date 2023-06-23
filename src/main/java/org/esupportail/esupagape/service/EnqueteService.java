@@ -251,7 +251,7 @@ public class EnqueteService {
         Map<Classification, CodHd> classificationMap = new HashMap<>();
         classificationMap.put(Classification.SURDITE_SEVERE_ET_PROFONDE, CodHd.AUD);
         classificationMap.put(Classification.MOTEUR, CodHd.MOT);
-        classificationMap.put(Classification.CECITE, CodHd.VUE);
+        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
         classificationMap.put(Classification.DEFICIENCE_AUDTIVE_AUTRE, CodHd.AUA);
         classificationMap.put(Classification.DEFICIENCE_VISUELLE_AUTRE, CodHd.VUA);
         classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);

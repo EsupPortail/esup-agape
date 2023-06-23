@@ -80,7 +80,7 @@ public class ExportService {
         put("codFil", "Discipline");
         put("codFmt", "Formation");
         put("codSco", "Année d'études");
-        put("codHd", "Type de handicap");
+        put("codHd", "Typologie de trouble");
         put("hdTmp", "Handicap temporaire");
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");

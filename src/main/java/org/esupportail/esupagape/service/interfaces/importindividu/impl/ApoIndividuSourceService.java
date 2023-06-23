@@ -137,7 +137,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         Map<String, Classification> classificationMap = new HashMap<>();
         classificationMap.put("A", Classification.SURDITE_SEVERE_ET_PROFONDE);
         classificationMap.put("M", Classification.MOTEUR);
-        classificationMap.put("V", Classification.CECITE);
+        classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
         classificationMap.put("B", Classification.DEFICIENCE_AUDTIVE_AUTRE);
         classificationMap.put("W", Classification.DEFICIENCE_VISUELLE_AUTRE);
         classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
