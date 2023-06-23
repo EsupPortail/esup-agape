@@ -10,9 +10,7 @@ public enum CodHd {
     VIS,
     VIS0,
     VUE,
-    VUA,
     AUD,
-    AUA,
     PTA,
     AUT,
     TND

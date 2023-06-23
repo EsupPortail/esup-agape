@@ -252,8 +252,6 @@ public class EnqueteService {
         classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_AUDITIVES, CodHd.AUD);
         classificationMap.put(Classification.MOTEUR, CodHd.MOT);
         classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
-        classificationMap.put(Classification.DEFICIENCE_AUDTIVE_AUTRE, CodHd.AUA);
-        classificationMap.put(Classification.DEFICIENCE_VISUELLE_AUTRE, CodHd.VUA);
         classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
         classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
         classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);

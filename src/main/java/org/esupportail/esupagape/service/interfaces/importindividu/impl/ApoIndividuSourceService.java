@@ -138,8 +138,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
         classificationMap.put("M", Classification.MOTEUR);
         classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
-        classificationMap.put("B", Classification.DEFICIENCE_AUDTIVE_AUTRE);
-        classificationMap.put("W", Classification.DEFICIENCE_VISUELLE_AUTRE);
         classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
         classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
         classificationMap.put("H", Classification.AUTISME);
