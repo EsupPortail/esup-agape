@@ -84,7 +84,7 @@ public class ExportService {
         put("hdTmp", "Handicap temporaire");
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
-        put("codPfas", "Aménagement spécifique");
+        put("codPfas", "Aménagement du cursus de formation");
         put("codMeahF", "Mesures aides humaines");
         put("aidHnat", "Autre aide humaine");
         put("codMeae", "Aménagement des examens");
