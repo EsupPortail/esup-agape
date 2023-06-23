@@ -47,10 +47,6 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private Set<CodMeahF> codMeahF = new HashSet<>();
 
-    private Integer interpH = 0;
-
-    private Integer codeurH = 0;
-
     @Column(columnDefinition = "TEXT")
     private String aidHNat;
 
@@ -187,22 +183,6 @@ public class Enquete {
 
     public void setCodMeahF(Set<CodMeahF> codMeahF) {
         this.codMeahF = codMeahF;
-    }
-
-    public Integer getInterpH() {
-        return interpH;
-    }
-
-    public void setInterpH(Integer interpH) {
-        this.interpH = interpH;
-    }
-
-    public Integer getCodeurH() {
-        return codeurH;
-    }
-
-    public void setCodeurH(Integer codeurH) {
-        this.codeurH = codeurH;
     }
 
     public String getAidHNat() {

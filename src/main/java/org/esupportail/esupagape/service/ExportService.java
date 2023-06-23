@@ -86,8 +86,6 @@ public class ExportService {
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement spécifique");
         put("codMeahF", "Mesures aides humaines");
-        put("interpH", "Interprète: nombre d'heures");
-        put("codeurH", "Codeur: nombre d'heures");
         put("aidHnat", "Autre aide humaine");
         put("codMeae", "Aménagement des examens");
         put("autAE", "Autre aménagement des examens");
@@ -122,8 +120,6 @@ public class ExportService {
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     enquete.getCodPfas() != null ? enquete.getCodPfas().name().toLowerCase() : "",
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
-                    enquete.getInterpH() != null ? enquete.getInterpH().toString() : "",
-                    enquete.getCodeurH()!= null ? enquete.getCodeurH().toString() : "",
                     enquete.getAidHNat(),
                     String.join("" ,enquete.getCodMeae().stream().map(codMeae -> codMeae.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAE(),

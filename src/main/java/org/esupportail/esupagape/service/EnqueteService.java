@@ -124,7 +124,6 @@ public class EnqueteService {
             }
         }
 
-        enqueteToUpdate.setInterpH(enqueteForm.getInterpH());
         enqueteToUpdate.getCodAmL().clear();
         if (StringUtils.hasText(enqueteForm.getAM0())) {
             enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM0()));
@@ -154,7 +153,6 @@ public class EnqueteService {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
         }
-        enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
 
@@ -258,7 +256,7 @@ public class EnqueteService {
         classificationMap.put(Classification.DEFICIENCE_VISUELLE_AUTRE, CodHd.VUA);
         classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
         classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
-        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_ET_DE_LA_PAROLE, CodHd.LNG);
+        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);
         classificationMap.put(Classification.AUTISME, CodHd.TSA);
         classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
         classificationMap.put(Classification.REFUS, CodHd.TND);
