@@ -135,7 +135,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     @Override
     public Map<String, Classification> getClassificationMap() {
         Map<String, Classification> classificationMap = new HashMap<>();
-        classificationMap.put("A", Classification.SURDITE_SEVERE_ET_PROFONDE);
+        classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
         classificationMap.put("M", Classification.MOTEUR);
         classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
         classificationMap.put("B", Classification.DEFICIENCE_AUDTIVE_AUTRE);
@@ -143,7 +143,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
         classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
         classificationMap.put("H", Classification.AUTISME);
-        classificationMap.put("I", Classification.SURDITE_SEVERE_ET_PROFONDE);
+        classificationMap.put("I", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
         return classificationMap;
     }
 

@@ -249,7 +249,7 @@ public class EnqueteService {
 
     public Map<Classification, CodHd> getClassificationEnqueteMap() {
         Map<Classification, CodHd> classificationMap = new HashMap<>();
-        classificationMap.put(Classification.SURDITE_SEVERE_ET_PROFONDE, CodHd.AUD);
+        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_AUDITIVES, CodHd.AUD);
         classificationMap.put(Classification.MOTEUR, CodHd.MOT);
         classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
         classificationMap.put(Classification.DEFICIENCE_AUDTIVE_AUTRE, CodHd.AUA);
