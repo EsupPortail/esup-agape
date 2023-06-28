@@ -251,7 +251,7 @@ public class DossierService {
         }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
-                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getTypeName(), dossier);
+                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getSimpleName(), dossier);
                 dossier.getAttachments().add(attachment);
             }
         } catch (IOException e) {
@@ -272,7 +272,7 @@ public class DossierService {
             throw new AgapeYearException();
         }
         Document attachment = documentService.getById(attachmentId);
-        if ("org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())) {
+        if ("Dossier".equals(attachment.getParentType())) {
             dossier.getAttachments().remove(attachment);
             documentService.delete(attachment);
         }

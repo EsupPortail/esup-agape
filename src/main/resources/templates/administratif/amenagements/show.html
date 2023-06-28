@@ -75,6 +75,7 @@
                             Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
                             <span th:text="${amenagement.motifRefus}"></span>
                         </div>
+                        <embed th:if="${amenagementPrec != null}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagementPrec.id})}" width="80%" height="100%" aria-expanded="false"/>
                         <embed th:if="${!esupSignaturePresent && (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                         <embed th:if="${amenagement.certificat != null || (!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
                     </th:block>

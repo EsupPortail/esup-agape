@@ -294,7 +294,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                     Document avis = documentService.createDocument(
                             new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS)),
                             "Avis-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
-                            "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                            "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                             amenagement.getDossier());
                     amenagement.setAvis(avis);
                 } catch (IOException e) {
@@ -346,7 +346,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 Document certificat = documentService.createDocument(
                         new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT)),
                         "Certificat-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
-                        "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                        "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         amenagement.getDossier());
                 amenagement.setCertificat(certificat);
                 sendAmenagementToIndividu(amenagementId);

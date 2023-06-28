@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.entity.enums;
 
 public enum TypeDocument {
-
     FICHE,
     ANNEXE,
     CONTRAT,

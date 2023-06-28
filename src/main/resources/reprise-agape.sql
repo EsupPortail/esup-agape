@@ -175,7 +175,7 @@ begin
                                                         insert into big_file (id, binary_file, version) VALUES (new_id_big_file, bigfilea.binary_file, bigfilea.version);
                                                         new_id_pj = nextval('hibernate_sequence');
                                                         insert into document (id, content_type, create_date, file_name, parent_id, parent_type, size, type_document, version, big_file_id, dossier_id)
-                                                        VALUES (new_id_pj, pj.content_type, pj.date_creation, pj.nom_fichier, new_id_aide_humaine, 'Dossier', pj.size, 'SITUATION', pj.version, new_id_big_file, new_id_dossier);
+                                                        VALUES (new_id_pj, pj.content_type, pj.date_creation, pj.nom_fichier, new_id_aide_humaine, 'Dossier', pj.size, null, pj.version, new_id_big_file, new_id_dossier);
                                                         insert into dossier_attachments (dossier_id, attachments_id) VALUES (new_id_dossier, new_id_pj);
                                                     end loop;
                                             end loop;
@@ -203,8 +203,8 @@ begin
                             for sc in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from situation_libelle_classification') as sc1 (situation bigint,libelle_classification bigint) where situation = s.id
                                 loop
                                     classificationnew = null;
-                                    if sc.libelle_classification = 9     then classificationnew = 'CECITE'; end if;
-                                    if sc.libelle_classification = 10    then classificationnew = 'SURDITE_SEVERE_ET_PROFONDE'; end if;
+                                    if sc.libelle_classification = 9     then classificationnew = 'TROUBLES_DES_FONCTIONS_VISUELLES'; end if;
+                                    if sc.libelle_classification = 10    then classificationnew = 'TROUBLES_DES_FONCTIONS_AUDITIVES'; end if;
                                     if sc.libelle_classification = 11    then classificationnew = 'MOTEUR'; end if;
                                     if sc.libelle_classification = 12    then classificationnew = 'TROUBLES_INTELLECTUELS_ET_COGNITIFS'; end if;
                                     if sc.libelle_classification = 13    then classificationnew = 'TROUBLES_PSYCHIQUES'; end if;
@@ -638,9 +638,9 @@ begin
                         if enquetea.codhd = 6 then codhdnew = 'VIS'; end if;
                         if enquetea.codhd = 7 then codhdnew = 'VIS0'; end if;
                         if enquetea.codhd = 8 then codhdnew = 'VUE'; end if;
-                        if enquetea.codhd = 9 then codhdnew = 'VUA'; end if;
+                        if enquetea.codhd = 9 then codhdnew = 'VUE'; end if;
                         if enquetea.codhd = 10 then codhdnew = 'AUD'; end if;
-                        if enquetea.codhd = 11 then codhdnew = 'AUA'; end if;
+                        if enquetea.codhd = 11 then codhdnew = 'AUD'; end if;
                         if enquetea.codhd = 12 then codhdnew = 'PTA'; end if;
                         if enquetea.codhd = 13 then codhdnew = 'AUT'; end if;
                         if enquetea.codhd = 14 then codhdnew = 'TND'; end if;

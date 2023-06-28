@@ -141,7 +141,7 @@ public class AideHumaineService {
         }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
-                Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getTypeName(), aideHumaine.getDossier());
+                Document document = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), aideHumaine.getId(), AideHumaine.class.getSimpleName(), aideHumaine.getDossier());
                 document.setTypeDocument(type);
                 aideHumaine.getPiecesJointes().add(document);
             }
