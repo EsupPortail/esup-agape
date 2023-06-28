@@ -50,7 +50,7 @@ public class ExportService {
         put("statusDossier", "Statut du dossier");
         put("statusDossierAmenagement", "Statut du Dossier Aménagement");
         put("classification", "Classification du handicap");
-        put("mdph", "Suivi MDPH");
+        put("mdph", "Dossier MDPH");
         put("taux", "Taux");
         put("typeSuiviHandisup", "Type de suivi Handisup");
         put("typeFormation", "Type de formation");
