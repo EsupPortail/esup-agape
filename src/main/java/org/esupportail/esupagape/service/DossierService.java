@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.service;
 
-import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
@@ -262,7 +261,7 @@ public class DossierService {
 
     @Transactional
     public List<DocumentDto> getAttachments(Long id) {
-        return documentRepository.findByDossierId(id).stream().filter(attachment -> "org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())).toList();
+        return documentRepository.findByDossierId(id).stream().filter(attachment -> "Dossier".equals(attachment.getParentType())).toList();
     }
 
     @Transactional
