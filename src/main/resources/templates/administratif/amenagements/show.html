@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div th:replace="fragments/side-administratif :: side"></div>
+            <div class="float-buttons">
+                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
+                    <i class="fa-solid fa-refresh"></i>
+                </button>
+                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+                    <i class="fa-solid fa-file-download" style="font-size: 22px"></i>
+                </a>
+            </div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:history.back();" class="text-center">Liste des aménagements</a>
+                        </li>
+                    </ol>
+                </nav>
+                <dl class="row">
+                    <dt class="col-sm-2">Formation</dt>
+                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormation}"></dd>
+                    <dt class="col-sm-2">Formation précédente</dt>
+                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
+                </dl>
+                <div class="col-12 text-center" style="height: calc(100vh - 240px);">
+                    <th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
+                        <th:block th:if="${amenagement.avisSignatureStatus != null}">
+                            <h1>La signature de l’avis est pris en charge par Esup-Signature</h1>
+                            <div class="alert alert-warning" th:if="${amenagement.avisSignatureStatus.name().equals('PENDING')}">
+                                Statut Esup-Signature : En cours de signature par le médecin
+                            </div>
+                            <div class="alert alert-danger" th:if="${amenagement.avisSignatureStatus.name().equals('REFUSE')}">
+                                Statut Esup-Signature : Refusé par le médecin
+                            </div>
+                            <div class="alert alert-success" th:if="${amenagement.avisSignatureStatus.name().equals('COMPLETED')}">
+                                Statut Esup-Signature : Avis Validé
+                            </div>
+                            <div class="alert alert-primary" th:if="${amenagement.avisSignatureStatus.name().equals('DOWNLOADED')}">
+                                Statut Esup-Signature : Avis récupéré
+                            </div>
+                        </th:block>
+                        <th:block th:if="${amenagement.certificatSignatureStatus != null}">
+                            <h1>La validation du certificat est prise en charge par Esup-Signature</h1>
+                            <div class="alert alert-warning" th:if="${amenagement.certificatSignatureStatus.name().equals('PENDING')}">
+                                Statut Esup-Signature : En cours de signature par l’administration
+                            </div>
+                            <div class="alert alert-danger" th:if="${amenagement.certificatSignatureStatus.name().equals('REFUSE')}">
+                                Statut Esup-Signature : Refusé par l’administration
+                            </div>
+                            <div class="alert alert-success" th:if="${amenagement.certificatSignatureStatus.name().equals('COMPLETED')}">
+                                Statut Esup-Signature : Validé par l’administration
+                            </div>
+                            <div class="alert alert-primary" th:if="${amenagement.certificatSignatureStatus.name().equals('DOWNLOADED')}">
+                                Statut Esup-Signature : Certificat récupéré
+                            </div>
+                        </th:block>
+                        <div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" class="alert alert-danger">
+                            Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
+                            <span th:text="${amenagement.motifRefus}"></span>
+                        </div>
+                        <embed th:if="${amenagementPrec != null}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagementPrec.id})}" width="80%" height="100%" aria-expanded="false"/>
+                        <embed th:if="${!esupSignaturePresent && (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                        <embed th:if="${amenagement.certificat != null || (!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                    </th:block>
+                    <div th:if="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}" class="alert alert-danger">
+                        Cet aménagement est expiré. Date de fin <span th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span><br>
+                        <span th:text="${amenagement.motifRefus}"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div class="modal fade" id="porteModal" tabindex="-1" aria-labelledby="porteModalLabel" aria-hidden="true" th:if="${amenagementPrec != null}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="porteModalLabel">Porté un aménagement d’examen d’une année antérieure</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/porte(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer la portabilité de l’aménagement
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="validationModalLabel">Valider l’aménagement d’examen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/validation(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer la validation de l’aménagement
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="refusModalLabel">Refuser l’aménagement d’examen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/refus(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer le refus de l’aménagement et de préciser un motif
+                            <textarea name="motif" required class="form-control"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-danger">Refuser</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
+</html>

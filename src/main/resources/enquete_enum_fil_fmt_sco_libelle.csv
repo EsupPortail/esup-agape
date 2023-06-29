@@ -1,0 +1,66 @@
+cod;libelle
+SCOL1;Licence 1e année
+SCOL2;Licence 2e année
+SCOL3;Licence 3e année ou Licence professionnelle
+SCOM1;Master 1e année
+SCOM2;Master 2e année
+SCO1;Ingénieur 1a
+SCO2;Ingénieur 2a
+SCO3;Ingénieur 3a
+SCO4;Ingénieur 4a 
+SCO5;Ingénieur 5a
+SCO6+;Bac+6 et plus
+SCOM;Master en école d'ingénieur
+SCOD;Doctorat en école d'ingénieur
+SCOiu1;BUT 1e année
+SCOiu2;BUT 2e année (DUT 2e)
+SCOiu3;BUT 3e année
+SCOx1;Autres formations niveau 1e cycle
+SCOx2;Autres formations niveau 2e cycle
+SCO1a;1e année d'études de santé / paramédicales
+SCO2a;2e année d'études de santé / paramédicales
+SCO3a;3e année d'études de santé / paramédicales
+SCO4a;4e année d'études de santé / paramédicales
+SCO5a;5e année d'études de santé / paramédicales
+SCO6a+;6e année d'études de santé et plus
+SCOnsp;Ne sais pas
+FMTCA;Capacité en droit
+FMTDaA;DAEU A
+FMTDaB;DAEU B
+FMTiut;BUT
+FMTL;Licence
+FMTlas;Licence Accès Santé
+FMTLp;Licence Professionnelle
+FMTM;Master
+FMTMf;Master MEEF
+FMTiep;IEP
+FMTing;Cursus ingénieur
+FMTD;Doctorat
+FMThdr;HDR
+FMTDU;DU
+FMTx;Autre cursus
+FMTpa;PASS
+FMTmed;Médecine
+FMTodo;Odontologie
+FMTpha;Pharmacie
+FMTmai;Sage-femme / Maïeutique
+FMTaup;Audioprothésiste
+FMTinf;Infirmier
+FMTane;Infirmier spécialisé
+FMTped;Pédicure Podologue
+FMTpsm;Psychomotricien
+FMTorh;Orthophoniste
+FMTort;Orthoptiste
+FMTbim;Biologie médicale
+FMTkin;Masseur-kinésithérapeute
+FMTmem;Manipulateur d'électrocardiologie médicale
+FMTerg;Ergothérapeute
+FMTafp;Autre formation paramédicale
+FMTnsp;Ne sais pas
+FILlsh;Lettres, Sciences Humaines et Sociales, Langues, Arts
+FILdsg;Droit, Sciences économiques, Gestion, AES
+FILsci;Sciences, Ingénierie
+FILsta;STAPS
+FILsan;Santé
+FILpar;Paramédical
+FILnsp;Ne sais pas

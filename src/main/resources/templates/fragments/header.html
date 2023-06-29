@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!--/*@thymesVar id="personLdap" type="org.esupportail.esupagape.service.ldap.PersonLdap"*/-->
+    <header th:fragment="header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container-fluid">
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon text-light"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
+                        <li class="nav-item"  sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ESPACE_HANDI') or hasRole('ROLE_MEDECIN')">
+                            <a class="nav-link active text-light" aria-current="page" th:href="@{/dossiers}">Dossiers</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMINISTRATIF') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
+                            <a class="nav-link text-light" th:href="@{/administratif/amenagements}">Administratif</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_SCOLARITE') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
+                            <a class="nav-link text-light" th:href="@{/scolarite/amenagements}">Scolarité</a>
+                        </li>
+                        <li class="nav-item dropdown"  sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Outils
+                            </a>
+                            <ul class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item text-dark" th:href="@{/exports}">Exports</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-dark " th:href="@{/statistiques}">Statistiques</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link active text-light" aria-current="page" th:href="@{/admin/}">Admin</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav mb-2 mb-lg-0 text-light" th:if="${personLdap != null}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownUserLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="text-white" th:text="${personLdap.displayName} + '(' + ${personLdap.getSupannEntiteAffectation()} + ')'"></span>
+                            </a>
+                            <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownUserLink">
+                                <li>
+                                    <a class="nav-link active text-light" aria-current="page" th:href="@{/logout}">Déconnexion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+</html>

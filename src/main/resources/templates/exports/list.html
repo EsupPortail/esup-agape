@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="fragments/head :: head"></head>
+    <body>
+        <header th:replace="fragments/header :: header"></header>
+        <main class="d-inline-flex">
+            <div class="agape-content">
+                <form th:action="@{/exports}" method="get">
+                    <div class="card mt-2 ms-2">
+                        <div class="card">
+                            <div class="row mt-2 ms-2">
+                                <div class="col-2" style="width: 350px;">
+                                    <div class="input-group">
+                                        <label class="input-group-text">Année universitaire</label>
+                                        <select class="form-select" name="yearFilter" onchange="this.form.submit();">
+                                            <option disabled selected hidden value="">Choisir</option>
+                                            <option th:selected="${yearFilter == year.number}"
+                                                    th:each="year : ${years}"
+                                                    th:value="${year.number}"
+                                                    th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+
+                                </div>
+                            </div>
+                            <div class="card-header text-white bg-primary mt-2">
+                                <h3 class="ms-2">Exports</h3>
+                            </div>
+                            <div class="card-body mt-3" style="height: 500px">
+                                <h4 class="card-title">Exports des données en csv</h4>
+                                <div class="col-lg-6">
+                                    <a title="Exporter le dossier complet en csv" th:href="@{exports/export-to-csv(year=${yearFilter})}" class="btn btn-outline-primary">
+                                        <i class="fa-regular fa-folder-open fa-lg"></i></a>
+                                    Exporter le dossier complet
+                                </div>
+                                <div class="col-lg-6 mt-2">
+                                    <a title="Exporter toutes les enquêtes en csv" th:href="@{exports/export-enquete-to-csv(year=${yearFilter})}" class="btn btn-outline-primary"><i class="fa-solid fa-magnifying-glass fa-lg"></i></i></a>
+                                    Exporter l’enquête
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <footer th:replace="fragments/footer :: black"></footer>
+        <div th:replace="fragments/flash :: flash"></div>
+    </body>
+</html>

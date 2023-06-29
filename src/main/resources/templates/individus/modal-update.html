@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<div th:fragment="update" class="modal fade" id="update-individu-modal" tabindex="-1" aria-labelledby="update-individu-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="update-individu-label">Modification de l'individu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form th:method="put" th:action="@{/dossiers/{id}/update-dossier-individu(id=${currentDossier.id})}" th:object="${dossierIndividuFrom}">
+                <div class="modal-body">
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="name">Nom</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <input disabled id="name" name="name" type="text" class="form-control" th:value="${currentDossier.individu.name}">
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label for="firstname" class="form-label">Prénom</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <input disabled id="firstname" name="firstname" type="text" class="form-control" th:value="${currentDossier.individu.firstName}">
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="numEtu">Numéro d’étudiant</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <input disabled id="numEtu" name="numEtu" type="text" class="form-control" th:value="${currentDossier.individu.numEtu}">
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="type">Type d’individu</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select th:disabled="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}" id="type" name="type" type="text" class="form-select" th:value="${currentDossier.type}">
+                                <option value="" disabled selected hidden>Choisir</option>
+                                <option  th:selected="${currentDossier.type == typeIndividu}" th:each="typeIndividu : ${typeIndividus}" th:text="#{'dossier.typeIndividu.' +${typeIndividu}}" th:value="${typeIndividu}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="nationalite">Nationalité</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select id="nationalite" name="nationalite" class="form-select" th:disabled="${currentDossier.individu.nationalite != null}">
+                                <option th:value="${currentDossier.individu.nationalite}" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.nationalite))}" th:if="${currentDossier.individu.nationalite != null}" selected></option>
+                                <th:block th:each="locale : ${locales}">
+                                    <option th:value="${locale}" th:text="${locale}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-baseline">
+                        <div class="col-4" style="width: 250px;">
+                            <label class="form-label" for="statusDossier">Statut du dossier</label>
+                        </div>
+                        <div class="col-12 col-xxl-8">
+                            <select id="statusDossier" name="statusDossier" type="text" class="form-select">
+                                <option value="" disabled selected hidden>Choisir</option>
+                                <option th:selected="${currentDossier.statusDossier == statusDossier}" th:each="statusDossier : ${statusDossiers}" th:text="#{'dossier.statusDossier.' +${statusDossier}}" th:value="${statusDossier}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-success float-end mb-3" value="Enregistrer">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>
