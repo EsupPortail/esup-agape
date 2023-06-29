@@ -44,8 +44,6 @@ public class EnqueteExportCsv {
         this.codPfpp = codPfpp;
         this.codPfas = codPfas;
         this.codMeahF = codMeahF;
-        this.interpH = interpH;
-        this.codeurH = codeurH;
         this.aidHNat = aidHNat;
         this.codMeae = codMeae;
         this.autAE = autAE;

@@ -75,8 +75,12 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
-        enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
+        if(enqueteForm.getTypFrmn() != null) {
+            enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
+        }
+        if(enqueteForm.getModFrmn() != null) {
+            enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
+        }
         if(enqueteForm.getCodSco() != null) {
             enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         }
@@ -124,7 +128,6 @@ public class EnqueteService {
             }
         }
 
-        enqueteToUpdate.setInterpH(enqueteForm.getInterpH());
         enqueteToUpdate.getCodAmL().clear();
         if (StringUtils.hasText(enqueteForm.getAM0())) {
             enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM0()));
@@ -154,7 +157,6 @@ public class EnqueteService {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
         }
-        enqueteToUpdate.setCodeurH(enqueteForm.getCodeurH());
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
 
@@ -183,7 +185,11 @@ public class EnqueteService {
                 enquete.setSexe("0");
             } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
                 enquete.setSexe("1");
+            } else if (dossier.getIndividu().getGender().equals(Gender.NE_SAIS_PAS)) {
+                enquete.setSexe("2");
             }
+
+
             if(enquete.getTypFrmn() == null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
@@ -247,14 +253,12 @@ public class EnqueteService {
 
     public Map<Classification, CodHd> getClassificationEnqueteMap() {
         Map<Classification, CodHd> classificationMap = new HashMap<>();
-        classificationMap.put(Classification.SURDITE_SEVERE_ET_PROFONDE, CodHd.AUD);
+        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_AUDITIVES, CodHd.AUD);
         classificationMap.put(Classification.MOTEUR, CodHd.MOT);
-        classificationMap.put(Classification.CECITE, CodHd.VUE);
-        classificationMap.put(Classification.DEFICIENCE_AUDTIVE_AUTRE, CodHd.AUA);
-        classificationMap.put(Classification.DEFICIENCE_VISUELLE_AUTRE, CodHd.VUA);
+        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
         classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
         classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
-        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_ET_DE_LA_PAROLE, CodHd.LNG);
+        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);
         classificationMap.put(Classification.AUTISME, CodHd.TSA);
         classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
         classificationMap.put(Classification.REFUS, CodHd.TND);

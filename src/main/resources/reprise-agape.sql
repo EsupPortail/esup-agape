@@ -18,6 +18,7 @@ declare
     aidanta record;
     contratf record;
     contratpj record;
+    situationpj record;
     bigfilea record;
     bigfilefeuille record;
     bigfileplanning record;
@@ -79,7 +80,7 @@ declare
     horsunivcounter bigint;
 begin
     horsunivcounter = 0;
-    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from etudiant') as e1(
+    for e in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from etudiant') as e1(
                                                                                                                id                       bigint,
                                                                                                                adresse_annuelle         varchar(255),
                                                                                                                adresse_fixe             varchar(255),
@@ -106,7 +107,7 @@ begin
         loop
             new_id_user = nextval('hibernate_sequence');
             numetunew = e.num_etudiant;
-            if e.num_etudiant in (select num_etudiant from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select num_etudiant as test from etudiant group by num_etudiant having count(num_etudiant) > 1') as e1(num_etudiant varchar(255))) then
+            if e.num_etudiant in (select num_etudiant from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select num_etudiant as test from etudiant group by num_etudiant having count(num_etudiant) > 1') as e1(num_etudiant varchar(255))) then
                 numetunew = concat(e.num_etudiant, horsunivcounter);
                 horsunivcounter = horsunivcounter + 1;
             end if;
@@ -115,7 +116,7 @@ begin
                 if e.sexe = 1 then gender = 'FEMININ'; end if;
                 insert into individu (id, contact_phone, date_of_birth, email_etu, eppn, first_name, fix_address, fixcp, fix_city, fix_country, fix_phone, gender, name, nationalite, num_etu, photo_id, sex) values
                     (new_id_user, e.tel_portable, e.date_naissance, e.email_etudiant, null, e.prenom, e.adresse_fixe, e.code_postal_fixe, e.nom_commune_fixe, null, e.tel_fixe, gender, e.nom, null, numetunew, null, e.sexe);
-                for d in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier') as d1(
+                for d in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from dossier') as d1(
                                                                                                                                                    id                       bigint,
                                                                                                                                                    annee                    varchar(255),
                                                                                                                                                    id_user                  bigint,
@@ -129,7 +130,7 @@ begin
                         if d.type_individu = 1 then type = 'ETUDIANT'; end if;
                         if d.type_individu = 2 then type = 'HORS_UNIV'; end if;
                         new_status_dossier = null;
-                        for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint) where dossier = d.id
+                        for ds in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from dossier_statut_dossier') as ds1 (dossier bigint, statut_dossier bigint) where dossier = d.id
                             loop
                                     if ds.statut_dossier = 7 or ds.statut_dossier = 1487 then new_status_dossier = 'ACCUEILLI'; end if;
                                     if ds.statut_dossier = 8 or ds.statut_dossier = 131589 then new_status_dossier = 'SUIVI'; end if;
@@ -139,10 +140,11 @@ begin
                             end loop;
                         if (select count(*) from year where number = cast(d.annee as integer)) = 0 then insert into year (id, number) values (nextval('hibernate_sequence'), cast(d.annee as integer)); end if;
                         commentnew = null;
+                        -- TODO calculer secteur disciplinaire
                         new_id_dossier = nextval('hibernate_sequence');
                         insert into dossier (id, year, individu_id, type, status_dossier, status_dossier_amenagement) values
                             (new_id_dossier, cast(d.annee as integer), new_id_user, type, new_status_dossier, 'NON');
-                        for s in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from situation') as s1 (id                         bigint,
+                        for s in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from situation') as s1 (id                         bigint,
                                                                                                                                                               commentaire_classification text,
                                                                                                                                                               date_modification          timestamp,
                                                                                                                                                               id_dossier                 bigint,
@@ -150,8 +152,36 @@ begin
                                                                                                                                                               version                    integer,
                                                                                                                                                               taux                       integer) where id_dossier = d.id
                             loop
+                                for situationpj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from situation_pieces_jointes_situation') as contratpj1(situation bigint, pieces_jointes_situation bigint) where situation = s.id
+                                    loop
+                                        for pj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from piece_jointe') as pj1(id                bigint,
+                                                                                                                                                                                  content_type      varchar(255),
+                                                                                                                                                                                  creer_par         varchar(255),
+                                                                                                                                                                                  date_creation     timestamp,
+                                                                                                                                                                                  date_modification timestamp,
+                                                                                                                                                                                  description       varchar(500),
+                                                                                                                                                                                  id_dossier        bigint,
+                                                                                                                                                                                  modifier_par      varchar(255),
+                                                                                                                                                                                  nom_fichier       varchar(255),
+                                                                                                                                                                                  size              bigint,
+                                                                                                                                                                                  titre             varchar(255),
+                                                                                                                                                                                  version           integer,
+                                                                                                                                                                                  fichier           bigint) where id = situationpj.pieces_jointes_situation
+                                            loop
+                                                for bigfilea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from big_file') as pj1(id          bigint,
+                                                                                                                                                                                            binary_file oid, version integer) where id = pj.fichier
+                                                    loop
+                                                        new_id_big_file = nextval('hibernate_sequence');
+                                                        insert into big_file (id, binary_file, version) VALUES (new_id_big_file, bigfilea.binary_file, bigfilea.version);
+                                                        new_id_pj = nextval('hibernate_sequence');
+                                                        insert into document (id, content_type, create_date, file_name, parent_id, parent_type, size, type_document, version, big_file_id, dossier_id)
+                                                        VALUES (new_id_pj, pj.content_type, pj.date_creation, pj.nom_fichier, new_id_aide_humaine, 'Dossier', pj.size, null, pj.version, new_id_big_file, new_id_dossier);
+                                                        insert into dossier_attachments (dossier_id, attachments_id) VALUES (new_id_dossier, new_id_pj);
+                                                    end loop;
+                                            end loop;
+                                    end loop;
                                 mdphnew = null;
-                                for sm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from situation_libellemdph') as sm1 (situation bigint,libellemdph bigint) where situation = s.id
+                                for sm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from situation_libellemdph') as sm1 (situation bigint,libellemdph bigint) where situation = s.id
                                     loop
                                         if sm.libellemdph = 21 then mdphnew =    'AAH'; end if;
                                         if sm.libellemdph = 22 then mdphnew =    'AEEH'; end if;
@@ -170,18 +200,18 @@ begin
                                         if sm.libellemdph = 22663 then mdphnew = 'EN_COURS_DE_CONSTITUTION_HANDISUP'; end if;
                                     end loop;
                             update dossier set commentaire = s.commentaire_classification, mdph = mdphnew where id = new_id_dossier;
-                            for sc in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from situation_libelle_classification') as sc1 (situation bigint,libelle_classification bigint) where situation = s.id
+                            for sc in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from situation_libelle_classification') as sc1 (situation bigint,libelle_classification bigint) where situation = s.id
                                 loop
                                     classificationnew = null;
-                                    if sc.libelle_classification = 9     then classificationnew = 'CECITE'; end if;
-                                    if sc.libelle_classification = 10    then classificationnew = 'SURDITE_SEVERE_ET_PROFONDE'; end if;
+                                    if sc.libelle_classification = 9     then classificationnew = 'TROUBLES_DES_FONCTIONS_VISUELLES'; end if;
+                                    if sc.libelle_classification = 10    then classificationnew = 'TROUBLES_DES_FONCTIONS_AUDITIVES'; end if;
                                     if sc.libelle_classification = 11    then classificationnew = 'MOTEUR'; end if;
                                     if sc.libelle_classification = 12    then classificationnew = 'TROUBLES_INTELLECTUELS_ET_COGNITIFS'; end if;
                                     if sc.libelle_classification = 13    then classificationnew = 'TROUBLES_PSYCHIQUES'; end if;
                                     if sc.libelle_classification = 14    then classificationnew = 'TROUBLES_VISCERAUX'; end if;
-                                    if sc.libelle_classification = 15    then classificationnew = 'DEFICIENCE_AUDTIVE_AUTRE'; end if;
-                                    if sc.libelle_classification = 16    then classificationnew = 'DEFICIENCE_VISUELLE_AUTRE'; end if;
-                                    if sc.libelle_classification = 226   then classificationnew = 'TROUBLE_DU_LANGAGE_ET_DE_LA_PAROLE'; end if;
+                                    if sc.libelle_classification = 15    then classificationnew = 'TROUBLES_DES_FONCTIONS_AUDITIVES'; end if;
+                                    if sc.libelle_classification = 16    then classificationnew = 'TROUBLES_DES_FONCTIONS_VISUELLES'; end if;
+                                    if sc.libelle_classification = 226   then classificationnew = 'TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE'; end if;
                                     if sc.libelle_classification = 10636 then classificationnew = 'AUTRES_TROUBLES'; end if;
                                     if sc.libelle_classification = 14615 then classificationnew = 'AUTISME'; end if;
                                     if sc.libelle_classification = 70903 then classificationnew = 'REFUS'; end if;
@@ -194,7 +224,7 @@ begin
                                 end loop;
                             end loop;
 -- BOUCLE SUR LES CONTACTS
-                        for c in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact') as c1(id                     bigint,
+                        for c in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from contact') as c1(id                     bigint,
                                                                                                                                                            compte_rendu           text,
                                                                                                                                                            date_contact           timestamp,
                                                                                                                                                            fonction_interlocuteur varchar(255),
@@ -202,7 +232,7 @@ begin
                                                                                                                                                            interlocuteur          varchar(255),
                                                                                                                                                            version                integer) where id_dossier = d.id
                         loop
-                            for ct in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contact_type_contact') as ct1(contact bigint, type_contact bigint) where contact = c.id
+                            for ct in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from contact_type_contact') as ct1(contact bigint, type_contact bigint) where contact = c.id
                             loop
                                     rdv = null;
                                     if ct.type_contact = 1 then rdv = 'MAIL'; end if;
@@ -214,7 +244,7 @@ begin
                                 (nextval('hibernate_sequence'), c.compte_rendu, c.date_contact, c.interlocuteur, rdv, new_id_dossier);
                         end loop;
 -- BOUCLE SUR LES AMENAGEMENTS
-                        for am in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from amenagement') as am1(
+                        for am in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from amenagement') as am1(
                                                                                                                                                                  id                  bigint,
                                                                                                                                                                  accord              varchar(255),
                                                                                                                                                                  autres_amenagements text,
@@ -248,9 +278,9 @@ begin
                             if am.accord = 'oui' then autorisation = 'OUI'; end if;
                             if am.accord = 'non' then autorisation = 'NON'; end if;
                             amenagement_text = '';
-                            for amt in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from amenagement_amenagements') as amt1(amenagement bigint, amenagements bigint) where amenagement = am.id
+                            for amt in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from amenagement_amenagements') as amt1(amenagement bigint, amenagements bigint) where amenagement = am.id
                                 loop
-                                    for l in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from libelle') as l1(dtype          varchar(31),
+                                    for l in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from libelle') as l1(dtype          varchar(31),
                                                                                                                                                                        id             bigint,
                                                                                                                                                                        actif          boolean,
                                                                                                                                                                        code_libelle   varchar(255),
@@ -271,7 +301,7 @@ begin
                             tempsmajorenew = upper(am.temp_majore);
                             if upper(am.temp_majore) = 'AUTRE' then tempsmajorenew = 'AUCUN'; end if;
                             dateenvoi = null;
-                            if am.statut_mail = true then dateenvoi = now();
+                            if am.statut_mail = true then dateenvoi = now(); end if;
                             insert into amenagement (id, administration_date, amenagement_text, autorisation, autres_temps_majores,
                                                      autres_type_epreuve, create_date, delete_date, end_date, individu_send_date, mail_medecin,
                                                      mail_valideur, motif_refus, nom_medecin, nom_valideur, status_amenagement, temps_majore,
@@ -285,7 +315,7 @@ begin
                             end if;
                         end loop;
 -- BOUCLE SUR LES AIDES MATERIELLES
-                for aidesm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aide_materielle') as aidesm1(id               bigint,
+                for aidesm in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from aide_materielle') as aidesm1(id               bigint,
                                                                                                                                                                      commentaires     varchar(255),
                                                                                                                                                                      couts            integer,
                                                                                                                                                                      date_debut       timestamp,
@@ -296,7 +326,7 @@ begin
                                                                                                                                                                      libelle_materiel bigint) where id_dossier = d.id
                     loop
                         type_aide_materiel = null;
-                        for aidesml in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aide_materielle_libelle_materiel') as aidesml1(aide_materielle bigint, libelle_materiel bigint)
+                        for aidesml in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from aide_materielle_libelle_materiel') as aidesml1(aide_materielle bigint, libelle_materiel bigint)
                             loop
                                 if aidesml.libelle_materiel = 28 then type_aide_materiel = 'RECHARGEMENT_LEOCARTE'; end if;
                                 if aidesml.libelle_materiel = 30 then type_aide_materiel = 'LOGICIEL_ADAPTE'; end if;
@@ -306,7 +336,7 @@ begin
                             values (nextval('hibernate_sequence'), aidesm.commentaires, aidesm.couts, aidesm.date_fin, aidesm.date_debut, type_aide_materiel, new_id_dossier);
                     end loop;
 -- BOUCLE SUR LES AIDES HUMAINES
-                for contrata in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contrat') as contrata1( id             bigint,
+                for contrata in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from contrat') as contrata1( id             bigint,
                                                                                                                                                                 date_contrat   timestamp,
                                                                                                                                                                 id_dossier     bigint,
                                                                                                                                                                 statut_dossier integer,
@@ -316,7 +346,7 @@ begin
                     loop
 
                         new_id_aide_humaine = nextval('hibernate_sequence');
-                        for aidanta in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from aidant') as aidant1(id             bigint,
+                        for aidanta in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from aidant') as aidant1(id             bigint,
                                                                                                                                                                     date_naissance timestamp,
                                                                                                                                                                     email          varchar(255),
                                                                                                                                                                     nom            varchar(255),
@@ -330,9 +360,9 @@ begin
                                 if contrata.statut_dossier = 1 then status_dossier_aide_humaine = 'COMPLET'; end if;
                                 insert into aide_humaine (id, date_of_birth_aidant, email_aidant, first_name_aidant, name_aidant, num_etu_aidant, phone_aidant, start_date, status_aide_humaine, dossier_id)
                                 values (new_id_aide_humaine, aidanta.date_naissance, aidanta.email, aidanta.prenom, aidanta.nom, aidanta.num_etudiant, aidanta.tel, contrata.date_contrat, status_dossier_aide_humaine, new_id_dossier);
-                                for contratpj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contrat_pieces_jointes') as contratpj1(contrat bigint, pieces_jointes bigint) where contrat = contrata.id
+                                for contratpj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from contrat_pieces_jointes') as contratpj1(contrat bigint, pieces_jointes bigint) where contrat = contrata.id
                                     loop
-                                        for pj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from piece_jointe') as pj1(id                bigint,
+                                        for pj in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from piece_jointe') as pj1(id                bigint,
                                                                                                                                                                                   content_type      varchar(255),
                                                                                                                                                                                   creer_par         varchar(255),
                                                                                                                                                                                   date_creation     timestamp,
@@ -346,7 +376,7 @@ begin
                                                                                                                                                                                   version           integer,
                                                                                                                                                                                   fichier           bigint) where id = contratpj.pieces_jointes
                                             loop
-                                                for bigfilea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from big_file') as pj1(id          bigint,
+                                                for bigfilea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from big_file') as pj1(id          bigint,
                                                                                                                                                                                             binary_file oid, version integer) where id = pj.fichier
                                                     loop
                                                         new_id_big_file = nextval('hibernate_sequence');
@@ -360,13 +390,13 @@ begin
                                                     end loop;
                                             end loop;
                                     end loop;
-                                for contratf in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from contrat_fonctions') as contratf1(contrat bigint, fonctions bigint) where contrat = contrata.id
+                                for contratf in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from contrat_fonctions') as contratf1(contrat bigint, fonctions bigint) where contrat = contrata.id
                                     loop
                                         if contratf.fonctions = 93 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'PRENEUR_NOTES'); end if;
                                         if contratf.fonctions = 94 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_ACC'); end if;
                                         if contratf.fonctions = 95 then insert into aide_humaine_fonction_aidants (aide_humaine_id, fonction_aidants) values (new_id_aide_humaine, 'TUTEUR_PEDAGO'); end if;
                                     end loop;
-                                for periodea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from periode') as periode1(id            bigint,
+                                for periodea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from periode') as periode1(id            bigint,
                                                                                                                                                                                cout          integer,
                                                                                                                                                                                id_contrat    bigint,
                                                                                                                                                                                mois          integer,
@@ -408,7 +438,7 @@ begin
                                         new_id_feuille = null;
                                         if periodea.feuille_heure is not null then
                                             new_id_big_file = null;
-                                            for feuille in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from piece_jointe') as feuille1(id                bigint,
+                                            for feuille in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from piece_jointe') as feuille1(id                bigint,
                                                                                                                                                                                       content_type      varchar(255),
                                                                                                                                                                                       creer_par         varchar(255),
                                                                                                                                                                                       date_creation     timestamp,
@@ -422,7 +452,7 @@ begin
                                                                                                                                                                                       version           integer,
                                                                                                                                                                                       fichier           bigint) where id = periodea.feuille_heure
                                                 loop
-                                                    for bigfilea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from big_file') as bigfeuille1(id          bigint,
+                                                    for bigfilea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from big_file') as bigfeuille1(id          bigint,
                                                                                                                                                                                                 binary_file oid, version integer) where id = feuille.fichier
                                                         loop
                                                             new_id_feuille = nextval('hibernate_sequence');
@@ -437,7 +467,7 @@ begin
                                         new_id_planing = null;
                                         if periodea.planning is not null then
                                             new_id_big_file = null;
-                                            for planing in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from piece_jointe') as planing1(id                bigint,
+                                            for planing in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from piece_jointe') as planing1(id                bigint,
                                                                                                                                                                                       content_type      varchar(255),
                                                                                                                                                                                       creer_par         varchar(255),
                                                                                                                                                                                       date_creation     timestamp,
@@ -451,7 +481,7 @@ begin
                                                                                                                                                                                       version           integer,
                                                                                                                                                                                       fichier           bigint) where id = periodea.planning
                                                 loop
-                                                    for bigfileplanning in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from big_file') as bigplanning1(id          bigint,
+                                                    for bigfileplanning in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from big_file') as bigplanning1(id          bigint,
                                                                                                                                                                                                 binary_file oid, version integer) where id = planing.fichier
                                                         loop
                                                             new_id_planing = nextval('hibernate_sequence');
@@ -469,7 +499,7 @@ begin
                             end loop;
                     end loop;
 -- BOUCLE SUR LES ENQUETES
-                for enquetea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from enquete') as enquetea1(id_        bigint,
+                for enquetea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from enquete') as enquetea1(id_        bigint,
                                                                                                                                                                aidhnat    text,
                                                                                                                                                                an         varchar(255),
                                                                                                                                                                autaa      text,
@@ -580,25 +610,25 @@ begin
                         if enquetea.codsco = 5 then codsconew = 'L3'; end if;
                         if enquetea.codsco = 6 then codsconew = 'M1'; end if;
                         if enquetea.codsco = 7 then codsconew = 'M2'; end if;
-                        if enquetea.codsco = 8 then codsconew = 'ip1'; end if;
-                        if enquetea.codsco = 9 then codsconew = 'ip2'; end if;
-                        if enquetea.codsco = 10 then codsconew = 'ip3'; end if;
-                        if enquetea.codsco = 11 then codsconew = 'ip4'; end if;
-                        if enquetea.codsco = 12 then codsconew = 'ip5'; end if;
-                        if enquetea.codsco = 13 then codsconew = 'ing1'; end if;
-                        if enquetea.codsco = 14 then codsconew = 'ing2'; end if;
-                        if enquetea.codsco = 15 then codsconew = 'ing3'; end if;
-                        if enquetea.codsco = 16 then codsconew = 'ing4'; end if;
-                        if enquetea.codsco = 17 then codsconew = 'ing5'; end if;
-                        if enquetea.codsco = 18 then codsconew = 'ing6'; end if;
-                        if enquetea.codsco = 19 then codsconew = 'san1a'; end if;
-                        if enquetea.codsco = 20 then codsconew = 'san2a'; end if;
-                        if enquetea.codsco = 21 then codsconew = 'san3a'; end if;
-                        if enquetea.codsco = 22 then codsconew = 'san4a'; end if;
-                        if enquetea.codsco = 23 then codsconew = 'san5a'; end if;
-                        if enquetea.codsco = 24 then codsconew = 'san6a'; end if;
-                        if enquetea.codsco = 25 then codsconew = 'cycx1'; end if;
-                        if enquetea.codsco = 26 then codsconew = 'cycx2'; end if;
+                        if enquetea.codsco = 8 then codsconew = ''; end if;
+                        if enquetea.codsco = 9 then codsconew = ''; end if;
+                        if enquetea.codsco = 10 then codsconew = ''; end if;
+                        if enquetea.codsco = 11 then codsconew = ''; end if;
+                        if enquetea.codsco = 12 then codsconew = ''; end if;
+                        if enquetea.codsco = 13 then codsconew = '1'; end if;
+                        if enquetea.codsco = 14 then codsconew = '2'; end if;
+                        if enquetea.codsco = 15 then codsconew = '3'; end if;
+                        if enquetea.codsco = 16 then codsconew = '4'; end if;
+                        if enquetea.codsco = 17 then codsconew = '5'; end if;
+                        if enquetea.codsco = 18 then codsconew = '6+'; end if;
+                        if enquetea.codsco = 19 then codsconew = '1a'; end if;
+                        if enquetea.codsco = 20 then codsconew = '2a'; end if;
+                        if enquetea.codsco = 21 then codsconew = '3a'; end if;
+                        if enquetea.codsco = 22 then codsconew = '4a'; end if;
+                        if enquetea.codsco = 23 then codsconew = '5a'; end if;
+                        if enquetea.codsco = 24 then codsconew = '6a+'; end if;
+                        if enquetea.codsco = 25 then codsconew = 'x1'; end if;
+                        if enquetea.codsco = 26 then codsconew = 'x2'; end if;
                         codhdnew = null;
                         if enquetea.codhd = 1 then codhdnew = 'COG'; end if;
                         if enquetea.codhd = 2 then codhdnew = 'TSA'; end if;
@@ -608,9 +638,9 @@ begin
                         if enquetea.codhd = 6 then codhdnew = 'VIS'; end if;
                         if enquetea.codhd = 7 then codhdnew = 'VIS0'; end if;
                         if enquetea.codhd = 8 then codhdnew = 'VUE'; end if;
-                        if enquetea.codhd = 9 then codhdnew = 'VUA'; end if;
+                        if enquetea.codhd = 9 then codhdnew = 'VUE'; end if;
                         if enquetea.codhd = 10 then codhdnew = 'AUD'; end if;
-                        if enquetea.codhd = 11 then codhdnew = 'AUA'; end if;
+                        if enquetea.codhd = 11 then codhdnew = 'AUD'; end if;
                         if enquetea.codhd = 12 then codhdnew = 'PTA'; end if;
                         if enquetea.codhd = 13 then codhdnew = 'AUT'; end if;
                         if enquetea.codhd = 14 then codhdnew = 'TND'; end if;
@@ -631,8 +661,8 @@ begin
                         if enquetea.typefrmn = 1 then typfrmnnew = 'I'; end if;
                         if enquetea.typefrmn = 2 then typfrmnnew = 'C'; end if;
                         new_id_enquete = nextval('hibernate_sequence');
-                        insert into enquete (id, aidhnat, an, autaa, autae, cod_fil, cod_fmt, cod_hd, cod_pfas, cod_pfpp, cod_sco, codeurh, com, finished, hd_tmp, interph, mod_frmn, sexe, typ_frmn, dossier_id)
-                            values (new_id_enquete, enquetea.aidhnat, enquetea.an, enquetea.autaa, enquetea.autae, codfilnew, codfmtnew, codhdnew, codpfasnew, codpfppnew, codsconew, enquetea.codeurh, enquetea.com, true, enquetea.hdtmp, enquetea.interph, modfrmnew, enquetea.sexe, typfrmnnew, new_id_dossier);
+                        insert into enquete (id, aidhnat, an, autaa, autae, cod_fil, cod_fmt, cod_hd, cod_pfas, cod_pfpp, cod_sco, com, finished, hd_tmp, mod_frmn, sexe, typ_frmn, dossier_id)
+                            values (new_id_enquete, enquetea.aidhnat, enquetea.an, enquetea.autaa, enquetea.autae, codfilnew, codfmtnew, codhdnew, codpfasnew, codpfppnew, codsconew, enquetea.com, true, enquetea.hdtmp, modfrmnew, enquetea.sexe, typfrmnnew, new_id_dossier);
                         codmeaanew = null;
                         if enquetea.codmeaa = 1 then codmeaanew = 'AA1'; end if;
                         if enquetea.codmeaa = 2 then codmeaanew = 'AA2'; end if;
@@ -641,7 +671,7 @@ begin
                         if codmeaanew is not null then
                             insert into enquete_cod_meaa (enquete_id, cod_meaa) values (new_id_enquete, codmeaanew);
                         end if;
-                        for enquetecodamla in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from enquete_codaml') as enquetecodamla1(enquete bigint, codaml bigint) where enquete = enquetea.id_
+                        for enquetecodamla in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from enquete_codaml') as enquetecodamla1(enquete bigint, codaml bigint) where enquete = enquetea.id_
                             loop
                                 codamlnew = null;
                                 if enquetecodamla.codaml = 0 then codamlnew = 'AM00'; end if;
@@ -681,7 +711,7 @@ begin
                                     insert into enquete_cod_aml (enquete_id, cod_aml) values (new_id_enquete, codamlnew);
                                 end if;
                             end loop;
-                        for enquetecodmeaea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from enquete_codmeae') as enquetecodmeaea1(enquete bigint, codmeae bigint) where enquete = enquetea.id_
+                        for enquetecodmeaea in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from enquete_codmeae') as enquetecodmeaea1(enquete bigint, codmeae bigint) where enquete = enquetea.id_
                             loop
                                 codmeaenew = null;
                                 if enquetecodmeaea.codmeae = 0 then
@@ -709,7 +739,7 @@ begin
                                     insert into enquete_cod_meae (enquete_id, cod_meae) values (new_id_enquete, codmeaenew);
                                 end if;
                             end loop;
-                        for enquetecodmeahfa in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=mh password=mh2015Agape', 'select * from enquete_codmeahf') as enquetecodmeahfa1(enquete bigint, codmeahf bigint) where enquete = enquetea.id_
+                        for enquetecodmeahfa in select * from dblink('dbname=agape port=5432 host=127.0.0.1 user=esupagape password=esup', 'select * from enquete_codmeahf') as enquetecodmeahfa1(enquete bigint, codmeahf bigint) where enquete = enquetea.id_
                             loop
                                 codmeahfnew = null;
                                 if enquetecodmeahfa.codmeahf = 0 then
@@ -727,27 +757,27 @@ begin
                                 elsif enquetecodmeahfa.codmeahf = 6 then
                                     codmeahfnew = 'AHS2F';
                                 elsif enquetecodmeahfa.codmeahf = 7 then
-                                    codmeahfnew = 'AHS3P';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 8 then
-                                    codmeahfnew = 'AHS3O';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 9 then
-                                    codmeahfnew = 'AHS3P';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 10 then
                                     codmeahfnew = 'AHS4';
                                 elsif enquetecodmeahfa.codmeahf = 11 then
-                                    codmeahfnew = 'AHS5O';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 12 then
-                                    codmeahfnew = 'AHS5O';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 13 then
-                                    codmeahfnew = 'AHS5Q';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 14 then
-                                    codmeahfnew = 'AHS5H';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 15 then
-                                    codmeahfnew = 'AHS5M';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 16 then
-                                    codmeahfnew = 'AHS5S';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 17 then
-                                    codmeahfnew = 'AHS5E';
+                                    codmeahfnew = 'AHS5';
                                 end if;
                                 if codmeahfnew is not null then
                                     insert into enquete_cod_meahf (enquete_id, cod_meahf) values (new_id_enquete, codmeahfnew);

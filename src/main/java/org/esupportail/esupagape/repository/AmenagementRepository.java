@@ -35,21 +35,27 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "and (:yearFilter is null or d.year = :yearFilter)")
     Long countToValidate(Integer yearFilter);
 
-    @Query(value = "select a from Amenagement a " +
-            "join Dossier d on a.dossier = d " +
-            "where " +
-            "(:codComposante is null or a.dossier.codComposante  = :codComposante) " +
-            "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
-            "and (d.year < :yearFilter) " +
-            "and ((select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter) = 0 or (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1)")
+    @Query("""
+            select distinct a from Amenagement a
+            join Dossier d on a.dossier = d
+            where (:codComposante is null or a.dossier.codComposante  = :codComposante)
+            and a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (d.year < :yearFilter)
+            and a.typeAmenagement = 'CURSUS'
+            and
+            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
+            """)
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
-    @Query(value = "select count(a) from Amenagement a " +
-            "join Dossier d on a.dossier = d " +
-            "where " +
-            "a.statusAmenagement = 'VISE_ADMINISTRATION' " +
-            "and (d.year < :yearFilter) " +
-            "and (select count(d1) from Dossier d1 where d1.individu = d.individu and d1.year = :yearFilter and d1.statusDossierAmenagement = 'NON') = 1")
+    @Query("""
+            select distinct count(a) from Amenagement a
+            join Dossier d on a.dossier = d
+            where a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (d.year < :yearFilter)
+            and a.typeAmenagement = 'CURSUS'
+            and
+            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
+            """)
     Long countToPorte(Integer yearFilter);
 
     @Query(value = "select a from Amenagement a " +

@@ -48,7 +48,7 @@
                 </select>
             </div>
             <div class="input-group input-group-sm mb-1">
-                <label class="input-group-text col-6">Suivi MDPH</label>
+                <label class="input-group-text col-6">Dossier MDPH</label>
                 <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{mdph}" multiple>
                     <option th:each="mdph : ${mdphs}" th:value="${mdph}" th:text="#{'dossier.mdph.' +${mdph}}"></option>
                 </select>

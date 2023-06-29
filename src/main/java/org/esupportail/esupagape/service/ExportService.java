@@ -50,7 +50,7 @@ public class ExportService {
         put("statusDossier", "Statut du dossier");
         put("statusDossierAmenagement", "Statut du Dossier Aménagement");
         put("classification", "Classification du handicap");
-        put("mdph", "Suivi MDPH");
+        put("mdph", "Dossier MDPH");
         put("taux", "Taux");
         put("typeSuiviHandisup", "Type de suivi Handisup");
         put("typeFormation", "Type de formation");
@@ -77,17 +77,17 @@ public class ExportService {
         put("sexe", "Sexe");
         put("typFrmn", "Type formation");
         put("modFrmn", "Modalité formation");
-        put("codFil", "Discipline");
-        put("codFmt", "Formation");
         put("codSco", "Année d'études");
-        put("codHd", "Type de handicap");
+        put("codFmt", "Formation");
+        put("codFil", "Discipline");
+        put("codHd", "Typologie de trouble");
         put("hdTmp", "Handicap temporaire");
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
-        put("codPfas", "Aménagement spécifique");
+        put("codPfas", "Aménagement du cursus de formation");
         put("codMeahF", "Mesures aides humaines");
-        put("interpH", "Interprète: nombre d'heures");
-        put("codeurH", "Codeur: nombre d'heures");
+        put("interpH", "supprimé");
+        put("codeurH", "supprimé");
         put("aidHnat", "Autre aide humaine");
         put("codMeae", "Aménagement des examens");
         put("autAE", "Autre aménagement des examens");
@@ -113,17 +113,17 @@ public class ExportService {
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
                     enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
-                    enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase().toString() : "",
-                    enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase().toString() : "",
-                    enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase().toString() : "",
+                    enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase() : "",
+                    enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase() : "",
+                    enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase() : "",
                     enquete.getCodHd() != null ? enquete.getCodHd().name().toLowerCase() : "",
-                    (enquete.getHdTmp()) ? "1" : "0",
+                    (enquete.getHdTmp()) ? "1" : "",
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     enquete.getCodPfas() != null ? enquete.getCodPfas().name().toLowerCase() : "",
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
-                    enquete.getInterpH() != null ? enquete.getInterpH().toString() : "",
-                    enquete.getCodeurH()!= null ? enquete.getCodeurH().toString() : "",
+                    "",
+                    "",
                     enquete.getAidHNat(),
                     String.join("" ,enquete.getCodMeae().stream().map(codMeae -> codMeae.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAE(),
@@ -132,6 +132,7 @@ public class ExportService {
                     String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList())
             );
             enqueteExportCsvs.add(enqueteExportCsv);
+            id++;
         }
         writeObjectListToCsv(enqueteExportCsvs, enqueteCsv, writer);
     }

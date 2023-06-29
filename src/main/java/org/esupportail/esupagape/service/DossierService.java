@@ -55,7 +55,6 @@ public class DossierService {
 
     private final EntityManager em;
 
-
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
@@ -169,12 +168,12 @@ public class DossierService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
-        if(dossier.getIndividu().getDossiers().size() > 1) {
+        if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
         } else {
             dossier.setNewDossier(true);
         }
-        if(dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
+        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         if (dossier.getAmenagements().size() == 0) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
@@ -252,7 +251,7 @@ public class DossierService {
         }
         try {
             for (MultipartFile multipartFile : multipartFiles) {
-                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getTypeName(), dossier);
+                Document attachment = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), dossier.getId(), Dossier.class.getSimpleName(), dossier);
                 dossier.getAttachments().add(attachment);
             }
         } catch (IOException e) {
@@ -262,7 +261,7 @@ public class DossierService {
 
     @Transactional
     public List<DocumentDto> getAttachments(Long id) {
-        return documentRepository.findByDossierId(id).stream().filter(attachment -> "org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())).toList();
+        return documentRepository.findByDossierId(id).stream().filter(attachment -> "Dossier".equals(attachment.getParentType())).toList();
     }
 
     @Transactional
@@ -273,7 +272,7 @@ public class DossierService {
             throw new AgapeYearException();
         }
         Document attachment = documentService.getById(attachmentId);
-        if ("org.esupportail.esupagape.entity.Dossier".equals(attachment.getParentType())) {
+        if ("Dossier".equals(attachment.getParentType())) {
             dossier.getAttachments().remove(attachment);
             documentService.delete(attachment);
         }
@@ -527,7 +526,7 @@ public class DossierService {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
         }
 
-        if(dossierFilter.getNewDossier() != null) {
+        if (dossierFilter.getNewDossier() != null) {
             if (dossierFilter.getNewDossier()) {
                 predicates.add(cb.isTrue(dossierRoot.get("newDossier")));
             } else {
@@ -548,25 +547,26 @@ public class DossierService {
     @Transactional
     public void anonymiseDossiers(Individu individu) {
         List<Dossier> dossiers = dossierRepository.findAllByIndividuId(individu.getId());
-        for(Dossier dossier : dossiers) {
+        for (Dossier dossier : dossiers) {
             dossier.setStatusDossier(StatusDossier.ANONYMOUS);
         }
     }
 
 
-    @Transactional
-    public void anonymiseUnsubscribeDossier(Long id) {
-        Dossier dossier = getById(id);
-        if (dossier.getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeYearException();
-        }
-        int nbDossiers = 2;
-        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers).count();
-        if(countDossiers == 0) {
-
-        }
-
-    }
+//    @Transactional
+//    public void anonymiseUnsubscribeDossier(Long id) {
+//        Dossier dossier = getById(id);
+////        if (dossier.getYear() != utilsService.getCurrentYear()) {
+////            throw new AgapeYearException();
+////        }
+//
+//        int nbDossiers = 2;
+//        long countDossiers =  dossier.getIndividu().getDossiers().stream().filter(d -> d.getYear() >= utilsService.getCurrentYear() - nbDossiers).count();
+//        if(countDossiers == 1 && dossier.getStatusDossier() == StatusDossier.DESINSCRIT) {
+//            individuService.anonymiseIndividu(dossier.getIndividu().getId());
+//            dossier.setStatusDossier(StatusDossier.ANONYMOUS);
+//        }
+//    }
 
 }
 

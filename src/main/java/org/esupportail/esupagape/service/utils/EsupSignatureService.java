@@ -117,7 +117,7 @@ public class EsupSignatureService {
         String urlStatus = String.format("%s/ws/signrequests/get-last-file/%s", applicationProperties.getEsupSignatureUrl(), signId);
         ResponseEntity<byte[]> bytes = restTemplate.getForEntity(urlStatus, byte[].class);
         byte[] pdf = bytes.getBody();
-        Document document = documentService.createDocument(new ByteArrayInputStream(pdf), "Avis_" + amenagementId, "application/pdf", amenagementId, Amenagement.class.getTypeName(), amenagement.getDossier());
+        Document document = documentService.createDocument(new ByteArrayInputStream(pdf), "Avis_" + amenagementId, "application/pdf", amenagementId, Amenagement.class.getSimpleName(), amenagement.getDossier());
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             amenagement.setAvis(document);
             amenagement.setAvisSignatureStatus(SignatureStatus.DOWNLOADED);

@@ -294,7 +294,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                     Document avis = documentService.createDocument(
                             new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS)),
                             "Avis-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
-                            "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                            "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                             amenagement.getDossier());
                     amenagement.setAvis(avis);
                 } catch (IOException e) {
@@ -346,7 +346,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 Document certificat = documentService.createDocument(
                         new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT)),
                         "Certificat-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
-                        "application/pdf", amenagement.getId(), Amenagement.class.getTypeName(),
+                        "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         amenagement.getDossier());
                 amenagement.setCertificat(certificat);
                 sendAmenagementToIndividu(amenagementId);
@@ -648,7 +648,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     }
 
     @Transactional
-    public void syncAllAmenagements() throws AgapeException {
+    public void syncEsupSignatureAmenagements() throws AgapeException {
         List<Amenagement> amenagementsToSync = new ArrayList<>();
         amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.ENVOYE, utilsService.getCurrentYear()));
         amenagementsToSync.addAll(amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VALIDE_MEDECIN, utilsService.getCurrentYear()));
@@ -656,6 +656,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         for(Amenagement amenagement : amenagementsToSync) {
             syncEsupSignature(amenagement.getId());
         }
+    }
+
+    @Transactional
+    public void syncAllAmenagements() {
         List<Amenagement> amenagementsToExpire = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
         for(Amenagement amenagement : amenagementsToExpire) {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
@@ -663,12 +667,8 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             }
         }
-    }
-
-    @Transactional
-    public void sendAllCertificats() {
-        List<Amenagement> amenagementsToSync = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
-        for(Amenagement amenagement : amenagementsToSync) {
+        List<Amenagement> amenagementsToSend = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
+        for(Amenagement amenagement : amenagementsToSend) {
             if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId());
             }

@@ -103,7 +103,7 @@
                                 <tr>
                                     <td th:text="${amenagement.dossier.composante}"></td>
                                     <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${amenagement.endDate != null} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                    <td th:text="${amenagement.typeAmenagement.name() != 'CURSUS'} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td>
                                         <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.dossier.statusDossierAmenagement}}"
                                               th:classappend="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>

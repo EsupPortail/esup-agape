@@ -79,6 +79,13 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/anonymise-dossiers")
+    public String anonymiseDossiers(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "L'anonymisation des dossiers est terminée"));
+        individuService.anonymiseOldDossiers();
+        return "redirect:/admin";
+    }
+
     @GetMapping("/refresh-sise")
     public String refrechSise(RedirectAttributes redirectAttributes) {
         try {
@@ -93,7 +100,7 @@ public class AdminController {
     @GetMapping("/sync-esup-signature")
     public String syncEsupSignature(RedirectAttributes redirectAttributes) throws AgapeException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro Esup Signature est terminée"));
-        amenagementService.syncAllAmenagements();
+        amenagementService.syncEsupSignatureAmenagements();
         return "redirect:/admin";
     }
 
@@ -128,23 +135,31 @@ public class AdminController {
     @PostMapping("/import-codes-ministere")
     public String importCsv(@RequestParam("file") MultipartFile file,
                             RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des codes du ministère est terminé"));
-        try {
-            csvImportService.importCsv(file);
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des codes du ministère a échoué"));
+        if(!file.isEmpty()) {
+            try {
+                csvImportService.importCsv(file);
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des codes du ministère est terminé"));
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des codes du ministère a échoué"));
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
         }
         return "redirect:/admin";
     }
 
     @PostMapping("/import-libelles-ministere")
     public String importCsvLibelle(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) throws IOException {
-        redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des libellés du ministère est terminé"));
-        try {
-            csvImportService.importCsvLibelle(file);
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des libellés du ministère a échoué"));
+                                   RedirectAttributes redirectAttributes) {
+        if(!file.isEmpty()) {
+            try {
+                csvImportService.importCsvLibelle(file);
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des libellés du ministère est terminé"));
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des libellés du ministère a échoué"));
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
         }
         return "redirect:/admin";
     }

@@ -35,8 +35,6 @@ public class EnqueteForm {
     private String AHS3;
     private String AHS4;
     private String AHS5;
-    private Integer interpH;
-    private Integer codeurH;
     private String aidHNat;
     private Set<CodMeae> codMeae = new HashSet<>();
     private String autAE;
@@ -205,22 +203,6 @@ public class EnqueteForm {
 
     public void setAHS5(String AHS5) {
         this.AHS5 = AHS5;
-    }
-
-    public Integer getInterpH() {
-        return interpH;
-    }
-
-    public void setInterpH(Integer interpH) {
-        this.interpH = interpH;
-    }
-
-    public Integer getCodeurH() {
-        return codeurH;
-    }
-
-    public void setCodeurH(Integer codeurH) {
-        this.codeurH = codeurH;
     }
 
     public String getAidHNat() {

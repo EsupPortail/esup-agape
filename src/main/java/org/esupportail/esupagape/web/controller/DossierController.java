@@ -181,12 +181,14 @@ public class DossierController {
         return "redirect:/dossiers/" + dossierId;
     }
 
-    @DeleteMapping(value = "/{dossierId}/anonymise-unsubscribe")
-    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    public String anonymiseUnsubscribeDossier(@PathVariable Long dossierId) {
-        dossierService.anonymiseUnsubscribeDossier (dossierId);
-        return "redirect:/dossiers/";
-    }
+//    @PostMapping(value = "/{dossierId}/anonymise-unsubscribe")
+//    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+//    public String anonymiseUnsubscribeDossier(@PathVariable Long dossierId) {
+//        dossierService.anonymiseUnsubscribeDossier (dossierId);
+//        return "redirect:/dossiers/";
+//    }
+
+
 
     @GetMapping("/notes/{dossierId}")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

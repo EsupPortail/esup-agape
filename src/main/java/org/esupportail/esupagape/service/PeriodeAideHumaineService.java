@@ -110,7 +110,7 @@ public class PeriodeAideHumaineService {
         try {
             for(MultipartFile multipartFile : multipartFiles) {
                 PeriodeAideHumaine periodeAideHumaineToUpdate = getPeriodeAideHumaineByMonth(aideHumaineId, month);
-                Document feuille = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), periodeAideHumaineToUpdate.getId(), PeriodeAideHumaine.class.getTypeName(), dossier);
+                Document feuille = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), periodeAideHumaineToUpdate.getId(), PeriodeAideHumaine.class.getSimpleName(), dossier);
                 periodeAideHumaineToUpdate.setFeuilleHeures(feuille);
             }
         } catch (IOException e) {
@@ -149,7 +149,7 @@ public class PeriodeAideHumaineService {
         try {
             for(MultipartFile multipartFile : multipartFiles) {
                 PeriodeAideHumaine periodeAideHumaineToUpdate = aideHumaine.getPeriodeAideHumaines().stream().filter(p -> p.getMois().equals(Month.of(month))).findFirst().orElseThrow();
-                Document planning = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), periodeAideHumaineToUpdate.getId(), PeriodeAideHumaine.class.getTypeName(), dossier);
+                Document planning = documentService.createDocument(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), periodeAideHumaineToUpdate.getId(), PeriodeAideHumaine.class.getSimpleName(), dossier);
                 periodeAideHumaineToUpdate.setPlanning(planning);
             }
         } catch (IOException e) {

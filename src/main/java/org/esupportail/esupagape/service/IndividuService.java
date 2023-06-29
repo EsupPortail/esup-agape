@@ -59,9 +59,9 @@ public class IndividuService {
 
     private final ExcludeIndividuRepository excludeIndividuRepository;
 
-    private final DossierService dossierService;
-
     private final EnqueteService enqueteService;
+
+    private final DossierService dossierService;
 
     public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService) {
         this.individuSourceServices = individuSourceServices;
@@ -425,19 +425,24 @@ public class IndividuService {
     @Transactional
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
-        if (individu != null) {
-            int yearOfBirth = individu.getDateOfBirth().getYear();
+        if (individu != null && !individu.getNumEtu().startsWith("Anonyme")) {
+            logger.info("anonymise " + individu.getNumEtu());
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
             individu.setName("Anonyme");
             individu.setFirstName("Anonyme");
-            individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
+            if(individu.getDateOfBirth() != null) {
+                int yearOfBirth = individu.getDateOfBirth().getYear();
+                individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
+            }
             individu.setEppn("example@univ-rouen.fr");
             individu.setEmailEtu("exampleetu@univ-rouen.fr");
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
-            individu.setFixCP(individu.getFixCP().substring(0, 2));
+            if(StringUtils.hasText(individu.getFixCP())) {
+                individu.setFixCP(individu.getFixCP().substring(0, 2));
+            }
 
             List<Dossier> dossiers = individu.getDossiers();
             LocalDate currentDate = LocalDate.now();
@@ -445,13 +450,12 @@ public class IndividuService {
 
             boolean hasHelpPreviousYear = false;
 
-
             if (anonymisationDateLimit != null) {
                 for (Dossier dossier : dossiers) {
                     List<AideHumaine> aidesHumaines = dossier.getAidesHumaines();
                     for (AideHumaine aideHumaine : aidesHumaines) {
                         LocalDate startDate = LocalDate.from(aideHumaine.getStartDate());
-                        if (startDate != null && startDate.getYear() == anonymisationDateLimit.getYear() - 1) {
+                        if (startDate.getYear() == anonymisationDateLimit.getYear() - 1) {
                             hasHelpPreviousYear = true;
 
                         }
@@ -462,18 +466,20 @@ public class IndividuService {
                 for (Dossier dossier : dossiers) {
                     List<AideHumaine> aidesHumaines = dossier.getAidesHumaines();
                     for (AideHumaine aideHumaine : aidesHumaines) {
-                        int aidantYearOfBirth = aideHumaine.getDateOfBirthAidant().getYear();
+                        if(aideHumaine.getDateOfBirthAidant() != null) {
+                            int aidantYearOfBirth = aideHumaine.getDateOfBirthAidant().getYear();
+                            aideHumaine.setDateOfBirthAidant(LocalDate.of(aidantYearOfBirth, Month.FEBRUARY, 1));
+                        }
                         aideHumaine.setNumEtuAidant("AnonymeAidant" + aideHumaine.getId());
                         aideHumaine.setNameAidant("AnonymeAidant");
                         aideHumaine.setFirstNameAidant("AnonymeAidant");
-                        aideHumaine.setDateOfBirthAidant(LocalDate.of(aidantYearOfBirth, Month.FEBRUARY, 1));
                         aideHumaine.setEmailAidant("exampleAidant@univ-rouen.fr");
                         aideHumaine.setPhoneAidant("0000000000");
                     }
                 }
             }
             individu.setDateAnonymisation(currentDate);
-            dossierService.anonymiseDossiers(individu);
+//            dossierService.anonymiseDossiers(individu);
         }
     }
 
@@ -483,6 +489,21 @@ public class IndividuService {
         for (Individu individu : individus) {
             if (individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
                 anonymiseIndividu(individu.getId());
+            }
+        }
+    }
+
+    @Transactional
+    public void anonymiseOldDossiers() {
+        if(applicationProperties.getNbDossierNullBeforeAnonymise() > -1) {
+            List<Individu> individus = getAllIndividus();
+            for (Individu individu : individus) {
+                long countDossiers = individu.getDossiers().stream()
+                        .filter(d -> d.getYear() >= utilsService.getCurrentYear() - applicationProperties.getNbDossierNullBeforeAnonymise())
+                        .count();
+                if (countDossiers == 0) {
+                    anonymiseIndividu(individu.getId());
+                }
             }
         }
     }
