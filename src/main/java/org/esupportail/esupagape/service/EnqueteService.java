@@ -75,8 +75,12 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
-        enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
+        if(enqueteForm.getTypFrmn() != null) {
+            enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
+        }
+        if(enqueteForm.getModFrmn() != null) {
+            enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
+        }
         if(enqueteForm.getCodSco() != null) {
             enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         }

@@ -98,7 +98,7 @@
                                             <div>
                                                 <select id="codFil" name="codFil" class="form-select" size="1">
                                                     <option disabled selected hidden value="">Choisir</option>
-                                                    <option th:selected="${enumCodfil.toLowerCase() == enquete.codFil}"
+                                                    <option th:selected="${enquete.codFil != null && enumCodfil.toLowerCase() == enquete.codFil.toLowerCase()}"
                                                             th:each="enumCodfil : ${codFils}"
                                                             th:value="${enumCodfil}"
                                                             th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>

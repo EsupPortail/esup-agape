@@ -18,6 +18,8 @@ public class EnqueteExportCsv {
     String codPfpp;
     String codPfas;
     String codMeahF;
+    String interpH;
+    String codeurH;
     String aidHNat;
     String codMeae;
     String autAE;
@@ -25,7 +27,7 @@ public class EnqueteExportCsv {
     String autAA;
     String codAmL;
 
-    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa) {
+    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL) {
         this.nfic = nfic;
         this.id = id;
         this.numetu = numetu;
@@ -176,6 +178,22 @@ public class EnqueteExportCsv {
 
     public void setCodMeahF(String codMeahF) {
         this.codMeahF = codMeahF;
+    }
+
+    public String getInterpH() {
+        return interpH;
+    }
+
+    public void setInterpH(String interpH) {
+        this.interpH = interpH;
+    }
+
+    public String getCodeurH() {
+        return codeurH;
+    }
+
+    public void setCodeurH(String codeurH) {
+        this.codeurH = codeurH;
     }
 
     public String getAidHNat() {

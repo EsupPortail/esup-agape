@@ -610,25 +610,25 @@ begin
                         if enquetea.codsco = 5 then codsconew = 'L3'; end if;
                         if enquetea.codsco = 6 then codsconew = 'M1'; end if;
                         if enquetea.codsco = 7 then codsconew = 'M2'; end if;
-                        if enquetea.codsco = 8 then codsconew = 'ip1'; end if;
-                        if enquetea.codsco = 9 then codsconew = 'ip2'; end if;
-                        if enquetea.codsco = 10 then codsconew = 'ip3'; end if;
-                        if enquetea.codsco = 11 then codsconew = 'ip4'; end if;
-                        if enquetea.codsco = 12 then codsconew = 'ip5'; end if;
-                        if enquetea.codsco = 13 then codsconew = 'ing1'; end if;
-                        if enquetea.codsco = 14 then codsconew = 'ing2'; end if;
-                        if enquetea.codsco = 15 then codsconew = 'ing3'; end if;
-                        if enquetea.codsco = 16 then codsconew = 'ing4'; end if;
-                        if enquetea.codsco = 17 then codsconew = 'ing5'; end if;
-                        if enquetea.codsco = 18 then codsconew = 'ing6'; end if;
-                        if enquetea.codsco = 19 then codsconew = 'san1a'; end if;
-                        if enquetea.codsco = 20 then codsconew = 'san2a'; end if;
-                        if enquetea.codsco = 21 then codsconew = 'san3a'; end if;
-                        if enquetea.codsco = 22 then codsconew = 'san4a'; end if;
-                        if enquetea.codsco = 23 then codsconew = 'san5a'; end if;
-                        if enquetea.codsco = 24 then codsconew = 'san6a'; end if;
-                        if enquetea.codsco = 25 then codsconew = 'cycx1'; end if;
-                        if enquetea.codsco = 26 then codsconew = 'cycx2'; end if;
+                        if enquetea.codsco = 8 then codsconew = ''; end if;
+                        if enquetea.codsco = 9 then codsconew = ''; end if;
+                        if enquetea.codsco = 10 then codsconew = ''; end if;
+                        if enquetea.codsco = 11 then codsconew = ''; end if;
+                        if enquetea.codsco = 12 then codsconew = ''; end if;
+                        if enquetea.codsco = 13 then codsconew = '1'; end if;
+                        if enquetea.codsco = 14 then codsconew = '2'; end if;
+                        if enquetea.codsco = 15 then codsconew = '3'; end if;
+                        if enquetea.codsco = 16 then codsconew = '4'; end if;
+                        if enquetea.codsco = 17 then codsconew = '5'; end if;
+                        if enquetea.codsco = 18 then codsconew = '6+'; end if;
+                        if enquetea.codsco = 19 then codsconew = '1a'; end if;
+                        if enquetea.codsco = 20 then codsconew = '2a'; end if;
+                        if enquetea.codsco = 21 then codsconew = '3a'; end if;
+                        if enquetea.codsco = 22 then codsconew = '4a'; end if;
+                        if enquetea.codsco = 23 then codsconew = '5a'; end if;
+                        if enquetea.codsco = 24 then codsconew = '6a+'; end if;
+                        if enquetea.codsco = 25 then codsconew = 'x1'; end if;
+                        if enquetea.codsco = 26 then codsconew = 'x2'; end if;
                         codhdnew = null;
                         if enquetea.codhd = 1 then codhdnew = 'COG'; end if;
                         if enquetea.codhd = 2 then codhdnew = 'TSA'; end if;
@@ -757,27 +757,27 @@ begin
                                 elsif enquetecodmeahfa.codmeahf = 6 then
                                     codmeahfnew = 'AHS2F';
                                 elsif enquetecodmeahfa.codmeahf = 7 then
-                                    codmeahfnew = 'AHS3P';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 8 then
-                                    codmeahfnew = 'AHS3O';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 9 then
-                                    codmeahfnew = 'AHS3P';
+                                    codmeahfnew = 'AHS3';
                                 elsif enquetecodmeahfa.codmeahf = 10 then
                                     codmeahfnew = 'AHS4';
                                 elsif enquetecodmeahfa.codmeahf = 11 then
-                                    codmeahfnew = 'AHS5O';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 12 then
-                                    codmeahfnew = 'AHS5O';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 13 then
-                                    codmeahfnew = 'AHS5Q';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 14 then
-                                    codmeahfnew = 'AHS5H';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 15 then
-                                    codmeahfnew = 'AHS5M';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 16 then
-                                    codmeahfnew = 'AHS5S';
+                                    codmeahfnew = 'AHS5';
                                 elsif enquetecodmeahfa.codmeahf = 17 then
-                                    codmeahfnew = 'AHS5E';
+                                    codmeahfnew = 'AHS5';
                                 end if;
                                 if codmeahfnew is not null then
                                     insert into enquete_cod_meahf (enquete_id, cod_meahf) values (new_id_enquete, codmeahfnew);
