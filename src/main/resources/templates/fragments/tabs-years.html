@@ -3,10 +3,10 @@
     <div th:fragment="tabs-years">
         <nav class="nav nav-tabs">
             <a th:href="@{/dossiers/{id}(id=${dossier.id})}"
-               th:each="dossier : ${currentsDossiers}"
-               th:text="${dossier.year} + '-' + ${dossier.year + 1}"
-               class="nav-link"
-               th:classappend="${dossier.year == currentDossier.year ? 'active':''}"></a>
+                th:each="dossier : ${currentsDossiers}"
+                th:text="${dossier.year} + '-' + ${dossier.year + 1}"
+                class="nav-link"
+                th:classappend="${dossier.year == currentDossier.year ? 'active':''}"></a>
         </nav>
     </div>
 </html>
