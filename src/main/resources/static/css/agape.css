@@ -20,6 +20,19 @@ select[disabled] > option {
     border-color: hsl(0, 76%, 50%);;
 }
 
+.filigrane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    pointer-events: none; /* Ignore les clics de souris */
+    z-index: 9999;
+    font-size: 5vw; /* Utilisation de la taille de la vue (vw) pour ajuster la taille */
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.3);
+    white-space: nowrap; /* Empêche le texte de se retourner à la ligne */
+}
+
 .form-label {
     font-weight: bold;
 }
