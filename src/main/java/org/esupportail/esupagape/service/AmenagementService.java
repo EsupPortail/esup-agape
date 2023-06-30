@@ -63,6 +63,7 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
@@ -440,10 +441,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
-        return generatePdf(objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
+        return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
     }
 
-    private byte[] generatePdf(Map<String, String> datas, byte[] model) throws IOException {
+    private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model) throws IOException {
         byte[] savedPdf;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PDDocument modelDocument = PDDocument.load(model);
@@ -476,7 +477,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 String date;
                 String validator;
                 try {
-                    if (fieldName.equals("signatureValideur") && !StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
+                    if (fieldName.equals("signatureValideur") && (!StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId()) || amenagement.getCreateDate().isBefore(LocalDateTime.of(2023, Month.AUGUST, 1, 0, 0)))) {
                         date = datas.get("administrationDate");
                         validator = datas.get("nomValideur");
                     } else if (fieldName.equals("signatureMedecin") && !StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
@@ -491,7 +492,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 }
                 pdSignature.setSignDate(calendar);
                 SignatureOptions signatureOptions = new SignatureOptions();
-                byte[] visualSignature = createVisualSignatureTemplate(rotation, pageRectangle, pdField.getWidgets().get(0).getRectangle(), validator, date, fieldName);
+                byte[] visualSignature = createVisualSignatureTemplate(amenagement, rotation, pageRectangle, pdField.getWidgets().get(0).getRectangle(), validator, date, fieldName);
                 signatureOptions.setVisualSignature(new ByteArrayInputStream(visualSignature));
                 signatureOptions.setPage(0);
                 PDDocument toSignDocument = PDDocument.load(savedPdf);
@@ -534,7 +535,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
-    private byte[] createVisualSignatureTemplate(int rotation, PDRectangle pageRectangle, PDRectangle signRectangle, String date, String validator, String fieldName) throws IOException
+    private byte[] createVisualSignatureTemplate(Amenagement amenagement, int rotation, PDRectangle pageRectangle, PDRectangle signRectangle, String date, String validator, String fieldName) throws IOException
     {
         try (PDDocument doc = new PDDocument())
         {
@@ -588,30 +589,33 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 if (initialScale != null) {
                     cs.transform(initialScale);
                 }
-                Color color = new Color(0x00AAFFAA, true);
+                Color color = new Color(0xFFFFFFFF, true);
                 cs.setNonStrokingColor(color);
                 cs.addRect(-5000, -5000, 10000, 10000);
                 cs.fill();
                 cs.saveGraphicsState();
                 cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
-                ClassPathResource signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
+                ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
+                if(!signImgResource.exists()) {
+                    signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
+                }
                 File tmpDir = Files.createTempDirectory("esupagape").toFile();
-                File signImage = new File(tmpDir + "/signImage.png");
+                File signImage = new File(tmpDir + "/signImage.jpg");
                 FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
                 PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
                 cs.drawImage(img, signRectangle.getWidth() / 2, 0);
                 cs.restoreGraphicsState();
-                float fontSize = 10;
-                float leading = fontSize * 1.5f;
-                cs.beginText();
-                cs.setFont(font, fontSize);
-                cs.setNonStrokingColor(Color.black);
-                cs.newLineAtOffset(fontSize, height - leading);
-                cs.setLeading(leading);
-                cs.showText(validator);
-                cs.newLine();
-                cs.showText("le : " + date);
-                cs.endText();
+//                float fontSize = 10;
+//                float leading = fontSize * 1.5f;
+//                cs.beginText();
+//                cs.setFont(font, fontSize);
+//                cs.setNonStrokingColor(Color.black);
+//                cs.newLineAtOffset(fontSize, height - leading);
+//                cs.setLeading(leading);
+//                cs.showText(validator);
+//                cs.newLine();
+//                cs.showText("le : " + date);
+//                cs.endText();
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             doc.save(baos);
