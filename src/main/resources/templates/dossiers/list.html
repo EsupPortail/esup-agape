@@ -7,7 +7,7 @@
             <div class="float-buttons">
                 <div class="d-inline-flex align-middle">
                     <form id="search-form" th:action="@{/dossiers}" method="get">
-                        <input class="form-control form-control-lg" type="text" placeholder="nom, prénom, numéro étudiant/Ine" name="fullTextSearch" id="fullTextSearch" size="40" th:value="${fullTextSearch}">
+                        <input class="form-control form-control-lg" type="text" placeholder="nom, prénom, numéro étudiant, ine" name="fullTextSearch" id="fullTextSearch" size="40" th:value="${fullTextSearch}">
                     </form>
                 </div>
                 <button title="Rechercher" class="btn btn-success" onclick="document.getElementById('search-form').submit();">
@@ -34,7 +34,7 @@
                 </nav>
                 <div style="height: 30px;"></div>
                 <table class="table table-responsive table-striped table-bordered" style="width: 100%">
-                    <thead class="text-center table-dark">
+                    <thead class="table-dark">
                         <tr >
                             <th scope="col" style="width: 100px;">
                                 <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
@@ -66,7 +66,7 @@
                             <th scope="col" style="width: 100px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="text-center">
+                    <tbody>
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>

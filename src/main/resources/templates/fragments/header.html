@@ -47,7 +47,7 @@
                     <ul class="navbar-nav mb-2 mb-lg-0 text-light" th:if="${personLdap != null}">
                         <li class="nav-item dropdown">
                             <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropdownUserLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="text-white" th:text="${personLdap.displayName} + '(' + ${personLdap.getSupannEntiteAffectation()} + ')'"></span>
+                                <span class="text-white" th:text="${personLdap.displayName} + '(' + ${personLdap.supannEntiteAffectation} + ')'"></span>
                             </a>
                             <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownUserLink">
                                 <li>
