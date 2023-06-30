@@ -8,6 +8,15 @@ ul {
     list-style-type: none;
 }
 
+a {
+    color: #337ab7;
+    /*text-decoration: none;*/
+}
+
+.nav-link {
+    color: #337ab7;
+}
+
 .form-check-input:disabled~.form-check-label, .form-check-input[disabled]~.form-check-label {
     opacity: initial !important;
 }
@@ -29,7 +38,7 @@ select[disabled] > option {
     z-index: 9999;
     font-size: 5vw; /* Utilisation de la taille de la vue (vw) pour ajuster la taille */
     font-weight: bold;
-    color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 114, 114, 0.3);
     white-space: nowrap; /* Empêche le texte de se retourner à la ligne */
 }
 
@@ -53,10 +62,20 @@ select[disabled] > option {
     content: "\25B2";
 }
 
+.agape-tab-content {
+    min-height: calc(100vh - 268px);
+}
+
 .agape-side {
     width: 450px;
     overflow-y: scroll;
     overflow-x:hidden;
+    height: calc(100vh - 112px);
+    margin-top: 56px;
+}
+
+.agape-side-closed {
+    width: 50px;
     height: calc(100vh - 112px);
     margin-top: 56px;
 }
@@ -72,6 +91,7 @@ select[disabled] > option {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 5px;
+    background-color: rgba(200,200,200,0.3);
 }
 
 .agape-amenagement-textarea {
@@ -169,6 +189,13 @@ select[disabled] > option {
     border-radius: 25px;
 }
 
+.float-buttons-filter {
+    bottom: 75px;
+    top: unset;
+    right: unset;
+    left: 280px;
+    position: fixed;
+}
 
 .circle-btn {
     width: 50px;

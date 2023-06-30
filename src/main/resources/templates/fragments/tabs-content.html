@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div th:fragment="tabs-content">
-        <nav class="mt-2">
-            <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+        <nav class="bg-white">
+            <ul class="nav nav-underline p-2" id="nav-tab" role="tablist">
                 <li class="nav-item dropdown" sec:authorize="!hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                     <a class="nav-link" th:href="@{/dossiers/{id}(id=${currentDossier.id})}" th:classappend="${active == 'dossier' ? 'active' : ''}">Dossier</a>
                 </li>
