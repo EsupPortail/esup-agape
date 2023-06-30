@@ -2,11 +2,17 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <!--/*@thymesVar id="dossierFilter" type="org.esupportail.esupagape.dtos.forms.DossierFilter"*/-->
-    <div th:fragment="side-filters" class="agape-side bg-light position-sticky me-2">
-        <div class="p-2">
-            <span class="fs-6 card text-bg-primary ps-3">Filtres avancés</span>
+    <div th:fragment="side-filters" id="side-filter" class="agape-side-closed bg-light position-sticky">
+        <div id="submit-filter" class="float-buttons float-buttons-filter d-none">
+            <button title="Actualiser les filtres" class="btn btn-success me-3" onclick="document.getElementById('filter-form').submit();">
+                <i class="fa-solid fa-filter"></i>
+            </button>
         </div>
-        <form id="filter-form" th:action="@{/dossiers}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1">
+        <div class="d-inline-flex p-2">
+            <button id="side-filter-button" class="btn btn-sm btn-outline-dark me-1" title="Filtres avancés"><i class="fa fa-filter"></i></button>
+            <span id="side-filter-title" class="fs-6 card text-bg-primary ps-3 d-none" style="width: 300px">Filtres avancés</span>
+        </div>
+        <form id="filter-form" th:action="@{/dossiers}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1 d-none">
             <div class="input-group input-group-sm mb-1">
                 <label class="input-group-text col-6" style="white-space: pre-line">Année universitaire</label>
                 <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{year}" multiple>
@@ -156,10 +162,14 @@
                     <option value="0">Non</option>
                 </select>
             </div>
-            <div class="text-end">
-                <input class="btn btn-success mb-1" type="submit" value="Filtrer">
+            <div style="height: 100px;">
             </div>
         </form>
-    </div>
+        <script th:if="${dossierFilter.year != null}">
+            document.addEventListener("DOMContentLoaded", function(event) {
+                let sideFilterButton = document.getElementById("side-filter-button");
+                sideFilterButton.click();
+            });
+        </script>
     </div>
 </html>

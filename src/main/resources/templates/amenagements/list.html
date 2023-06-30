@@ -26,15 +26,14 @@
                 </nav>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='amenagements')"></div>
-                <div class="m-3">
+                <div class="agape-tab-content bg-white p-3">
                     <div class="row">
                         <div class="col-12">
-                            <div class="clearfix w-100">
-                                <h4 class="float-start mt-3">Aménagements d’examen <span th:if="${currentDossier.statusDossierAmenagement} != null" th:text="'(' + #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} + ')'"></span></h4>
+                            <div class="w-100">
+                                <h4>Aménagements d’examen <span th:if="${currentDossier.statusDossierAmenagement} != null" th:text="'(' + #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} + ')'"></span></h4>
                             </div>
-
                             <table class="table table-striped">
-                                <thead class="text-start mt-2 mb-2 table-info">
+                                <thead class="table-dark">
                                     <tr>
                                         <th>Date de création</th>
                                         <th>Type d’aménagement</th>

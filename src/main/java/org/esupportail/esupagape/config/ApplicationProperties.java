@@ -60,6 +60,11 @@ public class ApplicationProperties {
      */
     private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
+    /**
+     * Affiche un texte en filigrane, ex : Plateforme de test
+     */
+    private String filigrane = "";
+
     private Boolean enableSchedulerAnonymise = false;
 
     private Boolean enableSchedulerEsupSignature = false;
@@ -152,6 +157,14 @@ public class ApplicationProperties {
 
     public void setEsupSignatureValideursEmails(List<String> esupSignatureValideursEmails) {
         this.esupSignatureValideursEmails = esupSignatureValideursEmails;
+    }
+
+    public String getFiligrane() {
+        return filigrane;
+    }
+
+    public void setFiligrane(String filigrane) {
+        this.filigrane = filigrane;
     }
 
     public Boolean getEnableSchedulerAnonymise() {

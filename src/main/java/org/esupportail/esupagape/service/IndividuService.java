@@ -100,7 +100,7 @@ public class IndividuService {
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
         if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
-            dossierService.getCurrent(id).setStatusDossier(StatusDossier.DESINSCRIT);
+            dossier.setStatusDossier(StatusDossier.DESINSCRIT);
             return;
         }
         if (StringUtils.hasText(individuInfos.getEppn())) {
@@ -189,11 +189,8 @@ public class IndividuService {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
             List<Individu> individusToCreate = individusFromSource.stream().filter(individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu())) && excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))).toList();
             individuRepository.saveAll(individusToCreate);
-            List<Individu> individusWithoutDossier = new ArrayList<>();
-            individusWithoutDossier.addAll(individusToCreate);
-            individusWithoutDossier.addAll(individus.stream().filter(individu -> individu.getDossiers().stream().noneMatch(dossier -> dossier.getYear() == utilsService.getCurrentYear())).toList());
             List<Dossier> dossiers = new ArrayList<>();
-            for (Individu individu : individusWithoutDossier) {
+            for (Individu individu : individusToCreate) {
                 logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
                 Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
                 dossiers.add(dossier);

@@ -65,6 +65,7 @@ public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
             model.addAttribute("versionApp", "dev");
         }
         model.addAttribute("applicationEmail", applicationProperties.getApplicationEmail());
+        model.addAttribute("filigrane", applicationProperties.getFiligrane());
         model.addAttribute("esupSignaturePresent", StringUtils.hasText(applicationProperties.getEsupSignatureUrl()));
         model.addAttribute("esupSignatureAvisWorkflow", StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId()));
         model.addAttribute("currentYear", utilsService.getCurrentYear());
