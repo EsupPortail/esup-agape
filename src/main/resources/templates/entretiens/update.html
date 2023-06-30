@@ -27,7 +27,7 @@
                 </nav>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
-                <div class="m-3">
+                <div class="agape-tab-content bg-white p-3">
                     <h4><span th:text="'Entretien du ' + ${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></span></h4>
                     <hr>
                     <div class="row">

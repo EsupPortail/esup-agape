@@ -7,7 +7,7 @@
 <body>
 <header th:replace="fragments/header :: header"></header>
 <main class="d-inline-flex">
-    <div class="agape-side bg-light position-sticky me-2">
+    <div class="agape-side bg-light position-sticky">
         <a href="/administratif/amenagements?porte=0" class="btn  ms-3 mt-3" th:classappend="${!porte ? 'btn-secondary' : 'btn-light'}">Aménagements à valider <div class="badge bg-danger" th:text="${nbAmenagementsToValidate}"></div></a>
         <a href="/administratif/amenagements?porte=1" class="btn  ms-3 mt-3" th:classappend="${porte ? 'btn-secondary' : 'btn-light'}">Aménagements portables <div class="badge bg-danger" th:text="${nbAmenagementsToPorte}"></div></a>
     </div>
@@ -21,7 +21,7 @@
                 </li>
             </ol>
         </nav>
-        <div class="m-3">
+        <div class="agape-tab-content bg-white p-3">
             <div class="row">
                 <div class="col-12">
                     <form th:action="@{/administratif/amenagements}" method="get">
@@ -77,23 +77,23 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-12 col-xl-2 text-start" style="white-space: nowrap;">
+                            <div class="col-12 col-xl-2" style="white-space: nowrap;">
                                 <input class="btn btn-success" type="submit" value="Rechercher">
                                 <a class="btn btn-secondary" id="btnClear" th:href="@{/administratif/amenagements}">Effacer</a>
                             </div>
                         </div>
                     </form>
                     <table class="table table-striped table-responsive">
-                        <thead class="text-center table-info">
-                            <tr class="text-start">
+                        <thead class="text-center table-dark">
+                            <tr >
                                 <th>Composante</th>
-                                <th><a class="sorted" sd:pagination-sort="createDate">Date de création</a> </th>
-                                <th><a class="sorted" sd:pagination-sort="endDate">Type d’aménagement</a></th>
+                                <th><a class="sorted link-light" sd:pagination-sort="createDate">Date de création</a> </th>
+                                <th><a class="sorted link-light" sd:pagination-sort="endDate">Type d’aménagement</a></th>
                                 <th>Validité</th>
                                 <th>Nom</th>
                                 <th>Temps majoré</th>
                                 <th>Nom médecin</th>
-                                <th><a class="sorted" sd:pagination-sort="statusAmenagement">Statut</a></th>
+                                <th><a class="sorted link-light" sd:pagination-sort="statusAmenagement">Statut</a></th>
                                 <th>Mail individu</th>
                                 <th style="width: 200px;">Voir</th>
                             </tr>

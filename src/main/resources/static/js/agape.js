@@ -85,6 +85,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    //Side hamburger button
+    let sideFilterButton = document.getElementById("side-filter-button");
+    if(sideFilterButton != null) {
+        sideFilterButton.addEventListener("click", function (e) {
+            let filterForm = document.getElementById("filter-form");
+            let sideFilter = document.getElementById("side-filter");
+            let sideTitle = document.getElementById("side-filter-title");
+            let submitFilter = document.getElementById("submit-filter");
+            sideFilter.classList.toggle("agape-side");
+            sideFilter.classList.toggle("agape-side-closed");
+            if(!filterForm.classList.contains("d-none")) {
+                filterForm.classList.add("d-none");
+                sideTitle.classList.add("d-none");
+                submitFilter.classList.add("d-none");
+            } else {
+                filterForm.classList.remove("d-none");
+                sideTitle.classList.remove("d-none");
+                submitFilter.classList.remove("d-none");
+            }
+        });
+    }
+
     //Gestion des aménagements autorisation classifications
     let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");

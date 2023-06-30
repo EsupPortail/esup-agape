@@ -18,9 +18,35 @@
                         </li>
                     </ol>
                 </nav>
+                <div class="d-inline">
+                    <div class="float-buttons">
+                        <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button">
+                            <i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
+                        <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                            <i class="fa-solid fa-pen"></i></button>
+                        <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
+                            <i class="fa-solid fa-xmark"></i></button>
+                        <button title="Enregistrer la modification du dossier" id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
+                            <i class="fa-solid fa-save"></i></button>
+                        <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i>
+                        </button>
+                        <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
+                        <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
+                            <i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
+                        </a>
+                        <button title="Anonymiser les données de l'individu"
+                                class="btn btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#anonymiseIndividuModalToggle"
+                                type="button"
+                                sec:authorize="hasRole('ROLE_ADMIN')">
+                            <i class="fa-solid fa-glasses"></i>
+                        </button>
+                    </div>
+                </div>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
                 <div th:replace="fragments/tabs-content :: tabs-content(active='dossier')"></div>
-                <div class="m-3">
+                <div class="agape-tab-content bg-white p-3">
                     <form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
                         <div class="row">
                             <div class="col-6">
@@ -326,35 +352,7 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="d-inline">
-                            <div class="float-buttons">
-                                <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button">
-                                    <i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
-                                <button title="Modifier le dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
-                                    <i class="fa-solid fa-pen"></i></button>
-                                <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
-                                    <i class="fa-solid fa-xmark"></i></button>
-                                <button title="Enregistrer la modification du dossier" id="submit-dossier" type="submit" value="Enregistrer" class="btn btn-success d-none">
-                                    <i class="fa-solid fa-save"></i></button>
-                                <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i>
-                                </button>
-                                <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
-                                <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
-                                    <i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
-                                </a>
-                                <button title="Anonymiser les données de l'individu"
-                                        class="btn btn-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#anonymiseIndividuModalToggle"
-                                        type="button"
-                                        sec:authorize="hasRole('ROLE_ADMIN')">
-                                    <i class="fa-solid fa-glasses"></i>
-                                </button>
-                            </div>
-                        </div>
                     </form>
-
                 </div>
             </div>
         </main>
