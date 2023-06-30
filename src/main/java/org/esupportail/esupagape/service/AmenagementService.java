@@ -690,4 +690,5 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             amenagement.setIndividuSendDate(LocalDateTime.now());
         }
     }
+
 }

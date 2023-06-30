@@ -37,12 +37,12 @@
                             <th:block th:each="amenagement : ${amenagements}">
                                 <tr>
                                     <td th:text="${amenagement.dossier.composante}"></td>
-                                    <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td th:text="${amenagement.dossier.individu.name + ' ' + amenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
-                                    <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                    <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
                                     <td th:text="${amenagement.individuSendDate != null} ? ${#temporals.format(amenagement.individuSendDate, 'dd/MM/yyyy')}: 'Non envoyé'"></td>
                                     <td style="width: 100px;">
                                         <ul class="list-group list-group-horizontal">

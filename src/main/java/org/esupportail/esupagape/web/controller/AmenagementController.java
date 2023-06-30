@@ -57,8 +57,7 @@ public class AmenagementController {
     @GetMapping("{amenagementId}/show")
     public String show(@PathVariable Long amenagementId, Model model) throws MessagingException {
         setModel(model);
-        model.addAttribute("amenagement",amenagementService.getById(amenagementId));
-//        model.addAttribute("currentDossier",amenagementService.getById(amenagementId).getDossier());
+        model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         return "amenagements/show";
     }
     @GetMapping("/{amenagementId}/update")
