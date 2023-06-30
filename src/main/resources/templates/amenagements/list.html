@@ -48,14 +48,14 @@
                                 <tbody>
                                     <th:block th:each="amenagement : ${amenagements}">
                                         <tr>
-                                            <td th:text="${#temporals.format(amenagement.getCreateDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.getEndDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
-                                            <td th:text="#{'amenagement.tempsMajore.' +${amenagement.getTempsMajore()}}" class=" d-none d-lg-table-cell d-xl-table-cell"></td>
+                                            <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                            <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}" class=" d-none d-lg-table-cell d-xl-table-cell"></td>
                                             <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;">
                                                 <pre th:text="${amenagement.amenagementText}"></pre>
                                             </td>
                                             <td th:text="${amenagement.nomMedecin}"></td>
-                                            <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.getStatusAmenagement()}}"></td>
+                                            <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
                                             <td th:text="${amenagement.motifRefus}"></td>
                                             <td>
                                                 <a th:if="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
