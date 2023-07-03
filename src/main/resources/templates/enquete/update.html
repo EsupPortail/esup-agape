@@ -210,6 +210,18 @@
                                                                         th:text="#{'enquete.codMeahF.' + ${codMeahF}}"
                                                                         th:if="${codMeahF.name().length() > 4 && codMeahF.name().startsWith(enumLibelleCodMeahF.name())}"></label>
                                                             </th:block>
+                                                            <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS3)}">
+                                                                <input th:name="${enumLibelleCodMeahF}"
+                                                                       type="radio"
+                                                                       value="on"
+                                                                       th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS3)}">
+                                                                <label class="me-2">Oui</label>
+                                                                <input th:name="${enumLibelleCodMeahF}"
+                                                                       type="radio"
+                                                                       value="off"
+                                                                       th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS3)}">
+                                                                <label>Non</label>
+                                                            </th:block>
                                                             <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS4)}">
                                                                 <input th:name="${enumLibelleCodMeahF}"
                                                                         type="radio"
@@ -220,6 +232,18 @@
                                                                         type="radio"
                                                                         value="off"
                                                                         th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS4)}">
+                                                                <label>Non</label>
+                                                            </th:block>
+                                                            <th:block th:if="${enumLibelleCodMeahF.equals(T(org.esupportail.esupagape.entity.enums.enquete.LibelleCodMeahF).AHS5)}">
+                                                                <input th:name="${enumLibelleCodMeahF}"
+                                                                       type="radio"
+                                                                       value="on"
+                                                                       th:checked="${enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS5)}">
+                                                                <label class="me-2">Oui</label>
+                                                                <input th:name="${enumLibelleCodMeahF}"
+                                                                       type="radio"
+                                                                       value="off"
+                                                                       th:checked="${!enquete.codMeahF.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodMeahF).AHS5)}">
                                                                 <label>Non</label>
                                                             </th:block>
                                                         </div>
@@ -233,7 +257,7 @@
                                     <div>
                                         </div>
                                         <div>
-                                            <label th:for="aidHNat" class="mt-1 form-label">Autre aide humaine</label>
+                                            <label th:for="aidHNat" class="mt-1 form-label">Nature 'autre(s) aide(s) humaine(s) spécifique(s)'</label>
                                             <div>
                                                 <textarea th:field="*{aidHNat}" class="form-control"></textarea>
                                             </div>

@@ -111,9 +111,17 @@ public class EnqueteService {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
             }
+//            if (StringUtils.hasText(enqueteForm.getAHS3())) {
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
+//            }
+
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
+                if (enqueteForm.getAHS3().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS3);
+                }
             }
             if (StringUtils.hasText(enqueteForm.getAHS4())) {
                 if (enqueteForm.getAHS4().equals("on")) {
@@ -123,9 +131,16 @@ public class EnqueteService {
                 }
             }
             if (StringUtils.hasText(enqueteForm.getAHS5())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
+                if (enqueteForm.getAHS5().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS5);
+                }
             }
+//            if (StringUtils.hasText(enqueteForm.getAHS5())) {
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
+//            }
         }
 
         enqueteToUpdate.getCodAmL().clear();
