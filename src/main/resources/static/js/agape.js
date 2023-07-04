@@ -318,6 +318,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let asOn = document.getElementById("ASOn")
+    if(asOn != null) {
+        asOn.addEventListener("click", function (event) {
+            document.getElementById("codPfasDiv").classList.remove("d-none");
+        });
+    }
+    let asOff = document.getElementById("ASOff")
+    if(asOff != null) {
+        asOff.addEventListener("click", function (event) {
+            document.getElementById("codPfasDiv").classList.add("d-none");
+        });
+    }
+
     let ahs0On = document.getElementById("AHS0On")
     if(ahs0On != null) {
         ahs0On.addEventListener("click", function (event) {

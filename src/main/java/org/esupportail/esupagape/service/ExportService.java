@@ -120,7 +120,7 @@ public class ExportService {
                     (enquete.getHdTmp()) ? "1" : "",
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
-                    enquete.getCodPfas() != null ? enquete.getCodPfas().name().toLowerCase() : "",
+                    String.join("" ,enquete.getCodPfas().stream().map(codPfas -> codPfas.name().toLowerCase()).sorted(String::compareTo).toList()),
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     "",
                     "",

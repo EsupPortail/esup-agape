@@ -7,10 +7,7 @@ import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
+import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
@@ -98,7 +95,14 @@ public class EnqueteService {
         if (enqueteForm.getCodPfpp() != null) {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
-        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
+        enqueteToUpdate.getCodPfas().clear();
+        if(enqueteForm.getCodPfasOn().equals("AS0")) {
+            enqueteToUpdate.getCodPfas().add(CodPfas.AS0);
+        } else {
+            enqueteToUpdate.getCodPfas().add(CodPfas.AS1);
+            enqueteToUpdate.getCodPfas().addAll(enqueteForm.getCodPfas());
+        }
+//        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
         enqueteToUpdate.getCodMeahF().clear();
         if (StringUtils.hasText(enqueteForm.getAHS0())) {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));

@@ -28,7 +28,8 @@ public class EnqueteForm {
     private Boolean hdTmp;
     private String com;
     private CodPfpp codPfpp;
-    private CodPfas codPfas = CodPfas.AS0;
+    private String codPfasOn;
+    private Set<CodPfas> codPfas = new HashSet<>();
     private String AHS0;
     private List<String> AHS1 = new ArrayList<>();
     private List<String> AHS2 = new ArrayList<>();
@@ -149,11 +150,19 @@ public class EnqueteForm {
         this.codPfpp = codPfpp;
     }
 
-    public CodPfas getCodPfas() {
+    public Set<CodPfas> getCodPfas() {
         return codPfas;
     }
 
-    public void setCodPfas(CodPfas codPfas) {
+    public String getCodPfasOn() {
+        return codPfasOn;
+    }
+
+    public void setCodPfasOn(String codPfasOn) {
+        this.codPfasOn = codPfasOn;
+    }
+
+    public void setCodPfas(Set<CodPfas> codPfas) {
         this.codPfas = codPfas;
     }
 

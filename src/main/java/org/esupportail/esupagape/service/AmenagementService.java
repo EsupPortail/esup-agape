@@ -595,6 +595,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 cs.fill();
                 cs.saveGraphicsState();
                 cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
+                //TODO gestion automatique de la taille de la signature par rapport à la taille du champ
                 ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
                 if(!signImgResource.exists()) {
                     signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
