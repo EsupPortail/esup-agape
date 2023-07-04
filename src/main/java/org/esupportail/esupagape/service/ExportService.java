@@ -112,7 +112,7 @@ public class ExportService {
                     enquete.getAn(),
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
-                    enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
+                    String.join("" ,enquete.getModFrmn().stream().map(modFrmn -> modFrmn.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase() : "",
                     enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase() : "",
                     enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase() : "",

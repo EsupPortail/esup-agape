@@ -72,12 +72,6 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        if(enqueteForm.getTypFrmn() != null) {
-            enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
-        }
-        if(enqueteForm.getModFrmn() != null) {
-            enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
-        }
         if(enqueteForm.getCodSco() != null) {
             enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         }
@@ -213,7 +207,10 @@ public class EnqueteService {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
             if(enquete.getModFrmn() == null) {
-                enquete.setModFrmn(dossier.getModeFormation());
+                enquete.getModFrmn().add(dossier.getModeFormation());
+                if(dossier.getAlternance()) {
+                    enquete.getModFrmn().add(ModFrmn.A);
+                }
             }
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {

@@ -20,8 +20,9 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private TypFrmn typFrmn;
 
+    @ElementCollection(targetClass=ModFrmn.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private ModFrmn modFrmn;
+    private Set<ModFrmn> modFrmn;
 
     private String codSco;
 
@@ -106,11 +107,11 @@ public class Enquete {
         this.typFrmn = typFrmn;
     }
 
-    public ModFrmn getModFrmn() {
+    public Set<ModFrmn> getModFrmn() {
         return modFrmn;
     }
 
-    public void setModFrmn(ModFrmn modFrmn) {
+    public void setModFrmn(Set<ModFrmn> modFrmn) {
         this.modFrmn = modFrmn;
     }
 

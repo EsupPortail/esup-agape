@@ -84,13 +84,7 @@
                                         <div>
                                             <label class="mt-1 form-label" th:for="modFrmns">Modalité formation<span th:text="${currentDossier.modeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
                                             <div>
-                                                <select id="modeFormation" name="modFrmn" type="text" class="form-control" disabled>
-                                                    <option value="" disabled selected hidden></option>
-                                                    <option th:selected="${currentDossier.modeFormation == modeFormation || enquete.modFrmn == modeFormation}"
-                                                            th:each="modeFormation : ${modFrmns}"
-                                                            th:value="${modeFormation}"
-                                                            th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
-                                                </select>
+                                                <input id="modeFormation" name="modFrmn" type="text" th:value="${currentDossier.alternance == true} ? #{'enquete.modFrmn.' + ${currentDossier.modeFormation}} + ' en alternance' : #{'enquete.modFrmn.' + ${currentDossier.modeFormation}}" class="form-control" disabled />
                                             </div>
                                         </div>
                                         <div>
