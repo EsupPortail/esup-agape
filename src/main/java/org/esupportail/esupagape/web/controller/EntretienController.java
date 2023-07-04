@@ -6,14 +6,17 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EntretienService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -72,8 +75,12 @@ public class EntretienController {
     }
 
     @PutMapping("/{entretienId}/update")
-    public String update(@PathVariable Long dossierId, @PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap) throws AgapeJpaException {
-        entretienService.update(entretienId, entretien, personLdap);
+    public String update(@PathVariable Long dossierId, @PathVariable Long entretienId, @Valid Entretien entretien, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        if(StringUtils.hasText(entretien.getCompteRendu())) {
+            entretienService.update(entretienId, entretien, personLdap);
+        } else {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Il manque un champ"));
+        }
         return "redirect:/dossiers/" + dossierId + "/entretiens/" + entretienId + "/update";
     }
 

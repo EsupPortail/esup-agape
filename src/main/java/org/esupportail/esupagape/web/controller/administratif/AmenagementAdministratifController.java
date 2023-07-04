@@ -153,6 +153,12 @@ public class AmenagementAdministratifController {
         return "redirect:/administratif/amenagements/" + amenagementId;
     }
 
+    @PostMapping("/{amenagementId}/send")
+    public String send(@PathVariable Long amenagementId) {
+        amenagementService.sendAmenagementToIndividu(amenagementId, true);
+        return "redirect:/administratif/amenagements/" + amenagementId;
+    }
+
     @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
     @ResponseBody
     public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {

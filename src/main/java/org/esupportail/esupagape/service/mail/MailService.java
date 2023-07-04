@@ -68,10 +68,14 @@ public class MailService {
         File certificatFile = new File(tmpDir + "/certificat.pdf");
         FileUtils.copyInputStreamToFile(inputStream, certificatFile);
         mimeMessage.addAttachment("certificat_amenagement.pdf", certificatFile);
-        mailSender.send(mimeMessage.getMimeMessage());
-
+        send(mimeMessage.getMimeMessage());
     }
 
+    private void send(MimeMessage mimeMessage) {
+        if(applicationProperties.getActivateSendEmails()) {
+            mailSender.send(mimeMessage);
+        }
+    }
 
     private void addInLineImages(MimeMessageHelper mimeMessage, String htmlContent) throws MessagingException {
         mimeMessage.setText(htmlContent, true);

@@ -82,6 +82,8 @@ public class Dossier {
 
     private Boolean employee;
 
+    private Boolean alternance;
+
     @ManyToOne
     private Individu individu;
 
@@ -314,6 +316,14 @@ public class Dossier {
 
     public void setEmployee(Boolean employee) {
         this.employee = employee;
+    }
+
+    public Boolean getAlternance() {
+        return alternance;
+    }
+
+    public void setAlternance(Boolean alternance) {
+        this.alternance = alternance;
     }
 
     public Individu getIndividu() {
