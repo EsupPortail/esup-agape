@@ -10,6 +10,7 @@ import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,7 @@ public class AmenagementController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public String create(Model model) {
         setModel(model);
         model.addAttribute("amenagement", new Amenagement());
@@ -44,6 +46,7 @@ public class AmenagementController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         amenagement.setId(null);
         try {
@@ -61,6 +64,7 @@ public class AmenagementController {
         return "amenagements/show";
     }
     @GetMapping("/{amenagementId}/update")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         setModel(model);
@@ -68,6 +72,7 @@ public class AmenagementController {
     }
 
     @PutMapping("/{amenagementId}/update")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
         return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
@@ -81,6 +86,7 @@ public class AmenagementController {
         model.addAttribute("autorisations", Autorisation.values());
     }
     @DeleteMapping(value = "/{amenagementId}/delete")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public String deleteAmenagement(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
         try {
             amenagementService.softDeleteAmenagement(amenagementId);
@@ -92,6 +98,7 @@ public class AmenagementController {
     }
 
     @PostMapping("/{amenagementId}/validation-medecin")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
     public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
             amenagementService.validationMedecin(amenagementId, personLdap);
