@@ -350,7 +350,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                         "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         amenagement.getDossier());
                 amenagement.setCertificat(certificat);
-                sendAmenagementToIndividu(amenagementId);
+                sendAmenagementToIndividu(amenagementId, false);
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -675,22 +675,29 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         List<Amenagement> amenagementsToSend = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
         for(Amenagement amenagement : amenagementsToSend) {
             if (amenagement.getIndividuSendDate() == null) {
-                sendAmenagementToIndividu(amenagement.getId());
+                sendAmenagementToIndividu(amenagement.getId(), false);
             }
         }
     }
 
 
     @Transactional
-    public void sendAmenagementToIndividu(long amenagementId) {
+    public void sendAmenagementToIndividu(long amenagementId, boolean force) {
         Amenagement amenagement = getById(amenagementId);
         String to = amenagement.getDossier().getIndividu().getEmailEtu();
-        if(applicationProperties.getActivateSendEmails() == null || !applicationProperties.getActivateSendEmails()) to = "fabienne.berges@univ-rouen.fr";
-        if(amenagement.getIndividuSendDate() == null && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+        if(StringUtils.hasText(applicationProperties.getTestEmail())) to = applicationProperties.getTestEmail();
+        if((force || amenagement.getIndividuSendDate() == null) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
-                mailService.sendCertificat(amenagement.getCertificat().getInputStream(), to);
+                byte[] certificat;
+                if(amenagement.getCertificat() != null ) {
+                    certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+                } else {
+                    byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+                    certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
+                }
+                mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             } catch (Exception e) {
-                logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId);
+                logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId, e);
             }
             amenagement.setIndividuSendDate(LocalDateTime.now());
         }
