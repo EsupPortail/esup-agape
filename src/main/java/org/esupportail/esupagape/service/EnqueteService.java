@@ -7,10 +7,7 @@ import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeahF;
+import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
@@ -75,12 +72,6 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        if(enqueteForm.getTypFrmn() != null) {
-            enqueteToUpdate.setTypFrmn(enqueteForm.getTypFrmn());
-        }
-        if(enqueteForm.getModFrmn() != null) {
-            enqueteToUpdate.setModFrmn(enqueteForm.getModFrmn());
-        }
         if(enqueteForm.getCodSco() != null) {
             enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         }
@@ -98,7 +89,14 @@ public class EnqueteService {
         if (enqueteForm.getCodPfpp() != null) {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
-        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
+        enqueteToUpdate.getCodPfas().clear();
+        if(enqueteForm.getCodPfasOn().equals("AS0")) {
+            enqueteToUpdate.getCodPfas().add(CodPfas.AS0);
+        } else {
+            enqueteToUpdate.getCodPfas().add(CodPfas.AS1);
+            enqueteToUpdate.getCodPfas().addAll(enqueteForm.getCodPfas());
+        }
+//        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
         enqueteToUpdate.getCodMeahF().clear();
         if (StringUtils.hasText(enqueteForm.getAHS0())) {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
@@ -111,9 +109,17 @@ public class EnqueteService {
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
                 enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
             }
+//            if (StringUtils.hasText(enqueteForm.getAHS3())) {
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
+//            }
+
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS3()));
+                if (enqueteForm.getAHS3().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS3);
+                }
             }
             if (StringUtils.hasText(enqueteForm.getAHS4())) {
                 if (enqueteForm.getAHS4().equals("on")) {
@@ -123,9 +129,16 @@ public class EnqueteService {
                 }
             }
             if (StringUtils.hasText(enqueteForm.getAHS5())) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
+                if (enqueteForm.getAHS5().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS5);
+                }
             }
+//            if (StringUtils.hasText(enqueteForm.getAHS5())) {
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
+//                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
+//            }
         }
 
         enqueteToUpdate.getCodAmL().clear();
@@ -194,7 +207,10 @@ public class EnqueteService {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
             if(enquete.getModFrmn() == null) {
-                enquete.setModFrmn(dossier.getModeFormation());
+                enquete.getModFrmn().add(dossier.getModeFormation());
+                if(dossier.getAlternance()) {
+                    enquete.getModFrmn().add(ModFrmn.A);
+                }
             }
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {

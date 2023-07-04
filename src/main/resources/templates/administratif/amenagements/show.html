@@ -18,6 +18,9 @@
                 <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
+                <button title="Envoyer à l'étudiant" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendModal">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
                     <i class="fa-solid fa-file-download" style="font-size: 22px"></i>
                 </a>
@@ -75,9 +78,8 @@
                             Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
                             <span th:text="${amenagement.motifRefus}"></span>
                         </div>
-                        <embed th:if="${amenagementPrec != null}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagementPrec.id})}" width="80%" height="100%" aria-expanded="false"/>
-                        <embed th:if="${!esupSignaturePresent && (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
-                        <embed th:if="${amenagement.certificat != null || (!esupSignaturePresent && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=1&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="100%" aria-expanded="false"/>
+                        <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
+                        <embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
                     </th:block>
                     <div th:if="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}" class="alert alert-danger">
                         Cet aménagement est expiré. Date de fin <span th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span><br>
@@ -143,8 +145,27 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+        <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="sendModalLabel">Envoyer l’aménagement d’examen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/send(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer l’envoi de l’aménagement à l’étudiant
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Envoyer</button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>

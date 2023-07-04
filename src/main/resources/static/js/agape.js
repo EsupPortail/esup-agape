@@ -318,6 +318,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let asOn = document.getElementById("ASOn")
+    if(asOn != null) {
+        asOn.addEventListener("click", function (event) {
+            document.getElementById("codPfasDiv").classList.remove("d-none");
+        });
+    }
+    let asOff = document.getElementById("ASOff")
+    if(asOff != null) {
+        asOff.addEventListener("click", function (event) {
+            document.getElementById("codPfasDiv").classList.add("d-none");
+        });
+    }
+
     let ahs0On = document.getElementById("AHS0On")
     if(ahs0On != null) {
         ahs0On.addEventListener("click", function (event) {
@@ -359,15 +372,19 @@ function lockForm() {
 }
 
 function unlockForm(button) {
-    let formName = button.form.getAttribute("id").replace("form-" , "");
+    let formName = button.getAttribute("ea-form-name").replace("form-" , "");
+    let form = document.getElementById('form-' + formName);
     button.classList.toggle('d-none');
     document.getElementById('lock-' + formName).classList.toggle('d-none');
-    document.getElementById('submit-' + formName).classList.toggle('d-none');
+    let submitButton = document.getElementById('submit-' + formName);
+    submitButton.classList.toggle('d-none');
+    submitButton.addEventListener("click", function (e) {
+        document.getElementById('check-' + formName).click();
+    });
     let closeButton = document.getElementById('close-' + formName);
     if(closeButton != null) {
         document.getElementById('close-' + formName).classList.toggle('d-none');
     }
-    let form = document.getElementById('form-' + formName);
     [...form.elements].forEach(item => {
         if(item.readOnly === undefined || item.readOnly === false) {
             item.disabled = false;

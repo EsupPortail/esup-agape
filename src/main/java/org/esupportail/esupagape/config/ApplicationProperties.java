@@ -65,6 +65,8 @@ public class ApplicationProperties {
      */
     private String filigrane = "";
 
+    private String testEmail = "toto@univ-ville.fr";
+
     private Boolean enableSchedulerAnonymise = false;
 
     private Boolean enableSchedulerEsupSignature = false;
@@ -165,6 +167,14 @@ public class ApplicationProperties {
 
     public void setFiligrane(String filigrane) {
         this.filigrane = filigrane;
+    }
+
+    public String getTestEmail() {
+        return testEmail;
+    }
+
+    public void setTestEmail(String testEmail) {
+        this.testEmail = testEmail;
     }
 
     public Boolean getEnableSchedulerAnonymise() {

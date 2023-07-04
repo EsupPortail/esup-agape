@@ -11,5 +11,9 @@ public enum CodMeae {
     AE6,
     AE7,
     AE8,
+    AE9,
+    AEA,
+    AEB,
+    AEC,
     AEO
 }

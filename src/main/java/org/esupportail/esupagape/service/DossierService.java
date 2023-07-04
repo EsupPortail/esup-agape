@@ -81,7 +81,7 @@ public class DossierService {
 
     public void deleteDossier(Long id) {
         Optional<Dossier> dossier = dossierRepository.findById(id);
-        dossier.ifPresent(d -> dossierRepository.delete(d));
+        dossier.ifPresent(dossierRepository::delete);
     }
 
     public Page<Dossier> getAllByYear(int year, Pageable pageable) {
@@ -133,6 +133,7 @@ public class DossierService {
         dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEmployee(dossier.getEmployee());
+        dossierToUpdate.setAlternance(dossier.getAlternance());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
         dossierToUpdate.setCommentaire(dossier.getCommentaire());

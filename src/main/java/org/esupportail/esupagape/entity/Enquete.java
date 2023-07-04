@@ -20,8 +20,9 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private TypFrmn typFrmn;
 
+    @ElementCollection(targetClass=ModFrmn.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private ModFrmn modFrmn;
+    private Set<ModFrmn> modFrmn;
 
     private String codSco;
 
@@ -40,8 +41,9 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private CodPfpp codPfpp;
 
+    @ElementCollection(targetClass=CodPfas.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private CodPfas codPfas = CodPfas.AS0;
+    private Set<CodPfas> codPfas = new HashSet<>();
 
     @ElementCollection(targetClass=CodMeahF.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -105,11 +107,11 @@ public class Enquete {
         this.typFrmn = typFrmn;
     }
 
-    public ModFrmn getModFrmn() {
+    public Set<ModFrmn> getModFrmn() {
         return modFrmn;
     }
 
-    public void setModFrmn(ModFrmn modFrmn) {
+    public void setModFrmn(Set<ModFrmn> modFrmn) {
         this.modFrmn = modFrmn;
     }
 
@@ -169,11 +171,11 @@ public class Enquete {
         this.codPfpp = codPfpp;
     }
 
-    public CodPfas getCodPfas() {
+    public Set<CodPfas> getCodPfas() {
         return codPfas;
     }
 
-    public void setCodPfas(CodPfas codPfas) {
+    public void setCodPfas(Set<CodPfas> codPfas) {
         this.codPfas = codPfas;
     }
 
