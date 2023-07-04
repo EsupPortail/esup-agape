@@ -4,7 +4,6 @@ import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,14 +14,12 @@ public class Entretien
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "La date doit être renseignée")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
     //@NotEmpty(message = "Ce champ doit être renseigné")
     private String interlocuteur;
 
-    @NotEmpty(message = "Ce champ doit être renseigné")
     @Column(columnDefinition = "TEXT")
     private String compteRendu;
 
