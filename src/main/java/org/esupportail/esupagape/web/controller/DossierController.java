@@ -67,7 +67,7 @@ public class DossierController {
         model.addAttribute("statusDossierAmenagement", statusDossierAmenagement);
         if(dossierFilter != null && dossierFilter.getYear() != null) {
             model.addAttribute("dossiers", dossierService.dossierIndividuClassDtoPage(dossierFilter, pageable));
-            model.addAttribute("mails", String.join(";", dossierService.filteredEmails(dossierFilter)));
+            model.addAttribute("mails", String.join(",", dossierService.filteredEmails(dossierFilter)));
             model.addAttribute("dossierFilter", dossierFilter);
         } else {
             model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
