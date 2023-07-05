@@ -54,7 +54,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.libelleFormation as libForm from Dossier d group by d.libelleFormation")
     List<String> findAllLibelleFormation();
 
-    @Query("Select d from Dossier d where  d.statusDossier = 'DESINSCRIT'")
+    @Query("Select d from Dossier d where  d.desinscrit is true")
     List<Dossier> findUnsubscribeDossier();
 
 }

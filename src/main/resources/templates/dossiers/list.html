@@ -19,9 +19,9 @@
                 <button title="Ajouter un individu manuellement" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIndividuModal">
                     <i class="fa-solid fa-plus"></i>
                 </button>
-                <a th:href="'mailto:' +${mails}" style="color: white;" th:if="${mails != null}" class="btn btn-primary" title="Envoyer un email">
+                <button data-bs-toggle="modal" data-bs-target="#mailtoModal" style="color: white;" th:if="${mails != null}" class="btn btn-primary" title="Envoyer un email">
                     <i class="fa-solid fa-mail-bulk" style="font-size: 22px"></i>
-                </a>
+                </button>
             </div>
             <div th:replace="fragments/side-filters :: side-filters"></div>
             <div class="agape-content agape-content-side">
@@ -36,6 +36,9 @@
                 <table class="table table-responsive table-striped table-bordered" style="width: 100%">
                     <thead class="table-dark">
                         <tr >
+                            <th scope="col" style="width: 30px;">
+                                <a class="sorted link-light"></a>
+                            </th>
                             <th scope="col" style="width: 100px;">
                                 <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
                             </th>
@@ -68,6 +71,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
+                            <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
                             <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none"></td>
@@ -88,8 +92,6 @@
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.DESINSCRIT}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.DESINSCRIT}}" class="badge text-bg-dark"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span></td>
                             </th:block>
@@ -273,6 +275,24 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="mailtoModal" tabindex="-1" aria-labelledby="mailtoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mailtoModalLabel">Liste mail</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                                <textarea class="form-control" th:text="${mails}" style="min-height: 500px;" rows="50">
+                                </textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer th:replace="fragments/footer :: black"></footer>
         <div th:replace="fragments/flash :: flash"></div>
     </body>

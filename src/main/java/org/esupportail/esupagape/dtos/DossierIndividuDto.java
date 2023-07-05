@@ -31,4 +31,8 @@ public interface DossierIndividuDto {
 
     Gender getGender();
 
+    String getEmailEtu();
+
+    Boolean getDesinscrit();
+
 }

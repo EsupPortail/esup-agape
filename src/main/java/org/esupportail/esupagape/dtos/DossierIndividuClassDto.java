@@ -31,7 +31,11 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
 
     private Gender gender;
 
-    public DossierIndividuClassDto(Long id, String numEtu, String codeIne, String firstName, String name, LocalDate dateOfBirth, TypeIndividu type, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Long individuId, Gender gender) {
+    private String emailEtu;
+
+    private Boolean desinscrit;
+
+    public DossierIndividuClassDto(Long id, String numEtu, String codeIne, String firstName, String name, LocalDate dateOfBirth, TypeIndividu type, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Long individuId, Gender gender, String emailEtu, Boolean desinscript) {
         this.id = id;
         this.numEtu = numEtu;
         this.codeIne = codeIne;
@@ -43,6 +47,8 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
         this.statusDossierAmenagement = statusDossierAmenagement;
         this.individuId = individuId;
         this.gender = gender;
+        this.emailEtu = emailEtu;
+        this.desinscrit = desinscript;
     }
 
     public Long getId() {
@@ -131,5 +137,21 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getEmailEtu() {
+        return emailEtu;
+    }
+
+    public void setEmailEtu(String emailEtu) {
+        this.emailEtu = emailEtu;
+    }
+
+    public Boolean getDesinscrit() {
+        return desinscrit;
+    }
+
+    public void setDesinscrit(Boolean desinscrit) {
+        this.desinscrit = desinscrit;
     }
 }
