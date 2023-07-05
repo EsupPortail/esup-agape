@@ -65,6 +65,10 @@ public class ApplicationProperties {
      */
     private String filigrane = "";
 
+    private String modelsPath;
+
+    private String signaturesPath;
+
     private String testEmail = "toto@univ-ville.fr";
 
     private Boolean enableSchedulerAnonymise = false;
@@ -167,6 +171,22 @@ public class ApplicationProperties {
 
     public void setFiligrane(String filigrane) {
         this.filigrane = filigrane;
+    }
+
+    public String getModelsPath() {
+        return modelsPath;
+    }
+
+    public void setModelsPath(String modelsPath) {
+        this.modelsPath = modelsPath;
+    }
+
+    public String getSignaturesPath() {
+        return signaturesPath;
+    }
+
+    public void setSignaturesPath(String signaturesPath) {
+        this.signaturesPath = signaturesPath;
     }
 
     public String getTestEmail() {
