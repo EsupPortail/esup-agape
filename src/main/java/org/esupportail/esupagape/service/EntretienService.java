@@ -43,9 +43,8 @@ public class EntretienService {
         if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        //TODO passage automatique en suivi si status importé, a confirmer avec celine martin
-        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
-            dossier.setStatusDossier(StatusDossier.SUIVI);
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+            dossier.setStatusDossier(StatusDossier.ACCUEILLI);
         }
         entretienRepository.save(entretien);
     }
