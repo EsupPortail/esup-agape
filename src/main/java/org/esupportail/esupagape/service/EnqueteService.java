@@ -194,11 +194,15 @@ public class EnqueteService {
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         if (dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
-            if (dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
-                enquete.setSexe("0");
-            } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
-                enquete.setSexe("1");
-            } else if (dossier.getIndividu().getGender().equals(Gender.NE_SAIS_PAS)) {
+            if(dossier.getIndividu().getGender() != null) {
+                if (dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
+                    enquete.setSexe("0");
+                } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
+                    enquete.setSexe("1");
+                } else if (dossier.getIndividu().getGender().equals(Gender.NE_SAIS_PAS)) {
+                    enquete.setSexe("2");
+                }
+            } else {
                 enquete.setSexe("2");
             }
 
@@ -206,11 +210,13 @@ public class EnqueteService {
             if(enquete.getTypFrmn() == null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
+            if(dossier.getModeFormation() != null) {
             if(enquete.getModFrmn() == null) {
                 enquete.getModFrmn().add(dossier.getModeFormation());
                 if(dossier.getAlternance()) {
                     enquete.getModFrmn().add(ModFrmn.A);
                 }
+            }
             }
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {
