@@ -34,12 +34,12 @@ select[disabled] > option {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
-    pointer-events: none; /* Ignore les clics de souris */
+    pointer-events: none;
     z-index: 9999;
-    font-size: 5vw; /* Utilisation de la taille de la vue (vw) pour ajuster la taille */
+    font-size: 5vw;
     font-weight: bold;
     color: rgba(255, 114, 114, 0.3);
-    white-space: nowrap; /* Empêche le texte de se retourner à la ligne */
+    white-space: nowrap;
 }
 
 .form-label {
