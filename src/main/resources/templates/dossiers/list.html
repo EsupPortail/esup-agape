@@ -283,8 +283,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                                <textarea class="form-control" th:text="${mails}" style="min-height: 500px;" rows="50">
-                                </textarea>
+                        <div class="agape-amenagement-textarea-wrapper">
+                            <textarea class="form-control agape-amenagement-textarea" th:text="${mails}" style="max-height: 500px;" rows="50"></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
