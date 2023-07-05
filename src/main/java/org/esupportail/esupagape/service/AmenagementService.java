@@ -368,7 +368,12 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         if(amenagement.getCertificat() != null ) {
             certificat = amenagement.getCertificat().getInputStream().readAllBytes();
         } else {
-            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            byte[] modelBytes;
+            if(StringUtils.hasText(applicationProperties.getModelsPath())) {
+                modelBytes = Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/certificat.pdf").toPath());
+            } else {
+                modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            }
             certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
         }
         httpServletResponse.getOutputStream().write(certificat);
@@ -384,7 +389,12 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         if(amenagement.getAvis() != null ) {
             avis = amenagement.getAvis().getInputStream().readAllBytes();
         } else {
-            byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+            byte[] modelBytes;
+            if(StringUtils.hasText(applicationProperties.getModelsPath())) {
+                modelBytes = Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/avis.pdf").toPath());
+            } else {
+                modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+            }
             avis = generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS);
         }
         httpServletResponse.getOutputStream().write(avis);
@@ -490,14 +500,19 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
 
     private void addVisualSignature(Amenagement amenagement, PDDocument doc, PDRectangle signRectangle, String fieldName) throws IOException
     {
-        PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, true);
-        ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
-        if(!signImgResource.exists()) {
-            signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
-        }
+        PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, false);
         File tmpDir = Files.createTempDirectory("esupagape").toFile();
-        File signImage = new File(tmpDir + "/signImage.jpg");
-        FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
+        File signImage;
+        if(StringUtils.hasText(applicationProperties.getSignaturesPath())) {
+            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getMailValideur() + ".jpg");
+        } else {
+            signImage = new File(tmpDir + "/signImage.jpg");
+            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
+            if(!signImgResource.exists()) {
+                signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
+            }
+            FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
+        }
         PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
         float ratio = img.getHeight() / signRectangle.getHeight();
         cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
