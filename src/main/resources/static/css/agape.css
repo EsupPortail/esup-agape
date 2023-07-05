@@ -202,3 +202,41 @@ select[disabled] > option {
     height: 50px;
     border-radius: 25px;
 }
+
+.text-bg-primary {
+    color: #ebeef0 !important;
+    background-color: #32608d !important;;
+}
+
+.text-bg-secondary{
+    color: #ebeef0;
+    background-color: #9d9d9d !important;;
+}
+
+.text-bg-success {
+    color: #ebeef0;
+    background-color: #71ac00 !important;;
+}
+
+.text-bg-danger{
+    color: #ebeef0;
+    background-color: #ff6868 !important;;
+}
+
+.text-bg-warning {
+    color: #000000;
+    background-color: #ffb052 !important;;
+}
+
+.text-bg-info {
+    color: #ebeef0;
+    background-color: #009dab !important;;
+}
+.text-bg-light {
+    color: #000000;
+    background-color: #ffffff !important;;
+}
+.text-bg-dark {
+    color: #ebeef0;
+    background-color: #3f3f3f !important;;
+}
