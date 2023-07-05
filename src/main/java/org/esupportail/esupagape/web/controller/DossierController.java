@@ -97,7 +97,7 @@ public class DossierController {
     }
 
     @GetMapping("/{dossierId}")
-    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDCIN')")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDECIN')")
     public String update(@PathVariable Long dossierId, Model model) {
         Dossier dossier = dossierService.getById(dossierId);
         model.addAttribute("classifications", Classification.values());
