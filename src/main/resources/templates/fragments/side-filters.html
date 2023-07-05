@@ -106,7 +106,7 @@
             <div class="input-group input-group-sm mb-1">
                 <label class="input-group-text col-6" style="white-space: pre-line">Modalité formation</label>
                 <select th:field="*{modFrmn}" type="text" class="form-select form-select-sm agape-slim-select-sm" multiple>
-                    <option th:each="modeFormation : ${modFrmns}" th:value="${modeFormation}" th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
+                    <option th:each="modeFormation : ${modFrmns}" th:if="${modeFormation != T(org.esupportail.esupagape.entity.enums.enquete.ModFrmn).A}" th:value="${modeFormation}" th:text="#{'enquete.modFrmn.' +${modeFormation}}"></option>
                 </select>
             </div>
             <div class="input-group input-group-sm mb-1">

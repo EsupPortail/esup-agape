@@ -52,7 +52,7 @@ public class WsApogeeServiceEtudiant {
 		try {
 			infoEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererInfosAdmEtuV4(numEtu);
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos : "  + e.getMessage());
+			logger.debug("Erreur lors de la recup des infos : "  + e.getMessage());
 		}
 		return infoEtudiant;
 	}
@@ -63,7 +63,7 @@ public class WsApogeeServiceEtudiant {
 		try {
 			adresseEtudiant = apogeeEtuFactory.getInstanceEtudiant().recupererAdressesEtudiantV2(numEtu, annee, "O");
 		} catch (Exception e) {
-			logger.warn("Erreur lors de la recup des infos : " + e.getMessage());
+			logger.debug("Erreur lors de la recup des infos : " + e.getMessage());
 		}
 		return adresseEtudiant;
 	}

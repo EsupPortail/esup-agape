@@ -216,7 +216,7 @@ public class DossierService {
         }
         dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
-        if (!StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
+        if (dossierIndividuForm.getType() != null) {
             dossierToUpdate.setType(dossierIndividuForm.getType());
         }
         if (StringUtils.hasText(dossierIndividuForm.getNumEtu())) {
@@ -278,36 +278,6 @@ public class DossierService {
         }
     }
 
-//    @Transactional
-//    public Page<DossierIndividuClassDto> findDossierByDossierFilter(DossierFilter dossierFilter, Pageable pageable) {
-//        Dossier dossierEx = new Dossier();
-//        dossierEx.setYear(dossierFilter.getYearFilter());
-//        dossierEx.setStatusDossier(dossierFilter.getStatusDossier());
-//        dossierEx.setStatusDossierAmenagement(dossierFilter.getStatusDossierAmenagement());
-//        Individu individuEx = new Individu();
-//        individuEx.setGender(dossierFilter.getGender());
-//        dossierEx.setIndividu(individuEx);
-//        Example<Dossier> dossierExample = Example.of(dossierEx);
-//        Page<Dossier> dossiers = dossierRepository.findAll(dossierExample, pageable);
-//        List<DossierIndividuClassDto> dossierIndividuDtos = new ArrayList<>();
-//        for(Dossier dossier : dossiers) {
-//            DossierIndividuClassDto dossierIndividuDto = new DossierIndividuClassDto();
-//            dossierIndividuDto.setId(dossier.getId());
-//            dossierIndividuDto.setNumEtu(dossier.getIndividu().getNumEtu());
-//            dossierIndividuDto.setCodeIne(dossier.getIndividu().getCodeIne());
-//            dossierIndividuDto.setFirstName(dossier.getIndividu().getFirstName());
-//            dossierIndividuDto.setName(dossier.getIndividu().getName());
-//            dossierIndividuDto.setDateOfBirth(dossier.getIndividu().getDateOfBirth());
-//            dossierIndividuDto.setType(dossier.getType());
-//            dossierIndividuDto.setStatusDossier(dossier.getStatusDossier());
-//            dossierIndividuDto.setStatusDossierAmenagement(dossier.getStatusDossierAmenagement());
-//            dossierIndividuDto.setIndividuId(dossier.getIndividu().getId());
-//            dossierIndividuDto.setGender(dossier.getIndividu().getGender());
-//            dossierIndividuDtos.add(dossierIndividuDto);
-//        }
-//        return new PageImpl<>(dossierIndividuDtos, pageable, dossierIndividuDtos.size());
-//    }
-
     public boolean isDossierOfThisYear(Dossier dossier) {
         return isDossierOfThisYear(dossier.getId());
     }
@@ -339,7 +309,7 @@ public class DossierService {
     public List<String> filteredEmails(DossierFilter dossierFilter) {
         TypedQuery<DossierIndividuClassDto> query = superFilter(dossierFilter, Pageable.unpaged());
         List<DossierIndividuClassDto> dossiers = query.getResultList();
-        return dossiers.stream().map(DossierIndividuClassDto::getEmailEtu).filter(StringUtils::hasText).collect(Collectors.toList());
+        return dossiers.stream().map(DossierIndividuClassDto::getEmailEtu).filter(StringUtils::hasText).sorted(String::compareTo).collect(Collectors.toList());
     }
 
     public TypedQuery<DossierIndividuClassDto> superFilter(DossierFilter dossierFilter, Pageable pageable) {
@@ -366,7 +336,7 @@ public class DossierService {
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
                 dossierRoot.get("desinscrit")
-        );
+        ).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -539,9 +509,29 @@ public class DossierService {
         cq.where(predicate);
 
         try {
-            cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
+            if(pageable.getSort().get().toList().size() > 0) {
+                if (
+                        pageable.getSort().get().toList().get(0).getProperty().equals("name")
+                        ||
+                        pageable.getSort().get().toList().get(0).getProperty().equals("numEtu")
+                        ||
+                        pageable.getSort().get().toList().get(0).getProperty().equals("firstName")
+                        ||
+                        pageable.getSort().get().toList().get(0).getProperty().equals("dateOfBirth")
+                ) {
+                    cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierIndividuJoin, cb));
+                } else if (
+                        pageable.getSort().get().toList().get(0).getProperty().equals("statusDossier")
+                        ||
+                        pageable.getSort().get().toList().get(0).getProperty().equals("type")
+                        ||
+                        pageable.getSort().get().toList().get(0).getProperty().equals("statusDossierAmenagement")
+                ) {
+                    cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
+                }
+            }
         } catch (Exception e) {
-            logger.debug(e.getMessage());
+            logger.warn(e.getMessage());
         }
         return em.createQuery(cq);
     }
