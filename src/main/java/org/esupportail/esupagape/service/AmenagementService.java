@@ -5,26 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
-import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceDictionary;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureOptions;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
-import org.apache.pdfbox.util.Matrix;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.Amenagement;
@@ -34,7 +24,6 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -53,19 +42,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -455,53 +438,23 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         resources.put(COSName.getPDFName("LiberationSans"), pdFont);
         pdAcroForm.setDefaultResources(resources);
         List<String> fieldsNames = pdAcroForm.getFields().stream().map(PDField::getFullyQualifiedName).toList();
-        int rotation = modelDocument.getPage(0).getRotation();
-        PDRectangle pageRectangle = modelDocument.getPage(0).getMediaBox().createRetranslatedRectangle();
         modelDocument.save(out);
         modelDocument.close();
         savedPdf = out.toByteArray();
         for(String fieldName : fieldsNames) {
             PDDocument toFillDocument = PDDocument.load(savedPdf);
             PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
-            pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
-            if(datas.containsKey(fieldName)) {
-                pdField.setValue(datas.get(fieldName));
-            }
-            out = new ByteArrayOutputStream();
-            toFillDocument.save(out);
-            toFillDocument.close();
-            savedPdf = out.toByteArray();
-            if(pdField instanceof PDSignatureField) {
-                PDSignature pdSignature = new PDSignature();
-                Calendar calendar = Calendar.getInstance();
-                String date;
-                String validator;
-                try {
-                    if (fieldName.equals("signatureValideur") && (!StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId()) || amenagement.getCreateDate().isBefore(LocalDateTime.of(2023, Month.AUGUST, 1, 0, 0)))) {
-                        date = datas.get("administrationDate");
-                        validator = datas.get("nomValideur");
-                    } else if (fieldName.equals("signatureMedecin") && !StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
-                        date = datas.get("valideMedecinDate");
-                        validator = datas.get("nomMedecin");
-                    } else {
-                        continue;
-                    }
-                    calendar.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(date));
-                } catch (ParseException e) {
-                    throw new AgapeRuntimeException(e.getMessage());
+            if(pdField != null) {
+                pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
+                if(datas.containsKey(fieldName)) {
+                    pdField.setValue(datas.get(fieldName));
                 }
-                pdSignature.setSignDate(calendar);
-                SignatureOptions signatureOptions = new SignatureOptions();
-                byte[] visualSignature = createVisualSignatureTemplate(amenagement, rotation, pageRectangle, pdField.getWidgets().get(0).getRectangle(), validator, date, fieldName);
-                signatureOptions.setVisualSignature(new ByteArrayInputStream(visualSignature));
-                signatureOptions.setPage(0);
-                PDDocument toSignDocument = PDDocument.load(savedPdf);
-                toSignDocument.addSignature(pdSignature, signatureOptions);
-                ((PDSignatureField) toSignDocument.getDocumentCatalog().getAcroForm().getField(fieldName)).setValue(pdSignature);
-                ((PDSignatureField) toSignDocument.getDocumentCatalog().getAcroForm().getField(fieldName)).setDefaultValue(pdSignature);
+                if(pdField instanceof PDSignatureField) {
+                    addVisualSignature(amenagement, toFillDocument, pdField.getWidgets().get(0).getRectangle(), fieldName);
+                }
                 out = new ByteArrayOutputStream();
-                toSignDocument.save(out);
-                toSignDocument.close();
+                toFillDocument.save(out);
+                toFillDocument.close();
                 savedPdf = out.toByteArray();
             }
         }
@@ -535,94 +488,20 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
-    private byte[] createVisualSignatureTemplate(Amenagement amenagement, int rotation, PDRectangle pageRectangle, PDRectangle signRectangle, String date, String validator, String fieldName) throws IOException
+    private void addVisualSignature(Amenagement amenagement, PDDocument doc, PDRectangle signRectangle, String fieldName) throws IOException
     {
-        try (PDDocument doc = new PDDocument())
-        {
-            PDPage page = new PDPage(pageRectangle);
-            doc.addPage(page);
-            PDAcroForm acroForm = new PDAcroForm(doc);
-            doc.getDocumentCatalog().setAcroForm(acroForm);
-            PDSignatureField signatureField = new PDSignatureField(acroForm);
-            PDAnnotationWidget widget = signatureField.getWidgets().get(0);
-            List<PDField> acroFormFields = acroForm.getFields();
-            acroForm.setSignaturesExist(true);
-            acroForm.setAppendOnly(true);
-            acroForm.getCOSObject().setDirect(true);
-            acroFormFields.add(signatureField);
-            widget.setRectangle(signRectangle);
-            PDStream stream = new PDStream(doc);
-            PDFormXObject form = new PDFormXObject(stream);
-            PDResources res = new PDResources();
-            form.setResources(res);
-            form.setFormType(1);
-            PDRectangle bbox = new PDRectangle(signRectangle.getWidth(), signRectangle.getHeight());
-            float height = bbox.getHeight();
-            Matrix initialScale = null;
-            switch (rotation) {
-                case 90:
-                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(1));
-                    initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(), bbox.getHeight() / bbox.getWidth());
-                    height = bbox.getWidth();
-                    break;
-                case 180:
-                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(2));
-                    break;
-                case 270:
-                    form.setMatrix(AffineTransform.getQuadrantRotateInstance(3));
-                    initialScale = Matrix.getScaleInstance(bbox.getWidth() / bbox.getHeight(), bbox.getHeight() / bbox.getWidth());
-                    height = bbox.getWidth();
-                    break;
-                case 0:
-                default:
-                    break;
-            }
-            form.setBBox(bbox);
-            PDFont font = PDType1Font.HELVETICA;
-            PDAppearanceDictionary appearance = new PDAppearanceDictionary();
-            appearance.getCOSObject().setDirect(true);
-            PDAppearanceStream appearanceStream = new PDAppearanceStream(form.getCOSObject());
-            appearance.setNormalAppearance(appearanceStream);
-            widget.setAppearance(appearance);
-            try (PDPageContentStream cs = new PDPageContentStream(doc, appearanceStream))
-            {
-                if (initialScale != null) {
-                    cs.transform(initialScale);
-                }
-                Color color = new Color(0xFFFFFFFF, true);
-                cs.setNonStrokingColor(color);
-                cs.addRect(-5000, -5000, 10000, 10000);
-                cs.fill();
-                cs.saveGraphicsState();
-                cs.transform(Matrix.getScaleInstance(0.3f, 0.3f));
-                //TODO gestion automatique de la taille de la signature par rapport à la taille du champ
-                ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
-                if(!signImgResource.exists()) {
-                    signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
-                }
-                File tmpDir = Files.createTempDirectory("esupagape").toFile();
-                File signImage = new File(tmpDir + "/signImage.jpg");
-                FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
-                PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
-                cs.drawImage(img, signRectangle.getWidth() / 2, 0);
-                cs.restoreGraphicsState();
-//                float fontSize = 10;
-//                float leading = fontSize * 1.5f;
-//                cs.beginText();
-//                cs.setFont(font, fontSize);
-//                cs.setNonStrokingColor(Color.black);
-//                cs.newLineAtOffset(fontSize, height - leading);
-//                cs.setLeading(leading);
-//                cs.showText(validator);
-//                cs.newLine();
-//                cs.showText("le : " + date);
-//                cs.endText();
-            }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            doc.save(baos);
-            doc.close();
-            return baos.toByteArray();
+        PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, true);
+        ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
+        if(!signImgResource.exists()) {
+            signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
         }
+        File tmpDir = Files.createTempDirectory("esupagape").toFile();
+        File signImage = new File(tmpDir + "/signImage.jpg");
+        FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
+        PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
+        float ratio = img.getHeight() / signRectangle.getHeight();
+        cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
+        cs.close();
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package org.esupportail.esupagape.service;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeDocument;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
@@ -57,6 +58,11 @@ public class AideHumaineService {
             throw new AgapeYearException();
         }
         aideHumaine.setDossier(dossier);
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)
+                || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
+                || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+            dossier.setStatusDossier(StatusDossier.SUIVI);
+        }
         recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaine);
         return aideHumaineRepository.save(aideHumaine);
     }

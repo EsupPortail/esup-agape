@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AideMaterielleRepository;
@@ -45,6 +46,11 @@ public class AideMaterielleService {
             throw new AgapeYearException();
         }
         aideMaterielle.setDossier(dossier);
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)
+            || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
+            || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+            dossier.setStatusDossier(StatusDossier.SUIVI);
+        }
         aideMaterielleRepository.save(aideMaterielle);
     }
 
