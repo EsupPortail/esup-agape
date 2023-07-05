@@ -100,7 +100,7 @@ public class IndividuService {
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
         if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
-            dossier.setStatusDossier(StatusDossier.DESINSCRIT);
+            dossier.setDesinscrit(true);
             return;
         }
         if (StringUtils.hasText(individuInfos.getEppn())) {
@@ -137,18 +137,6 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getFixCountry())) {
             individu.setFixCountry(individuInfos.getFixCountry());
         }
-     /*   if(StringUtils.hasText(individuInfos.getCurrentAddress())) {
-            individu.setCurrentAddress(individuInfos.getCurrentAddress());
-        }
-        if(StringUtils.hasText(individuInfos.getCurrentCP())) {
-            individu.setCurrentCP(individuInfos.getCurrentCP());
-        }
-        if(StringUtils.hasText(individuInfos.getCurrentCity())) {
-            individu.setCurrentCity(individuInfos.getCurrentCity());
-        }
-        if(StringUtils.hasText(individuInfos.getCurrentCountry())) {
-            individu.setCurrentCountry(individuInfos.getCurrentCountry());
-        }*/
         if (StringUtils.hasText(individuInfos.getFixPhone())) {
             individu.setFixPhone(individuInfos.getFixPhone());
         }
@@ -174,7 +162,7 @@ public class IndividuService {
             try {
                 syncIndividu(individu.getId());
             } catch (AgapeRuntimeException e) {
-                logger.warn(e.getMessage());
+                logger.warn(e.getMessage() + "for " + individu.getNumEtu());
             }
         }
         logger.info("Sync individus done");

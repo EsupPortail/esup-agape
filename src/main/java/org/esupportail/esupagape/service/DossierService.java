@@ -339,7 +339,7 @@ public class DossierService {
     public List<String> filteredEmails(DossierFilter dossierFilter) {
         TypedQuery<DossierIndividuClassDto> query = superFilter(dossierFilter, Pageable.unpaged());
         List<DossierIndividuClassDto> dossiers = query.getResultList();
-        return dossiers.stream().map(DossierIndividuClassDto::getNumEtu).collect(Collectors.toList());
+        return dossiers.stream().map(DossierIndividuClassDto::getEmailEtu).filter(StringUtils::hasText).collect(Collectors.toList());
     }
 
     public TypedQuery<DossierIndividuClassDto> superFilter(DossierFilter dossierFilter, Pageable pageable) {
@@ -363,7 +363,9 @@ public class DossierService {
                 dossierRoot.get("statusDossier"),
                 dossierRoot.get("statusDossierAmenagement"),
                 dossierIndividuJoin.get("id"),
-                dossierIndividuJoin.get("gender")
+                dossierIndividuJoin.get("gender"),
+                dossierIndividuJoin.get("emailEtu"),
+                dossierRoot.get("desinscrit")
         );
 
         List<Predicate> predicates = new ArrayList<>();
@@ -569,5 +571,3 @@ public class DossierService {
 //    }
 
 }
-
-
