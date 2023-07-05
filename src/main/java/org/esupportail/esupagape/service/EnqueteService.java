@@ -210,11 +210,13 @@ public class EnqueteService {
             if(enquete.getTypFrmn() == null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
+            if(dossier.getModeFormation() != null) {
             if(enquete.getModFrmn() == null) {
                 enquete.getModFrmn().add(dossier.getModeFormation());
                 if(dossier.getAlternance()) {
                     enquete.getModFrmn().add(ModFrmn.A);
                 }
+            }
             }
             Amenagement amenagement = amenagementService.isAmenagementValid(id);
             if (amenagement != null) {
