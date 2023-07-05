@@ -75,7 +75,7 @@
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
-                            <th:block th:switch="${dossierIndividuDto.statusDossier}">
+                            <th:block th:if="${dossierIndividuDto.statusDossier != null}" th:switch="${dossierIndividuDto.statusDossier}">
                                 <td th:case="${dossierIndividuDto.statusDossier.SUIVI}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}">
@@ -93,6 +93,8 @@
                                 <td th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span></td>
                             </th:block>
+                            <td th:if="${dossierIndividuDto.statusDossier == null}">
+                                <span><i class="fa fa-warning"></i></span></td>
                             <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
                                     class="d-none d-sm-none d-md-table-cell"></td>
                             <td>

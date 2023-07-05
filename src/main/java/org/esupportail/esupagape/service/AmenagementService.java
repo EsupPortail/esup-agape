@@ -499,7 +499,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         File signImage = new File(tmpDir + "/signImage.jpg");
         FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
         PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
-        float ratio = img.getWidth() / signRectangle.getWidth();
+        float ratio = img.getHeight() / signRectangle.getHeight();
         cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
         cs.close();
     }
