@@ -137,10 +137,10 @@ public class AmenagementService {
         if(amenagement.getDossier().getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON) || amenagement.getStatusAmenagement().equals(StatusAmenagement.ENVOYE) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
             amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
         } else {
-            throw new AgapeException("Impossible de supprimer un aménagement qui n'est pas au statut brouillon");
+            throw new AgapeException("Impossible de supprimer un aménagement qui n'est pas au statut brouillon, envoyé à la signature du médecin ou validé par le médecin");
         }
     }
 
