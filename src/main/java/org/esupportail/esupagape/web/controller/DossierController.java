@@ -116,7 +116,7 @@ public class DossierController {
     }
 
     @GetMapping("/{dossierId}/sync")
-    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
         dossierService.syncDossier(dossierId);
         try {
