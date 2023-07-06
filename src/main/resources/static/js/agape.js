@@ -406,6 +406,9 @@ function toggleInputLock(id) {
 function textAreaAdjust(element, lineHeight) {
     let text = element.value;
     let lines = text.split(/\r|\r\n|\n/);
-    let count = lines.length;
+    //let count = lines.length;
+    let capitalizeFirstLetterOnFirstLines = lines.map(line => line.charAt(0).toUpperCase() + line.slice(1));
+    let count = capitalizeFirstLetterOnFirstLines.length;
+    element.value = capitalizeFirstLetterOnFirstLines.join('\n');
     element.style.height = (lineHeight * count) + "px";
 }
