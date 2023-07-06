@@ -40,7 +40,6 @@
             <div class="col-12 text-center" style="height: 90%">
                 <th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
                     <th:block th:if="${amenagement.avisSignatureStatus != null}">
-                        <h1>La signature de l’avis est pris en charge par Esup-Signature</h1>
                         <div class="alert alert-warning" th:if="${amenagement.avisSignatureStatus.name().equals('PENDING')}">
                             Statut Esup-Signature : En cours de signature par le médecin
                         </div>
@@ -48,14 +47,13 @@
                             Statut Esup-Signature : Refusé par le médecin
                         </div>
                         <div class="alert alert-success" th:if="${amenagement.avisSignatureStatus.name().equals('COMPLETED')}">
-                            Statut Esup-Signature : Avis Validé
+                            Statut Esup-Signature : Avis signé par le médecin
                         </div>
                         <div class="alert alert-primary" th:if="${amenagement.avisSignatureStatus.name().equals('DOWNLOADED')}">
-                            Statut Esup-Signature : Avis récupéré
+                            Statut Esup-Signature : Avis signé par le médecin et transmit à l’administration
                         </div>
                     </th:block>
                     <th:block th:if="${amenagement.certificatSignatureStatus != null}">
-                        <h1>La validation du certificat est prise en charge par Esup-Signature</h1>
                         <div class="alert alert-warning" th:if="${amenagement.certificatSignatureStatus.name().equals('PENDING')}">
                             Statut Esup-Signature : En cours de signature par l’administration
                         </div>

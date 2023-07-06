@@ -269,14 +269,16 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             amenagement.setMailMedecin(personLdap.getMail());
             if(!StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId()) && StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 sendToCertificatWorkflow(id);
+                amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
             } else if(StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
                 sendToAvisWorkflow(id);
                 amenagement.setStatusAmenagement(StatusAmenagement.ENVOYE);
+                //TODO lors de la suppression, supprimer dans esup-signature
             } else {
                 try {
                     byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
                     Document avis = documentService.createDocument(
-                            new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS)),
+                            new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, true)),
                             "Avis-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
                             "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                             amenagement.getDossier());
@@ -296,7 +298,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         Amenagement amenagement = getById(id);
         try {
             byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT), TypeWorkflow.CERTIFICAT);
+            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, false), TypeWorkflow.CERTIFICAT);
         } catch (IOException e) {
             throw new AgapeException("Envoi vers esup-signature impossible", e);
         }
@@ -307,7 +309,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         Amenagement amenagement = getById(id);
         try {
             byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
-            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS), TypeWorkflow.AVIS);
+            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, false), TypeWorkflow.AVIS);
         } catch (IOException e) {
             throw new AgapeException("Envoi vers esup-signature impossible", e);
         }
@@ -328,7 +330,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                 Document certificat = documentService.createDocument(
-                        new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT)),
+                        new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true)),
                         "Certificat-" + amenagement.getDossier().getIndividu().getNumEtu() + "-" + amenagement.getId() + ".pdf",
                         "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         amenagement.getDossier());
@@ -374,7 +376,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             } else {
                 modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
             }
-            certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
+            certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
         }
         httpServletResponse.getOutputStream().write(certificat);
     }
@@ -395,12 +397,12 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             } else {
                 modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
             }
-            avis = generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS);
+            avis = generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, true);
         }
         httpServletResponse.getOutputStream().write(avis);
     }
 
-    private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow) throws IOException {
+    private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow, boolean withSign) throws IOException {
         CertificatPdf certificatPdf = new CertificatPdf();
         certificatPdf.setName(amenagement.getDossier().getIndividu().getName());
         certificatPdf.setFirstname(amenagement.getDossier().getIndividu().getFirstName());
@@ -434,10 +436,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
-        return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes);
+        return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes, withSign);
     }
 
-    private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model) throws IOException {
+    private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model, boolean withSign) throws IOException {
         byte[] savedPdf;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PDDocument modelDocument = PDDocument.load(model);
@@ -459,7 +461,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 if(datas.containsKey(fieldName)) {
                     pdField.setValue(datas.get(fieldName));
                 }
-                if(pdField instanceof PDSignatureField) {
+                if(pdField instanceof PDSignatureField && withSign) {
                     addVisualSignature(amenagement, toFillDocument, pdField.getWidgets().get(0).getRectangle(), fieldName);
                 }
                 out = new ByteArrayOutputStream();
@@ -587,7 +589,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                     certificat = amenagement.getCertificat().getInputStream().readAllBytes();
                 } else {
                     byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-                    certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT);
+                    certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
                 }
                 mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             } catch (Exception e) {
