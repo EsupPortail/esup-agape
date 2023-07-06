@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-<div th:fragment="update" class="modal fade" id="update-individu-modal" tabindex="-1" aria-labelledby="update-individu-modal" aria-hidden="true">
+<div th:fragment="update" class="modal fade" id="update-individu-modal" tabindex="-1" aria-labelledby="update-individu-modal" aria-hidden="true" data-bs-focus="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -50,8 +50,9 @@
                             <label class="form-label" for="nationalite">Nationalité</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <select id="nationalite" name="nationalite" class="form-select" th:disabled="${currentDossier.individu.nationalite != null}">
+                            <select id="nationalite" name="nationalite" class="agape-slim-select-search" th:disabled="${currentDossier.individu.nationalite != null}">
                                 <option th:value="${currentDossier.individu.nationalite}" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.nationalite))}" th:if="${currentDossier.individu.nationalite != null}" selected></option>
+                                <option value="" th:if="${currentDossier.individu.nationalite == null}" selected></option>
                                 <th:block th:each="locale : ${locales}">
                                     <option th:value="${locale}" th:text="${locale}"></option>
                                 </th:block>

@@ -162,7 +162,7 @@ public class IndividuService {
             try {
                 syncIndividu(individu.getId());
             } catch (AgapeRuntimeException e) {
-                logger.warn(e.getMessage() + "for " + individu.getNumEtu());
+                logger.debug(e.getMessage() + " for " + individu.getNumEtu());
             }
         }
         logger.info("Sync individus done");
