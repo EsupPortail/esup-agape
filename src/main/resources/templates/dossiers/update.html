@@ -18,7 +18,7 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="d-inline">
+                <div class="d-inline" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                     <div class="float-buttons">
                         <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button">
                             <i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
@@ -31,7 +31,7 @@
                         <button title="Voir les pièces jointes" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pjModal" type="button"><i class="fa-solid fa-paperclip"></i>
                         </button>
                         <button title="Voir les résultats" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#notesModal" type="button"><i class="fa-solid fa-chart-bar"></i></button>
-                        <a type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" type="button" class="btn btn-secondary" title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
                             <i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
                         </a>
                         <button title="Anonymiser les données de l'individu"

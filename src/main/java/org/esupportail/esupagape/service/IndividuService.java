@@ -102,6 +102,8 @@ public class IndividuService {
         if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
             dossier.setDesinscrit(true);
             return;
+        } else {
+            dossier.setDesinscrit(false);
         }
         if (StringUtils.hasText(individuInfos.getEppn())) {
             individu.setEppn(individuInfos.getEppn());
