@@ -23,6 +23,7 @@
                                     <td th:text="${pieceJointe.fileName}"></td>
                                     <td>
                                         <a class="btn btn-sm btn-info"
+                                                title="Télécharger la pièce-jointe"
                                                 th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document?typeDocumentAideHumaine=' + ${pieceJointe.typeDocument}">
                                             <i class="fa-solid fa-download"></i></a>
                                     </td>
@@ -34,6 +35,7 @@
                                         </form>-->
                                             <button th:attr="id=${pieceJointe.id}"
                                                     data-bs-toggle="modal"
+                                                    title="Supprimer la pièce-jointe"
                                                     href="#"
                                                     data-bs-target="#modal-warning"
                                                     class="btn btn-sm btn-danger"

@@ -49,12 +49,12 @@
                                             <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
                                             <td th:text="${aideMaterielle.cost}" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"></td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                                <button class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-eye"></i>
+                                                <button class="btn btn-info" title="Voir le détail" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-eye"></i>
                                                 </button>
                                                 <div th:replace="aides/modal-show-aide-materielle :: show"></div>
                                             </td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
+                                                <button title="Supprimer l'aide matérielle" th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade" th:if="${currentYear == currentDossier.year}"
                                                         th:id="'delete-aide-materielle-' + ${aideMaterielle.id}"
@@ -127,10 +127,10 @@
                                             <td th:text="${aideHumaine.nameAidant}" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"></td>
                                             <td th:text="${aideHumaine.firstNameAidant}" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"></td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                                <a class="btn btn-info" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="fa-solid fa-eye"></i></a>
+                                                <a class="btn btn-info" title="Voir le détail" th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/update'"><i class="fa-solid fa-eye"></i></a>
                                             </td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                                <button th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
+                                                <button title="Supprimer l'aide humaine" th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-humaine-' + ${aideHumaine.id}"><i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade" th:if="${currentYear == currentDossier.year}"
                                                         th:id="'delete-aide-humaine-' + ${aideHumaine.id}"
