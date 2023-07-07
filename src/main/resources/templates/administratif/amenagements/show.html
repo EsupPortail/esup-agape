@@ -18,7 +18,7 @@
                 <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                <button title="Envoyer à l'étudiant" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendModal">
+                <button th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" title="Envoyer à l'étudiant" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendModal">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
                 <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/administratif/amenagements/{id}/get-certificat?type=download(id=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
