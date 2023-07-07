@@ -4,7 +4,7 @@
 <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <div th:fragment="side" class="agape-side bg-light position-sticky">
         <div class="p-2">
-            <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Aménagement</span></span>
+            <span class="fs-6 card bg-primary text-white mb-4 "><span class="ms-3">Aménagement</span></span>
             <div class="container">
                 <dt class="col-sm-6">Année du dossier courant</dt>
                 <dd class="col-sm-6" th:text="${currentDossier.year} + '-' + ${currentDossier.year + 1}"></dd>
@@ -24,7 +24,7 @@
                 <dt class="col-sm-6">Statut de l’envoi de mail individu</dt>
                 <dd th:text="${amenagement.individuSendDate != null} ? ${#temporals.format(amenagement.individuSendDate, 'dd/MM/yyyy')}: 'Non envoyé'"></dd>
             </div>
-            <span class="fs-6 card text-bg-primary mb-4 "><span class="ms-3">Information sur l'individu</span></span>
+            <span class="fs-6 card bg-primary text-white mb-4 "><span class="ms-3">Information sur l'individu</span></span>
             <div class="container">
                 <dt class="col-sm-6">Type d’individu</dt>
                 <dd class="col-sm-6" th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>

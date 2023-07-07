@@ -102,11 +102,11 @@
                             <td>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item border-0 p-1 bg-transparent">
-                                        <a class="btn btn-sm btn-info" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="fa-regular fa-eye"></i>
+                                        <a class="btn btn-sm btn-info" title="Voir fiche" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="fa-regular fa-eye"></i>
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN')">
-                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
+                                        <a data-bs-toggle="modal" title="Supprimer l'individu" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
                                             <i class="fa-solid fa-user-xmark"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-individu-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
@@ -135,7 +135,7 @@
                                         </div>
                                     </li>
                                     <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
-                                        <a data-bs-toggle="modal" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
+                                        <a data-bs-toggle="modal" title="Supprimer le dossier" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
                                             <i class="fa-solid fa-trash"></i></a>
                                         <div class="modal modal-warning fade in" th:id="'modal-warning-dossier-' + ${dossierIndividuDto.id}">
                                             <div class="modal-dialog">
