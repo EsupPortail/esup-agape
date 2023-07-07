@@ -9,7 +9,7 @@
 <main class="d-inline-flex">
     <div class="agape-side bg-light position-sticky">
         <a href="/administratif/amenagements?porte=0" class="btn  ms-3 mt-3" th:classappend="${!porte ? 'btn-secondary' : 'btn-light'}">Aménagements à valider <div class="badge bg-danger" th:text="${nbAmenagementsToValidate}"></div></a>
-        <a href="/administratif/amenagements?porte=1" class="btn  ms-3 mt-3" th:classappend="${porte ? 'btn-secondary' : 'btn-light'}">Aménagements portables <div class="badge bg-danger" th:text="${nbAmenagementsToPorte}"></div></a>
+        <a th:if="${currentYear > 2022}" href="/administratif/amenagements?porte=1" class="btn  ms-3 mt-3" th:classappend="${porte ? 'btn-secondary' : 'btn-light'}">Aménagements portables <div class="badge bg-danger" th:text="${nbAmenagementsToPorte}"></div></a>
     </div>
     <div class="agape-content agape-content-side">
         <nav aria-label="breadcrumb">
@@ -113,7 +113,7 @@
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
                                     <td th:text="${amenagement.individuSendDate != null} ? ${#temporals.format(amenagement.individuSendDate, 'dd/MM/yyyy')}: 'Non envoyé'"></td>
-                                    <td style="width: 100px;">
+                                    <td class="text-center" style="width: 100px;">
                                         <ul class="list-group list-group-horizontal">
                                             <li class="list-group-item border-0 p-1 bg-transparent">
                                                 <a class="btn btn-info" th:href="@{/administratif/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="fa-solid fa-eye"></i>
