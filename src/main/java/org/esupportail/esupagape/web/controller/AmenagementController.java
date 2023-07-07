@@ -132,4 +132,12 @@ public class AmenagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/add-libelle")
+    @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
+    public String addLibelle(String newLibelle, Integer previousIndex, RedirectAttributes redirectAttributes) {
+        amenagementService.addLibelle(newLibelle, previousIndex);
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Libellé ajouté"));
+        return "redirect:/";
+    }
+
 }

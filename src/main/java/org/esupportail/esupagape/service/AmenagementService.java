@@ -17,15 +17,13 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
-import org.esupportail.esupagape.entity.Amenagement;
-import org.esupportail.esupagape.entity.Document;
-import org.esupportail.esupagape.entity.Dossier;
-import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.*;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
+import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.EsupSignatureService;
@@ -66,8 +64,9 @@ public class AmenagementService {
     private final EsupSignatureService esupSignatureService;
     private final MailService mailService;
     private final DocumentService documentService;
+    private final LibelleAmenagementRepository libelleAmenagementRepository;
 
-    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService) {
+    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository) {
         this.applicationProperties = applicationProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
@@ -77,6 +76,7 @@ public class AmenagementService {
         this.esupSignatureService = esupSignatureService;
         this.mailService = mailService;
         this.documentService = documentService;
+        this.libelleAmenagementRepository = libelleAmenagementRepository;
     }
 
     public Amenagement getById(Long id) {
@@ -599,4 +599,17 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         }
     }
 
+    public void addLibelle(String newLibelle, Integer previousIndex) {
+        int newOrderIndex = previousIndex + 1;
+        LibelleAmenagement libelleAmenagement = new LibelleAmenagement();
+        libelleAmenagement.setTitle(newLibelle);
+        libelleAmenagement.setOrderIndex(newOrderIndex);
+        List<LibelleAmenagement> allRecords = libelleAmenagementRepository.findAll();
+        for (LibelleAmenagement existingRecord : allRecords) {
+            if (existingRecord.getOrderIndex() >= newOrderIndex) {
+                existingRecord.setOrderIndex(existingRecord.getOrderIndex() + 1);
+            }
+        }
+        libelleAmenagementRepository.save(libelleAmenagement);
+    }
 }
