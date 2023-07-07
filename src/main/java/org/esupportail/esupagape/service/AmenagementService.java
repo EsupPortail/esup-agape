@@ -190,13 +190,19 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
         dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
     }
+
     amenagement.setDossier(dossier);
     amenagement.setNomMedecin(personLdap.getDisplayName());
     amenagement.setMailMedecin(personLdap.getMail());
 
     Set<Classification> selectedClassifications = amenagement.getClassification();
     updateClassification(dossier, selectedClassifications);
-
+    if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
+        amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
+    } else {
+        amenagement.getTypeEpreuves().clear();
+        amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+    }
     amenagementRepository.save(amenagement);
 }
 
@@ -210,6 +216,12 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
             amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
             amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
+            if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
+                amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
+            } else {
+                amenagement.getTypeEpreuves().clear();
+                amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+            }
             amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
             amenagementToUpdate.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
             amenagementToUpdate.setEndDate(amenagement.getEndDate());

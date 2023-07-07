@@ -239,3 +239,11 @@ select[disabled] > option {
     color: #ebeef0;
     background-color: #3f3f3f !important;;
 }
+
+:root {
+    --color-span-star : #dc3545;
+}
+
+.star {
+    color: var(--color-span-star);
+}
