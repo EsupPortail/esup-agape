@@ -55,13 +55,13 @@
                                         <td>
                                             <ul class="list-group list-group-horizontal">
                                                 <li class="list-group-item border-0 p-1 bg-transparent">
-                                                    <a class="btn btn-warning"
+                                                    <a class="btn btn-warning" title="Modifier l'entretien"
                                                             th:href="@{/dossiers/{id}/entretiens/{entretienId}/update(id=${currentDossier.id},entretienId=${entretien.id})}"
                                                             role="button"><i class="fa-solid fa-pen"></i>
                                                     </a>
                                                 </li>
                                                 <li class="list-group-item border-0 p-1 bg-transparent">
-                                                    <a data-bs-toggle="modal" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${entretien.id}" class="btn btn-danger">
+                                                    <a data-bs-toggle="modal" title="Supprimer l'entretien" href="#" data-bs-target="#modal-warning" th:attr="data-bs-target='#modal-warning'+${entretien.id}" class="btn btn-danger">
                                                         <i class="fa-solid fa-trash"></i></a>
                                                     <div class="modal modal-warning fade in" th:id="modal-warning+${entretien.id}">
                                                         <div class="modal-dialog">

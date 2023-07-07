@@ -26,12 +26,12 @@
                 </nav>
                 <div class="d-inline">
                     <div class="float-buttons">
-                        <button th:if="${currentYear == currentDossier.year}" onclick="unlockForm(this);" ea-form-name="form-aide-humaine" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="lockForm(this);" id="lock-aide-humaine" type="button" value="Annuler" class="btn btn-danger mt-2 d-none"><i class="fa-solid fa-xmark"></i></button>
-                        <button type="button" id="submit-aide-humaine" class="btn btn-success mt-2 d-none">
+                        <button th:if="${currentYear == currentDossier.year}" title="Modifier l'aide humaine" onclick="unlockForm(this);" ea-form-name="form-aide-humaine" id="unlock-aide-humaine" type="button" value="Modifier" class="btn btn-warning mt-2"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="lockForm(this);" id="lock-aide-humaine" type="button" title="Annuler la modification"  value="Annuler" class="btn btn-danger mt-2 d-none"><i class="fa-solid fa-xmark"></i></button>
+                        <button type="button" id="submit-aide-humaine" class="btn btn-success mt-2 d-none" title="Valider la modification">
                             <i class="fa-solid fa-save"></i>
                         </button>
-                        <button type="button" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="fa-solid fa-paperclip"></i></button>
+                        <button type="button" title="Pièce(s)-jointe(s)" class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#pj-aide-humaine"><i class="fa-solid fa-paperclip"></i></button>
                     </div>
                 </div>
                 <div th:replace="fragments/tabs-years :: tabs-years"></div>
