@@ -7,10 +7,11 @@ import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-//@EnableScheduling
+@EnableScheduling
 @Service
 public class SchedulerService {
 
@@ -38,6 +39,7 @@ public class SchedulerService {
             individuService.importIndividus();
             individuService.syncAllIndividus();
             dossierService.syncAllDossiers();
+            logger.info("Synchro individus terminée");
         }
     }
 
@@ -46,6 +48,7 @@ public class SchedulerService {
         if(applicationProperties.getEnableSchedulerEsupSignature()) {
             logger.info("Synchro Esup Signature");
             amenagementService.syncEsupSignatureAmenagements();
+            logger.info("Synchro Esup Signature terminée");
         }
     }
 
@@ -54,6 +57,7 @@ public class SchedulerService {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
             logger.info("Synchro Aménagements");
             amenagementService.syncAllAmenagements();
+            logger.info("Synchro Aménagements terminée");
         }
     }
 
@@ -62,6 +66,7 @@ public class SchedulerService {
         if(applicationProperties.getEnableSchedulerAnonymise()) {
             logger.info("Anonymisation des anciens dossiers ");
             individuService.anonymiseOldDossiers();
+            logger.info("Anonymisation des anciens dossiers terminée");
         }
     }
 

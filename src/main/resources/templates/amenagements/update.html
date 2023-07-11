@@ -158,11 +158,11 @@
                     </div>
                     <div class="col-12">
                         <div class="float-buttons">
-                            <button type="button" title="Envoyer à la signature" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
                             <button type="submit"  title="Enregistrer" class="btn btn-success" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <i class="fa-solid fa-save"></i>
+                            </button>
+                            <button type="button" title="Envoyer à la signature" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                                <i class="fa-solid fa-paper-plane"></i>
                             </button>
                             <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
                                 <i class="fa-solid fa-book-medical" style="font-size: 22px"></i>
