@@ -518,10 +518,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         File tmpDir = Files.createTempDirectory("esupagape").toFile();
         File signImage;
         if(StringUtils.hasText(applicationProperties.getSignaturesPath())) {
-            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getMailValideur() + ".jpg");
+            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getMailValideur() + ".png");
         } else {
-            signImage = new File(tmpDir + "/signImage.jpg");
-            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".jpg");
+            signImage = new File(tmpDir + "/signImage.png");
+            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".png");
             if(!signImgResource.exists()) {
                 signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
             }

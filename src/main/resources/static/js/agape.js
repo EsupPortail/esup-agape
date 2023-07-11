@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     //Gestion des aménagements autorisation classifications
-    let autorisationOui = document.getElementById("autorisationOui");
+   /* let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");
     if(autorisationOui != null && autorisationNon != null) {
         autorisationOui.addEventListener("click", function () {
@@ -184,8 +184,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
         autorisationNc.addEventListener("click", function () {
             lockClassification();
         });
-    }
+    }*/
 
+    let autorisationOui = document.getElementById("autorisationOui");
+    let autorisationNon = document.getElementById("autorisationNon");
+    let autorisationNc = document.getElementById("autorisationNc");
+
+    if (autorisationOui != null && autorisationNon != null) {
+        autorisationOui.addEventListener("click", function () {
+            unLockClassification();
+        });
+
+        autorisationNon.addEventListener("click", function () {
+            lockClassification();
+        });
+
+        autorisationNc.addEventListener("click", function () {
+            lockClassification();
+        });
+
+        if (autorisationOui.checked) {
+            unLockClassification();
+        }
+    }
     //Gestion automatique des slimselect avec search
     document.querySelectorAll(".agape-slim-select-search").forEach(function (element) {
         if(element.id !== '') {
