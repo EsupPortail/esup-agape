@@ -281,8 +281,8 @@ public class EnqueteService {
         classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
         classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);
         classificationMap.put(Classification.AUTISME, CodHd.TSA);
-        classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
-        classificationMap.put(Classification.REFUS, CodHd.TND);
+//        classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
+//        classificationMap.put(Classification.REFUS, CodHd.TND);
         classificationMap.put(Classification.AUTRES_TROUBLES, CodHd.AUT);
         classificationMap.put(Classification.TROUBLES_INTELLECTUELS_ET_COGNITIFS, CodHd.COG);
         classificationMap.put(Classification.TROUBLES_PSYCHIQUES, CodHd.PSY);
