@@ -149,6 +149,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
+        dossierToUpdate.setStatusDossier(StatusDossier.ACCUEILLI);
     }
 
     public DossierInfos getInfos(Dossier dossier) {

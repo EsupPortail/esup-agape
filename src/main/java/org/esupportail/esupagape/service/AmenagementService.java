@@ -196,7 +196,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
     amenagement.setMailMedecin(personLdap.getMail());
 
     Set<Classification> selectedClassifications = amenagement.getClassification();
-    updateClassification(dossier, selectedClassifications);
+    updateDossierClassification(dossier, selectedClassifications, amenagement.getAutorisation());
     if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
         amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
     } else {
@@ -229,20 +229,32 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
 
             Set<Classification> selectedClassifications = amenagement.getClassification();
-            amenagementToUpdate.setClassification(selectedClassifications);
+            if(amenagement.getAutorisation().equals(Autorisation.OUI)) {
+                amenagementToUpdate.setClassification(selectedClassifications);
+            } else {
+                amenagementToUpdate.getClassification().clear();
+            }
 
-            updateClassification(amenagementToUpdate.getDossier(), selectedClassifications);
+            updateDossierClassification(amenagementToUpdate.getDossier(), selectedClassifications, amenagement.getAutorisation());
 
             amenagementRepository.save(amenagementToUpdate);
         }
     }
 
-    private void updateClassification(Dossier dossier, Set<Classification> selectedClassifications) {
+    private void updateDossierClassification(Dossier dossier, Set<Classification> selectedClassifications, Autorisation autorisation) {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
-            if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
-                dossier.setClassifications(selectedClassifications);
+            if(autorisation.equals(Autorisation.OUI)) {
+                if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
+                    dossier.setClassifications(selectedClassifications);
+                } else {
+                    dossier.setClassifications(Collections.emptySet());
+                }
+            } else if (autorisation.equals(Autorisation.NON)) {
+                dossier.getClassifications().clear();
+                dossier.getClassifications().add(Classification.REFUS);
             } else {
-                dossier.setClassifications(Collections.emptySet());
+                dossier.getClassifications().clear();
+                dossier.getClassifications().add(Classification.NON_COMMUNIQUE);
             }
         }
     }
