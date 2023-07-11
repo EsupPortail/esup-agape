@@ -338,7 +338,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 amenagement.setAdministrationDate(LocalDateTime.now());
                 amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                 amenagement.setNomValideur(personLdap.getDisplayName());
-                amenagement.setMailValideur(personLdap.getMail());
+                amenagement.setUidValideur(personLdap.getUid());
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                 Document certificat = documentService.createDocument(
@@ -364,7 +364,7 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
             amenagement.setAdministrationDate(LocalDateTime.now());
             amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
             amenagement.setNomValideur(personLdap.getDisplayName());
-            amenagement.setMailValideur(personLdap.getMail());
+            amenagement.setUidValideur(personLdap.getUid());
             amenagement.setMotifRefus(motif);
             amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         } else {
@@ -518,12 +518,12 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         File tmpDir = Files.createTempDirectory("esupagape").toFile();
         File signImage;
         if(StringUtils.hasText(applicationProperties.getSignaturesPath())) {
-            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getMailValideur() + ".png");
+            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getUidValideur() + ".jpg");
         } else {
-            signImage = new File(tmpDir + "/signImage.png");
-            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getMailValideur() + ".png");
+            signImage = new File(tmpDir + "/signImage.jpg");
+            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getUidValideur() + ".jpg");
             if(!signImgResource.exists()) {
-                signImgResource = new ClassPathResource("/static/images/" + fieldName + ".png");
+                signImgResource = new ClassPathResource("/static/images/" + fieldName + ".jpg");
             }
             FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
         }
