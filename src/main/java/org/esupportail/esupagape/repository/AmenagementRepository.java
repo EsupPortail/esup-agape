@@ -42,8 +42,6 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and
-            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
             """)
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
@@ -53,8 +51,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and
-            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
+
             """)
     Long countToPorte(Integer yearFilter);
 

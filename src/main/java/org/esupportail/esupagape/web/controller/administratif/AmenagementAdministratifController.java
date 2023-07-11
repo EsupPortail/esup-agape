@@ -104,7 +104,7 @@ public class AmenagementAdministratifController {
         try {
             dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
         } catch (AgapeJpaException e) {
-            dossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.AJOUT_MANUEL);
+            dossier = amenagement.getDossier();
         }
         model.addAttribute("currentDossier", dossier);
         model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));

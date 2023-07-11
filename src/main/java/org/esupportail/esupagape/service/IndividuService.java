@@ -96,15 +96,7 @@ public class IndividuService {
     @Transactional
     public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
-        Dossier dossier = dossierService.getCurrent(id);
-        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
-        if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
-            dossier.setDesinscrit(true);
-            return;
-        } else {
-            dossier.setDesinscrit(false);
-        }
         if (StringUtils.hasText(individuInfos.getEppn())) {
             individu.setEppn(individuInfos.getEppn());
         }
@@ -126,7 +118,6 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getEmailEtu())) {
             individu.setEmailEtu(individuInfos.getEmailEtu());
         }
-
         if (StringUtils.hasText(individuInfos.getFixAddress())) {
             individu.setFixAddress(individuInfos.getFixAddress());
         }
@@ -149,10 +140,22 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
-        if (individuInfos.getHandicap() != null) {
-            if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
-                dossier.getClassifications().add(individuInfos.getHandicap());
+        try {
+            Dossier dossier = dossierService.getCurrent(id);
+            if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
+            if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
+                dossier.setDesinscrit(true);
+                return;
+            } else {
+                dossier.setDesinscrit(false);
             }
+            if (individuInfos.getHandicap() != null) {
+                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+                    dossier.getClassifications().add(individuInfos.getHandicap());
+                }
+            }
+        } catch (AgapeJpaException e) {
+            logger.debug(e.getMessage());
         }
     }
 

@@ -514,16 +514,6 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         }
     }
 
-    @Transactional
-    public void porteAdministration(Long id, PersonLdap personLdap) throws AgapeJpaException {
-        Amenagement amenagement = getById(id);
-        Dossier currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
-        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
-        currentDossier.setAmenagementPorte(amenagement);
-        currentDossier.setMailValideurPortabilite(personLdap.getMail());
-        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
-    }
-
     private void addVisualSignature(Amenagement amenagement, PDDocument doc, PDRectangle signRectangle, String fieldName) throws IOException
     {
         PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, false);
@@ -543,6 +533,24 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         float ratio = img.getHeight() / signRectangle.getHeight();
         cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
         cs.close();
+    }
+
+    @Transactional
+    public void porteAdministration(Long id, PersonLdap personLdap) {
+        Amenagement amenagement = getById(id);
+        Dossier currentDossier;
+        try {
+            currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+                currentDossier.setStatusDossier(StatusDossier.RECONDUIT_PAR_LA_DEPE);
+            }
+        } catch (AgapeJpaException e) {
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.RECONDUIT_PAR_LA_DEPE);
+        }
+        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+        currentDossier.setAmenagementPorte(amenagement);
+        currentDossier.setMailValideurPortabilite(personLdap.getMail());
+        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }
 
     @Transactional
