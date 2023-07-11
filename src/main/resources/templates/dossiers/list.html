@@ -97,6 +97,8 @@
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.RECONDUIT_PAR_LA_DEPE}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT_PAR_LA_DEPE}}" class="badge text-bg-primary"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span></td>
                             </th:block>

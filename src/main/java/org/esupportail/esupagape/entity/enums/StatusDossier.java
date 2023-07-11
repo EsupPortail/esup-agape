@@ -8,5 +8,6 @@ public enum StatusDossier {
     ACCUEILLI,
     SUIVI,
     IMPOSSIBLE_A_CONTACTER,
-    ANONYMOUS
+    ANONYMOUS,
+    DESINSCRIT
 }

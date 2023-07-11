@@ -269,6 +269,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
+    public Page<Amenagement> getByIndividuNamePortable(String name, Pageable pageable) {
+        return amenagementRepository.findByIndividuNamePortable(name, utilsService.getCurrentYear(), pageable);
+    }
+
     public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
         return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
     }

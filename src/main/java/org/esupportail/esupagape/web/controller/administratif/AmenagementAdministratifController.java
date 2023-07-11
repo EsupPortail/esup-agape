@@ -52,6 +52,7 @@ public class AmenagementAdministratifController {
                        @RequestParam(required = false) String codComposante,
                        @RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) Boolean porte,
+                       @RequestParam(required = false) String name,
                        @PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, Model model) {
@@ -61,17 +62,21 @@ public class AmenagementAdministratifController {
         }
         if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDE_MEDECIN;
         if(!StringUtils.hasText(codComposante)) codComposante = null;
-        Page<Amenagement> amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
         List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
         statusAmenagements.remove(StatusAmenagement.BROUILLON);
         statusAmenagements.remove(StatusAmenagement.SUPPRIME);
         if(!StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
             statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
-        if(porte) {
+        Page<Amenagement> amenagements;
+        if(StringUtils.hasText(name)){
+            amenagements = amenagementService.getByIndividuNamePortable(name, pageable);
+        } else if(porte) {
             amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
+        } else {
+            amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
         }
         model.addAttribute("statusAmenagements", statusAmenagements);
         model.addAttribute("amenagements", amenagements);
