@@ -76,6 +76,7 @@ public class DossierService {
             dossier.setType(TypeIndividu.INCONNU);
         }
         dossierRepository.save(dossier);
+        individu.getDossiers().add(dossier);
         return dossier;
     }
 
@@ -117,6 +118,9 @@ public class DossierService {
     }
 
     public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable) {
+        if(StringUtils.hasText(fullTextSearch)) {
+            yearFilter = null;
+        }
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable);
     }
 

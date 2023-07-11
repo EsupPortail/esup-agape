@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <div class="agape-amenagement-textarea-wrapper">
-                                            <textarea autocapitalize="sentences" id="amenagementText" type="text" rows="7" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
+                                            <textarea autocapitalize="sentences" id="amenagementText" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
                                         </div>
                                         <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
                                     </div>
@@ -158,9 +158,16 @@
                         </div>
                     </form>
                 </div>
-                <div class="alert alert-warning" style="margin-top: 160px; margin-right: 5px;" role="alert">
+                <div class="alert alert-warning mt-2" role="alert">
                     <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                 </div>
+            </div>
+            <div class="bg-white border-dark" style="position: absolute;right: 0; top:0; overflow-y: scroll; height: 80%; margin-top: 50px;">
+                <ul>
+                <th:block th:each="libelle : ${libellesAmenagement}">
+                    <li th:text="${libelle.title}"></li>
+                </th:block>
+                </ul>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>

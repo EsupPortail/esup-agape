@@ -3,8 +3,8 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
-import org.esupportail.esupagape.repository.IndividuRepository;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -30,12 +30,10 @@ public class IndividuController {
 
     private final IndividuService individuService;
     private final DossierService dossierService;
-    private final IndividuRepository individuRepository;
 
-    public IndividuController(IndividuService individuService, DossierService dossierService, IndividuRepository individuRepository) {
+    public IndividuController(IndividuService individuService, DossierService dossierService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
-        this.individuRepository = individuRepository;
     }
 
     @GetMapping("/{individuId}/redirect")
@@ -108,6 +106,15 @@ public class IndividuController {
     public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
         individuService.anonymiseIndividu(individuId);
         return "redirect:/individus/" + individuId + "/redirect";
+    }
+
+    @PostMapping("/fusion")
+    @ResponseBody
+    public void fusionIndividus(@RequestBody List<Long> ids) throws AgapeException {
+        if(ids.size() != 2) {
+            throw new AgapeRuntimeException("non !!");
+        }
+        individuService.fusion(ids);
     }
 
 }

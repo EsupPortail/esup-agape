@@ -495,4 +495,19 @@ public class IndividuService {
         }
     }
 
+    @Transactional
+    public void fusion(List<Long> ids) throws AgapeException {
+        ids = ids.stream().sorted(Comparator.comparingLong(Long::longValue).reversed()).toList();
+        Individu individu1 = findById(ids.get(0));
+        Individu individu2 = findById(ids.get(1));
+        if(individu1.getDateOfBirth().equals(individu2.getDateOfBirth())) {
+            for (Dossier dossier : individu2.getDossiers()) {
+                individu1.getDossiers().add(dossier);
+                dossier.setIndividu(individu1);
+            }
+            anonymiseIndividu(individu2.getId());
+        } else {
+            throw new AgapeRuntimeException("la date de naissance ne correspond pas");
+        }
+    }
 }

@@ -19,8 +19,11 @@
                 <button title="Ajouter un individu manuellement" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIndividuModal">
                     <i class="fa-solid fa-plus"></i>
                 </button>
-                <button data-bs-toggle="modal" data-bs-target="#mailtoModal" style="color: white;" th:if="${mails != null}" class="btn btn-primary" title="Envoyer un email">
+                <button data-bs-toggle="modal" data-bs-target="#mailtoModal" th:if="${mails != null}" class="btn btn-primary" title="Envoyer un email">
                     <i class="fa-solid fa-mail-bulk" style="font-size: 22px"></i>
+                </button>
+                <button id="fusion-btn" data-bs-toggle="modal" data-bs-target="#fusionModal" class="btn btn-warning d-none" title="Fusionner deux individus">
+                    <i class="fa-solid fa-people-arrows" style="font-size: 22px"></i>
                 </button>
             </div>
             <div th:replace="fragments/side-filters :: side-filters"></div>
@@ -37,7 +40,8 @@
                     <thead class="table-dark">
                         <tr >
                             <th scope="col" style="width: 30px;">
-                                <a class="sorted link-light"></a>
+                            </th>
+                            <th scope="col" style="width: 30px;">
                             </th>
                             <th scope="col" style="width: 100px;">
                                 <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
@@ -72,6 +76,7 @@
                     <tbody>
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
+                            <td class="text-center"><input class="fusion-checkbox" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
                             <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none"></td>
@@ -289,6 +294,23 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="fusionModal" tabindex="-1" aria-labelledby="fusionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="fusionModalLabel">Fusion d'individus</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Merci de confirmer la fusion des deux individus
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button id="fusion-submit" type="button" th:ea-csrf="${_csrf.token}" class="btn btn-success">Confirmer</button>
                     </div>
                 </div>
             </div>
