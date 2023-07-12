@@ -40,6 +40,9 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
+                            <a class="nav-link active text-light" aria-current="page" th:href="@{/exports/}">Exports</a>
+                        </li>
                         <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                             <a class="nav-link active text-light" aria-current="page" th:href="@{/admin/}">Admin</a>
                         </li>

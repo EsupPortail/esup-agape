@@ -97,8 +97,8 @@
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.RECONDUIT_PAR_LA_DEPE}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT_PAR_LA_DEPE}}" class="badge text-bg-primary"></span></td>
+                                <td th:case="${dossierIndividuDto.statusDossier.RECONDUIT}">
+                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT}}" class="badge text-bg-primary"></span></td>
                                 <td th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}">
                                     <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span></td>
                             </th:block>
@@ -249,7 +249,7 @@
                                                     <input id="firstName" th:field="*{firstName}" type="text" class="form-control" required />
                                                     <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"></p>
                                                 </div>
-                                                <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
+                                                <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Date de naissance</label>
                                                 <div class="col-sm-10">
                                                     <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" class="form-control mb-1" required />
                                                     <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error" th:errors="*{dateOfBirth}"></p>

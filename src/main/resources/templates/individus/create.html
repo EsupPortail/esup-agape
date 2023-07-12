@@ -68,7 +68,7 @@
                                 <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error"
                                    th:errors="*{firstName}"></p>
                             </div>
-                            <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Année de naissance</label>
+                            <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Date de naissance</label>
                             <div class="col-sm-10">
                                 <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" class="form-control mb-1" required />
                                 <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"

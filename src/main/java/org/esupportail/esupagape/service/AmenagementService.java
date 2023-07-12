@@ -546,10 +546,10 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         try {
             currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
             if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-                currentDossier.setStatusDossier(StatusDossier.RECONDUIT_PAR_LA_DEPE);
+                currentDossier.setStatusDossier(StatusDossier.RECONDUIT);
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.RECONDUIT_PAR_LA_DEPE);
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.RECONDUIT);
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         currentDossier.setAmenagementPorte(amenagement);

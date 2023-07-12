@@ -8,32 +8,32 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ExportRepository extends JpaRepository <Dossier, Long> {
-    @Query("""
-            select YEAR(i.dateOfBirth) as yearOfBirth,
-            i.gender as gender,
-            i.fixCP as fixCP,
-            i.fixCity as fixCity,
-            i.fixCountry as fixCountry,
-            d.type as type, 
-            d.statusDossier as statusDossier,
-            d.statusDossierAmenagement as statusDossierAmenagement,
-            c as classification,
-            d.mdph as mdph,
-            d.taux as taux,
-            t as typeSuiviHandisup,
-            d.typeFormation as typeFormation,
-            d.modeFormation as modeFormation,
-            d.libelleFormation as libelleFormation,
-            d.libelleFormationPrec as libelleFormationPrec,
-            d.codComposante as codComposante,
-            d.composante as composante,
-            d.formAddress as formAddress,
-            d.resultatTotal as resultatTotal,
-            d.suiviHandisup as suiviHandisup
-            from Dossier d join Individu i on d.individu.id = i.id
-            left join d.classifications c
-            left join d.typeSuiviHandisup t
+    @Query(value = """
+            select to_char(i.date_of_birth, 'YYYY') as yearOfBirth,
+                   cast(i.gender AS VARCHAR) as gender,
+                   cast(i.fixcp AS VARCHAR) as fixCP,
+                   cast(i.fix_city AS VARCHAR) as fixCity,
+                   cast(i.fix_country AS VARCHAR) as fixCountry,
+                   cast(d.type AS VARCHAR) as type,
+                   cast(d.status_dossier AS VARCHAR) as statusDossier,
+                   cast(d.status_dossier_amenagement AS VARCHAR) as statusDossierAmenagement,
+                   cast((select string_agg(distinct c.classifications, ',') from dossier_classifications as c where c.dossier_id = d.id) AS VARCHAR) as classifications,
+                   cast(d.mdph AS VARCHAR) as mdph,
+                   cast(d.taux AS VARCHAR) as taux,
+                   cast((select string_agg(distinct t.type_suivi_handisup, ',') from dossier_type_suivi_handisup as t where t.dossier_id = d.id) AS VARCHAR) as typeSuiviHandisup,
+                   cast(d.type_formation AS VARCHAR) as typeFormation,
+                   cast(d.mode_formation AS VARCHAR) as modeFormation,
+                   cast(d.libelle_formation AS VARCHAR) as libelleFormation,
+                   cast(d.libelle_formation_prec AS VARCHAR) as libelleFormationPrec,
+                   cast(d.cod_composante AS VARCHAR) as codComposante,
+                   cast(d.composante AS VARCHAR) as composante,
+                   cast(d.form_address AS VARCHAR) as formAddress,
+                   cast(d.resultat_total AS VARCHAR) as resultatTotal,
+                   cast(d.suivi_handisup AS VARCHAR) as suiviHandisup
+            from dossier as d
+                     join individu as i on d.individu_id = i.id
             where (:year is null or d.year = :year)
-             order by i.dateOfBirth desc """)
+            order by i.date_of_birth desc
+            """, nativeQuery = true)
     List<DossierCompletCsvDto> findByYearForCSV(Integer year);
 }

@@ -24,6 +24,7 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossier statusDossier;
 
+    //TODO
     private Boolean desinscrit = false;
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +42,7 @@ public class Dossier {
     private Etat etat;
 
     @Enumerated(EnumType.STRING)
+//TODO plusieurs possible + synchro avec l'enquete
     private Mdph mdph;
 
     @Enumerated(EnumType.STRING)
