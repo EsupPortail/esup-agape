@@ -11,7 +11,7 @@
                     <h1 class="modal-title fs-5" id="add-entretien-label">Ajouter un nouvel entretien</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create-entretien(id=${currentDossier.id})}" th:object="${entretien}">
+                <form th:method="post" th:action="@{/dossiers/{id}/entretiens/create(id=${currentDossier.id})}" th:object="${entretien}">
                     <div class="modal-body mb-3 mt-3">
                         <label th:for="date" class="form-label"><span class="star">*</span> Date de l’entretien</label>
                         <input id="date" type="datetime-local" class="form-control" th:name="date" th:value="${now}" required>

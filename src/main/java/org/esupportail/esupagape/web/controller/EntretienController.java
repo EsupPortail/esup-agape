@@ -51,7 +51,7 @@ public class EntretienController {
         return "entretiens/list";
     }
 
-    @PostMapping("/create-entretien")
+    @PostMapping("/create")
     public String create(@PathVariable Long dossierId, @Valid Entretien entretien, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model, dossierId);
