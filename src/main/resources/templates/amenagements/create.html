@@ -96,7 +96,7 @@
                                         <label for="autres-temp-majore" class="form-label">Autres temps majorés</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <input id="autres-temp-majore" type="text" class="form-control agape-amenagement-input" th:field="*{autresTempsMajores}">
+                                        <input id="autres-temp-majore" type="text" class="form-control" th:field="*{autresTempsMajores}">
                                         <p th:if="${#fields.hasErrors('autresTempsMajores')}" th:errorclass="error" th:errors="*{autresTempsMajores}"></p>
                                     </div>
                                 </div>
