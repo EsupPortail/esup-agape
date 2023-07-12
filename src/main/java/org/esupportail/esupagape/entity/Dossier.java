@@ -24,9 +24,6 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossier statusDossier;
 
-    //TODO
-    private Boolean desinscrit = false;
-
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
@@ -144,14 +141,6 @@ public class Dossier {
 
     public void setStatusDossier(StatusDossier statusDossier) {
         this.statusDossier = statusDossier;
-    }
-
-    public Boolean getDesinscrit() {
-        return desinscrit;
-    }
-
-    public void setDesinscrit(Boolean desinscrit) {
-        this.desinscrit = desinscrit;
     }
 
     public Autorisation getAutorisation() {

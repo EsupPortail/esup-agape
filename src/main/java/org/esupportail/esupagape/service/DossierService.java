@@ -342,7 +342,7 @@ public class DossierService {
                 dossierIndividuJoin.get("id"),
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
-                dossierRoot.get("desinscrit")
+                dossierIndividuJoin.get("desinscrit")
         ).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();

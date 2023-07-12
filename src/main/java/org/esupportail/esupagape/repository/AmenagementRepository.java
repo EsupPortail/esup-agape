@@ -36,6 +36,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "or upper(d.individu.numEtu) = :fullTextSearch " +
             "or upper (d.individu.codeIne) = :fullTextSearch) " +
             "and (d.year < :yearFilter) " +
+            "and d.individu.desinscrit != true " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and a.typeAmenagement = 'CURSUS'")
     Page<Amenagement> findByIndividuNamePortable(String fullTextSearch, Integer yearFilter, Pageable pageable);
@@ -53,6 +54,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
@@ -62,7 +64,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
     Long countToPorte(Integer yearFilter);
 

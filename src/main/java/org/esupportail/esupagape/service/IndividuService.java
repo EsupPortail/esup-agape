@@ -8,7 +8,6 @@ import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
@@ -140,17 +139,13 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
+        if((individu.getDesinscrit() == null || !individu.getDesinscrit()) && individuInfos.getEppn() == null) {
+            individu.setDesinscrit(true);
+        }
         try {
             Dossier dossier = dossierService.getCurrent(id);
-            if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-            if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
-                dossier.setDesinscrit(true);
-                return;
-            } else {
-                dossier.setDesinscrit(false);
-            }
             if (individuInfos.getHandicap() != null) {
-                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) && individuInfos.getHandicap() != null) {
                     dossier.getClassifications().add(individuInfos.getHandicap());
                 }
             }
