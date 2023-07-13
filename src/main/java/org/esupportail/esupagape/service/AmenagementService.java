@@ -178,33 +178,33 @@ public class AmenagementService {
             }
         }
     }*/
-@Transactional
-public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
-    Dossier dossier = dossierService.getById(idDossier);
-    if (dossier.getYear() != utilsService.getCurrentYear()) {
-        throw new AgapeYearException();
-    }
-    if (amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
-        throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
-    }
-    if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-        dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
-    }
+    @Transactional
+    public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
+        Dossier dossier = dossierService.getById(idDossier);
+        if (dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        if (amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
+            throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
+        }
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+            dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+        }
 
-    amenagement.setDossier(dossier);
-    amenagement.setNomMedecin(personLdap.getDisplayName());
-    amenagement.setMailMedecin(personLdap.getMail());
+        amenagement.setDossier(dossier);
+        amenagement.setNomMedecin(personLdap.getDisplayName());
+        amenagement.setMailMedecin(personLdap.getMail());
 
-    Set<Classification> selectedClassifications = amenagement.getClassification();
-    updateDossierClassification(dossier, selectedClassifications, amenagement.getAutorisation());
-    if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
-        amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
-    } else {
-        amenagement.getTypeEpreuves().clear();
-        amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+        Set<Classification> selectedClassifications = amenagement.getClassification();
+        updateDossierClassification(dossier, selectedClassifications, amenagement.getAutorisation());
+        if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
+            amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
+        } else {
+            amenagement.getTypeEpreuves().clear();
+            amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+        }
+        amenagementRepository.save(amenagement);
     }
-    amenagementRepository.save(amenagement);
-}
 
     @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
