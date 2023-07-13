@@ -39,6 +39,8 @@ public class Individu {
 
     private String eppn;
 
+    private Boolean desinscrit = false;
+
     private String photoId;
 
     private String emailEtu;
@@ -153,6 +155,14 @@ public class Individu {
 
     public void setEppn(String eppn) {
         this.eppn = eppn;
+    }
+
+    public Boolean getDesinscrit() {
+        return desinscrit;
+    }
+
+    public void setDesinscrit(Boolean desinscrit) {
+        this.desinscrit = desinscrit;
     }
 
     public String getPhotoId() {

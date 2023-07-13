@@ -38,7 +38,10 @@
                 <input class="mt-2" type="file" name="file" accept=".csv"><br>
                 <button class="btn btn-primary mt-2" type="submit">Importer libellés</button>
             </form>
-
+            <form th:action="@{/admin/import-libelles-amenagement}" method="post" enctype="multipart/form-data">
+                <input class="mt-2" type="file" name="file" accept=".csv"><br>
+                <button class="btn btn-primary mt-2" type="submit">Importer libellés aménagement</button>
+            </form>
             <h1>Années</h1>
             <hr>
             <div class="col-6 mx-auto">
@@ -62,7 +65,7 @@
                                     <div class="modal-content">
                                         <div class="modal-body">
                                             Confirmez la suppression de l’année ?
-                                           <!-- <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
+                                            <!-- <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
                                                 <input type="hidden" name="id" th:value="${year.id}">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                     Annuler

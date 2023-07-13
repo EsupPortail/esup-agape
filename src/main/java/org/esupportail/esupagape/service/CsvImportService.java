@@ -5,8 +5,10 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtSco;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
+import org.esupportail.esupagape.entity.LibelleAmenagement;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
+import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,14 +23,14 @@ import java.util.List;
 public class CsvImportService {
 
     private final EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository;
-
     private final EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository;
+    private final LibelleAmenagementRepository libelleAmenagementRepository;
 
     public CsvImportService(EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository,
-                            EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository) {
+                            EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository, LibelleAmenagementRepository libelleAmenagementRepository) {
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
-
+        this.libelleAmenagementRepository = libelleAmenagementRepository;
     }
 
     @Transactional
@@ -73,6 +75,26 @@ public class CsvImportService {
             enqueteEnumFilFmtScoLibelles.add(enqueteEnumFilFmtScoLibelle);
         }
         enqueteEnumFilFmtScoLibelleRepository.saveAll(enqueteEnumFilFmtScoLibelles);
+    }
+
+    public void importCsvLibelleAmenagement(MultipartFile file) throws IOException {
+        libelleAmenagementRepository.deleteAllInBatch();
+        CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
+        csvFormat.setDelimiter(";");
+//        csvFormat.setHeader();
+//        csvFormat.setSkipHeaderRecord(true);
+
+        List<CSVRecord> csvRecords = csvFormat.build().parse(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)).getRecords();
+        List<LibelleAmenagement> libelleAmenagements = new ArrayList<>();
+        for (CSVRecord csvRecord : csvRecords) {
+            String order = StringUtils.trimToNull(csvRecord.get(0));
+            String title = StringUtils.trimToNull(csvRecord.get(1));
+            LibelleAmenagement libelleAmenagement = new LibelleAmenagement();
+            libelleAmenagement.setTitle(title);
+            libelleAmenagement.setOrderIndex(Integer.valueOf(order));
+            libelleAmenagements.add(libelleAmenagement);
+        }
+        libelleAmenagementRepository.saveAll(libelleAmenagements);
     }
 }
 

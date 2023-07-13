@@ -54,7 +54,7 @@ public class Amenagement {
 
     private String nomMedecin;
 
-    private String mailValideur;
+    private String uidValideur;
 
     private String nomValideur;
 
@@ -204,12 +204,12 @@ public class Amenagement {
         this.nomMedecin = nomMedecin;
     }
 
-    public String getMailValideur() {
-        return mailValideur;
+    public String getUidValideur() {
+        return uidValideur;
     }
 
-    public void setMailValideur(String mailValideur) {
-        this.mailValideur = mailValideur;
+    public void setUidValideur(String uidValideur) {
+        this.uidValideur = uidValideur;
     }
 
     public String getNomValideur() {

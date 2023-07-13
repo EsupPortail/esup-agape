@@ -49,7 +49,7 @@ public class ExportService {
         put("type", "Type de l'individu");
         put("statusDossier", "Statut du dossier");
         put("statusDossierAmenagement", "Statut du Dossier Aménagement");
-        put("classification", "Classification du handicap");
+        put("classifications", "Classification du handicap");
         put("mdph", "Dossier MDPH");
         put("taux", "Taux");
         put("typeSuiviHandisup", "Type de suivi Handisup");

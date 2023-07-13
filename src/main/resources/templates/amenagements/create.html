@@ -30,7 +30,7 @@
                             <div class="col-12 col-xl-6">
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="typeAmenagement">* Type d’aménagement</label>
+                                        <label class="form-label" for="typeAmenagement"><span class="star">*</span> Type d’aménagement</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="typeAmenagement"
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label">* Types d’épreuves</label>
+                                        <label class="form-label"><span class="star">*</span> Types d’épreuves</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="tempsMajore">* Temps majoré</label>
+                                        <label class="form-label" for="tempsMajore"><span class="star">*</span> Temps majoré</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <select id="tempsMajore" type="text" class="form-select" name="tempsMajore" th:value="${amenagement.tempsMajore}" required>
@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <div class="agape-amenagement-textarea-wrapper">
-                                            <textarea autocapitalize="sentences" id="amenagementText" type="text" rows="7" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
+                                            <textarea  id="amenagementText" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
                                         </div>
                                         <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
                                     </div>
@@ -115,7 +115,7 @@
                             <div class="col-12 col-xl-6">
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label">* Autorisation de transmission</label>
+                                        <label class="form-label"><span class="star">*</span> Autorisation de transmission</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <th:block th:each="autorisation : ${autorisations}">
@@ -134,7 +134,7 @@
                                 <div id="classificationDiv" class="d-none">
                                     <div class="row mb-1 align-items-baseline">
                                         <div class="col-4" style="width: 250px;">
-                                            <label class="form-label select-label" th:for="classification">* Classification du
+                                            <label class="form-label select-label" th:for="classification"><span class="star">*</span> Classification du
                                                 handicap</label>
                                         </div>
                                         <div class="col-12 col-xxl-8">
@@ -158,9 +158,16 @@
                         </div>
                     </form>
                 </div>
-                <div class="alert alert-warning" style="margin-top: 160px; margin-right: 5px;" role="alert">
-                    * Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
+                <div class="alert alert-warning mt-2" role="alert">
+                    <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                 </div>
+            </div>
+            <div class="bg-white border-dark" style="position: absolute;right: 0; top:0; overflow-y: scroll; height: 80%; margin-top: 50px;">
+                <ul>
+                <th:block th:each="libelle : ${libellesAmenagement}">
+                    <li th:text="${libelle.title}"></li>
+                </th:block>
+                </ul>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
