@@ -163,4 +163,20 @@ public class AdminController {
         }
         return "redirect:/admin";
     }
+
+    @PostMapping("/import-libelles-amenagement")
+    public String importLibelleAmenagement(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+        if(!file.isEmpty()) {
+            try {
+                csvImportService.importCsvLibelleAmenagement(file);
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des libellés aménagements est terminé"));
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des libellés aménagements a échoué"));
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
+        }
+        return "redirect:/admin";
+    }
 }

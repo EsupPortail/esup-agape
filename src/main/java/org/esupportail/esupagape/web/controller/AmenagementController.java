@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
+import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -26,9 +27,12 @@ import java.io.IOException;
 public class AmenagementController {
 
     private final AmenagementService amenagementService;
+    private final LibelleAmenagementRepository libelleAmenagementRepository;
 
-    public AmenagementController(AmenagementService amenagementService) {
+    public AmenagementController(AmenagementService amenagementService,
+                                 LibelleAmenagementRepository libelleAmenagementRepository) {
         this.amenagementService = amenagementService;
+        this.libelleAmenagementRepository = libelleAmenagementRepository;
     }
 
     @GetMapping
@@ -42,6 +46,7 @@ public class AmenagementController {
     public String create(Model model) {
         setModel(model);
         model.addAttribute("amenagement", new Amenagement());
+        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
         return "amenagements/create";
     }
 
@@ -130,6 +135,14 @@ public class AmenagementController {
         amenagementService.getAvis(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/add-libelle")
+    @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
+    public String addLibelle(String newLibelle, Integer previousIndex, RedirectAttributes redirectAttributes) {
+        amenagementService.addLibelle(newLibelle, previousIndex);
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Libellé ajouté"));
+        return "redirect:/";
     }
 
 }

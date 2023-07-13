@@ -76,6 +76,7 @@ public class DossierService {
             dossier.setType(TypeIndividu.INCONNU);
         }
         dossierRepository.save(dossier);
+        individu.getDossiers().add(dossier);
         return dossier;
     }
 
@@ -117,6 +118,9 @@ public class DossierService {
     }
 
     public Page<DossierIndividuDto> getFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable) {
+        if(StringUtils.hasText(fullTextSearch)) {
+            yearFilter = null;
+        }
         return dossierRepository.findByFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable);
     }
 
@@ -128,7 +132,7 @@ public class DossierService {
         }
         dossierToUpdate.setClassifications(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
-        dossierToUpdate.setMdph(dossier.getMdph());
+        dossierToUpdate.setMdphs(dossier.getMdphs());
         dossierToUpdate.setTaux(dossier.getTaux());
         dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
@@ -145,6 +149,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
+        dossierToUpdate.setStatusDossier(StatusDossier.ACCUEILLI);
     }
 
     public DossierInfos getInfos(Dossier dossier) {
@@ -178,7 +183,7 @@ public class DossierService {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), utilsService.getCurrentYear(), false, false, new DossierInfos());
+            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, false, new DossierInfos());
             if (dossierInfos != null) {
                 if (StringUtils.hasText(dossierInfos.getCodComposante())) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
@@ -191,6 +196,8 @@ public class DossierService {
                 }
                 if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
                     dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());
+                } else {
+                    dossier.setLibelleFormationPrec("");
                 }
                 if (StringUtils.hasText(dossierInfos.getFormAddress())) {
                     dossier.setFormAddress(dossierInfos.getFormAddress());
@@ -335,7 +342,7 @@ public class DossierService {
                 dossierIndividuJoin.get("id"),
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
-                dossierRoot.get("desinscrit")
+                dossierIndividuJoin.get("desinscrit")
         ).distinct(true);
 
         List<Predicate> predicates = new ArrayList<>();

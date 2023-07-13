@@ -11,12 +11,12 @@
                 <form th:method="post" th:action="@{/dossiers/{id}/aides/create-aide-humaine(id=${currentDossier.id})}" th:object="${aideHumaine}">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label th:for="startDate" class="form-label">* Date de debut</label>
+                            <label th:for="startDate" class="form-label"><span class="star">*</span>  Date de debut</label>
                             <input id="startDate" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}" required>
                             <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                         </div>
                         <div class="mb-3">
-                            <label th:for="fonctionAidants" class="form-label">* Fonction</label>
+                            <label th:for="fonctionAidants" class="form-label"><span class="star">*</span>  Fonction</label>
                             <select id="fonctionAidants" class="mb-3 agape-slim-select" name="fonctionAidants" th:field="*{fonctionAidants}" size="1" multiple required>
                                 <th:block th:each="fonctionAidant : ${fonctionAidants}">
                                     <option th:id="${fonctionAidant}" th:value="${fonctionAidant}" th:text="#{'aides.fonctionAidant.' +${fonctionAidant}}"></option>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="alert alert-warning" style="margin: 5px;" role="alert">
-                        * Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
+                        <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

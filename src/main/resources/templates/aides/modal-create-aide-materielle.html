@@ -10,7 +10,7 @@
             </div>
             <form th:method="post" th:action="@{/dossiers/{id}/aides/create-aide-materiel(id=${currentDossier.id})}" th:object="${aideMaterielle}">
                 <div class="modal-body">
-                    <label class="form-label">* Type d’aide matérielle</label>
+                    <label class="form-label"><span class="star">*</span> Type d’aide matérielle</label>
                     <th:block th:each="typeAideMaterielle : ${typeAideMaterielles}">
                         <div class="form-check">
                             <input th:id="${typeAideMaterielle}" th:checked="${aideMaterielle.typeAideMaterielle == typeAideMaterielle}" class="form-check-input" type="radio" name="typeAideMaterielle" th:value="${typeAideMaterielle}" required>
@@ -18,17 +18,17 @@
                         </div>
                     </th:block>
                     <div class="mb-3 mt-3">
-                        <label th:for="start-date" class="form-label">* Date de debut</label>
+                        <label th:for="start-date" class="form-label"><span class="star">*</span> Date de debut</label>
                         <input id="start-date" type="datetime-local" class="form-control" th:name="startDate" th:value="${now}" required>
                         <p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
                     </div>
                     <div class="mb-3 mt-3">
-                        <label th:for="end-date" class="form-label">* Date de fin</label>
+                        <label th:for="end-date" class="form-label"><span class="star">*</span> Date de fin</label>
                         <input id="end-date" type="datetime-local" class="form-control" th:name="endDate" th:value="${now}" required>
                         <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
                     </div>
                     <div class="mb-3 mt-3">
-                        <label th:for="cost" class="form-label">* Cout en euros</label>
+                        <label th:for="cost" class="form-label"><span class="star">*</span> Coût en euros</label>
                         <input id="cost" type="number" min="0" class="form-control" th:field="*{cost}" required>
                         <p th:if="${#fields.hasErrors('cost')}" th:errorclass="error" th:errors="*{cost}"></p>
                     </div>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="alert alert-warning" style="margin: 5px;" role="alert">
-                    * Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
+                    <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

@@ -24,8 +24,6 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossier statusDossier;
 
-    private Boolean desinscrit = false;
-
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
@@ -40,8 +38,10 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Etat etat;
 
+    @ElementCollection(targetClass = Mdph.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Mdph mdph;
+//TODO plusieurs possible + synchro avec l'enquete
+    private Set<Mdph>  mdphs;
 
     @Enumerated(EnumType.STRING)
     private RentreeProchaine rentreeProchaine;
@@ -144,14 +144,6 @@ public class Dossier {
         this.statusDossier = statusDossier;
     }
 
-    public Boolean getDesinscrit() {
-        return desinscrit;
-    }
-
-    public void setDesinscrit(Boolean desinscrit) {
-        this.desinscrit = desinscrit;
-    }
-
     public Autorisation getAutorisation() {
         return autorisation;
     }
@@ -184,12 +176,12 @@ public class Dossier {
         this.etat = etat;
     }
 
-    public Mdph getMdph() {
-        return mdph;
+    public Set<Mdph> getMdphs() {
+        return mdphs;
     }
 
-    public void setMdph(Mdph mdph) {
-        this.mdph = mdph;
+    public void setMdphs(Set<Mdph> mdphs) {
+        this.mdphs = mdphs;
     }
 
     public RentreeProchaine getRentreeProchaine() {

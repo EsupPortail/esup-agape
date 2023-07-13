@@ -11,7 +11,7 @@
     <groupId>org.esupportail</groupId>
     <artifactId>esupagape</artifactId>
     <version>0.0.6-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>Esup-Agape</name>
     <description>Esup-Agape</description>
     <properties>

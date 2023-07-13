@@ -13,11 +13,68 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if(element.classList.contains("agape-amenagement-textarea")) {
             textAreaAdjust(element, 18);
             element.addEventListener("keyup", e => textAreaAdjust(e.target, 18));
-        } else {
-            textAreaAdjust(element, 30);
-            element.addEventListener("keyup", e => textAreaAdjust(e.target, 30));
         }
+        // else {
+        //     textAreaAdjust(element, 30);
+        //     element.addEventListener("keyup", e => textAreaAdjust(e.target, 30));
+        // }
     });
+
+    //Gestion des checkbox fusion
+    let nbFusionChecked = 0;
+    let fusionBtn = document.getElementById("fusion-btn");
+    let fusionSubmit = document.getElementById("fusion-submit");
+    Array.prototype.slice.call(document.getElementsByClassName('fusion-checkbox')).forEach(function (element) {
+        element.addEventListener("click", function (e){
+            if(e.target.checked) {
+                nbFusionChecked++;
+            } else {
+                nbFusionChecked--;
+            }
+            if(nbFusionChecked > 1) {
+                Array.prototype.slice.call(document.getElementsByClassName('fusion-checkbox')).forEach(function (element1) {
+                    if(!element1.checked) {
+                        element1.disabled = true;
+                    }
+                });
+                fusionBtn.classList.remove("d-none");
+                fusionSubmit.addEventListener("click", fusionAction, false);
+            } else {
+                Array.prototype.slice.call(document.getElementsByClassName('fusion-checkbox')).forEach(function (element1) {
+                    if(!element1.checked) {
+                        element1.disabled = false;
+                    }
+                });
+                fusionBtn.classList.add("d-none");
+                fusionSubmit.removeEventListener("click", fusionAction, false);
+            }
+        });
+    });
+
+    let fusionAction = function(e) {
+        let fusionIds = [];
+        Array.prototype.slice.call(document.getElementsByClassName('fusion-checkbox')).forEach(function (element1) {
+            if(element1.checked) {
+                fusionIds.push(element1.value);
+            }
+        });
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/individus/fusion?_csrf=' + e.target.getAttribute("ea-csrf"), false);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        let datas = JSON.stringify(fusionIds);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                location.reload();
+            } else {
+                alert('Erreur lors de la requête. Statut : ' + xhr.status);
+            }
+        };
+        xhr.onerror = function() {
+            alert('Erreur lors de la requête.');
+        };
+        xhr.send(datas);
+
+    }
 
     //Affichage des notes
     let notesModal = document.querySelector("#notesModal");
@@ -108,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     //Gestion des aménagements autorisation classifications
-    let autorisationOui = document.getElementById("autorisationOui");
+   /* let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");
     if(autorisationOui != null && autorisationNon != null) {
         autorisationOui.addEventListener("click", function () {
@@ -127,8 +184,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
         autorisationNc.addEventListener("click", function () {
             lockClassification();
         });
-    }
+    }*/
 
+    let autorisationOui = document.getElementById("autorisationOui");
+    let autorisationNon = document.getElementById("autorisationNon");
+    let autorisationNc = document.getElementById("autorisationNc");
+
+    if (autorisationOui != null && autorisationNon != null) {
+        autorisationOui.addEventListener("click", function () {
+            unLockClassification();
+        });
+
+        autorisationNon.addEventListener("click", function () {
+            lockClassification();
+        });
+
+        autorisationNc.addEventListener("click", function () {
+            lockClassification();
+        });
+
+        if (autorisationOui.checked) {
+            unLockClassification();
+        }
+    }
     //Gestion automatique des slimselect avec search
     document.querySelectorAll(".agape-slim-select-search").forEach(function (element) {
         if(element.id !== '') {
@@ -409,6 +487,7 @@ function textAreaAdjust(element, lineHeight) {
     //let count = lines.length;
     let capitalizeFirstLetterOnFirstLines = lines.map(line => line.charAt(0).toUpperCase() + line.slice(1));
     let count = capitalizeFirstLetterOnFirstLines.length;
+    if(count < 15) count += 15 - count;
     element.value = capitalizeFirstLetterOnFirstLines.join('\n');
     element.style.height = (lineHeight * count) + "px";
 }

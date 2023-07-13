@@ -21,7 +21,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
 
     List<Amenagement> findByStatusAmenagementAndDossierYear(StatusAmenagement statusAmenagement, int year);
 
-    @Query(value = "select a from Amenagement a join Dossier d on a.dossier = d " +
+    @Query("select distinct a from Amenagement a join Dossier d on a.dossier = d " +
             "where " +
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
             "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
@@ -29,7 +29,19 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "and (:yearFilter is null or d.year = :yearFilter)")
     Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
 
-    @Query(value = "select count(a) from Amenagement a join Dossier d on a.dossier = d " +
+    @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
+            "where (upper(i.firstName) like upper(concat('%', :fullTextSearch)) " +
+            "or upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%')) " +
+            "or upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))" +
+            "or upper(d.individu.numEtu) = :fullTextSearch " +
+            "or upper (d.individu.codeIne) = :fullTextSearch) " +
+            "and (d.year < :yearFilter) " +
+            "and d.individu.desinscrit != true " +
+            "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
+            "and a.typeAmenagement = 'CURSUS'")
+    Page<Amenagement> findByIndividuNamePortable(String fullTextSearch, Integer yearFilter, Pageable pageable);
+
+    @Query("select count(a) from Amenagement a join Dossier d on a.dossier = d " +
             "where " +
             "a.statusAmenagement = 'VALIDE_MEDECIN' " +
             "and (:yearFilter is null or d.year = :yearFilter)")
@@ -42,8 +54,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and
-            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
@@ -53,8 +64,7 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and
-            (select count(*) from Dossier d2 where d2.individu = d.individu and d2.year = :yearFilter and d2.statusDossierAmenagement = 'NON') = 1
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
     Long countToPorte(Integer yearFilter);
 

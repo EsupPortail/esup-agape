@@ -8,7 +8,6 @@ import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
@@ -96,15 +95,7 @@ public class IndividuService {
     @Transactional
     public void syncIndividu(Long id) throws AgapeJpaException {
         Individu individu = individuRepository.findById(id).orElseThrow();
-        Dossier dossier = dossierService.getCurrent(id);
-        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
         IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
-        if (dossier.getType().equals(TypeIndividu.ETUDIANT) && individuInfos.getEppn() == null) {
-            dossier.setDesinscrit(true);
-            return;
-        } else {
-            dossier.setDesinscrit(false);
-        }
         if (StringUtils.hasText(individuInfos.getEppn())) {
             individu.setEppn(individuInfos.getEppn());
         }
@@ -126,7 +117,6 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getEmailEtu())) {
             individu.setEmailEtu(individuInfos.getEmailEtu());
         }
-
         if (StringUtils.hasText(individuInfos.getFixAddress())) {
             individu.setFixAddress(individuInfos.getFixAddress());
         }
@@ -149,10 +139,18 @@ public class IndividuService {
         if (StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
-        if (individuInfos.getHandicap() != null) {
-            if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
-                dossier.getClassifications().add(individuInfos.getHandicap());
+        if((individu.getDesinscrit() == null || !individu.getDesinscrit()) && individuInfos.getEppn() == null) {
+            individu.setDesinscrit(true);
+        }
+        try {
+            Dossier dossier = dossierService.getCurrent(id);
+            if (individuInfos.getHandicap() != null) {
+                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) && individuInfos.getHandicap() != null) {
+                    dossier.getClassifications().add(individuInfos.getHandicap());
+                }
             }
+        } catch (AgapeJpaException e) {
+            logger.debug(e.getMessage());
         }
     }
 
@@ -495,4 +493,19 @@ public class IndividuService {
         }
     }
 
+    @Transactional
+    public void fusion(List<Long> ids) throws AgapeException {
+        ids = ids.stream().sorted(Comparator.comparingLong(Long::longValue).reversed()).toList();
+        Individu individu1 = findById(ids.get(0));
+        Individu individu2 = findById(ids.get(1));
+        if(individu1.getDateOfBirth().equals(individu2.getDateOfBirth())) {
+            for (Dossier dossier : individu2.getDossiers()) {
+                individu1.getDossiers().add(dossier);
+                dossier.setIndividu(individu1);
+            }
+            anonymiseIndividu(individu2.getId());
+        } else {
+            throw new AgapeRuntimeException("la date de naissance ne correspond pas");
+        }
+    }
 }
