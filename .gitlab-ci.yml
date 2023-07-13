@@ -3,8 +3,8 @@ build-test:
   script:
     - mvn clean package -DskipTests -Dspring.config.location=/opt/esup-agape-test/application-test.properties
     - sudo systemctl stop esup-agape-test.service
-    - rm -f /opt/esup-agape-test/esup-agape.war
-    - cp target/esup-agape.war /opt/esup-agape-test/
+    - rm -f /opt/esup-agape-test/esup-agape.jar
+    - cp target/esup-agape.jar /opt/esup-agape-test/
     - sudo systemctl restart esup-agape-test.service
   only:
     - test
@@ -16,8 +16,8 @@ build-prod:
   script:
     - mvn clean package -DskipTests -Dspring.config.location=/opt/esup-agape/application.properties
     - ssh -tt -o StrictHostKeyChecking=no gitlab-runner@aibes sudo systemctl stop esup-agape.service
-    - rm -f /opt/esup-agape/esup-agape.war
-    - cp target/esup-agape.war /opt/esup-agape/
+    - rm -f /opt/esup-agape/esup-agape.jar
+    - cp target/esup-agape.jar /opt/esup-agape/
     - ssh -tt -o StrictHostKeyChecking=no gitlab-runner@aibes sudo systemctl restart esup-agape.service
   only:
     - tags
