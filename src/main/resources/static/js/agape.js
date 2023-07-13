@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    let ahs0On = document.getElementById("AHS0On")
+    /*let ahs0On = document.getElementById("AHS0On")
     if(ahs0On != null) {
         ahs0On.addEventListener("click", function (event) {
             document.getElementById("codMeahFDiv").classList.remove("d-none");
@@ -420,7 +420,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
         ahs0Off.addEventListener("click", function (event) {
             document.getElementById("codMeahFDiv").classList.add("d-none");
         });
+    }*/
+    let codMeahFDiv = document.getElementById('codMeahFDiv');
+    let AHS0Off = document.getElementById('AHS0Off');
+    let AHS0On = document.getElementById('AHS0On');
+
+    if (AHS0Off.checked) {
+        codMeahFDiv.classList.add('d-none');
     }
+
+    AHS0On.addEventListener('change', function() {
+        if (this.checked) {
+            codMeahFDiv.classList.remove('d-none');
+        }
+    });
+
+   AHS0Off.addEventListener('change', function() {
+        if (this.checked) {
+            codMeahFDiv.classList.add('d-none');
+        }
+    });
 
     //Gestion des float button
     let saveBtn = document.getElementById("save-btn");
