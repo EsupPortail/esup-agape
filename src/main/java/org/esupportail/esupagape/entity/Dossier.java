@@ -38,9 +38,10 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private Etat etat;
 
+    @ElementCollection(targetClass = Mdph.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
 //TODO plusieurs possible + synchro avec l'enquete
-    private Mdph mdph;
+    private Set<Mdph>  mdphs;
 
     @Enumerated(EnumType.STRING)
     private RentreeProchaine rentreeProchaine;
@@ -175,12 +176,12 @@ public class Dossier {
         this.etat = etat;
     }
 
-    public Mdph getMdph() {
-        return mdph;
+    public Set<Mdph> getMdphs() {
+        return mdphs;
     }
 
-    public void setMdph(Mdph mdph) {
-        this.mdph = mdph;
+    public void setMdphs(Set<Mdph> mdphs) {
+        this.mdphs = mdphs;
     }
 
     public RentreeProchaine getRentreeProchaine() {

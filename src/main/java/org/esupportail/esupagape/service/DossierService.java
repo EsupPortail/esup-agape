@@ -132,7 +132,7 @@ public class DossierService {
         }
         dossierToUpdate.setClassifications(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
-        dossierToUpdate.setMdph(dossier.getMdph());
+        dossierToUpdate.setMdphs(dossier.getMdphs());
         dossierToUpdate.setTaux(dossier.getTaux());
         dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());

@@ -87,12 +87,15 @@
                                 <!--                    </div>-->
                                 <div class="row mb-1 align-items-baseline">
                                     <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="mdph">Dossier MDPH</label>
+                                        <label class="form-label" th:for="mdph">Dossier MDPH</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <select disabled id="mdph" name="mdph" type="text" class="form-select" th:value="${currentDossier.mdph}">
-                                            <option value="" disabled selected hidden>Choisir</option>
-                                            <option th:selected="${currentDossier.mdph == mdph}" th:each="mdph : ${mdphs}" th:text="#{'dossier.mdph.' +${mdph}}" th:value="${mdph}"></option>
+                                        <select disabled id="mdph" th:field="*{mdphs}" type="text" class="agape-slim-select-search" th:value="${currentDossier.mdphs}" size="1" multiple>
+                                            <option type="text"
+                                                    th:checked="${currentDossier.mdphs.contains(mdph)}"
+                                                    th:each="mdph : ${mdphs}"
+                                                    th:text="#{'dossier.mdph.' +${mdph}}"
+                                                    th:value="${mdph}"></option>
                                         </select>
                                     </div>
                                 </div>
