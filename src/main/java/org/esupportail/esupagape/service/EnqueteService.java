@@ -8,6 +8,7 @@ import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
@@ -205,6 +206,7 @@ public class EnqueteService {
             } else {
                 enquete.setSexe("2");
             }
+
             if(enquete.getCodMeahF().isEmpty() || enquete.getCodMeahF().contains(CodMeahF.AHS0)) {
                 enquete.getCodMeahF().clear();
                 if (dossier.getAidesHumaines().stream().anyMatch(ah -> ah.getFonctionAidants().contains(FonctionAidant.PRENEUR_NOTES))) {
@@ -243,6 +245,11 @@ public class EnqueteService {
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
+            if(dossier.getStatusDossier() != null && dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+               enquete.setCodMeaa(Collections.singleton(CodMeaa.AA1));
+            } else if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) ) {
+                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA2));
+            }
             if (dossier.getClassifications().size() > 2) {
                 enquete.setCodHd(CodHd.PTA);
                 if (dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
