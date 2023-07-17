@@ -44,6 +44,9 @@
                             <th scope="col" style="width: 30px;">
                             </th>
                             <th scope="col" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="year">Année universitaire</a>
+                            </th>
+                            <th scope="col" style="width: 100px;">
                                 <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
                             </th>
                             <th scope="col" class="d-none" style="width: 115px;">
@@ -77,6 +80,7 @@
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
                             <td class="text-center"><input class="fusion-checkbox" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
+                            <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
                             <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none"></td>

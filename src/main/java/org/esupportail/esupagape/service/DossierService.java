@@ -339,6 +339,7 @@ public class DossierService {
                 dossierRoot.get("type"),
                 dossierRoot.get("statusDossier"),
                 dossierRoot.get("statusDossierAmenagement"),
+                dossierRoot.get("year"),
                 dossierIndividuJoin.get("id"),
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
@@ -533,6 +534,7 @@ public class DossierService {
                         pageable.getSort().get().toList().get(0).getProperty().equals("type")
                         ||
                         pageable.getSort().get().toList().get(0).getProperty().equals("statusDossierAmenagement")
+                        || pageable.getSort().get().toList().get(0).getProperty().equals("year")
                 ) {
                     cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
                 }
