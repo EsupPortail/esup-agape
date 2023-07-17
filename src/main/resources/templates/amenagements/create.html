@@ -140,6 +140,7 @@
                                         <div class="col-12 col-xxl-8">
                                             <select multiple id="classification" name="classification" size="1" class="agape-slim-select-search">
                                                 <option th:each="classification : ${classifications}"
+                                                        th:unless="${classification == T(org.esupportail.esupagape.entity.enums.Classification).NON_COMMUNIQUE || classification == T(org.esupportail.esupagape.entity.enums.Classification).REFUS}"
                                                         th:text="#{'dossier.classification.' + ${classification}}"
                                                         th:value="${classification}"
                                                         th:selected="${currentDossier.classifications != null && currentDossier.classifications.contains(classification)}"></option>
