@@ -269,10 +269,9 @@ public class AmenagementService {
         return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNamePortable(String name, Pageable pageable) {
-        return amenagementRepository.findByIndividuNamePortable(name, utilsService.getCurrentYear(), pageable);
+    public Page<Amenagement> getByIndividuNamePortable(String fullTextSearch, Pageable pageable) {
+        return amenagementRepository.findByIndividuNamePortable(fullTextSearch, utilsService.getCurrentYear(), pageable);
     }
-
     public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
         return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
     }

@@ -7,10 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface AmenagementRepository extends JpaRepository <Amenagement, Long> {
+public interface AmenagementRepository extends JpaRepository<Amenagement, Long> {
 
     Page<Amenagement> findByDossierId(Long dossierId, Pageable pageable);
 
@@ -29,17 +30,21 @@ public interface AmenagementRepository extends JpaRepository <Amenagement, Long>
             "and (:yearFilter is null or d.year = :yearFilter)")
     Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
 
+
     @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
-            "where (upper(i.firstName) like upper(concat('%', :fullTextSearch)) " +
-            "or upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%')) " +
-            "or upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))" +
-            "or upper(d.individu.numEtu) = :fullTextSearch " +
-            "or upper (d.individu.codeIne) = :fullTextSearch) " +
+            "where (upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +
+            "or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%'))) " +
+            "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))) " +
+            "or (upper(d.individu.numEtu) = upper(:fullTextSearch)) " +
+            "or (upper(d.individu.codeIne) = upper(:fullTextSearch)) " +
             "and (d.year < :yearFilter) " +
             "and d.individu.desinscrit != true " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and a.typeAmenagement = 'CURSUS'")
-    Page<Amenagement> findByIndividuNamePortable(String fullTextSearch, Integer yearFilter, Pageable pageable);
+    Page<Amenagement> findByIndividuNamePortable(@Param("fullTextSearch") String fullTextSearch,
+                                                 @Param("yearFilter") Integer yearFilter,
+                                                 Pageable pageable);
+
 
     @Query("select count(a) from Amenagement a join Dossier d on a.dossier = d " +
             "where " +

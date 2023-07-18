@@ -53,6 +53,7 @@ public class AmenagementAdministratifController {
                        @RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) Boolean porte,
                        @RequestParam(required = false) String name,
+                       @RequestParam(required = false) String fullTextSearch,
                        @PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, Model model) {
@@ -69,9 +70,9 @@ public class AmenagementAdministratifController {
             statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
         Page<Amenagement> amenagements;
-        if(StringUtils.hasText(name)){
-            amenagements = amenagementService.getByIndividuNamePortable(name, pageable);
-        } else if(porte) {
+        if (StringUtils.hasText(fullTextSearch)) {
+            amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
+        } else if (porte) {
             amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
