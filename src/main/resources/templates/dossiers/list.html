@@ -260,7 +260,7 @@
                                                 </div>
                                                 <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                                                 <div class="col-sm-10">
-                                                    <select selected th:field="*{gender}" type="text" class="form-select" required>
+                                                    <select th:field="*{gender}" type="text" class="form-select" required>
                                                         <option value="">Choisir</option>
                                                         <option th:each="gender : ${genders}"
                                                                 th:selected="${individu.gender == gender}"
@@ -268,6 +268,13 @@
                                                                 th:value="${gender}"></option>
                                                     </select>
                                                     <p th:if="${#fields.hasErrors('gender')}" th:errorclass="error" th:errors="*{gender}"></p>
+                                                </div>
+                                                <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
+                                                <div class="col-sm-10">
+                                                    <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                                        <option></option>
+                                                        <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                                    </select>
                                                 </div>
                                                 <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
                                                 <div class="col-sm-10">

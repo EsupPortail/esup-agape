@@ -65,13 +65,15 @@ public class DossierService {
         this.dossierRepository = dossierRepository;
     }
 
-    public Dossier create(Individu individu, StatusDossier statusDossier) {
+    public Dossier create(Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(statusDossier);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
+        } else if (typeIndividu != null) {
+            dossier.setType(typeIndividu);
         } else {
             dossier.setType(TypeIndividu.INCONNU);
         }

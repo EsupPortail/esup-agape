@@ -74,6 +74,13 @@
                                 <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"
                                    th:errors="*{dateOfBirth}"></p>
                             </div>
+                            <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
+                            <div class="col-sm-10">
+                                <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                    <option></option>
+                                    <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                </select>
+                            </div>
                             <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                             <div class="col-sm-10">
                                 <select selected th:field="*{gender}" type="text" class="form-select" required>

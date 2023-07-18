@@ -90,7 +90,6 @@ public class DossierController {
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
-
         model.addAttribute("individu", new Individu());
         model.addAttribute("genders", Gender.values());
         return "dossiers/list";

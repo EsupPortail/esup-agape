@@ -549,7 +549,7 @@ public class AmenagementService {
                 currentDossier.setStatusDossier(StatusDossier.RECONDUIT);
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.RECONDUIT);
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.RECONDUIT);
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         currentDossier.setAmenagementPorte(amenagement);

@@ -3,6 +3,7 @@ package org.esupportail.esupagape.web.controller;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DossierService;
@@ -55,6 +56,7 @@ public class IndividuController {
 
     @PostMapping("/create")
     public String create(@RequestParam(required = false) String force,
+                         @RequestParam(required = false) TypeIndividu typeIndividu,
                          @Valid Individu individu,
                          BindingResult bindingResult,
                          Model model,
@@ -66,7 +68,7 @@ public class IndividuController {
             return "individus/create";
         }
         try {
-            Individu individuOk = individuService.create(individu, force);
+            Individu individuOk = individuService.create(individu, typeIndividu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
@@ -82,7 +84,7 @@ public class IndividuController {
         try {
             Individu individu = new Individu();
             individu.setNumEtu(numEtu);
-            Individu individuOk = individuService.create(individu, force);
+            Individu individuOk = individuService.create(individu, null, force);
             if(individuOk != null) {
                 logger.info("Nouvel étudiant" + individuOk.getId());
                 return "redirect:/individus/" + individuOk.getId() + "/redirect";

@@ -65,7 +65,6 @@ public class Individu {
 
     private String contactPhone;
 
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private LocalDate dateAnonymisation;
