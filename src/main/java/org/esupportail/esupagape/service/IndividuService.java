@@ -8,6 +8,7 @@ import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
@@ -180,7 +181,7 @@ public class IndividuService {
             List<Dossier> dossiers = new ArrayList<>();
             for (Individu individu : individusToCreate) {
                 logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
-                Dossier dossier = dossierService.create(individu, StatusDossier.IMPORTE);
+                Dossier dossier = dossierService.create(individu, null, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
                 individu.getDossiers().add(dossier);
             }
@@ -189,7 +190,7 @@ public class IndividuService {
         logger.info("Import individus done");
     }
 
-    public void save(Individu individuToAdd, String force) throws AgapeJpaException {
+    public void save(Individu individuToAdd, TypeIndividu typeIndividu, String force) throws AgapeJpaException {
         ExcludeIndividu excludeIndividu = null;
         if (StringUtils.hasText(individuToAdd.getNumEtu())) {
             excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individuToAdd.getNumEtu()));
@@ -205,14 +206,14 @@ public class IndividuService {
             individuToAdd.setNumEtu(null);
         }
         if (foundIndividu != null) {
-            dossierService.create(foundIndividu, StatusDossier.AJOUT_MANUEL);
+            dossierService.create(foundIndividu, null, StatusDossier.AJOUT_MANUEL);
         } else {
             if (excludeIndividu != null) {
                 // suppression de l'exclusion si l’insertion est forcée
                 excludeIndividuRepository.delete(excludeIndividu);
             }
             individuRepository.save(individuToAdd);
-            dossierService.create(individuToAdd, StatusDossier.AJOUT_MANUEL);
+            dossierService.create(individuToAdd, typeIndividu, StatusDossier.AJOUT_MANUEL);
         }
     }
 
@@ -230,7 +231,7 @@ public class IndividuService {
     }
 
     @Transactional
-    public Individu create(Individu individu, String force) throws AgapeJpaException {
+    public Individu create(Individu individu, TypeIndividu typeIndividu, String force) throws AgapeJpaException {
         Individu individuTestIsExist = null;
         if (StringUtils.hasText(individu.getNumEtu())) {
             individuTestIsExist = getIndividu(individu.getNumEtu());
@@ -250,18 +251,18 @@ public class IndividuService {
                 if (newIndividu != null) {
                     return newIndividu;
                 } else {
-                    save(individu, force);
+                    save(individu, typeIndividu, force);
                     return individu;
                 }
             }
         }
         if (individuTestIsExist != null) {
             if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
-                dossierService.create(individuTestIsExist, StatusDossier.AJOUT_MANUEL);
+                dossierService.create(individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
             }
             return individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
-            save(individu, force);
+            save(individu, typeIndividu, force);
         }
         return individu;
     }
@@ -287,7 +288,7 @@ public class IndividuService {
             if(individuTestIsExist != null) {
                 return individuTestIsExist;
             }
-            save(individuFromSources, force);
+            save(individuFromSources, null, force);
         }
         return individuFromSources;
     }
@@ -301,7 +302,7 @@ public class IndividuService {
             }
         }
         if (individuFromSources != null) {
-            save(individuFromSources, force);
+            save(individuFromSources, null, force);
         }
         return individuFromSources;
     }

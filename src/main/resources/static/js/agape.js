@@ -279,6 +279,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion du formulaire enquete
+
     let codMeae = document.getElementById("codMeae")
     if(codMeae != null) {
         let codMeaeSlim = new SlimSelect({
@@ -421,25 +422,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
             document.getElementById("codMeahFDiv").classList.add("d-none");
         });
     }*/
+
     let codMeahFDiv = document.getElementById('codMeahFDiv');
-    let AHS0Off = document.getElementById('AHS0Off');
-    let AHS0On = document.getElementById('AHS0On');
+    if(codMeahFDiv != null) {
+        let AHS0Off = document.getElementById('AHS0Off');
+        let AHS0On = document.getElementById('AHS0On');
 
-    if (AHS0Off.checked) {
-        codMeahFDiv.classList.add('d-none');
-    }
-
-    AHS0On.addEventListener('change', function() {
-        if (this.checked) {
-            codMeahFDiv.classList.remove('d-none');
-        }
-    });
-
-   AHS0Off.addEventListener('change', function() {
-        if (this.checked) {
+        if (AHS0Off.checked) {
             codMeahFDiv.classList.add('d-none');
         }
-    });
+
+        AHS0On.addEventListener('change', function () {
+            if (this.checked) {
+                codMeahFDiv.classList.remove('d-none');
+            }
+        });
+
+        AHS0Off.addEventListener('change', function () {
+            if (this.checked) {
+                codMeahFDiv.classList.add('d-none');
+            }
+        });
+    }
 
     //Gestion des float button
     let saveBtn = document.getElementById("save-btn");

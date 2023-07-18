@@ -8,7 +8,7 @@
         <header th:replace="fragments/header :: header"></header>
         <main class="d-inline-flex">
             <div th:if="${currentYear == currentDossier.year}" class="float-buttons">
-                <a th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary">
+                <a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDECIN')" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary">
                     <i class="fa-solid fa-plus"></i></a>
             </div>
             <div th:replace="fragments/side :: side"></div>
