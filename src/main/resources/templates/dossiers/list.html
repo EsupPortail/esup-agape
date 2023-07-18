@@ -276,6 +276,26 @@
                                                         <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
                                                     </select>
                                                 </div>
+                                                <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email universitaire</label>
+                                                <div class="col-sm-10">
+                                                    <input id="emailEtu" th:field="*{emailEtu}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('emailEtu')}" th:errorclass="error" th:errors="*{emailEtu}"></p>
+                                                </div>
+                                                <label for="contactPhone" class="col-md-2 col-form-label mb-1">Téléphone</label>
+                                                <div class="col-sm-10">
+                                                    <input id="contactPhone" th:field="*{contactPhone}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('contactPhone')}" th:errorclass="error" th:errors="*{contactPhone}"></p>
+                                                </div>
+                                                <label for="fixCP" class="col-md-2 col-form-label mb-1">Code postal</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCP" th:field="*{fixCP}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCP')}" th:errorclass="error" th:errors="*{fixCP}"></p>
+                                                </div>
+                                                <label for="fixCity" class="col-md-2 col-form-label mb-1">Ville</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCity" th:field="*{fixCity}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCity')}" th:errorclass="error" th:errors="*{fixCity}"></p>
+                                                </div>
                                                 <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
                                                 <div class="col-sm-10">
                                                     <input id="force2" name="force" type="checkbox" class="form-check-input">
