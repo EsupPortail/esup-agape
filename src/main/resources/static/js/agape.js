@@ -164,6 +164,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let amenagementText = document.getElementById("amenagement-text");
+    if(amenagementText != null) {
+        amenagementText.addEventListener("focusin", function (){
+            document.getElementById("amenagement-help").classList.remove("d-none");
+        });
+        document.getElementById("toto").addEventListener("mousedown", function (){
+            document.getElementById("amenagement-help").classList.add("d-none");
+        });
+    }
+
     //Gestion des aménagements autorisation classifications
    /* let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");
@@ -513,4 +523,12 @@ function textAreaAdjust(element, lineHeight) {
     if(count < 15) count += 15 - count;
     element.value = capitalizeFirstLetterOnFirstLines.join('\n');
     element.style.height = (lineHeight * count) + "px";
+}
+
+function selectText(lien) {
+    let selection = window.getSelection();
+    let range = document.createRange();
+    range.selectNodeContents(lien);
+    selection.removeAllRanges();
+    selection.addRange(range);
 }
