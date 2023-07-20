@@ -169,7 +169,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         amenagementText.addEventListener("focusin", function (){
             document.getElementById("amenagement-help").classList.remove("d-none");
         });
-        document.getElementById("toto").addEventListener("mousedown", function (){
+        amenagementText.addEventListener("click", function (e){
+            e.stopPropagation();
+        });
+        document.getElementById("form-background").addEventListener("click", function (){
             document.getElementById("amenagement-help").classList.add("d-none");
         });
     }

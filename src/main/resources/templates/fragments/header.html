@@ -16,8 +16,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
-                        <img src="/images/logo-univ.png" height="38px" />
-                        <a class="nav-link active text-light" aria-current="page" th:href="@{/}"><h5 class="my-auto ms-1 me-1">AGAPE</h5></a>
+                        <a aria-current="page" th:href="@{/}"><img src="/images/logo-univ.png" height="38px" /></a>
+                        <a aria-current="page" th:href="@{/}"><img class="ms-2 me-2" src="/images/eh-logo-rouge.png" height="44px" /></a>
                         <li class="nav-item"  sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_MEDECIN')">
                             <a class="nav-link active text-light" aria-current="page" th:href="@{/dossiers}">Dossiers</a>
                         </li>
