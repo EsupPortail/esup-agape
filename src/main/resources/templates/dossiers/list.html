@@ -44,6 +44,9 @@
                             <th scope="col" style="width: 30px;">
                             </th>
                             <th scope="col" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="year">Année universitaire</a>
+                            </th>
+                            <th scope="col" style="width: 100px;">
                                 <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
                             </th>
                             <th scope="col" class="d-none" style="width: 115px;">
@@ -77,6 +80,7 @@
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
                             <td class="text-center"><input class="fusion-checkbox" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
+                            <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
                             <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none"></td>
@@ -256,7 +260,7 @@
                                                 </div>
                                                 <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                                                 <div class="col-sm-10">
-                                                    <select selected th:field="*{gender}" type="text" class="form-select" required>
+                                                    <select th:field="*{gender}" type="text" class="form-select" required>
                                                         <option value="">Choisir</option>
                                                         <option th:each="gender : ${genders}"
                                                                 th:selected="${individu.gender == gender}"
@@ -264,6 +268,33 @@
                                                                 th:value="${gender}"></option>
                                                     </select>
                                                     <p th:if="${#fields.hasErrors('gender')}" th:errorclass="error" th:errors="*{gender}"></p>
+                                                </div>
+                                                <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
+                                                <div class="col-sm-10">
+                                                    <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                                        <option></option>
+                                                        <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                                    </select>
+                                                </div>
+                                                <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email universitaire</label>
+                                                <div class="col-sm-10">
+                                                    <input id="emailEtu" th:field="*{emailEtu}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('emailEtu')}" th:errorclass="error" th:errors="*{emailEtu}"></p>
+                                                </div>
+                                                <label for="contactPhone" class="col-md-2 col-form-label mb-1">Téléphone</label>
+                                                <div class="col-sm-10">
+                                                    <input id="contactPhone" th:field="*{contactPhone}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('contactPhone')}" th:errorclass="error" th:errors="*{contactPhone}"></p>
+                                                </div>
+                                                <label for="fixCP" class="col-md-2 col-form-label mb-1">Code postal</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCP" th:field="*{fixCP}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCP')}" th:errorclass="error" th:errors="*{fixCP}"></p>
+                                                </div>
+                                                <label for="fixCity" class="col-md-2 col-form-label mb-1">Ville</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCity" th:field="*{fixCity}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCity')}" th:errorclass="error" th:errors="*{fixCity}"></p>
                                                 </div>
                                                 <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
                                                 <div class="col-sm-10">

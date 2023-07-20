@@ -32,21 +32,21 @@
                                 <div id="container" class="row">
 
                                         <div class="col-lg-4">
-                                            <canvas id="myChart" style="min-height: 400px; min-width: 400px;"></canvas>
+                                            <canvas id="myChart"></canvas>
                                             <script th:inline="javascript">
                                                 const ctx = document.getElementById('myChart');
                                                 new Chart(ctx, [[${classificationChart}]]);
                                             </script>
                                         </div>
                                         <div class="col-lg-4">
-                                            <canvas id="myChart2"style="min-height: 400px; min-width: 400px;"></canvas>
+                                            <canvas id="myChart2"></canvas>
                                             <script th:inline="javascript">
                                                 const ctx2 = document.getElementById('myChart2');
                                                 new Chart(ctx2, [[${composanteChart}]]);
                                             </script>
                                         </div>
                                         <div class="col-lg-4">
-                                            <canvas id="myChart3" style="min-height: 600px; min-width:400px;"></canvas>
+                                            <canvas id="myChart3"></canvas>
                                             <script th:inline="javascript">
                                                 const ctx3 = document.getElementById('myChart3');
                                                 new Chart(ctx3, [[${individuLineChart}]]);

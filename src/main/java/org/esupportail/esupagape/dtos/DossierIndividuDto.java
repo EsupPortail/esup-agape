@@ -35,4 +35,5 @@ public interface DossierIndividuDto {
 
     Boolean getDesinscrit();
 
+    Integer getYear();
 }

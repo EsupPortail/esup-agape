@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.TypeIndividu;
 
 import java.time.LocalDate;
 
+
 public class DossierIndividuClassDto implements DossierIndividuDto {
 
     private Long id;
@@ -26,6 +27,7 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
     private StatusDossier statusDossier;
 
     private StatusDossierAmenagement statusDossierAmenagement;
+    private Integer year;
 
     private Long individuId;
 
@@ -35,7 +37,8 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
 
     private Boolean desinscrit;
 
-    public DossierIndividuClassDto(Long id, String numEtu, String codeIne, String firstName, String name, LocalDate dateOfBirth, TypeIndividu type, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Long individuId, Gender gender, String emailEtu, Boolean desinscript) {
+
+    public DossierIndividuClassDto(Long id, String numEtu, String codeIne, String firstName, String name, LocalDate dateOfBirth, TypeIndividu type, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer year, Long individuId, Gender gender, String emailEtu, Boolean desinscript) {
         this.id = id;
         this.numEtu = numEtu;
         this.codeIne = codeIne;
@@ -45,6 +48,7 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
         this.type = type;
         this.statusDossier = statusDossier;
         this.statusDossierAmenagement = statusDossierAmenagement;
+        this.year = year;
         this.individuId = individuId;
         this.gender = gender;
         this.emailEtu = emailEtu;
@@ -153,5 +157,14 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
 
     public void setDesinscrit(Boolean desinscrit) {
         this.desinscrit = desinscrit;
+    }
+
+    @Override
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 }

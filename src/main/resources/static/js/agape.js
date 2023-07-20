@@ -164,6 +164,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let amenagementText = document.getElementById("amenagement-text");
+    if(amenagementText != null) {
+        amenagementText.addEventListener("focusin", function (){
+            document.getElementById("amenagement-help").classList.remove("d-none");
+        });
+        document.getElementById("toto").addEventListener("mousedown", function (){
+            document.getElementById("amenagement-help").classList.add("d-none");
+        });
+    }
+
     //Gestion des aménagements autorisation classifications
    /* let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");
@@ -279,6 +289,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     //Gestion du formulaire enquete
+
+    let inputElement = document.getElementById('autres-temp-majore');
+    if(inputElement != null) {
+        inputElement.addEventListener("input", e => capitalizeFirstLetter(e.target));
+    }
+
     let codMeae = document.getElementById("codMeae")
     if(codMeae != null) {
         let codMeaeSlim = new SlimSelect({
@@ -409,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    let ahs0On = document.getElementById("AHS0On")
+    /*let ahs0On = document.getElementById("AHS0On")
     if(ahs0On != null) {
         ahs0On.addEventListener("click", function (event) {
             document.getElementById("codMeahFDiv").classList.remove("d-none");
@@ -419,6 +435,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if(ahs0Off != null) {
         ahs0Off.addEventListener("click", function (event) {
             document.getElementById("codMeahFDiv").classList.add("d-none");
+        });
+    }*/
+
+    let codMeahFDiv = document.getElementById('codMeahFDiv');
+    if(codMeahFDiv != null) {
+        let AHS0Off = document.getElementById('AHS0Off');
+        let AHS0On = document.getElementById('AHS0On');
+
+        if (AHS0Off.checked) {
+            codMeahFDiv.classList.add('d-none');
+        }
+
+        AHS0On.addEventListener('change', function () {
+            if (this.checked) {
+                codMeahFDiv.classList.remove('d-none');
+            }
+        });
+
+        AHS0Off.addEventListener('change', function () {
+            if (this.checked) {
+                codMeahFDiv.classList.add('d-none');
+            }
         });
     }
 
@@ -490,4 +528,17 @@ function textAreaAdjust(element, lineHeight) {
     if(count < 15) count += 15 - count;
     element.value = capitalizeFirstLetterOnFirstLines.join('\n');
     element.style.height = (lineHeight * count) + "px";
+}
+
+function selectText(lien) {
+    let selection = window.getSelection();
+    let range = document.createRange();
+    range.selectNodeContents(lien);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+function capitalizeFirstLetter(element) {
+    const value = element.value;
+    element.value = value.charAt(0).toUpperCase() + value.slice(1);
 }

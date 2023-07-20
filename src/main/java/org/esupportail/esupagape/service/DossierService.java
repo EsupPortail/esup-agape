@@ -65,13 +65,15 @@ public class DossierService {
         this.dossierRepository = dossierRepository;
     }
 
-    public Dossier create(Individu individu, StatusDossier statusDossier) {
+    public Dossier create(Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(statusDossier);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
+        } else if (typeIndividu != null) {
+            dossier.setType(typeIndividu);
         } else {
             dossier.setType(TypeIndividu.INCONNU);
         }
@@ -339,6 +341,7 @@ public class DossierService {
                 dossierRoot.get("type"),
                 dossierRoot.get("statusDossier"),
                 dossierRoot.get("statusDossierAmenagement"),
+                dossierRoot.get("year"),
                 dossierIndividuJoin.get("id"),
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
@@ -533,6 +536,7 @@ public class DossierService {
                         pageable.getSort().get().toList().get(0).getProperty().equals("type")
                         ||
                         pageable.getSort().get().toList().get(0).getProperty().equals("statusDossierAmenagement")
+                        || pageable.getSort().get().toList().get(0).getProperty().equals("year")
                 ) {
                     cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
                 }

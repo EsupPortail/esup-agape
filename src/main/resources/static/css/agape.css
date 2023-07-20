@@ -247,3 +247,12 @@ select[disabled] > option {
 .star {
     color: var(--color-span-star);
 }
+
+.ss-main .ss-arrow {
+    margin-right: 11px;
+}
+
+.ss-main .ss-arrow path {
+    stroke-width: 13px;
+    stroke: #23343a;
+}

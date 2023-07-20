@@ -26,7 +26,7 @@
                     <h4>Ajout d’un aménagement d’examen</h4>
                     <hr>
                     <form id="amenagementForm" th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
-                        <div class="row">
+                        <div id="toto" class="row">
                             <div class="col-12 col-xl-6">
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
@@ -102,11 +102,11 @@
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-4" style="width: 250px;">
-                                        <label th:for="amenagementText" class="form-label">Aménagement</label>
+                                        <label th:for="amenagement-text" class="form-label">Aménagement</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <div class="agape-amenagement-textarea-wrapper">
-                                            <textarea  id="amenagementText" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
+                                            <textarea id="amenagement-text" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
                                         </div>
                                         <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
                                     </div>
@@ -140,6 +140,7 @@
                                         <div class="col-12 col-xxl-8">
                                             <select multiple id="classification" name="classification" size="1" class="agape-slim-select-search">
                                                 <option th:each="classification : ${classifications}"
+                                                        th:unless="${classification == T(org.esupportail.esupagape.entity.enums.Classification).NON_COMMUNIQUE || classification == T(org.esupportail.esupagape.entity.enums.Classification).REFUS}"
                                                         th:text="#{'dossier.classification.' + ${classification}}"
                                                         th:value="${classification}"
                                                         th:selected="${currentDossier.classifications != null && currentDossier.classifications.contains(classification)}"></option>
@@ -162,12 +163,12 @@
                     <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
                 </div>
             </div>
-            <div class="bg-white border-dark" style="position: absolute;right: 0; top:0; overflow-y: scroll; height: 80%; margin-top: 50px;">
-                <ul>
+            <div id="amenagement-help" class="bg-white d-none" style="width:400px;position: absolute;right: 20px; top:100px; overflow-y: scroll; height: 70%; margin-top: 50px;">
+                <div class="list-group">
                 <th:block th:each="libelle : ${libellesAmenagement}">
-                    <li th:text="${libelle.title}"></li>
+                    <a class="list-group-item list-group-item-action"  th:text="${libelle.title}" onclick="selectText(this)"></a>
                 </th:block>
-                </ul>
+                </div>
             </div>
         </main>
         <footer th:replace="fragments/footer :: black"></footer>
