@@ -71,12 +71,12 @@
                                         </div>
                                         <div class="mb-3">
                                             <label th:for="emailAidant" class="form-label">Email</label>
-                                            <input id="emailAidant" type="text" class="form-control" th:field="*{emailAidant}">
+                                            <input id="emailAidant" type="email" class="form-control" th:field="*{emailAidant}">
                                             <p th:if="${#fields.hasErrors('emailAidant')}" th:errorclass="error" th:errors="*{emailAidant}"></p>
                                         </div>
                                         <div class="mb-3">
                                             <label th:for="phoneAidant" class="form-label">Téléphone</label>
-                                            <input id="phoneAidant" type="text" class="form-control" th:field="*{phoneAidant}">
+                                            <input id="phoneAidant" type="tel" class="form-control" th:field="*{phoneAidant}">
                                             <p th:if="${#fields.hasErrors('phoneAidant')}" th:errorclass="error" th:errors="*{phoneAidant}"></p>
                                         </div>
                                     </div>

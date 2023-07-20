@@ -290,6 +290,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //Gestion du formulaire enquete
 
+    let inputElement = document.getElementById('autres-temp-majore');
+    if(inputElement != null) {
+        inputElement.addEventListener("input", e => capitalizeFirstLetter(e.target));
+    }
+
     let codMeae = document.getElementById("codMeae")
     if(codMeae != null) {
         let codMeaeSlim = new SlimSelect({
@@ -531,4 +536,9 @@ function selectText(lien) {
     range.selectNodeContents(lien);
     selection.removeAllRanges();
     selection.addRange(range);
+}
+
+function capitalizeFirstLetter(element) {
+    const value = element.value;
+    element.value = value.charAt(0).toUpperCase() + value.slice(1);
 }
