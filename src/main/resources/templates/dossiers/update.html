@@ -378,8 +378,8 @@
                                             <a onclick="toggleInputLock('libelleFormation');"
                                                 role="button"
                                                 id="libelleFormationEdit"
-                                                class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                class="btn btn-light border-secondary border-opacity-25 d-none">
+                                                <!-- th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
@@ -424,24 +424,24 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div  th:if="${currentYear == currentDossier.year}" class="row mb-1 align-items-baseline alert alert-info" style="width: 500px; margin-top: 80px;">
+                                <div  th:if="${currentYear == currentDossier.year}" class="row mb-1 align-items-baseline alert alert-info" style="width: 550px; margin-top: 80px;">
                                     <div class="col-4" style="width: 250px;">
                                         <label class="form-label" for="niveauEtudes">Niveau d’études</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
                                         <div class="input-group">
                                             <input disabled
-                                                   id="niveauEtudes"
-                                                   name="niveauEtudes"
-                                                   type="text"
-                                                   class="form-control"
-                                                   th:value="${currentDossier.niveauEtudes}"
-                                                   th:readonly="${currentDossier.niveauEtudes != ''}">
+                                                    id="niveauEtudes"
+                                                    name="niveauEtudes"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.niveauEtudes}"
+                                                    th:readonly="${currentDossier.niveauEtudes != ''}">
                                             <a onclick="toggleInputLock('niveauEtudes');"
-                                               role="button"
-                                               id="niveauEtudesEdit"
-                                               class="btn btn-light border-secondary border-opacity-25 d-none"
-                                               th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                role="button"
+                                                id="niveauEtudesEdit"
+                                                class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
@@ -453,17 +453,17 @@
                                     <div class="col-12 col-xxl-8">
                                         <div class="input-group">
                                             <input disabled
-                                                   id="secteurDisciplinaire"
-                                                   name="secteurDisciplinaire"
-                                                   type="text"
-                                                   class="form-control"
-                                                   th:value="${currentDossier.secteurDisciplinaire}"
-                                                   th:readonly="${currentDossier.secteurDisciplinaire != ''}">
+                                                    id="secteurDisciplinaire"
+                                                    name="secteurDisciplinaire"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.secteurDisciplinaire}"
+                                                    th:readonly="${currentDossier.secteurDisciplinaire != ''}">
                                             <a onclick="toggleInputLock('secteurDisciplinaire');"
-                                               role="button"
-                                               id="secteurDisciplinaireEdit"
-                                               class="btn btn-light border-secondary border-opacity-25 d-none"
-                                               th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                role="button"
+                                                id="secteurDisciplinaireEdit"
+                                                class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
@@ -476,17 +476,17 @@
                                         <div class="col-12 col-xxl-8">
                                             <div class="input-group" style="width: 400px;">
                                                 <input disabled
-                                                       id="formAddress"
-                                                       name="formAddress"
-                                                       type="text"
-                                                       class="form-control"
-                                                       th:value="${currentDossier.formAddress}"
-                                                       th:readonly="${currentDossier.formAddress != ''}">
+                                                        id="formAddress"
+                                                        name="formAddress"
+                                                        type="text"
+                                                        class="form-control"
+                                                        th:value="${currentDossier.formAddress}"
+                                                        th:readonly="${currentDossier.formAddress != ''}">
                                                 <a onclick="toggleInputLock('formAddress');"
-                                                   role="button"
-                                                   id="formAddressEdit"
-                                                   class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                   th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                    role="button"
+                                                    id="formAddressEdit"
+                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
+                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
                                             </div>
