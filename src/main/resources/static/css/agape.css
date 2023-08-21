@@ -13,6 +13,10 @@ a {
     /*text-decoration: none;*/
 }
 
+thead th {
+    vertical-align: top;
+}
+
 .nav-link {
     color: #337ab7;
 }
