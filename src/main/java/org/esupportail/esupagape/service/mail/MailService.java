@@ -1,5 +1,10 @@
 package org.esupportail.esupagape.service.mail;
 
+import jakarta.annotation.Resource;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.xml.bind.DatatypeConverter;
 import org.apache.commons.io.FileUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.slf4j.Logger;
@@ -15,12 +20,7 @@ import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
