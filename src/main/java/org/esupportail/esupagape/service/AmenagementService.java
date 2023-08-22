@@ -557,6 +557,24 @@ public class AmenagementService {
     }
 
     @Transactional
+    public void rejectAdministration(Long id, PersonLdap personLdap) {
+        Amenagement amenagement = getById(id);
+        Dossier currentDossier;
+        try {
+            currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+                currentDossier.setStatusDossier(StatusDossier.NON_RECONDUIT);
+            }
+        } catch (AgapeJpaException e) {
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.NON_RECONDUIT);
+        }
+        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+        currentDossier.setMailValideurPortabilite(personLdap.getMail());
+        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
+    }
+
+    @Transactional
     public SignatureStatus checkEsupSignatureStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
         SignatureStatus signatureStatus = esupSignatureService.getStatus(amenagementId, typeWorkflow);
         if(signatureStatus.equals(SignatureStatus.COMPLETED)) {

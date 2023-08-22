@@ -129,6 +129,18 @@ public class AmenagementAdministratifController {
         return "redirect:/administratif/amenagements/" + amenagementId;
     }
 
+    @PostMapping("/{amenagementId}/reject")
+    public String reject(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+        try {
+            amenagementService.rejectAdministration(amenagementId, personLdap);
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "L'aménagement a été annulé pour l'année courante"));
+        } catch (AgapeJpaException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Annulation impossible"));
+
+        }
+        return "redirect:/administratif/amenagements/" + amenagementId;
+    }
+
     @PostMapping("/{amenagementId}/validation")
     public String validation(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {

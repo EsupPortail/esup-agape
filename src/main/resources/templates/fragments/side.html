@@ -45,7 +45,9 @@
                             <span th:case="${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}"
                                 class="badge text-bg-primary"></span>
                             <span th:case="${currentDossier.statusDossier.RECONDUIT}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.RECONDUIT}}"
-                                  class="badge text-bg-primary"></span>
+                                class="badge text-bg-primary"></span>
+                            <span th:case="${currentDossier.statusDossier.NON_RECONDUIT}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.NON_RECONDUIT}}"
+                                class="badge text-bg-dark"></span>
                             <span th:case="${currentDossier.statusDossier.ANONYMOUS}" th:text="#{'dossier.statusDossier.' +${currentDossier.statusDossier.ANONYMOUS}}"
                                 class="badge text-bg-dark"></span>
                         </th:block>
