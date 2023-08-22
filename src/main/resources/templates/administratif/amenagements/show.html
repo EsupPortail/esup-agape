@@ -12,6 +12,9 @@
                 <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
+                <button title="Annuler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
+                    <i class="fa-solid fa-times"></i>
+                </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
                     <i class="fa-solid fa-check"></i>
                 </button>
@@ -38,9 +41,9 @@
                 </nav>
                 <dl class="row">
                     <dt class="col-sm-2">Formation</dt>
-                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormation}"></dd>
+                    <dd class="col-sm-10" th:text="${currentDossier.year} + ' - ' + ${currentDossier.libelleFormation}"></dd>
                     <dt class="col-sm-2">Formation précédente</dt>
-                    <dd class="col-sm-10" th:text="${currentDossier.libelleFormationPrec}"></dd>
+                    <dd class="col-sm-10" th:text="${currentDossier.year - 1} + ' - ' + ${currentDossier.libelleFormationPrec}"></dd>
                 </dl>
                 <div class="col-12 text-center" style="height: calc(100vh - 240px);">
                     <th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
@@ -107,7 +110,25 @@
                 </div>
             </div>
         </div>
-
+        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true" th:if="${amenagementPrec != null}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="rejectModalLabel">Annuler un aménagement d’examen d’une année antérieure</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:method="post" th:action="@{/administratif/amenagements/{amenagementId}/reject(amenagementId=${amenagement.id})}">
+                        <div class="modal-body">
+                            Merci de confirmer l’annulation de l’aménagement
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
             <div class="modal-dialog">
                 <div class="modal-content">

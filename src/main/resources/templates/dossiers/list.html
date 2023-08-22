@@ -88,24 +88,19 @@
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
+                            <td>
                             <th:block th:if="${dossierIndividuDto.statusDossier != null}" th:switch="${dossierIndividuDto.statusDossier}">
-                                <td th:case="${dossierIndividuDto.statusDossier.SUIVI}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPORTE}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ACCUEILLI}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI}}" class="badge text-bg-warning"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.RECONDUIT}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT}}" class="badge text-bg-primary"></span></td>
-                                <td th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}">
-                                    <span th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span></td>
+                                <span th:case="${dossierIndividuDto.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.ACCUEILLI}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI}}" class="badge text-bg-warning"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.RECONDUIT}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT}}" class="badge text-bg-primary"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.NON_RECONDUIT}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.NON_RECONDUIT}}" class="badge text-bg-dark"></span>
+                                <span th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span>
                             </th:block>
+                            </td>
                             <td th:if="${dossierIndividuDto.statusDossier == null}">
                                 <span><i class="fa fa-warning"></i></span></td>
                             <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
