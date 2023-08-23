@@ -350,7 +350,7 @@
                                                            name="AM0"
                                                            type="radio"
                                                            th:value="AM00"
-                                                           th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                           th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
                                                     <label for="AM0On" th:text="#{'enquete.codAmL.AM00'}"></label>
                                                 </div>
                                                 <div class="d-inline">
@@ -358,11 +358,11 @@
                                                            name="AM0"
                                                            type="radio"
                                                            value=""
-                                                           th:checked="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
+                                                           th:checked="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))}">
                                                     <label for="AM0Off" th:text="#{'enquete.label.NoAM00'}"></label>
                                                 </div>
                                                 <div id="codAmLDiv"
-                                                     th:classappend="${!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
+                                                     th:classappend="${enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf('AM00'))} ? 'd-none' : ''">
                                                     <th:block th:each="enumLibelleCodAmL : ${libelleCodAmLs}">
                                                         <div>
                                                             <label class="text-decoration-underline mt-2"
