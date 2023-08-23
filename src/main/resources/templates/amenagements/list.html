@@ -3,15 +3,15 @@
     <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
     <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
             <div th:if="${currentYear == currentDossier.year}" class="float-buttons">
                 <a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDECIN')" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary">
                     <i class="fa-solid fa-plus"></i></a>
             </div>
-            <div th:replace="fragments/side :: side"></div>
+            <div th:replace="~{fragments/side :: side}"></div>
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -24,8 +24,8 @@
                         <li class="breadcrumb-item active">Aménagements</li>
                     </ol>
                 </nav>
-                <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='amenagements')"></div>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='amenagements')}"></div>
                 <div class="agape-tab-content bg-white p-3">
                     <div class="row">
                         <div class="col-12">
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
     </body>
 </html>

@@ -3,14 +3,14 @@
     <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
     <!--/*@thymesVar id="entretiens" type="java.util.List<org.esupportail.esupagape.entity.Entretien>"*/-->
     <!--/*@thymesVar id="personLdap" type="org.esupportail.esupagape.service.ldap.PersonLdap"*/-->
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
                 <button th:if="${currentYear == currentDossier.year}" title="Ajouter un entretien" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-entretien-modal" type="button"><i class="fa-solid fa-plus"></i></button>
             </div>
-            <div th:replace="fragments/side :: side"></div>
+            <div th:replace="~{fragments/side :: side}"></div>
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -23,8 +23,8 @@
                         <li class="breadcrumb-item active" aria-current="page">Liste des entretiens</li>
                     </ol>
                 </nav>
-                <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='entretiens')"></div>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='entretiens')}"></div>
                 <div class="agape-tab-content bg-white p-3">
                     <div class="row">
                         <div class="col-lg-12">
@@ -95,7 +95,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div th:replace="entretiens/modal-create :: create"></div>
+                            <div th:replace="~{entretiens/modal-create :: create}"></div>
                             <section th:if="${#lists.isEmpty(entretiens.content)}">
                                 <div class="col-lg-12 text-center">
                                     <div sd:pagination-summary="">info</div>
@@ -112,7 +112,7 @@
                 </div>
             </div>
         </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
     </body>
 </html>
