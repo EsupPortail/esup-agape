@@ -51,6 +51,21 @@ public class MailService {
     @Resource
     private TemplateEngine templateEngine;
 
+    public void sendTest(String to) throws MessagingException {
+        if (!checkMailSender()) {
+            return;
+        }
+        final Context ctx = new Context(Locale.FRENCH);
+        setTemplate(ctx);
+        MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
+        String htmlContent = templateEngine.process("mail/email-test.html", ctx);
+        addInLineImages(mimeMessage, htmlContent);
+        mimeMessage.setSubject("Certificat d'aménagement");
+        mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
+        mimeMessage.setTo(new InternetAddress(to));
+        send(mimeMessage.getMimeMessage());
+    }
+
     @Transactional
     public void sendCertificat(InputStream inputStream, String to) throws MessagingException, IOException {
         if (!checkMailSender()) {
