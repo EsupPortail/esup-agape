@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -552,6 +552,24 @@ public class AmenagementService {
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         currentDossier.setAmenagementPorte(amenagement);
+        currentDossier.setMailValideurPortabilite(personLdap.getMail());
+        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
+    }
+
+    @Transactional
+    public void rejectAdministration(Long id, PersonLdap personLdap) {
+        Amenagement amenagement = getById(id);
+        Dossier currentDossier;
+        try {
+            currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+                currentDossier.setStatusDossier(StatusDossier.NON_RECONDUIT);
+            }
+        } catch (AgapeJpaException e) {
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.NON_RECONDUIT);
+        }
+        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         currentDossier.setMailValideurPortabilite(personLdap.getMail());
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }

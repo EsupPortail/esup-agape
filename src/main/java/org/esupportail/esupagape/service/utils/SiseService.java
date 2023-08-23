@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;

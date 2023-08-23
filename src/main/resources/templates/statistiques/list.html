@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
             <div class="agape-content">
                 <form th:action="@{/statistiques}" method="get">
@@ -61,7 +61,7 @@
                 </form>
             </div>
         </main>
-        <footer th:replace="fragments/footer :: black"></footer>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
     </body>

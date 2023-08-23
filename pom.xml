@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.13</version>
+        <version>3.1.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.esupportail</groupId>
@@ -72,7 +72,7 @@
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -164,7 +164,7 @@
         <dependency>
             <groupId>io.github.jpenren</groupId>
             <artifactId>thymeleaf-spring-data-dialect</artifactId>
-            <version>3.5.0</version>
+            <version>3.6.0</version>
         </dependency>
         <dependency>
             <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -204,6 +204,12 @@
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>rt</artifactId>
             <version>2.3.6</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jakarta.activation</artifactId>
+                    <groupId>com.sun.activation</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
