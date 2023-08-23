@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:sd="http://www.w3.org/1999/xhtml">
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
             <div class="float-buttons">
                 <div class="d-inline-flex align-middle">
@@ -26,7 +26,7 @@
                     <i class="fa-solid fa-people-arrows" style="font-size: 22px"></i>
                 </button>
             </div>
-            <div th:replace="fragments/side-filters :: side-filters"></div>
+            <div th:replace="~{fragments/side-filters :: side-filters}"></div>
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -344,7 +344,7 @@
             </div>
         </div>
 
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
     </body>
 </html>

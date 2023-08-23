@@ -2,7 +2,7 @@ package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

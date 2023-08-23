@@ -3,8 +3,8 @@ package org.esupportail.esupagape.entity;
 import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity

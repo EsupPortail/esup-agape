@@ -1,11 +1,13 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.mail.MessagingException;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.CsvImportService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -39,17 +41,20 @@ public class AdminController {
 
     private final SiseService siseService;
 
+    private final MailService mailService;
+
     public AdminController(
             IndividuService individuService,
             DossierService dossierService,
             AmenagementService amenagementService, UtilsService utilsService,
-            CsvImportService csvImportService, SiseService siseService) {
+            CsvImportService csvImportService, SiseService siseService, MailService mailService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.csvImportService = csvImportService;
         this.siseService = siseService;
+        this.mailService = mailService;
     }
 
     @GetMapping
@@ -62,6 +67,17 @@ public class AdminController {
     public String forceSync(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'import est terminé"));
         individuService.importIndividus();
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/test-mail")
+    public String testMail(@RequestParam("mail") String mail, RedirectAttributes redirectAttributes) {
+        try {
+            redirectAttributes.addFlashAttribute("message", new Message("success", "Envoi effectué"));
+            mailService.sendTest(mail);
+        } catch (MessagingException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Erreur lors de l'envoi du mail de test"));
+        }
         return "redirect:/admin";
     }
 

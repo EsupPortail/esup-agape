@@ -1,5 +1,10 @@
 package org.esupportail.esupagape.service.mail;
 
+import jakarta.annotation.Resource;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.xml.bind.DatatypeConverter;
 import org.apache.commons.io.FileUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.slf4j.Logger;
@@ -15,12 +20,7 @@ import org.springframework.util.FileCopyUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -50,6 +50,21 @@ public class MailService {
 
     @Resource
     private TemplateEngine templateEngine;
+
+    public void sendTest(String to) throws MessagingException {
+        if (!checkMailSender()) {
+            return;
+        }
+        final Context ctx = new Context(Locale.FRENCH);
+        setTemplate(ctx);
+        MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
+        String htmlContent = templateEngine.process("mail/email-test.html", ctx);
+        addInLineImages(mimeMessage, htmlContent);
+        mimeMessage.setSubject("Certificat d'aménagement");
+        mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
+        mimeMessage.setTo(new InternetAddress(to));
+        send(mimeMessage.getMimeMessage());
+    }
 
     @Transactional
     public void sendCertificat(InputStream inputStream, String to) throws MessagingException, IOException {

@@ -2,11 +2,11 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
     <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
-            <div th:replace="fragments/side :: side"></div>
+            <div th:replace="~{fragments/side :: side}"></div>
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -44,8 +44,8 @@
                         </button>
                     </div>
                 </div>
-                <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='dossier')"></div>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='dossier')}"></div>
                 <div class="agape-tab-content bg-white p-3">
                     <form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id}}" th:method="put" th:object="${currentDossier}">
                         <input type="submit" class="d-none" id="check-dossier">
@@ -684,8 +684,8 @@
             new bootstrap.Modal(document.getElementById('pjModal')).show();
             document.getElementById('pjModal').classList.toggle("fade");
         </script>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
-        <div th:replace="individus/modal-update :: update"></div>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
+        <div th:replace="~{individus/modal-update :: update}"></div>
     </body>
 </html>
