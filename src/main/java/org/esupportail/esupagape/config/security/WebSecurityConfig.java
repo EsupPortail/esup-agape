@@ -84,12 +84,6 @@ public class WebSecurityConfig {
         http.logout(logout -> logout.invalidateHttpSession(true)
                                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/logged-out").permitAll()
-                .requestMatchers("/webjars", "/webjars/**").permitAll()
-                .requestMatchers("/css", "/css/**").permitAll()
-                .requestMatchers("/images", "/images/**").permitAll()
-                .requestMatchers("/js", "/js/**").permitAll()
-                .requestMatchers("/").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
                 .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
                 .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
                 .requestMatchers("/individus", "/individus/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
@@ -107,7 +101,8 @@ public class WebSecurityConfig {
                 .requestMatchers("/dossiers/*/enquete/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .requestMatchers("/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MANAGER", "MEDECIN")
                 .requestMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")
-                .requestMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE"));
+                .requestMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE")
+                .anyRequest().hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE"));
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
