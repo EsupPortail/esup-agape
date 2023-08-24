@@ -13,7 +13,8 @@ import java.util.Set;
 public class Amenagement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
     @ManyToOne(optional = false)
