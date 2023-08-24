@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +79,7 @@ public class SiseService {
                 throw new AgapeIOException("unable to backup");
             }
         }
+        logger.info("get sise csv from : " + "https://infocentre.pleiade.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;");
         restTemplate.execute("https://infocentre.pleiade.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;", HttpMethod.GET, null, clientHttpResponse -> {
             StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(file));
             return file;

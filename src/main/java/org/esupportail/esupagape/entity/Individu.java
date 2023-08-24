@@ -3,9 +3,9 @@ package org.esupportail.esupagape.entity;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Past;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,8 @@ import java.util.List;
 public class Individu {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
     @Column(unique = true)
@@ -64,7 +65,6 @@ public class Individu {
     private String fixPhone;
 
     private String contactPhone;
-
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

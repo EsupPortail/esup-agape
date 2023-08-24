@@ -15,7 +15,9 @@ import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -70,7 +72,8 @@ public class DossierController {
             model.addAttribute("mails", String.join("\n", dossierService.filteredEmails(dossierFilter)));
             model.addAttribute("dossierFilter", dossierFilter);
         } else {
-            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
+            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").and(Sort.by("firstName")).and(Sort.by("year").descending()));
+            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, newPageable));
         }
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());
@@ -90,7 +93,6 @@ public class DossierController {
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
         model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
-
         model.addAttribute("individu", new Individu());
         model.addAttribute("genders", Gender.values());
         return "dossiers/list";

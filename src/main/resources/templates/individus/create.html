@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head :: head"></head>
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
-<header th:replace="fragments/header :: header"></header>
+<header th:replace="~{fragments/header :: header}"></header>
 <main>
     <div style="height: 60px;"></div>
     <h1 class="title-create text-center" th:unless="${bindingResult != null}">Ajout d’un individu</h1>
@@ -74,6 +74,13 @@
                                 <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"
                                    th:errors="*{dateOfBirth}"></p>
                             </div>
+                            <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
+                            <div class="col-sm-10">
+                                <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                    <option></option>
+                                    <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                </select>
+                            </div>
                             <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
                             <div class="col-sm-10">
                                 <select selected th:field="*{gender}" type="text" class="form-select" required>
@@ -99,7 +106,7 @@
         </div>
     </div>
 </main>
-<footer th:replace="fragments/footer :: black"></footer>
-<div th:replace="fragments/flash :: flash"></div>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
 </body>
 </html>

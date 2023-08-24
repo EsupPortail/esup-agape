@@ -2,7 +2,7 @@ package org.esupportail.esupagape.entity;
 
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +10,8 @@ import java.util.Set;
 public class Enquete {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
     private String an;

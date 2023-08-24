@@ -30,9 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -65,13 +65,15 @@ public class DossierService {
         this.dossierRepository = dossierRepository;
     }
 
-    public Dossier create(Individu individu, StatusDossier statusDossier) {
+    public Dossier create(Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
         dossier.setStatusDossier(statusDossier);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
+        } else if (typeIndividu != null) {
+            dossier.setType(typeIndividu);
         } else {
             dossier.setType(TypeIndividu.INCONNU);
         }
@@ -339,6 +341,7 @@ public class DossierService {
                 dossierRoot.get("type"),
                 dossierRoot.get("statusDossier"),
                 dossierRoot.get("statusDossierAmenagement"),
+                dossierRoot.get("year"),
                 dossierIndividuJoin.get("id"),
                 dossierIndividuJoin.get("gender"),
                 dossierIndividuJoin.get("emailEtu"),
@@ -533,6 +536,7 @@ public class DossierService {
                         pageable.getSort().get().toList().get(0).getProperty().equals("type")
                         ||
                         pageable.getSort().get().toList().get(0).getProperty().equals("statusDossierAmenagement")
+                        || pageable.getSort().get().toList().get(0).getProperty().equals("year")
                 ) {
                     cq.orderBy(QueryUtils.toOrders(pageable.getSort(), dossierRoot, cb));
                 }

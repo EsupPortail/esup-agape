@@ -4,7 +4,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +16,8 @@ import java.util.Set;
 public class Dossier {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
     private Integer year;

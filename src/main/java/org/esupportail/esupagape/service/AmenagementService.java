@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -178,33 +178,33 @@ public class AmenagementService {
             }
         }
     }*/
-@Transactional
-public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
-    Dossier dossier = dossierService.getById(idDossier);
-    if (dossier.getYear() != utilsService.getCurrentYear()) {
-        throw new AgapeYearException();
-    }
-    if (amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
-        throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
-    }
-    if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-        dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
-    }
+    @Transactional
+    public void create(Amenagement amenagement, Long idDossier, PersonLdap personLdap) throws AgapeException {
+        Dossier dossier = dossierService.getById(idDossier);
+        if (dossier.getYear() != utilsService.getCurrentYear()) {
+            throw new AgapeYearException();
+        }
+        if (amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate() == null) {
+            throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
+        }
+        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+            dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+        }
 
-    amenagement.setDossier(dossier);
-    amenagement.setNomMedecin(personLdap.getDisplayName());
-    amenagement.setMailMedecin(personLdap.getMail());
+        amenagement.setDossier(dossier);
+        amenagement.setNomMedecin(personLdap.getDisplayName());
+        amenagement.setMailMedecin(personLdap.getMail());
 
-    Set<Classification> selectedClassifications = amenagement.getClassification();
-    updateDossierClassification(dossier, selectedClassifications, amenagement.getAutorisation());
-    if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
-        amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
-    } else {
-        amenagement.getTypeEpreuves().clear();
-        amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+        Set<Classification> selectedClassifications = amenagement.getClassification();
+        updateDossierClassification(dossier, selectedClassifications, amenagement.getAutorisation());
+        if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
+            amenagement.setTypeEpreuves(amenagement.getTypeEpreuves());
+        } else {
+            amenagement.getTypeEpreuves().clear();
+            amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
+        }
+        amenagementRepository.save(amenagement);
     }
-    amenagementRepository.save(amenagement);
-}
 
     @Transactional
     public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
@@ -269,10 +269,9 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
         return amenagementRepository.findByFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNamePortable(String name, Pageable pageable) {
-        return amenagementRepository.findByIndividuNamePortable(name, utilsService.getCurrentYear(), pageable);
+    public Page<Amenagement> getByIndividuNamePortable(String fullTextSearch, Pageable pageable) {
+        return amenagementRepository.findByIndividuNamePortable(fullTextSearch, utilsService.getCurrentYear(), pageable);
     }
-
     public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
         return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
     }
@@ -549,10 +548,28 @@ public void create(Amenagement amenagement, Long idDossier, PersonLdap personLda
                 currentDossier.setStatusDossier(StatusDossier.RECONDUIT);
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), StatusDossier.RECONDUIT);
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.RECONDUIT);
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         currentDossier.setAmenagementPorte(amenagement);
+        currentDossier.setMailValideurPortabilite(personLdap.getMail());
+        currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
+    }
+
+    @Transactional
+    public void rejectAdministration(Long id, PersonLdap personLdap) {
+        Amenagement amenagement = getById(id);
+        Dossier currentDossier;
+        try {
+            currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
+                currentDossier.setStatusDossier(StatusDossier.NON_RECONDUIT);
+            }
+        } catch (AgapeJpaException e) {
+            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.NON_RECONDUIT);
+        }
+        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
+        currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         currentDossier.setMailValideurPortabilite(personLdap.getMail());
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
     }

@@ -18,7 +18,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     @Query("""
             select d.id as id, i.numEtu as numEtu, i.codeIne as codeIne, i.firstName as firstName, i.name as name, i.dateOfBirth as dateOfBirth,
-            d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId, i.gender as gender, i.emailEtu as emailEtu, i.desinscrit as desinscrit
+            d.type as type, d.statusDossier as statusDossier, d.statusDossierAmenagement as statusDossierAmenagement, i.id as individuId, i.gender as gender, i.emailEtu as emailEtu, i.desinscrit as desinscrit, d.year as year
             from Dossier d join Individu i on i.id = d.individu.id
             where (:fullTextSearch is null or upper(d.individu.name) like upper(concat('%', :fullTextSearch, '%'))
             or upper(d.individu.firstName) like upper(concat('%', :fullTextSearch))
@@ -53,8 +53,5 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     @Query("select distinct d.libelleFormation as libForm from Dossier d group by d.libelleFormation")
     List<String> findAllLibelleFormation();
-
-    @Query("Select d from Dossier d where  d.individu.desinscrit is true")
-    List<Dossier> findUnsubscribeDossier();
 
 }

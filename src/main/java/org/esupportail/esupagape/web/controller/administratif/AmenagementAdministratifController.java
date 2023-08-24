@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +53,7 @@ public class AmenagementAdministratifController {
                        @RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) Boolean porte,
                        @RequestParam(required = false) String name,
+                       @RequestParam(required = false) String fullTextSearch,
                        @PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, Model model) {
@@ -69,9 +70,9 @@ public class AmenagementAdministratifController {
             statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
         Page<Amenagement> amenagements;
-        if(StringUtils.hasText(name)){
-            amenagements = amenagementService.getByIndividuNamePortable(name, pageable);
-        } else if(porte) {
+        if (StringUtils.hasText(fullTextSearch)) {
+            amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
+        } else if (porte) {
             amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
@@ -123,6 +124,18 @@ public class AmenagementAdministratifController {
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été porté pour l'année courante"));
         } catch (AgapeJpaException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Portabilité impossible"));
+
+        }
+        return "redirect:/administratif/amenagements/" + amenagementId;
+    }
+
+    @PostMapping("/{amenagementId}/reject")
+    public String reject(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+        try {
+            amenagementService.rejectAdministration(amenagementId, personLdap);
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "L'aménagement a été annulé pour l'année courante"));
+        } catch (AgapeJpaException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Annulation impossible"));
 
         }
         return "redirect:/administratif/amenagements/" + amenagementId;

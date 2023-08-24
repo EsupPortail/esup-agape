@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Date;
@@ -19,7 +19,8 @@ public class Document {
 	private static final Logger logger = LoggerFactory.getLogger(Document.class);
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
 	@Version

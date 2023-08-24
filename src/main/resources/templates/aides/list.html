@@ -4,11 +4,11 @@
     <!--/*@thymesVar id="aideMaterielles" type="java.util.List<org.esupportail.esupagape.entity.AideMaterielle>"*/-->
     <!--/*@thymesVar id="aideHumaines" type="java.util.List<org.esupportail.esupagape.entity.AideHumaine>"*/-->
 
-    <head th:replace="fragments/head :: head"></head>
+    <head th:replace="~{fragments/head :: head}"></head>
     <body>
-        <header th:replace="fragments/header :: header"></header>
+        <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
-            <div th:replace="fragments/side :: side"></div>
+            <div th:replace="~{fragments/side :: side}"></div>
             <div class="agape-content agape-content-side">
                 <div class="mb-3">
                     <ol class="breadcrumb">
@@ -21,8 +21,8 @@
                         <li class="breadcrumb-item active">Aides</li>
                     </ol>
                 </div>
-                <div th:replace="fragments/tabs-years :: tabs-years"></div>
-                <div th:replace="fragments/tabs-content :: tabs-content(active='aides')"></div>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='aides')}"></div>
                 <div class="agape-tab-content bg-white p-3">
                     <div class="row">
                         <div class="col-xl-6">
@@ -94,7 +94,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div th:replace="aides/modal-create-aide-materielle :: create"></div>
+                            <div th:replace="~{aides/modal-create-aide-materielle :: create}"></div>
                         </div>
                         <div class="col-xl-6">
                             <div class="clearfix w-100">
@@ -163,13 +163,13 @@
                                     </th:block>
                                 </tbody>
                             </table>
-                            <div th:replace="aides/modal-create-aide-humaine :: create"></div>
+                            <div th:replace="~{aides/modal-create-aide-humaine :: create}"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-        <footer th:replace="fragments/footer :: black"></footer>
-        <div th:replace="fragments/flash :: flash"></div>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
     </body>
 </html>
