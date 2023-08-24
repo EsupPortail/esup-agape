@@ -5,7 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -19,6 +23,11 @@ import java.util.Locale;
 
 @Configuration
 @EnableConfigurationProperties({ApplicationProperties.class})
+@EnableLdapRepositories(basePackages = "org.esupportail.esupagape.repository.ldap")
+@EnableJpaRepositories(basePackages = "org.esupportail.esupagape.repository",
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.esupportail.esupagape.repository.ldap.*")
+        })
 public class WebAppConfig implements WebMvcConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAppConfig.class);

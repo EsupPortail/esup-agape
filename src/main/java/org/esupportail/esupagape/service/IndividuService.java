@@ -258,7 +258,13 @@ public class IndividuService {
         }
         if (individuTestIsExist != null) {
             if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
-                dossierService.create(individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
+                Dossier dossier = dossierService.create(individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
+                dossierService.syncDossier(dossier.getId());
+            }
+            try {
+                syncIndividu(individuTestIsExist.getId());
+            } catch (AgapeJpaException e) {
+                throw new RuntimeException(e);
             }
             return individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
