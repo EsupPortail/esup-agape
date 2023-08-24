@@ -11,11 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,11 +45,6 @@ import java.util.*;
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties({LdapProperties.class, CasProperties.class, WebSecurityProperties.class})
-@EnableLdapRepositories(basePackages = "org.esupportail.esupagape.repository.ldap")
-@EnableJpaRepositories(basePackages = "org.esupportail.esupagape.repository",
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "org.esupportail.esupagape.repository.ldap.*")
-        })
 @EnableMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true)
@@ -104,7 +95,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/individus", "/individus/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
                 .requestMatchers("/individus/fusion").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/individus/*/anonymise").hasAnyRole("ADMIN")
-                .requestMatchers("/dossiers", "/dossiers/*").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
+                .requestMatchers("/dossiers", "/dossiers/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
                 .requestMatchers("/dossiers/*/entretiens").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .requestMatchers("/dossiers/*/aides").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
                 .requestMatchers("/dossiers/*/enquete").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
