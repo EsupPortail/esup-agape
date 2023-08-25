@@ -32,7 +32,7 @@ public class SchedulerService {
     }
 
     @Scheduled(initialDelay = 1, fixedRate = 86400000)
-    public void importIndividus() {
+    public void importIndividus() throws AgapeException {
         if(applicationProperties.getEnableSchedulerIndividu()) {
             logger.info("Synchro individus");
             individuService.importIndividus();

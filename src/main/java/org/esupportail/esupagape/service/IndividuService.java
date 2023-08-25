@@ -170,7 +170,7 @@ public class IndividuService {
     }
 
     @Transactional
-    public void importIndividus() {
+    public void importIndividus() throws AgapeException {
         logger.info("Import individus started");
         List<Individu> individus = individuRepository.findAll();
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
