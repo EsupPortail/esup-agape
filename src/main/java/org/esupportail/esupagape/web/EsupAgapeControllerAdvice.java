@@ -74,8 +74,7 @@ public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = { AgapeException.class })
-    protected String handleConflict(
-            AgapeException ex, WebRequest request, RedirectAttributes redirectAttributes) {
+    protected String handleAgapeException(AgapeException ex, WebRequest request, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("danger", ex.getMessage()));
         return "redirect:" + request.getHeader("referer");
     }
