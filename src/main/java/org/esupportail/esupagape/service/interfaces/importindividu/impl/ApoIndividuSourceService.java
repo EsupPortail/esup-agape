@@ -4,6 +4,7 @@ import gouv.education.apogee.commun.client.ws.EtudiantMetier.CoordonneesDTO2;
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.InfoAdmEtuDTO4;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceEtudiant;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
@@ -19,7 +20,6 @@ import org.springframework.util.StringUtils;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public List<Individu> getAllIndividuNums() {
+    public List<Individu> getAllIndividuNums() throws AgapeException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<Individu> numEtus = new ArrayList<>();
         String sqlRequest = 
@@ -107,17 +107,17 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                 "    AND ins_adm_etp.eta_pmt_iae = 'P' " +
                 "    AND ins_adm_etp.tem_iae_prm = 'O'" +
                 "    AND ins_adm_etp.cod_cge not in ('NM1')";
-        new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
-            numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
-            while (rs.next()) {
-                numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
-            }
-        });
         try {
             Connection connection = dataSource.getConnection();
+            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
+                numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
+                while (rs.next()) {
+                    numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
+                }
+            });
             connection.close();
-        } catch (SQLException e) {
-            logger.warn("unable to close APO connection");
+        } catch (Exception e) {
+            throw new AgapeException(e.getMessage(), e);
         }
         return numEtus;
     }

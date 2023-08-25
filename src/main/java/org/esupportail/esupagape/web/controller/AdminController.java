@@ -64,7 +64,7 @@ public class AdminController {
     }
 
     @GetMapping("/import-individus")
-    public String forceSync(RedirectAttributes redirectAttributes) {
+    public String forceSync(RedirectAttributes redirectAttributes) throws AgapeException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'import est terminé"));
         individuService.importIndividus();
         return "redirect:/admin";
