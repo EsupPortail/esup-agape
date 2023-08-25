@@ -15,8 +15,10 @@
         <form id="filter-form" th:action="@{/dossiers}" th:method="get" th:object="${dossierFilter}" class="ms-1 me-1 d-none">
             <div class="input-group input-group-sm mb-1">
                 <label class="input-group-text col-6" style="white-space: pre-line">Année universitaire</label>
-                <select class="form-select form-select-sm agape-slim-select-sm" th:field="*{year}" multiple>
-                    <option th:each="year : ${years}" th:value="${year.number}" th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                <select class="form-select form-select-sm agape-slim-select-sm" id="year" name="year" multiple>
+                    <th:block th:each="year : ${years}">
+                        <option th:selected="${(year.number == currentYear && dossierFilter.year == null ) || (dossierFilter.year != null && dossierFilter.year.contains(year.number))}" th:value="${year.number}" th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
+                    </th:block>
                 </select>
             </div>
             <div class="input-group input-group-sm mb-1">
