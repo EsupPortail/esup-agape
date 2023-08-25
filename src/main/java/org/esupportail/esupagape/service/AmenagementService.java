@@ -614,16 +614,12 @@ public class AmenagementService {
 
     @Transactional
     public void syncAllAmenagements() {
-        List<Amenagement> amenagementsToExpire = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
-        for(Amenagement amenagement : amenagementsToExpire) {
+        List<Amenagement> amenagementsToSync = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
+        for(Amenagement amenagement : amenagementsToSync) {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now)) {
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-            }
-        }
-        List<Amenagement> amenagementsToSend = amenagementRepository.findByStatusAmenagementAndDossierYear(StatusAmenagement.VISE_ADMINISTRATION, utilsService.getCurrentYear());
-        for(Amenagement amenagement : amenagementsToSend) {
-            if (amenagement.getIndividuSendDate() == null) {
+            } else if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
             }
         }
