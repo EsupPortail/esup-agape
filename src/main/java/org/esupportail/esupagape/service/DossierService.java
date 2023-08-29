@@ -145,6 +145,9 @@ public class DossierService {
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
         dossierToUpdate.setTypeFormation(dossier.getTypeFormation());
         dossierToUpdate.setModeFormation(dossier.getModeFormation());
+        if(StringUtils.hasText(dossier.getNiveauEtudes())) dossierToUpdate.setNiveauEtudes(dossier.getNiveauEtudes());
+        if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) dossierToUpdate.setSecteurDisciplinaire(dossier.getSecteurDisciplinaire());
+        if(StringUtils.hasText(dossier.getFormAddress())) dossierToUpdate.setSecteurDisciplinaire(dossier.getFormAddress());
         if (StringUtils.hasText(dossier.getLibelleFormation())) {
             dossierToUpdate.setLibelleFormation(dossier.getLibelleFormation());
         }

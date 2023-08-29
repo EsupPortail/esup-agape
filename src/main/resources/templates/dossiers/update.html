@@ -22,7 +22,8 @@
                     <div class="float-buttons">
                         <button title="Modifier les informations de l'individu" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-individu-modal" type="button">
                             <i class="fa-solid fa-user-pen" style="font-size: 20px;"></i></button>
-                        <button title="Modifier le dossier" ea-form-name="form-dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning">
+                        <button title="Modifier le dossier" ea-form-name="form-dossier" onclick="unlockForm(this);" id="unlock-dossier" type="button" value="Modifier le dossier" class="btn btn-warning"
+                            th:if="${currentDossier.year == currentYear}">
                             <i class="fa-solid fa-pen"></i></button>
                         <button title="Annuler la modification du dossier" onclick="lockForm();" id="lock-dossier" type="button" value="Annuler" class="btn btn-danger d-none">
                             <i class="fa-solid fa-xmark"></i></button>
@@ -424,12 +425,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div  th:if="${currentYear == currentDossier.year}" class="row mb-1 align-items-baseline alert alert-info" style="width: 550px; margin-top: 80px;">
-                                    <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="niveauEtudes">Niveau d’études</label>
-                                    </div>
-                                    <div class="col-12 col-xxl-8">
-                                        <div class="input-group">
+                                <div class="alert alert-info">
+                                    <h5>Données relatives à l’année courante (<span th:text="${currentYear} + '-' + ${currentYear+1}"></span>)</h5>
+                                    <div class="row mb-1 align-items-baseline">
+                                        <div class="col-4">
+                                            <label class="form-label" for="niveauEtudes">Niveau d’études</label>
+                                        </div>
+                                        <div class="col-8">
                                             <input disabled
                                                     id="niveauEtudes"
                                                     name="niveauEtudes"
@@ -440,56 +442,50 @@
                                             <a onclick="toggleInputLock('niveauEtudes');"
                                                 role="button"
                                                 id="niveauEtudesEdit"
-                                                class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                class="btn btn-light border-secondary border-opacity-25 d-none">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
                                     </div>
-
-                                    <div class="col-4" style="width: 250px;">
-                                        <label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>
-                                    </div>
-                                    <div class="col-12 col-xxl-8">
-                                        <div class="input-group">
-                                            <input disabled
+                                    <div class="row mb-1 align-items-baseline">
+                                        <div class="col-4">
+                                            <label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <textarea disabled
                                                     id="secteurDisciplinaire"
                                                     name="secteurDisciplinaire"
                                                     type="text"
                                                     class="form-control"
                                                     th:value="${currentDossier.secteurDisciplinaire}"
                                                     th:readonly="${currentDossier.secteurDisciplinaire != ''}">
+                                            </textarea>
                                             <a onclick="toggleInputLock('secteurDisciplinaire');"
                                                 role="button"
                                                 id="secteurDisciplinaireEdit"
-                                                class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+                                                class="btn btn-light border-secondary border-opacity-25 d-none">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </div>
                                     </div>
-
                                     <div class="row mb-1 align-items-baseline">
-                                        <div class="col-4" style="width: 250px;">
+                                        <div class="col-4">
                                             <label class="form-label" for="formAddress">Adresse de formation</label>
                                         </div>
-                                        <div class="col-12 col-xxl-8">
-                                            <div class="input-group" style="width: 400px;">
-                                                <input disabled
-                                                        id="formAddress"
-                                                        name="formAddress"
-                                                        type="text"
-                                                        class="form-control"
-                                                        th:value="${currentDossier.formAddress}"
-                                                        th:readonly="${currentDossier.formAddress != ''}">
-                                                <a onclick="toggleInputLock('formAddress');"
-                                                    role="button"
-                                                    id="formAddressEdit"
-                                                    class="btn btn-light border-secondary border-opacity-25 d-none"
-                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </a>
-                                            </div>
+                                        <div class="col-8">
+                                            <textarea disabled
+                                                    id="formAddress"
+                                                    name="formAddress"
+                                                    type="text"
+                                                    class="form-control"
+                                                    th:value="${currentDossier.formAddress}"
+                                                      th:readonly="${currentDossier.formAddress != ''}"></textarea>
+                                            <a onclick="toggleInputLock('formAddress');"
+                                                role="button"
+                                                id="formAddressEdit"
+                                                class="btn btn-light border-secondary border-opacity-25 d-none">
+                                            <i class="fa-solid fa-pen"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
