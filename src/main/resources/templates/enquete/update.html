@@ -388,7 +388,7 @@
                                                                        th:name="${enumLibelleCodAmL}"
                                                                        type="radio"
                                                                        th:value="${enumLibelleCodAmL} + 'X'"
-                                                                       th:checked="${enquete.codAmL.isEmpty() || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).AM00) || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + 'X'))}">
+                                                                       th:checked="${enquete.codAmL.isEmpty() || enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).AM00) || (! (enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '0'))) and (!enquete.codAmL.contains(T(org.esupportail.esupagape.entity.enums.enquete.CodAmL).valueOf(enumLibelleCodAmL + '1')))) }">
                                                                 <label th:for="'X' + ${enumLibelleCodAmL}" class="me-2">Ne sais
                                                                     pas</label>
                                                             </div>

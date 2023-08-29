@@ -12,6 +12,7 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.DocumentService;
 import org.esupportail.esupagape.service.DossierService;
+import org.esupportail.esupagape.service.EnqueteService;
 import org.esupportail.esupagape.service.IndividuService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -43,11 +44,14 @@ public class DossierController {
 
     private final DocumentService documentService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService) {
+    private final EnqueteService enqueteService;
+
+    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.utilsService = utilsService;
         this.documentService = documentService;
+        this.enqueteService = enqueteService;
     }
 
     @GetMapping
@@ -134,6 +138,7 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long dossierId, @Valid Dossier dossier) {
         dossierService.update(dossierId, dossier);
+        enqueteService.getAndUpdateByDossierId(dossierId);
         return "redirect:/dossiers/" + dossierId;
     }
 

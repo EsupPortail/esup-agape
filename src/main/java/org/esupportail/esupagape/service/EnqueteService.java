@@ -5,10 +5,7 @@ import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
-import org.esupportail.esupagape.entity.enums.Classification;
-import org.esupportail.esupagape.entity.enums.FonctionAidant;
-import org.esupportail.esupagape.entity.enums.Gender;
-import org.esupportail.esupagape.entity.enums.StatusDossier;
+import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
@@ -74,16 +71,16 @@ public class EnqueteService {
             throw new AgapeYearException();
         }
         enqueteToUpdate.setSexe(enqueteForm.getSexe());
-        if(enqueteForm.getCodSco() != null) {
+        if (enqueteForm.getCodSco() != null) {
             enqueteToUpdate.setCodSco(enqueteForm.getCodSco());
         }
-        if(enqueteForm.getCodFmt() != null) {
+        if (enqueteForm.getCodFmt() != null) {
             enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
         }
-        if(enqueteForm.getCodFil() != null) {
+        if (enqueteForm.getCodFil() != null) {
             enqueteToUpdate.setCodFil(enqueteForm.getCodFil());
         }
-        if(enqueteForm.getCodHd() != null) {
+        if (enqueteForm.getCodHd() != null) {
             enqueteToUpdate.setCodHd(enqueteForm.getCodHd());
         }
         enqueteToUpdate.setHdTmp(enqueteForm.getHdTmp());
@@ -92,7 +89,7 @@ public class EnqueteService {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
         enqueteToUpdate.getCodPfas().clear();
-        if(enqueteForm.getCodPfasOn().equals("AS0")) {
+        if (enqueteForm.getCodPfasOn().equals("AS0")) {
             enqueteToUpdate.getCodPfas().add(CodPfas.AS0);
         } else {
             enqueteToUpdate.getCodPfas().add(CodPfas.AS1);
@@ -195,7 +192,7 @@ public class EnqueteService {
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
         if (dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
-            if(dossier.getIndividu().getGender() != null) {
+            if (dossier.getIndividu().getGender() != null) {
                 if (dossier.getIndividu().getGender().equals(Gender.FEMININ)) {
                     enquete.setSexe("0");
                 } else if (dossier.getIndividu().getGender().equals(Gender.MASCULIN)) {
@@ -207,7 +204,7 @@ public class EnqueteService {
                 enquete.setSexe("2");
             }
 
-            if(enquete.getCodMeahF().isEmpty() || enquete.getCodMeahF().contains(CodMeahF.AHS0)) {
+            if (enquete.getCodMeahF().isEmpty() || enquete.getCodMeahF().contains(CodMeahF.AHS0)) {
                 enquete.getCodMeahF().clear();
                 if (dossier.getAidesHumaines().stream().anyMatch(ah -> ah.getFonctionAidants().contains(FonctionAidant.PRENEUR_NOTES))) {
                     enquete.getCodMeahF().add(CodMeahF.AHS3);
@@ -216,13 +213,13 @@ public class EnqueteService {
                     enquete.getCodMeahF().add(CodMeahF.AHS5);
                 }
             }
-            if(enquete.getTypFrmn() == null) {
+            if (enquete.getTypFrmn() == null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
-            if(dossier.getModeFormation() != null) {
+            if (dossier.getModeFormation() != null) {
                 enquete.getModFrmn().clear();
                 enquete.getModFrmn().add(dossier.getModeFormation());
-                if(dossier.getAlternance()) {
+                if (dossier.getAlternance()) {
                     enquete.getModFrmn().add(ModFrmn.A);
                 }
             }
@@ -240,14 +237,14 @@ public class EnqueteService {
             } else {
                 enquete.getCodMeae().remove(CodMeae.AEO);
             }
-            if(enquete.getCodMeae().isEmpty()) {
+            if (enquete.getCodMeae().isEmpty()) {
                 enquete.getCodMeae().add(CodMeae.AE0);
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
-            if(dossier.getStatusDossier() != null && dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
-               enquete.setCodMeaa(Collections.singleton(CodMeaa.AA1));
-            } else if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) ) {
+            if (dossier.getStatusDossier() != null && dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA1));
+            } else if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
                 enquete.setCodMeaa(Collections.singleton(CodMeaa.AA2));
             }
             if (dossier.getClassifications().size() > 2) {
@@ -273,7 +270,59 @@ public class EnqueteService {
                 }
             }
         }
+        if (!dossier.getMdphs().isEmpty()) {
+            clearButKeepExceptions(enquete);
+            if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
+                    dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
+                enquete.getCodAmL().add(CodAmL.AM21);
+            } else {
+                enquete.getCodAmL().add(CodAmL.AM20);
+            }
+
+            if (dossier.getMdphs().contains(Mdph.TRANSPORT_INDIVIDUEL_ADAPTE)) {
+                enquete.getCodAmL().add(CodAmL.AM31);
+            } else {
+                enquete.getCodAmL().add(CodAmL.AM30);
+            }
+            if (dossier.getMdphs().contains(Mdph.RQTH)) {
+                enquete.getCodAmL().add(CodAmL.AM41);
+            } else {
+                enquete.getCodAmL().add(CodAmL.AM40);
+            }
+
+            if (dossier.getMdphs().contains(Mdph.AEEH)) {
+                enquete.getCodAmL().add(CodAmL.AM51);
+            } else {
+                enquete.getCodAmL().add(CodAmL.AM50);
+            }
+
+            if (dossier.getMdphs().contains(Mdph.AAH) ||
+                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
+                    dossier.getMdphs().contains(Mdph.CARTE_PRIORITE) ||
+                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
+                enquete.getCodAmL().add(CodAmL.AM81);
+            } else {
+                enquete.getCodAmL().add(CodAmL.AM80);
+            }
+        } else {
+            clearButKeepExceptions(enquete);
+        }
+
         return enquete;
+    }
+
+    private void clearButKeepExceptions(Enquete enquete) {
+        Set<CodAmL> codAmLToKeep = new HashSet<>();
+        codAmLToKeep.add(CodAmL.AM10);
+        codAmLToKeep.add(CodAmL.AM11);
+        codAmLToKeep.add(CodAmL.AM1X);
+        codAmLToKeep.add(CodAmL.AM60);
+        codAmLToKeep.add(CodAmL.AM61);
+        codAmLToKeep.add(CodAmL.AM6X);
+        codAmLToKeep.add(CodAmL.AM70);
+        codAmLToKeep.add(CodAmL.AM71);
+        codAmLToKeep.add(CodAmL.AM7X);
+        enquete.getCodAmL().retainAll(codAmLToKeep);
     }
 
     public void detachAllByDossiers(long id) {
@@ -358,7 +407,7 @@ public class EnqueteService {
     @Transactional
     public void finished(Long enqueteId) {
         Enquete enquete = getById(enqueteId);
-        if(enquete.getFinished() != null) {
+        if (enquete.getFinished() != null) {
             enquete.setFinished(!enquete.getFinished());
         } else {
             enquete.setFinished(true);
