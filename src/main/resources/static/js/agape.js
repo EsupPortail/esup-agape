@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             events: {
                 afterChange: (newVal) => {
                     console.log(newVal[0].value);
-                    fetch('/ws-secure/enquete/cod-sco/?codFmt=' + newVal[0].value)
+                    fetch('/ws-secure/enquete/cod-sco?codFmt=' + newVal[0].value)
                         .then((response) => response.json())
                         .then(function (data) {
                             console.log(data);
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
         codSco.disable();
         codFil.addEventListener("change", function (event) {
-            fetch('/ws-secure/enquete/cod-fmt/?codFil=' + codFil.value)
+            fetch('/ws-secure/enquete/cod-fmt?codFil=' + codFil.value)
                 .then((response) => response.json())
                 .then(function(data){
                     codFmt.setData(data);
