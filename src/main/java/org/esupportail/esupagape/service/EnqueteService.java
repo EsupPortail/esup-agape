@@ -270,8 +270,8 @@ public class EnqueteService {
                 }
             }
         }
+        clearButKeepExceptions(enquete);
         if (!dossier.getMdphs().isEmpty()) {
-            clearButKeepExceptions(enquete);
             if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
                     dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
                 enquete.getCodAmL().add(CodAmL.AM21);
@@ -295,7 +295,6 @@ public class EnqueteService {
             } else {
                 enquete.getCodAmL().add(CodAmL.AM50);
             }
-
             if (dossier.getMdphs().contains(Mdph.AAH) ||
                     dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
                     dossier.getMdphs().contains(Mdph.CARTE_PRIORITE) ||
@@ -304,10 +303,8 @@ public class EnqueteService {
             } else {
                 enquete.getCodAmL().add(CodAmL.AM80);
             }
-        } else {
-            clearButKeepExceptions(enquete);
         }
-
+        checkAllAmlX(enquete);
         return enquete;
     }
 
@@ -323,6 +320,22 @@ public class EnqueteService {
         codAmLToKeep.add(CodAmL.AM71);
         codAmLToKeep.add(CodAmL.AM7X);
         enquete.getCodAmL().retainAll(codAmLToKeep);
+    }
+
+    private void checkAllAmlX(Enquete enquete) {
+        Set<CodAmL> codAmLX = new HashSet<>();
+        codAmLX.add(CodAmL.AM1X);
+        codAmLX.add(CodAmL.AM2X);
+        codAmLX.add(CodAmL.AM3X);
+        codAmLX.add(CodAmL.AM4X);
+        codAmLX.add(CodAmL.AM5X);
+        codAmLX.add(CodAmL.AM6X);
+        codAmLX.add(CodAmL.AM7X);
+        codAmLX.add(CodAmL.AM8X);
+        if(codAmLX.containsAll(enquete.getCodAmL())) {
+            enquete.getCodAmL().clear();
+            enquete.getCodAmL().add(CodAmL.AM00);
+        }
     }
 
     public void detachAllByDossiers(long id) {
