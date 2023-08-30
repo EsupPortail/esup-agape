@@ -83,6 +83,4 @@ public class AmenagementScolariteController {
         return "scolarite/amenagements/show";
     }
 
-    ///////test////
-
 }
