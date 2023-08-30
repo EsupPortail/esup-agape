@@ -23,6 +23,7 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%'))) " +
             "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))) " +
             "and (:yearFilter is null or d.year = :yearFilter) " +
+            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' ")
     Page<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
                                                  @Param("yearFilter") Integer yearFilter,
