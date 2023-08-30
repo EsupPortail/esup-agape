@@ -79,7 +79,7 @@
                     <tbody>
                         <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
-                            <td class="text-center"><input class="fusion-checkbox" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
+                            <td class="text-center"><input class="fusion-checkbox form-check-input" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
                             <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
                             <td th:utext="${dossierIndividuDto.numEtu}"></td>
                             <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
@@ -208,7 +208,7 @@
                                                     <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row form-check">
                                                 <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
                                                 <div class="mb-3 col-2">
                                                     <input id="force" name="force" type="checkbox" class="form-check-input">
@@ -291,7 +291,7 @@
                                                     <input id="fixCity" th:field="*{fixCity}" type="text" class="form-control" required />
                                                     <p th:if="${#fields.hasErrors('fixCity')}" th:errorclass="error" th:errors="*{fixCity}"></p>
                                                 </div>
-                                                <label for="force2" class="col-md-2 col-form-label mb-1">Forcer l’ajout</label>
+                                                <label for="force2" class="col-md-2 col-form-label form-check-label mb-1">Forcer l’ajout</label>
                                                 <div class="col-sm-10">
                                                     <input id="force2" name="force" type="checkbox" class="form-check-input">
                                                 </div>
