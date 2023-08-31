@@ -87,10 +87,10 @@ public class Amenagement {
     @Enumerated(EnumType.STRING)
     private SignatureStatus certificatSignatureStatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Document avis;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Document certificat;
 
     public Long getId() {
