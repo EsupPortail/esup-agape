@@ -327,15 +327,15 @@
 							</div>
 							<div>
 								<label class="mt-1 form-label" th:for="codMeaa">Autres aides</label>
-								<div class="form-check form">
-									<th:block th:each="enumCodMeaa : ${codMeaaStructures}">
-										<input th:id="${enumCodMeaa}" name="codMeaaStructure" type="radio"
-										       th:value="${enumCodMeaa}"
-										       th:checked="${enquete.codMeaa.contains(enumCodMeaa)}">
-										<label th:for="${enumCodMeaa}"
-										       th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></label>
-									</th:block>
-								</div>
+								<th:block th:each="enumCodMeaa : ${codMeaaStructures}">
+									<div class="form-check">
+									<input class="form-check-input" th:id="${enumCodMeaa}" name="codMeaaStructure" type="radio"
+										   th:value="${enumCodMeaa}"
+										   th:checked="${enquete.codMeaa.contains(enumCodMeaa)}">
+									<label class="form-check-label" th:for="${enumCodMeaa}"
+										   th:text="#{'enquete.codMeaa.' + ${enumCodMeaa}}"></label>
+									</div>
+								</th:block>
 								<div>
 									<select multiple id="codMeaa" th:field="*{codMeaa}" class=""
 									        th:disabled="${currentYear == currentDossier.year && enquete.finished == true}">
