@@ -21,10 +21,10 @@
                         <li class="nav-item"  sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_MEDECIN')">
                             <a class="nav-link active text-light" aria-current="page" th:href="@{/dossiers}">Dossiers</a>
                         </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMINISTRATIF') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMINISTRATIF') or hasRole('ROLE_ADMIN')">
                             <a class="nav-link text-light" th:href="@{/administratif/amenagements}">Administratif</a>
                         </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_SCOLARITE') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_SCOLARITE') or hasRole('ROLE_ADMIN')">
                             <a class="nav-link text-light" th:href="@{/scolarite/amenagements}">Scolarité</a>
                         </li>
                         <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
