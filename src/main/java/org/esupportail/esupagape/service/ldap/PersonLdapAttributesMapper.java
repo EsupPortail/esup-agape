@@ -44,6 +44,10 @@ public class PersonLdapAttributesMapper implements AttributesMapper<PersonLdap> 
         if (supannEntiteAffectation != null){
             person.setSupannEntiteAffectation(supannEntiteAffectation.get().toString());
         }
+        Attribute supannEtuAnneeInscription = attrs.get("supannEtuAnneeInscription");
+        if (supannEtuAnneeInscription != null){
+            person.setSupannEtuAnneeInscription(supannEtuAnneeInscription.get().toString());
+        }
         return person;
     }
 }

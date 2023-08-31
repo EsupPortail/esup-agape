@@ -67,6 +67,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuInfos.setFixPhone(personLdap.getTelephoneNumber());
             individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
             individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSchacDateOfBirth(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+            individuInfos.setAffectation(personLdap.getSupannEntiteAffectationPrincipale());
+            individuInfos.setYear(personLdap.getSupannEtuAnneeInscription());
             try {
                 individuInfos.setPhotoId(ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
             } catch (AgapeException e) {

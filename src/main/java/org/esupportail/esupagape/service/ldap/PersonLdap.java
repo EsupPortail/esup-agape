@@ -52,7 +52,7 @@ public final class PersonLdap {
 	private @Attribute(name = "supannCodeINE") String supannCodeINE;
 	private @Attribute(name = "supannEtuId") String supannEtuId;
 	private @Attribute(name = "supannEtuEtape") String supannEtuEtape;
-	private @Attribute(name = "supannEtuAnnee") String supannEtuAnneeInscription;
+	private @Attribute(name = "supannEtuAnneeInscription") String supannEtuAnneeInscription;
 	private @Attribute(name = "supannEtuSecteurDisciplinaire") String supannEtuSecteurDisciplinaire;
 	private @Attribute(name = "supannEtuDiplome") String supannEtuDiplome;
 	private @Attribute(name = "supannEtuTypeDiplome") String supannEtuTypeDiplome;
