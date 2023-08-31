@@ -34,21 +34,21 @@ public class AideHumaineService {
 
     private final AideHumaineRepository aideHumaineRepository;
 
-    private final IndividuService individuService;
-
     private final DocumentService documentService;
 
     private final UtilsService utilsService;
 
     private final DossierService dossierService;
 
-    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, IndividuService individuService, DocumentService documentService, UtilsService utilsService, DossierService dossierService) {
+    private final SyncService syncService;
+
+    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, DocumentService documentService, UtilsService utilsService, DossierService dossierService, SyncService syncService) {
         this.documentRepository = documentRepository;
         this.aideHumaineRepository = aideHumaineRepository;
-        this.individuService = individuService;
         this.documentService = documentService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
+        this.syncService = syncService;
     }
 
     @Transactional
@@ -117,7 +117,7 @@ public class AideHumaineService {
     }
 
     private void recupAidantWithNumEtu(String numEtu, AideHumaine aideHumaineToUpdate) {
-        IndividuInfos individuInfos = individuService.getIndividuInfosByNumEtu(numEtu);
+        IndividuInfos individuInfos = syncService.getIndividuInfosByNumEtu(numEtu);
         if (StringUtils.hasText(individuInfos.getName())) {
             aideHumaineToUpdate.setNameAidant(individuInfos.getName());
         }

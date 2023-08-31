@@ -25,6 +25,8 @@ public class IndividuInfos {
     String currentCity;
     String currentCountry;*/
     String photoId;
+    String affectation;
+    String year;
     Classification handicap;
 
     public String getEppn() {
@@ -178,6 +180,22 @@ public class IndividuInfos {
 
     public void setPhotoId(String photoId) {
         this.photoId = photoId;
+    }
+
+    public String getAffectation() {
+        return affectation;
+    }
+
+    public void setAffectation(String affectation) {
+        this.affectation = affectation;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public Classification getHandicap() {

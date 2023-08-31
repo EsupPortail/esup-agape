@@ -64,12 +64,13 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
     Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query("""
-            select distinct count(a) from Amenagement a
-            join Dossier d on a.dossier = d
+            select count(distinct a) from Amenagement a
+            left join Dossier d on a.dossier = d
+            left join Individu i on d.individu = i
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
+            and (i.desinscrit is null or i.desinscrit = false)
             """)
     Long countToPorte(Integer yearFilter);
 

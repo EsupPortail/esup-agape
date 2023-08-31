@@ -18,7 +18,7 @@
                         <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
                     </div>
                     <div class="ms-3">
-                        <label class="form-label" th:for="typeContact"><span class="star">*</span> Type Contact</label>
+                        <label class="form-label form-check-label" th:for="typeContact"><span class="star">*</span> Type Contact</label>
                         <div>
                             <th:block th:each="enumTypeContact : ${typeContacts}">
                                 <div>

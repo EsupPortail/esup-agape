@@ -3,22 +3,14 @@ package org.esupportail.esupagape.web.controller;
 import jakarta.mail.MessagingException;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.service.AmenagementService;
-import org.esupportail.esupagape.service.CsvImportService;
-import org.esupportail.esupagape.service.DossierService;
-import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.*;
 import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,8 +36,7 @@ public class AdminController {
     private final MailService mailService;
 
     public AdminController(
-            IndividuService individuService,
-            DossierService dossierService,
+            IndividuService individuService, DossierService dossierService,
             AmenagementService amenagementService, UtilsService utilsService,
             CsvImportService csvImportService, SiseService siseService, MailService mailService) {
         this.individuService = individuService;
