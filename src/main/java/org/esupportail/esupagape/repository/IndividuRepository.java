@@ -23,4 +23,7 @@ public interface IndividuRepository extends JpaRepository<Individu, Long> {
     @Query(value = "select date_part('Year', date_of_birth) from individu group by date_part('Year', date_of_birth) order by date_part('Year', date_of_birth)", nativeQuery = true)
     List<Integer> findAllDateOfBirthDistinct();
 
+    @Query("select i.id from Individu i")
+    List<Long> findIdsAll();
+
 }

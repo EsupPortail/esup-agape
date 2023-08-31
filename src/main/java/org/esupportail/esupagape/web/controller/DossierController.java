@@ -1,5 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
 import org.esupportail.esupagape.entity.Dossier;
@@ -10,10 +12,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.service.DocumentService;
-import org.esupportail.esupagape.service.DossierService;
-import org.esupportail.esupagape.service.EnqueteService;
-import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.*;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.PageRequest;
@@ -29,9 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-
 @Controller
 @RequestMapping("/dossiers")
 public class DossierController {
@@ -40,15 +36,18 @@ public class DossierController {
 
     private final IndividuService individuService;
 
+    private final SyncService syncService;
+
     private final UtilsService utilsService;
 
     private final DocumentService documentService;
 
     private final EnqueteService enqueteService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService) {
+    public DossierController(DossierService dossierService, IndividuService individuService, SyncService syncService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
+        this.syncService = syncService;
         this.utilsService = utilsService;
         this.documentService = documentService;
         this.enqueteService = enqueteService;
@@ -126,7 +125,7 @@ public class DossierController {
     public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
         dossierService.syncDossier(dossierId);
         try {
-            individuService.syncIndividu(dossierService.getById(dossierId).getIndividu().getId());
+            syncService.syncIndividu(dossierService.getById(dossierId).getIndividu().getId());
         } catch (AgapeJpaException e) {
             throw new RuntimeException(e);
         }

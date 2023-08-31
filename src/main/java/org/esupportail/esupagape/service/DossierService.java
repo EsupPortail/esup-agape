@@ -168,16 +168,21 @@ public class DossierService {
     @Transactional
     public void syncAllDossiers() {
         logger.info("Sync dossiers started");
-        List<Dossier> dossiers = dossierRepository.findAllByYear(utilsService.getCurrentYear(), Pageable.unpaged()).getContent();
-        for (Dossier dossier : dossiers) {
-            syncDossier(dossier.getId());
+        List<Long> dossiersIds = dossierRepository.findIdsAll();
+        int count = 0;
+        for (Long dossierId : dossiersIds) {
+            syncDossier(dossierId);
+            count++;
         }
-        logger.info("Sync dossiers done");
+        logger.info("Sync dossiers done : " + count);
     }
 
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = getById(id);
+        if(dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
+            return;
+        }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
         } else {

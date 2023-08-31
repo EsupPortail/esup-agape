@@ -6,7 +6,6 @@ import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.ExcludeIndividu;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -14,7 +13,6 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.ExcludeIndividuRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
-import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -63,7 +61,9 @@ public class IndividuService {
 
     private final DossierService dossierService;
 
-    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService) {
+    private final SyncService syncService;
+
+    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService, SyncService syncService) {
         this.individuSourceServices = individuSourceServices;
         this.applicationProperties = applicationProperties;
         this.individuRepository = individuRepository;
@@ -71,6 +71,7 @@ public class IndividuService {
         this.excludeIndividuRepository = excludeIndividuRepository;
         this.dossierService = dossierService;
         this.enqueteService = enqueteService;
+        this.syncService = syncService;
     }
 
     public Individu getIndividu(String numEtu) {
@@ -83,90 +84,6 @@ public class IndividuService {
 
     public List<Individu> getAllIndividus() {
         return individuRepository.findAll();
-    }
-
-    public IndividuInfos getIndividuInfosByNumEtu(String numEtu) {
-        IndividuInfos individuInfos = new IndividuInfos();
-        for (IndividuSourceService individuSourceService : individuSourceServices) {
-            individuInfos = individuSourceService.getIndividuProperties(numEtu, individuInfos, utilsService.getCurrentYear());
-        }
-        return individuInfos;
-    }
-
-    @Transactional
-    public void syncIndividu(Long id) throws AgapeJpaException {
-        Individu individu = individuRepository.findById(id).orElseThrow();
-        IndividuInfos individuInfos = getIndividuInfosByNumEtu(individu.getNumEtu());
-        if (StringUtils.hasText(individuInfos.getEppn())) {
-            individu.setEppn(individuInfos.getEppn());
-        }
-        if (StringUtils.hasText(individuInfos.getName())) {
-            individu.setName(individuInfos.getName());
-        }
-        if (StringUtils.hasText(individuInfos.getFirstName())) {
-            individu.setFirstName(individuInfos.getFirstName());
-        }
-        if (StringUtils.hasText(individuInfos.getGenre())) {
-            individu.setSex(individuInfos.getGenre());
-        }
-        if (StringUtils.hasText(individuInfos.getGenre())) {
-            individu.setGender(Gender.valueOf(individuInfos.getGenre()));
-        }
-        if (StringUtils.hasText(individuInfos.getNationalite())) {
-            individu.setNationalite(individuInfos.getNationalite());
-        }
-        if (StringUtils.hasText(individuInfos.getEmailEtu())) {
-            individu.setEmailEtu(individuInfos.getEmailEtu());
-        }
-        if (StringUtils.hasText(individuInfos.getFixAddress())) {
-            individu.setFixAddress(individuInfos.getFixAddress());
-        }
-        if (StringUtils.hasText(individuInfos.getFixCP())) {
-            individu.setFixCP(individuInfos.getFixCP());
-        }
-        if (StringUtils.hasText(individuInfos.getFixCity())) {
-            individu.setFixCity(individuInfos.getFixCity());
-        }
-        if (StringUtils.hasText(individuInfos.getFixCountry())) {
-            individu.setFixCountry(individuInfos.getFixCountry());
-        }
-        if (StringUtils.hasText(individuInfos.getFixPhone())) {
-            individu.setFixPhone(individuInfos.getFixPhone());
-        }
-
-        if (StringUtils.hasText(individuInfos.getContactPhone())) {
-            individu.setContactPhone(individuInfos.getContactPhone());
-        }
-        if (StringUtils.hasText(individuInfos.getPhotoId())) {
-            individu.setPhotoId(individuInfos.getPhotoId());
-        }
-        if((individu.getDesinscrit() == null || !individu.getDesinscrit()) && individuInfos.getEppn() == null) {
-            individu.setDesinscrit(true);
-        }
-        try {
-            Dossier dossier = dossierService.getCurrent(id);
-            if (individuInfos.getHandicap() != null) {
-                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) && individuInfos.getHandicap() != null) {
-                    dossier.getClassifications().add(individuInfos.getHandicap());
-                }
-            }
-        } catch (AgapeJpaException e) {
-            logger.debug(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public void syncAllIndividus() {
-        logger.info("Sync individus started");
-        List<Individu> individus = individuRepository.findAll();
-        for (Individu individu : individus) {
-            try {
-                syncIndividu(individu.getId());
-            } catch (AgapeRuntimeException e) {
-                logger.debug(e.getMessage() + " for " + individu.getNumEtu());
-            }
-        }
-        logger.info("Sync individus done");
     }
 
     @Transactional
@@ -188,6 +105,21 @@ public class IndividuService {
             dossierService.saveAll(dossiers);
         }
         logger.info("Import individus done");
+    }
+
+    public void syncAllIndividus() {
+        logger.info("Sync individus started");
+        List<Long> individusIds = individuRepository.findIdsAll();
+        int count = 0;
+        for (Long individuId : individusIds) {
+            count++;
+            try {
+                syncService.syncIndividu(individuId);
+            } catch (AgapeRuntimeException e) {
+                logger.debug(e.getMessage() + " for individu " + individuId);
+            }
+        }
+        logger.info("Sync individus done : " + count);
     }
 
     public void save(Individu individuToAdd, TypeIndividu typeIndividu, String force) throws AgapeJpaException {
@@ -262,7 +194,7 @@ public class IndividuService {
                 dossierService.syncDossier(dossier.getId());
             }
             try {
-                syncIndividu(individuTestIsExist.getId());
+                syncService.syncIndividu(individuTestIsExist.getId());
             } catch (AgapeJpaException e) {
                 throw new RuntimeException(e);
             }
