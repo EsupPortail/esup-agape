@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--/*@thymesVar id="amenagement" type="org.esupportail.esupagape.entity.Amenagement"*/-->
-<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="lastDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
     <div th:fragment="side" class="agape-side bg-light position-sticky">
         <div class="p-2">
             <span class="fs-6 card bg-primary text-white mb-2 "><span class="ms-3">Aménagement</span></span>
             <div class="container">
-                <dt>Année du dossier courant</dt>
-                <dd th:text="${currentDossier.year} + '-' + ${currentDossier.year + 1}"></dd>
+                <dt>Année du dernier dossier</dt>
+                <dd th:text="${lastDossier.year} + '-' + ${lastDossier.year + 1}"></dd>
                 <dt>Année de validation de l’aménagement</dt>
                 <dd th:text="${amenagement.dossier.year} + '-' + ${amenagement.dossier.year + 1}"></dd>
                 <dt>Composante</dt>
                 <dd th:text="${amenagement.dossier.composante}"></dd>
                 <dt>Statut</dt>
                 <dd th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></dd>
-                <dt th:if="${currentDossier.amenagementPorte != null}">Portabilité effectuée par</dt>
-                <dd th:if="${currentDossier.amenagementPorte != null}" th:text="${currentDossier.nomValideurPortabilite}"></dd>
+                <dt th:if="${lastDossier.amenagementPorte != null}">Portabilité effectuée par</dt>
+                <dd th:if="${lastDossier.amenagementPorte != null}" th:text="${lastDossier.nomValideurPortabilite}"></dd>
                 <dt>Nom du médecin</dt>
                 <dd th:text="${amenagement.nomMedecin}"></dd>
                 <dt>Date de fin</dt>
@@ -27,23 +27,23 @@
             <span class="fs-6 card bg-primary text-white mb-2 "><span class="ms-3">Information sur l'individu</span></span>
             <div class="container">
                 <dt>Type d’individu</dt>
-                <dd th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
+                <dd th:text="#{'dossier.typeIndividu.' + ${lastDossier.type}}"></dd>
                 <dt>N° Étudiant</dt>
-                <dd th:text="${currentDossier.individu.numEtu}"></dd>
+                <dd th:text="${lastDossier.individu.numEtu}"></dd>
                 <dt>Nom</dt>
-                <dd th:text="|${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))} ${#strings.toUpperCase(currentDossier.individu.name)}|" ></dd>
+                <dd th:text="|${#strings.capitalize(#strings.toLowerCase(lastDossier.individu.firstName))} ${#strings.toUpperCase(lastDossier.individu.name)}|" ></dd>
 <!--                <dt>Nom</dt>-->
-<!--                <dd th:text="${#strings.toUpperCase(currentDossier.individu.name)}"></dd>-->
+<!--                <dd th:text="${#strings.toUpperCase(lastDossier.individu.name)}"></dd>-->
 <!--                <dt>Prénom</dt>-->
-<!--                <dd th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>-->
+<!--                <dd th:text="${#strings.capitalize(#strings.toLowerCase(lastDossier.individu.firstName))}"></dd>-->
                 <dt>Date de naissance</dt>
-                <dd th:text="${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')}"></dd>
+                <dd th:text="${#temporals.format(lastDossier.individu.dateOfBirth, 'dd/MM/yyyy')}"></dd>
                 <dt>Email universitaire</dt>
-                <dd th:text="${currentDossier.individu.emailEtu}"></dd>
+                <dd th:text="${lastDossier.individu.emailEtu}"></dd>
                 <dt>Téléphone</dt>
-                <dd th:text="${currentDossier.individu.contactPhone}"></dd>
+                <dd th:text="${lastDossier.individu.contactPhone}"></dd>
                 <!--<dt >Téléphone fixe</dt>
-                <dd class="" th:text="${currentDossier.individu.fixPhone}"></dd>-->
+                <dd class="" th:text="${lastDossier.individu.fixPhone}"></dd>-->
             </div>
         </div>
     </div>

@@ -194,13 +194,11 @@ public class DossierController {
 //        return "redirect:/dossiers/";
 //    }
 
-
-
     @GetMapping("/notes/{dossierId}")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public String getNotes(@PathVariable Long dossierId, Model model) {
         Dossier dossier = dossierService.getById(dossierId);
-        model.addAttribute("extendedInfos", dossierService.getInfos(dossier));
+        model.addAttribute("extendedInfos", dossierService.getInfos(dossier.getIndividu(), dossier.getYear()));
         return "dossiers/notes";
     }
 }

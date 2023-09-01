@@ -26,7 +26,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/administratif/amenagements")
@@ -106,14 +108,17 @@ public class AmenagementAdministratifController {
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
         model.addAttribute("amenagement", amenagement);
+        List<Dossier> dossiers = dossierService.getAllByIndividu(amenagement.getDossier().getIndividu().getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
+        model.addAttribute("dossiers", dossiers);
+        model.addAttribute("currentForm", dossierService.getInfos(amenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
+        model.addAttribute("lastDossier", dossiers.get(0));
         Dossier dossier;
         try {
             dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
         } catch (AgapeJpaException e) {
-            dossier = amenagement.getDossier();
+            dossier = null;
         }
         model.addAttribute("currentDossier", dossier);
-        model.addAttribute("amenagementPrec", amenagementService.getAmenagementPrec(amenagementId, utilsService.getCurrentYear()));
         return "administratif/amenagements/show";
     }
 
