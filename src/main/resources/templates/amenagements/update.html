@@ -27,7 +27,7 @@
             <form id="amenagement" th:method="put"
                   th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
                   th:object="${amenagement}">
-                <div class="row">
+                <div id="form-background" class="row">
                     <div class="col-12 col-xl-6">
                         <div class="row mb-1">
                             <div class="col-4" style="width: 250px;">
@@ -49,10 +49,9 @@
                                 <label th:for="end-date" class="form-label">Date de fin</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="end-date" type="date" class="form-control" th:name="endDate"
-                                       th:value="${#temporals.format(amenagement.endDate, 'yyyy-MM-dd')}">
+                                <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${#temporals.format(amenagement.endDate, 'yyyy-MM-dd')}">
                                 <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error"
-                                   th:errors="*{endDate}"></p>
+                                    th:errors="*{endDate}"></p>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -72,10 +71,9 @@
                                 <label th:for="autre-typeEpreuve" class="form-label">Autre type d’épreuve</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="autre-typeEpreuve" type="text" class="form-control"
-                                       th:field="*{autresTypeEpreuve}">
+                                <input id="autre-typeEpreuve" type="text" class="form-control" th:field="*{autresTypeEpreuve}">
                                 <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error"
-                                   th:errors="*{autresTypeEpreuve}"></p>
+                                    th:errors="*{autresTypeEpreuve}"></p>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -98,10 +96,9 @@
                                 <label th:for="autre-typeEpreuve" class="form-label">Autres temps majorés</label>
                             </div>
                             <div class="col-12 col-xxl-8">
-                                <input id="autres-temp-majore" type="text" class="form-control"
-                                       th:field="*{autresTempsMajores}">
+                                <input id="autres-temp-majore" type="text" class="form-control" th:field="*{autresTempsMajores}">
                                 <p th:if="${#fields.hasErrors('autresTempsMajores')}" th:errorclass="error"
-                                   th:errors="*{autresTempsMajores}"></p>
+                                    th:errors="*{autresTempsMajores}"></p>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -110,12 +107,9 @@
                             </div>
                             <div class="col-12 col-xxl-8">
                                 <div class="agape-amenagement-textarea-wrapper">
-                                    <textarea id="amenagementText" type="text" rows="15"
-                                              class="form-control agape-amenagement-textarea"
-                                              th:field="*{amenagementText}"></textarea>
+                                    <textarea id="amenagement-text" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
                                 </div>
-                                <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error"
-                                   th:errors="*{amenagementText}"></p>
+                                <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
                             </div>
                         </div>
                     </div>
@@ -174,6 +168,13 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+    <div id="amenagement-help" class="bg-white d-none" style="width:400px;position: absolute;right: 20px; top:100px; overflow-y: scroll; height: 70%; margin-top: 50px;">
+        <div class="list-group">
+            <th:block th:each="libelle : ${libellesAmenagement}">
+                <a class="list-group-item list-group-item-action"  th:text="${libelle.title}" onclick="selectText(this)"></a>
+            </th:block>
         </div>
     </div>
 </main>
