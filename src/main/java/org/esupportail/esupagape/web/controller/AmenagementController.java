@@ -72,6 +72,7 @@ public class AmenagementController {
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
+        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
         setModel(model);
         return "amenagements/update";
     }
