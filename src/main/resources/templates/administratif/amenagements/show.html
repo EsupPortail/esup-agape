@@ -9,10 +9,10 @@
         <main class="d-inline-flex">
             <div th:replace="~{fragments/side-administratif :: side}"></div>
             <div class="float-buttons">
-                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
+                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
-                <button title="Annuler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
+                <button title="Annuler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
                     <i class="fa-solid fa-times"></i>
                 </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
@@ -36,11 +36,15 @@
                         </li>
                     </ol>
                 </nav>
-                <dl class="row">
-                    <dt class="col-sm-2">Formation</dt>
-                    <dd class="col-sm-10" th:text="${currentDossier.year} + ' - ' + ${currentDossier.libelleFormation}"></dd>
-                    <dt class="col-sm-2">Formation précédente</dt>
-                    <dd class="col-sm-10" th:text="${currentDossier.year - 1} + ' - ' + ${currentDossier.libelleFormationPrec}"></dd>
+                <dl>
+                    <dt class="col-sm-2">Formation actuelle</dt>
+                    <dd class="col-sm-10" th:text="${currentYear - 1} + '-' + ${currentYear} + ' : ' + ${currentForm}"></dd>
+                </dl>
+                <dl>
+                    <dt class="col-sm-2">Formations précédentes</dt>
+                    <th:block th:each="dossier : ${dossiers}">
+                        <dd class="col-sm-10" th:text="${dossier.year - 1} + '-' + ${dossier.year} + ' : ' + ${dossier.libelleFormation}"></dd>
+                    </th:block>
                 </dl>
                 <div class="col-12 text-center" style="height: calc(100vh - 240px);">
                     <th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">

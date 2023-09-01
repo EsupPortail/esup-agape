@@ -160,10 +160,10 @@ public class DossierService {
         dossierToUpdate.setStatusDossier(StatusDossier.ACCUEILLI);
     }
 
-    public DossierInfos getInfos(Dossier dossier) {
+    public DossierInfos getInfos(Individu individu, Integer year) {
         DossierInfos infos = new DossierInfos();
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, true, infos);
+            dossierInfosService.getDossierProperties(individu, year, false, true, infos);
         }
         return infos;
     }
