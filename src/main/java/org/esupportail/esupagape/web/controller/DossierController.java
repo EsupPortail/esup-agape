@@ -123,7 +123,7 @@ public class DossierController {
     @GetMapping("/{dossierId}/sync")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
-        dossierService.syncDossier(dossierId);
+        syncService.syncDossier(dossierId);
         try {
             syncService.syncIndividu(dossierService.getById(dossierId).getIndividu().getId());
         } catch (AgapeJpaException e) {
