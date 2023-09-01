@@ -32,7 +32,7 @@ public class SchedulerService {
         this.applicationProperties = applicationProperties;
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 86400000)
+    @Scheduled(cron="00 02 02 * * *")
     public void importIndividus() throws AgapeException {
         if(applicationProperties.getEnableSchedulerIndividu()) {
             logger.info("Synchro individus");
