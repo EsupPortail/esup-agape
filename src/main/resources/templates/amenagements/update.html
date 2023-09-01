@@ -25,8 +25,8 @@
             <h4>Modification d’un aménagement</h4>
             <hr>
             <form id="amenagement" th:method="put"
-                  th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
-                  th:object="${amenagement}">
+                th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
+                th:object="${amenagement}">
                 <div id="form-background" class="row">
                     <div class="col-12 col-xl-6">
                         <div class="row mb-1">
@@ -122,10 +122,10 @@
                                 <th:block th:each="autorisation : ${autorisations}">
                                     <div class="form-check">
                                         <input th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}"
-                                               name="autorisation" type="radio" class="form-check-input"
-                                               th:field="*{autorisation}" th:value="${autorisation}" required>
+                                            name="autorisation" type="radio" class="form-check-input"
+                                            th:field="*{autorisation}" th:value="${autorisation}" required>
                                         <label class="form-check-label" th:for="${autorisation}"
-                                               th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                                            th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
                                     </div>
                                 </th:block>
                             </div>
@@ -133,8 +133,7 @@
                         <div id="classificationDiv" class="d-none">
                             <div class="row mb-1 align-items-baseline">
                                 <div class="col-4" style="width: 250px;">
-                                    <label class="form-label select-label" th:for="classification">Classification du
-                                        handicap</label>
+                                    <label class="form-label select-label" th:for="classification">Classification du handicap</label>
                                 </div>
                                 <div class="col-12 col-xxl-8">
                                     <select multiple id="classification" th:field="*{classification}" size="1"
@@ -155,7 +154,7 @@
                             <button type="submit"  title="Enregistrer" class="btn btn-success" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <i class="fa-solid fa-save"></i>
                             </button>
-                            <button type="button" title="Envoyer à la signature" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
+                            <button type="button" th:title="${esupSignatureAvisWorkflow} ? 'Envoyer à la signature' : 'Envoyer à l\'administration'" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
                                 <i class="fa-solid fa-paper-plane"></i>
                             </button>
                             <a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
@@ -192,8 +191,7 @@
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form th:method="post"
-                  th:action="@{/dossiers/{id}/amenagements/{amenagementId}/validation-medecin(id=${currentDossier.id},amenagementId=${amenagement.id})}">
+            <form th:method="post" th:action="@{/dossiers/{id}/amenagements/{amenagementId}/validation-medecin(id=${currentDossier.id},amenagementId=${amenagement.id})}">
                 <div class="modal-body">
                     Merci de confirmer l’envoi de l’aménagement à l’administration
                 </div>
