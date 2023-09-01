@@ -84,7 +84,7 @@ public class SyncService {
         if (StringUtils.hasText(individuInfos.getPhotoId())) {
             individu.setPhotoId(individuInfos.getPhotoId());
         }
-        if ((individu.getDesinscrit() == null || !individu.getDesinscrit()) && (!StringUtils.hasText(individuInfos.getAffectation()) || Integer.parseInt(individuInfos.getYear()) < utilsService.getCurrentYear())) {
+        if (!StringUtils.hasText(individuInfos.getAffectation()) || Integer.parseInt(individuInfos.getYear()) < utilsService.getCurrentYear()) {
             individu.setDesinscrit(true);
         } else {
             individu.setDesinscrit(false);

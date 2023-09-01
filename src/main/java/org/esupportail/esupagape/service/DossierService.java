@@ -189,7 +189,7 @@ public class DossierService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if (dossier.getAmenagements().size() == 0) {
+        if (dossier.getAmenagements().isEmpty()) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
