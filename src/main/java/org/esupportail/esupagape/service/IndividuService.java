@@ -191,7 +191,7 @@ public class IndividuService {
         if (individuTestIsExist != null) {
             if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
                 Dossier dossier = dossierService.create(individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
-                dossierService.syncDossier(dossier.getId());
+                syncService.syncDossier(dossier.getId());
             }
             try {
                 syncService.syncIndividu(individuTestIsExist.getId());

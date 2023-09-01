@@ -53,12 +53,15 @@ public class DossierService {
 
     private final DocumentService documentService;
 
+    private final SyncService syncService;
+
     private final EntityManager em;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, SyncService syncService, EntityManager em) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.syncService = syncService;
         this.em = em;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
@@ -165,64 +168,15 @@ public class DossierService {
         return infos;
     }
 
-    @Transactional
     public void syncAllDossiers() {
         logger.info("Sync dossiers started");
         List<Long> dossiersIds = dossierRepository.findIdsAll();
         int count = 0;
         for (Long dossierId : dossiersIds) {
-            syncDossier(dossierId);
+            syncService.syncDossier(dossierId);
             count++;
         }
         logger.info("Sync dossiers done : " + count);
-    }
-
-    @Transactional
-    public void syncDossier(Long id) {
-        Dossier dossier = getById(id);
-        if(dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
-            return;
-        }
-        if (dossier.getIndividu().getDossiers().size() > 1) {
-            dossier.setNewDossier(false);
-        } else {
-            dossier.setNewDossier(true);
-        }
-        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if (dossier.getAmenagements().isEmpty()) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
-        }
-        for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, false, new DossierInfos());
-            if (dossierInfos != null) {
-                if (StringUtils.hasText(dossierInfos.getCodComposante())) {
-                    dossier.setCodComposante(dossierInfos.getCodComposante());
-                }
-                if (StringUtils.hasText(dossierInfos.getComposante())) {
-                    dossier.setComposante(dossierInfos.getComposante().trim());
-                }
-                if (StringUtils.hasText(dossierInfos.getLibelleFormation())) {
-                    dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
-                }
-                if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
-                    dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());
-                } else {
-                    dossier.setLibelleFormationPrec("");
-                }
-                if (StringUtils.hasText(dossierInfos.getFormAddress())) {
-                    dossier.setFormAddress(dossierInfos.getFormAddress());
-                }
-                if (StringUtils.hasText(dossierInfos.getNiveauEtudes())) {
-                    dossier.setNiveauEtudes(dossierInfos.getNiveauEtudes());
-                }
-                if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
-                    dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
-                }
-                if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
-                    dossier.setResultatTotal(dossierInfos.getResultatAnn());
-                }
-            }
-        }
     }
 
     @Transactional

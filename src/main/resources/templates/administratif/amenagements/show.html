@@ -7,7 +7,7 @@
     <body>
         <header th:replace="~{fragments/header :: header}"></header>
         <main class="d-inline-flex">
-            <div th:replace="fragments/side-administratif :: side"></div>
+            <div th:replace="~{fragments/side-administratif :: side}"></div>
             <div class="float-buttons">
                 <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${amenagementPrec != null && currentDossier.amenagementPorte == null}">
                     <i class="fa-solid fa-refresh"></i>
@@ -31,9 +31,6 @@
             <div class="agape-content agape-content-side">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
-                        </li>
                         <li class="breadcrumb-item">
                             <a href="javascript:history.back();" class="text-center">Liste des aménagements</a>
                         </li>
