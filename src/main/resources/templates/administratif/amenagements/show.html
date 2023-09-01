@@ -43,7 +43,7 @@
                 <dl>
                     <dt class="col-sm-2">Formations précédentes</dt>
                     <th:block th:each="dossier : ${dossiers}">
-                        <dd class="col-sm-10" th:text="${dossier.year - 1} + '-' + ${dossier.year} + ' : ' + ${dossier.libelleFormation}"></dd>
+                        <dd class="col-sm-10" th:if="${dossier.libelleFormation != null}" th:text="${dossier.year - 1} + '-' + ${dossier.year} + ' : ' + ${dossier.libelleFormation}"></dd>
                     </th:block>
                 </dl>
                 <div class="col-12 text-center" style="height: calc(100vh - 240px);">
@@ -92,7 +92,7 @@
                 </div>
             </div>
         </main>
-        <div class="modal fade" id="porteModal" tabindex="-1" aria-labelledby="porteModalLabel" aria-hidden="true" th:if="${amenagementPrec != null}">
+        <div class="modal fade" id="porteModal" tabindex="-1" aria-labelledby="porteModalLabel" aria-hidden="true" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true" th:if="${amenagementPrec != null}">
+        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
