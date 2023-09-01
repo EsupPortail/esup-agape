@@ -47,7 +47,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
     @Override
     public IndividuInfos getIndividuProperties(String numEtu, IndividuInfos individuInfos, int annee) {
         List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(numEtu);
-        if(personLdaps.size() > 0) {
+        if(!personLdaps.isEmpty()) {
             PersonLdap personLdap = personLdaps.get(0);
             individuInfos.setEppn(personLdap.getEduPersonPrincipalName());
             String address = personLdap.getPostalAddress();
