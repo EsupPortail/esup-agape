@@ -43,7 +43,7 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 30000)
+    @Scheduled(initialDelay = 1, fixedRate = 120000)
     public void syncEsupSignature() throws AgapeException {
         if(applicationProperties.getEnableSchedulerEsupSignature()) {
             logger.info("Synchro Esup Signature");
@@ -52,7 +52,7 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 30000)
+    @Scheduled(initialDelay = 1, fixedRate = 120000)
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
             logger.info("Synchro Aménagements");
