@@ -32,6 +32,7 @@ public class AmenagementScolariteController {
 
     private final ScolariteService scolariteService;
 
+    //TOTO création d'un service OUService
     private final LdapPersonService ldapPersonService;
 
     public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementRepository amenagementRepository, ScolariteService scolariteService1, LdapPersonService ldapPersonService) {
@@ -52,6 +53,7 @@ public class AmenagementScolariteController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
+        //TOTO Champ de recherche + prefix supannref id configurable
         OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
         String codComposante = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith("{APOGEE}")).toList().get(0).split("}")[1];
         Page<Amenagement> amenagements;
