@@ -177,6 +177,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    let sendAmenagement = document.getElementById("send-amenagement");
+    if(sendAmenagement != null) {
+        sendAmenagement.addEventListener("click", function (){
+            let sendInput = document.getElementById("send-input");
+            sendInput.value = true;
+            document.getElementById("submit-btn").click();
+        });
+    }
+    let cancelSendAmenagement = document.getElementById("cancel-send-amenagement");
+    if(cancelSendAmenagement != null) {
+        cancelSendAmenagement.addEventListener("click", function (){
+            let sendInput = document.getElementById("send-input");
+            sendInput.value = false;
+        });
+    }
+
+
     //Gestion des aménagements autorisation classifications
    /* let autorisationOui = document.getElementById("autorisationOui");
     let autorisationNon = document.getElementById("autorisationNon");

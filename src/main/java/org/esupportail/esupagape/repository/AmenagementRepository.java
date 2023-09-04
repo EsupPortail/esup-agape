@@ -58,6 +58,7 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             where (:codComposante is null or a.dossier.codComposante  = :codComposante)
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
+            and (select count(*) from Dossier d1 where d1.individu = d.individu and d1.amenagementPorte = a) = 0
             and a.typeAmenagement = 'CURSUS'
             and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
@@ -66,13 +67,13 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
     @Query("""
             select count(distinct a) from Amenagement a
             left join Dossier d on a.dossier = d
-            left join Individu i on d.individu = i
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
-            and (d.year < :yearFilter)
+            and (d.year < :currentYear)
+            and (select count(*) from Dossier d1 where d1.individu = d.individu and d1.amenagementPorte = a) = 0
             and a.typeAmenagement = 'CURSUS'
-            and (i.desinscrit is null or i.desinscrit = false)
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
-    Long countToPorte(Integer yearFilter);
+    Long countToPorte(Integer currentYear);
 
     @Query(value = "select a from Amenagement a " +
             "join Dossier d on a.dossier = d " +

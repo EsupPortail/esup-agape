@@ -122,7 +122,7 @@ public class SyncService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if (dossier.getAmenagements().isEmpty()) {
+        if (dossier.getAmenagements().isEmpty() && dossier.getAmenagementPorte() == null) {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
         }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {

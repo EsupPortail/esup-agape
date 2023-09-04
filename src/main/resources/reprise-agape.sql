@@ -297,7 +297,7 @@ begin
                                     end loop;
                                 end loop;
                             type_amenagement = 'DATE';
-                            if am.date_fin > '01-01-2024' then type_amenagement = 'CURSUS'; end if;
+                            if am.date_fin > '2024-01-01' then type_amenagement = 'CURSUS'; end if;
                             tempsmajorenew = upper(am.temp_majore);
                             if upper(am.temp_majore) = 'AUTRE' then tempsmajorenew = 'AUCUN'; end if;
                             dateenvoi = null;

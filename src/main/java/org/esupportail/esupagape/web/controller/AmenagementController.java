@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -17,9 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import java.io.IOException;
 
 @Controller
@@ -79,8 +79,17 @@ public class AmenagementController {
 
     @PutMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement) throws AgapeJpaException {
+    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
+        if(send) {
+            try {
+                amenagementService.validationMedecin(amenagementId, personLdap);
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+                return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
+            } catch (AgapeException | AgapeRuntimeException e) {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            }
+        }
         return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/update";
     }
 
@@ -103,18 +112,18 @@ public class AmenagementController {
         return "redirect:/dossiers/" + dossierId + "/amenagements";
     }
 
-    @PostMapping("/{amenagementId}/validation-medecin")
-    @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
-        try {
-            amenagementService.validationMedecin(amenagementId, personLdap);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
-        } catch (AgapeException | AgapeRuntimeException e) {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
-        }
-
-        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
-    }
+//    @PostMapping("/{amenagementId}/validation-medecin")
+//    @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
+//    public String validationMedecin(@PathVariable Long dossierId, @PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+//        try {
+//            amenagementService.validationMedecin(amenagementId, personLdap);
+//            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+//        } catch (AgapeException | AgapeRuntimeException e) {
+//            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+//        }
+//
+//        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
+//    }
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
