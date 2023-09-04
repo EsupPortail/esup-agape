@@ -7,6 +7,8 @@ import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
+import org.esupportail.esupagape.service.ldap.LdapPersonService;
+import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
@@ -30,16 +32,18 @@ public class AmenagementScolariteController {
 
     private final ScolariteService scolariteService;
 
-    public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementRepository amenagementRepository, ScolariteService scolariteService1) {
+    private final LdapPersonService ldapPersonService;
+
+    public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementRepository amenagementRepository, ScolariteService scolariteService1, LdapPersonService ldapPersonService) {
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.scolariteService = scolariteService;
+        this.ldapPersonService = ldapPersonService;
     }
 
     @GetMapping
-    public String list(@RequestParam(required = false) String codComposante,
-                       @RequestParam(required = false) Integer yearFilter,
+    public String list(@RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) String fullTextSearch,
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @PageableDefault(size = 10,
@@ -48,8 +52,8 @@ public class AmenagementScolariteController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
-        if (!StringUtils.hasText(codComposante)) codComposante = null;
-
+        OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
+        String codComposante = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith("{APOGEE}")).toList().get(0).split("}")[1];
         Page<Amenagement> amenagements;
         if (StringUtils.hasText(fullTextSearch)) {
             amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
