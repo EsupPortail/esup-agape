@@ -7,6 +7,7 @@ import org.esupportail.esupagape.service.ldap.LdapGroupService;
 import org.esupportail.esupagape.service.security.CasLdapAuthoritiesPopulator;
 import org.esupportail.esupagape.service.security.Group2UserRoleService;
 import org.esupportail.esupagape.service.security.SpelGroupService;
+import org.esupportail.esupagape.service.security.SuAuthenticationSuccessHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,9 +34,11 @@ import org.springframework.security.ldap.search.LdapUserSearch;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -230,4 +233,14 @@ public class WebSecurityConfig {
         return logoutFilter;
     }
 
+    @Bean
+    public SwitchUserFilter switchUserFilter() {
+        SwitchUserFilter switchUserFilter = new SwitchUserFilter();
+        switchUserFilter.setSwitchUserUrl("/admin/su-login");
+        switchUserFilter.setExitUserUrl("/su-logout");
+        switchUserFilter.setSuccessHandler(new SuAuthenticationSuccessHandler());
+        switchUserFilter.setFailureHandler(new ExceptionMappingAuthenticationFailureHandler());
+        switchUserFilter.setUserDetailsService(ldapUserDetailsService());
+        return switchUserFilter;
+    }
 }
