@@ -580,6 +580,7 @@ public class AmenagementService {
         SignatureStatus signatureStatus = esupSignatureService.getStatus(amenagementId, typeWorkflow);
         if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
             esupSignatureService.getLastPdf(amenagementId, typeWorkflow);
+            logger.info("aménagement " + amenagementId + " status esup-signature " + typeWorkflow.name() + " : COMPLETED");
         }
         return signatureStatus;
     }
