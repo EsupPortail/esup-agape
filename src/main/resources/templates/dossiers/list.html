@@ -86,7 +86,7 @@
                             + dossierIndividuDto.statusDossier.name() == 'IMPOSSIBLE_A_CONTACTER' ? 'table-danger' : ''
                             + dossierIndividuDto.statusDossier.name() == 'RECU_PAR_LA_MEDECINE_PREVENTIVE' ? 'table-light' : ''
                             + dossierIndividuDto.statusDossier.name() == 'RECONDUIT' ? 'table-light' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'NON_RECONDUIT' ? 'table-dark' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'NON_RECONDUIT' ? 'table-secondary' : ''
                             + dossierIndividuDto.statusDossier.name() == 'ANONYMOUS' ? 'table-default' : ''
                             }">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
