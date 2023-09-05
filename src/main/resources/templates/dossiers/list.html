@@ -36,9 +36,9 @@
                     </ol>
                 </nav>
                 <div style="height: 30px;"></div>
-                <table class="table table-responsive table-striped table-bordered" style="width: 100%">
+                <table class="table table-responsive table-bordered" style="width: 100%">
                     <thead class="table-dark">
-                        <tr >
+                        <tr>
                             <th scope="col" style="width: 30px;">
                             </th>
                             <th scope="col" style="width: 30px;">
@@ -77,7 +77,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle">
+                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle"
+                        th:classappend="${
+                            dossierIndividuDto.statusDossier.name() == 'SUIVI' ? 'table-success' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'IMPORTE' ? 'table-primary' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'AJOUT_MANUEL' ? 'table-info' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'ACCUEILLI' ? 'table-warning' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'IMPOSSIBLE_A_CONTACTER' ? 'table-danger' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'RECU_PAR_LA_MEDECINE_PREVENTIVE' ? 'table-light' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'RECONDUIT' ? 'table-light' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'NON_RECONDUIT' ? 'table-dark' : ''
+                            + dossierIndividuDto.statusDossier.name() == 'ANONYMOUS' ? 'table-default' : ''
+                            }">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
                             <td class="text-center"><input class="fusion-checkbox form-check-input" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
                             <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
@@ -88,6 +99,7 @@
                             <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell"></td>
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
+<!--                            <td th:utext="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier}}">-->
                             <td>
                             <th:block th:if="${dossierIndividuDto.statusDossier != null}" th:switch="${dossierIndividuDto.statusDossier}">
                                 <span th:case="${dossierIndividuDto.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span>
