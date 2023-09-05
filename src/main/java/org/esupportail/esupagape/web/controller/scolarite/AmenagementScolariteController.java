@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,14 +53,12 @@ public class AmenagementScolariteController {
             yearFilter = utilsService.getCurrentYear();
         }
         //TOTO Champ de recherche + prefix supannref id configurable
+
         OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
         String codComposante = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith("{APOGEE}")).toList().get(0).split("}")[1];
+
         Page<Amenagement> amenagements;
-        if (StringUtils.hasText(fullTextSearch)) {
-            amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
-        } else {
-            amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear(), pageable);
-        }
+        amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear(), pageable);
        // model.addAttribute("amenagements", amenagementService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear(), pageable));
         model.addAttribute("amenagements", amenagements);
         model.addAttribute("codComposante", codComposante);

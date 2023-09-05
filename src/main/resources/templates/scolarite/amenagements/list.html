@@ -26,19 +26,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-2" style="min-width: 500px;">
-								<div class="input-group">
-									<label class="input-group-text" th:for="codComposante">Composante</label>
-									<select id="codComposante" class="form-select" name="codComposante">
-										<option value="">Choisir</option>
-										<option th:selected="${codComposante == composante.cod}"
-										        th:each="composante: ${composantes}"
-										        th:if="${composante.cod != null && !composante.cod.isEmpty()}"
-										        th:value="${composante.cod}"
-										        th:text="${composante.libelle}"></option>
-									</select>
-								</div>
-							</div>
+
 							<form id="search-form" th:action="@{/scolarite/amenagements}" method="get">
 								<input class="col-2 form-control" style="max-width: 600px" type="text"
 								       placeholder="Rechercher par nom, prénom" name="fullTextSearch"
