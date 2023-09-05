@@ -35,7 +35,7 @@ import java.util.Map;
 @Service
 public class EsupSignatureService {
 
-    private final Logger log = LoggerFactory.getLogger(EsupSignatureService.class);
+    private final Logger logger = LoggerFactory.getLogger(EsupSignatureService.class);
 
     private final ApplicationProperties applicationProperties;
     private final AmenagementRepository amenagementRepository;
@@ -96,6 +96,7 @@ public class EsupSignatureService {
                 amenagement.setCertificatSignatureStatus(SignatureStatus.PENDING);
             }
         }
+        logger.info("aménagement : " + amenagement.getId() + " envoyé vie esup-signature à " + getRecipientEmails());
     }
 
     @Transactional
