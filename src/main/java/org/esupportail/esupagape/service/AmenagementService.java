@@ -314,6 +314,7 @@ public class AmenagementService {
                     throw new AgapeException("Impossible de générer l'avis");
                 }
                 amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
