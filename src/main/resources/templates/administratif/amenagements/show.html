@@ -9,10 +9,10 @@
         <main class="d-inline-flex">
             <div th:replace="~{fragments/side-administratif :: side}"></div>
             <div class="float-buttons">
-                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
+                <button title="Renouveler l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#porteModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null) && amenagement.getDossier().year != currentYear}">
                     <i class="fa-solid fa-refresh"></i>
                 </button>
-                <button title="Annuler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null)}">
+                <button title="Annuler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${!dossiers.isEmpty() && (currentDossier == null || currentDossier.amenagementPorte == null) && amenagement.getDossier().year != currentYear}">
                     <i class="fa-solid fa-times"></i>
                 </button>
                 <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && !esupSignaturePresent}">
