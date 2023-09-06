@@ -62,9 +62,9 @@ public class AmenagementScolariteController {
         OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
         List<String> codComposantes = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith("{APOGEE}")).toList();
         if (!codComposantes.isEmpty()) {
-            Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposantes.get(0), utilsService.getCurrentYear(), pageable);
+            Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposantes.get(0).split("}")[1], utilsService.getCurrentYear(), pageable);
             model.addAttribute("amenagements", amenagements);
-            model.addAttribute("codComposante", codComposantes.get(0));
+            model.addAttribute("codComposante", codComposantes.get(0).split("}")[1]);
         } else {
             if(httpServletRequest.isUserInRole("ROLE_ADMIN")) {
                 model.addAttribute("amenagements", scolariteService.getFullTextSearchScol(statusAmenagement, null, utilsService.getCurrentYear(), pageable));

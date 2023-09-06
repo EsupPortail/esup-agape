@@ -88,13 +88,13 @@
                 </table>
             </div>
         </div>
-        <div class="card col-lg-10 mx-auto">
+        <div class="card col-lg-10 mx-auto" th:if="${@environment.getActiveProfiles()[0] == 'dev'}">
             <div class="card-body">
                 <form th:action="@{/admin/su-login}" method="POST" class="form-signin">
                     <h5 class="text-center"><b>Changer d’utilisateur</b></h5>
                     <br/>
                     <input type="text" id="username" name="username" th:placeholder="Identifiant"
-                           class="form-control"/> <br/>
+                        class="form-control"/> <br/>
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
                 </form>
             </div>
