@@ -99,7 +99,8 @@
                                 <th>Nom médecin</th>
                                 <th><a class="sorted link-light" sd:pagination-sort="statusAmenagement">Statut</a></th>
                                 <th>Mail individu</th>
-                                <th style="width: 200px;">Voir</th>
+                                <th>Voir</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -119,7 +120,7 @@
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
                                     <td th:text="${amenagement.dossier.individu.emailEtu}"></td>
                                     <td class="text-center" style="width: 100px;">
-                                        <ul class="list-group list-group-horizontal">
+                                        <ul class="list-group list-group-horizontal" style="display: block;">
                                             <li class="list-group-item border-0 p-1 bg-transparent">
                                                 <a class="btn btn-info" th:href="@{/administratif/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="fa-solid fa-eye"></i>
                                                 </a>

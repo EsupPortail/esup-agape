@@ -193,7 +193,7 @@ public class EsupSignatureService {
         } else {
             signId = amenagement.getCertificatSignatureId();
         }
-        String urlDeletePdf = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
+        String urlDeletePdf = String.format("%s/ws/signrequests/soft/%s", applicationProperties.getEsupSignatureUrl(), signId);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete(urlDeletePdf);
     }
