@@ -325,9 +325,15 @@ public class AmenagementService {
     public void sendToCertificatWorkflow(Long id) throws AgapeException {
         Amenagement amenagement = getById(id);
         try {
-            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            byte[] modelBytes;
+            if(StringUtils.hasText(applicationProperties.getModelsPath())) {
+                modelBytes = Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/certificat.pdf").toPath());
+            } else {
+                modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            }
             esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, false), TypeWorkflow.CERTIFICAT);
         } catch (IOException e) {
+            logger.warn(e.getMessage());
             throw new AgapeException("Envoi vers esup-signature impossible", e);
         }
     }
@@ -336,8 +342,13 @@ public class AmenagementService {
     public void sendToAvisWorkflow(Long id) throws AgapeException {
         Amenagement amenagement = getById(id);
         try {
-            byte[] modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
-            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, false), TypeWorkflow.AVIS);
+            byte[] modelBytes;
+            if(StringUtils.hasText(applicationProperties.getModelsPath())) {
+                modelBytes = Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/avis.pdf").toPath());
+            } else {
+                modelBytes = new ClassPathResource("models/avis.pdf").getInputStream().readAllBytes();
+            }
+            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, false), TypeWorkflow.CERTIFICAT);            esupSignatureService.send(id, generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, false), TypeWorkflow.AVIS);
         } catch (IOException e) {
             throw new AgapeException("Envoi vers esup-signature impossible", e);
         }
@@ -485,12 +496,15 @@ public class AmenagementService {
             PDDocument toFillDocument = PDDocument.load(savedPdf);
             PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
             if(pdField != null) {
-                pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
-                if(datas.containsKey(fieldName)) {
-                    pdField.setValue(datas.get(fieldName));
-                }
-                if(pdField instanceof PDSignatureField && withSign) {
-                    addVisualSignature(amenagement, toFillDocument, pdField.getWidgets().get(0).getRectangle(), fieldName);
+                if(pdField instanceof PDSignatureField) {
+                    if(withSign) {
+                        addVisualSignature(amenagement, toFillDocument, pdField.getWidgets().get(0).getRectangle(), fieldName);
+                    }
+                } else {
+                    pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
+                    if(datas.containsKey(fieldName)) {
+                        pdField.setValue(datas.get(fieldName));
+                    }
                 }
                 out = new ByteArrayOutputStream();
                 toFillDocument.save(out);
@@ -499,7 +513,7 @@ public class AmenagementService {
             }
         }
         PDDocument finishedDocument = PDDocument.load(savedPdf);
-        finishedDocument.getDocumentCatalog().getAcroForm().flatten();
+        finishedDocument.getDocumentCatalog().getAcroForm().flatten(finishedDocument.getDocumentCatalog().getAcroForm().getFields().stream().filter(f -> !(f instanceof PDSignatureField)).collect(Collectors.toList()), true);
         out = new ByteArrayOutputStream();
         finishedDocument.save(out);
         finishedDocument.close();
@@ -511,7 +525,7 @@ public class AmenagementService {
         Amenagement amenagement = getById(amenagementId);
         Individu individu = amenagement.getDossier().getIndividu();
         List<Amenagement> amenagements = amenagementRepository.findAmenagementPrec(individu, year);
-        if(amenagements.size() > 0) {
+        if(!amenagements.isEmpty()) {
             return amenagementRepository.findAmenagementPrec(individu, year).get(0);
         } else {
             return null;
