@@ -74,6 +74,7 @@ public class EsupSignatureService {
         map.add("title", title);
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+        requestEntity.getBody().add("scanSignatureFields", "true");
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         RestTemplate restTemplate = new RestTemplate();
         String workflowId;
