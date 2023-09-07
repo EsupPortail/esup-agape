@@ -153,7 +153,7 @@ public class EsupSignatureService {
         } else {
             String urlStatus = String.format("%s/ws/signrequests/status/%s", applicationProperties.getEsupSignatureUrl(), signId);
             ResponseEntity<String> responseEntityStatus = restTemplate.getForEntity(urlStatus, String.class);
-            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase());
+            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase().replace('-', '_'));
             if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
                 amenagement.setAvisSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {

@@ -526,7 +526,7 @@ public class AmenagementService {
 //                    continue toto;
                 }
             }
-            finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), true);
+            finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), false);
         }
 
         if(!dates.isEmpty()) {
