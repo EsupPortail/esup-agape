@@ -85,7 +85,7 @@ public class EsupSignatureService {
         }
         String urlPostWorkflow = String.format("%s/ws/forms/%s/new-doc", applicationProperties.getEsupSignatureUrl(), workflowId);
         signRequestId = restTemplate.postForObject(urlPostWorkflow, requestEntity, String.class);
-        if (signRequestId != null) {
+        if (org.springframework.util.StringUtils.hasText(signRequestId)) {
             if (signRequestId.equals("-1")) {
                 throw new AgapeRuntimeException("Erreur lors de la mise à la signature");
             }
@@ -96,6 +96,8 @@ public class EsupSignatureService {
                 amenagement.setCertificatSignatureId(signRequestId);
                 amenagement.setCertificatSignatureStatus(SignatureStatus.PENDING);
             }
+        } else {
+            throw new AgapeRuntimeException("Erreur lors de la mise à la signature");
         }
         logger.info("aménagement : " + amenagement.getId() + " envoyé vie esup-signature à " + getRecipientEmails());
     }
