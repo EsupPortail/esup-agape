@@ -673,10 +673,10 @@ public class AmenagementService {
                     certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
                 }
                 mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
+                amenagement.setIndividuSendDate(LocalDateTime.now());
             } catch (Exception e) {
                 logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId, e);
             }
-            amenagement.setIndividuSendDate(LocalDateTime.now());
         }
     }
 
