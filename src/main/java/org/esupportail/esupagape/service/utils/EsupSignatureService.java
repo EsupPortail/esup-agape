@@ -83,7 +83,7 @@ public class EsupSignatureService {
         } else {
             workflowId = applicationProperties.getEsupSignatureCertificatsWorkflowId();
         }
-        String urlPostWorkflow = String.format("%s/ws/workflows/%s/new", applicationProperties.getEsupSignatureUrl(), workflowId);
+        String urlPostWorkflow = String.format("%s/ws/forms/%s/new-doc", applicationProperties.getEsupSignatureUrl(), workflowId);
         signRequestId = restTemplate.postForObject(urlPostWorkflow, requestEntity, String.class);
         if (signRequestId != null) {
             if (signRequestId.equals("-1")) {
