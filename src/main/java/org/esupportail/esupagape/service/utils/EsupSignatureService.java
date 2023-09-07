@@ -83,9 +83,9 @@ public class EsupSignatureService {
         } else {
             workflowId = applicationProperties.getEsupSignatureCertificatsWorkflowId();
         }
-        String urlPostWorkflow = String.format("%s/ws/workflows/%s/new", applicationProperties.getEsupSignatureUrl(), workflowId);
+        String urlPostWorkflow = String.format("%s/ws/forms/%s/new-doc", applicationProperties.getEsupSignatureUrl(), workflowId);
         signRequestId = restTemplate.postForObject(urlPostWorkflow, requestEntity, String.class);
-        if (signRequestId != null) {
+        if (org.springframework.util.StringUtils.hasText(signRequestId)) {
             if (signRequestId.equals("-1")) {
                 throw new AgapeRuntimeException("Erreur lors de la mise à la signature");
             }
@@ -96,6 +96,8 @@ public class EsupSignatureService {
                 amenagement.setCertificatSignatureId(signRequestId);
                 amenagement.setCertificatSignatureStatus(SignatureStatus.PENDING);
             }
+        } else {
+            throw new AgapeRuntimeException("Erreur lors de la mise à la signature");
         }
         logger.info("aménagement : " + amenagement.getId() + " envoyé vie esup-signature à " + getRecipientEmails());
     }
@@ -153,7 +155,7 @@ public class EsupSignatureService {
         } else {
             String urlStatus = String.format("%s/ws/signrequests/status/%s", applicationProperties.getEsupSignatureUrl(), signId);
             ResponseEntity<String> responseEntityStatus = restTemplate.getForEntity(urlStatus, String.class);
-            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase());
+            SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase().replace('-', '_'));
             if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
                 amenagement.setAvisSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {

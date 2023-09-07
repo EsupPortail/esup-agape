@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -12,6 +13,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
@@ -39,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -513,7 +514,22 @@ public class AmenagementService {
             }
         }
         PDDocument finishedDocument = PDDocument.load(savedPdf);
-        finishedDocument.getDocumentCatalog().getAcroForm().flatten(finishedDocument.getDocumentCatalog().getAcroForm().getFields().stream().filter(f -> !(f instanceof PDSignatureField)).collect(Collectors.toList()), true);
+        List<PDField> fields = finishedDocument.getDocumentCatalog().getAcroForm().getFields();
+        List<PDField> dates = fields.stream().filter(f -> f.getFullyQualifiedName().equals("administrationDate")).toList();
+        List<PDField> cleannedFields = fields.stream().filter(f -> !(f instanceof PDSignatureField) && !f.getFullyQualifiedName().equals("administrationDate")).toList();
+        toto:
+        for(PDField field : cleannedFields) {
+            for(PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
+                if(pdAnnotationWidget.getPage() == null) {
+                    pdAnnotationWidget.setPage(finishedDocument.getPage(0));
+                }
+            }
+            finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), false);
+        }
+
+        if(!dates.isEmpty()) {
+            finishedDocument.getDocumentCatalog().getAcroForm().getFields().add(dates.get(0));
+        }
         out = new ByteArrayOutputStream();
         finishedDocument.save(out);
         finishedDocument.close();
