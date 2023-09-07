@@ -7,89 +7,123 @@
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <main class="d-inline-flex">
-    <div th:replace="~{fragments/side :: side}"></div>
-    <div class="agape-content agape-content-side">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a th:href="@{'/dossiers/' + ${currentDossier.id}}">Dossier <span th:text="${currentDossier.individu.firstName + ' ' + currentDossier.individu.name}"></span></a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" class="text-center ">Liste des aménagements</a>
-                </li>
-            </ol>
-        </nav>
-        <div class="col-12">
-            <div class="float-buttons">
-                <a style="padding: 0" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) ||amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis?disposition=attachment(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger l'avis médical">
+	<div th:replace="~{fragments/side :: side}"></div>
+	<div class="agape-content agape-content-side">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a th:href="@{'/dossiers/' + ${currentDossier.id}}">Dossier <span
+							th:text="${currentDossier.individu.firstName + ' ' + currentDossier.individu.name}"></span></a>
+				</li>
+				<li class="breadcrumb-item">
+					<a th:href="@{/dossiers/{id}/amenagements(id=${currentDossier.id})}" class="text-center ">Liste des
+						aménagements</a>
+				</li>
+			</ol>
+		</nav>
+		<div class="col-12">
+			<div class="float-buttons">
+				<a style="padding: 0"
+				   th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) ||amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+				   th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis?disposition=attachment(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
+				   class="btn btn-primary" title="Télécharger l'avis médical">
                     <span class="fa-stack">
                         <i class="fas fa-download fa-stack-2x text-white-50"></i>
                         <i class="fas fa-file-medical fa-stack-1x mt-3 text-white"></i>
                     </span>
-                </a>
-                <a style="padding: 0" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${currentDossier.id}, amenagementId=${amenagement.id})}" class="btn btn-primary" title="Télécharger le certificat">
+				</a>
+				<a style="padding: 0"
+				   th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+				   th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-certificat(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
+				   class="btn btn-primary" title="Télécharger le certificat">
                     <span class="fa-stack">
                         <i class="fas fa-download fa-stack-2x text-white-50"></i>
                         <i class="fas fa-file-signature fa-stack-1x mt-3 text-white"></i>
                     </span>
-                </a>
-            </div>
-        </div>
-        <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
-        <div th:replace="~{fragments/tabs-content :: tabs-content(active='amenagements')}"></div>
-        <div class="agape-tab-content bg-white p-3">
-            <h4>Aménagement du <span th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy')}"></span></h4>
-            <hr>
-            <div class="col-12 text-center" style="height: 90%">
-                <th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
-                    <th:block th:if="${amenagement.avisSignatureStatus != null}">
-                        <div class="alert alert-warning" th:if="${amenagement.avisSignatureStatus.name().equals('PENDING')}">
-                            Statut Esup-Signature : En cours de signature par le médecin
-                        </div>
-                        <div class="alert alert-danger" th:if="${amenagement.avisSignatureStatus.name().equals('REFUSED')}">
-                            Statut Esup-Signature : Refusé par le médecin
-                        </div>
-                        <div class="alert alert-success" th:if="${amenagement.avisSignatureStatus.name().equals('COMPLETED')}">
-                            Statut Esup-Signature : Avis signé par le médecin
-                        </div>
-                        <div class="alert alert-primary" th:if="${amenagement.avisSignatureStatus.name().equals('DOWNLOADED')}">
-                            Statut Esup-Signature : Avis signé par le médecin et transmit à l’administration
-                        </div>
-                    </th:block>
-                    <th:block th:if="${amenagement.certificatSignatureStatus != null}">
-                        <div class="alert alert-warning" th:if="${amenagement.certificatSignatureStatus.name().equals('PENDING')}">
-                            Statut Esup-Signature : En cours de signature par l’administration
-                        </div>
-                        <div class="alert alert-danger" th:if="${amenagement.certificatSignatureStatus.name().equals('REFUSED')}">
-                            Statut Esup-Signature : Refusé par l’administration
-                        </div>
-                        <div class="alert alert-success" th:if="${amenagement.certificatSignatureStatus.name().equals('COMPLETED')}">
-                            Statut Esup-Signature : Validé par l’administration
-                        </div>
-                        <div class="alert alert-primary" th:if="${amenagement.certificatSignatureStatus.name().equals('DOWNLOADED')}">
-                            Statut Esup-Signature : Certificat récupéré
-                        </div>
-                    </th:block>
-                    <div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" class="alert alert-danger">
-                        Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
-                        <span th:text="${amenagement.motifRefus}"></span>
-                    </div>
-                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/dossiers/{dossierId}/amenagements/{amenagementId}/get-avis?disposition=inline#toolbar=0&navpanes=0&scrollbar=0&zoom=100(dossierId=${currentDossier.id}, amenagementId=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
-                    <embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
-                </th:block>
-                <div th:if="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}" class="alert alert-danger">
-                    Cet aménagement est expiré. Date de fin <span th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span>
-                </div>
-                <div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).SUPPRIME)}" class="alert alert-danger">
-                    Cet aménagement est supprimé
-                </div>
-            </div>
+				</a>
+			</div>
+		</div>
+		<div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+		<div th:replace="~{fragments/tabs-content :: tabs-content(active='amenagements')}"></div>
+		<div class="agape-tab-content bg-white p-3">
+			<h4>Aménagement du <span th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy')}"></span></h4>
+			<hr>
+			<div class="col-12 text-center" style="height: 90%">
+				<th:block
+						th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
+					<th:block th:if="${amenagement.avisSignatureStatus != null}">
+						<div class="alert alert-warning"
+						     th:if="${amenagement.avisSignatureStatus.name().equals('PENDING')}">
+							Statut Esup-Signature : En cours de signature par le médecin
+						</div>
+						<div class="alert alert-danger"
+						     th:if="${amenagement.avisSignatureStatus.name().equals('REFUSED')}">
+							Statut Esup-Signature : Refusé par le médecin
+						</div>
+						<div class="alert alert-success"
+						     th:if="${amenagement.avisSignatureStatus.name().equals('COMPLETED')}">
+							Statut Esup-Signature : Avis signé par le médecin
+						</div>
+						<div class="alert alert-primary"
+						     th:if="${amenagement.avisSignatureStatus.name().equals('DOWNLOADED')}">
+							Statut Esup-Signature : Avis signé par le médecin et transmis à l’administration
+						</div>
+						<div class="alert alert-danger"
+						     th:if="${amenagement.avisSignatureStatus.name().equals('DELETED') || amenagement.avisSignatureStatus.name().equals('FULLY_DELETED') }">
+							Statut Esup-Signature : Avis supprimé dans Esup-signature
+						</div>
+					</th:block>
+					<th:block th:if="${amenagement.certificatSignatureStatus != null}">
+						<div class="alert alert-warning"
+						     th:if="${amenagement.certificatSignatureStatus.name().equals('PENDING')}">
+							Statut Esup-Signature : En cours de signature par l’administration
+						</div>
+						<div class="alert alert-danger"
+						     th:if="${amenagement.certificatSignatureStatus.name().equals('REFUSED')}">
+							Statut Esup-Signature : Refusé par l’administration
+						</div>
+						<div class="alert alert-success"
+						     th:if="${amenagement.certificatSignatureStatus.name().equals('COMPLETED')}">
+							Statut Esup-Signature : Validé par l’administration
+						</div>
+						<div class="alert alert-primary"
+						     th:if="${amenagement.certificatSignatureStatus.name().equals('DOWNLOADED')}">
+							Statut Esup-Signature : Certificat récupéré
+						</div>
+						<div class="alert alert-danger"
+						     th:if="${amenagement.certificatSignatureStatus.name().equals('DELETED') || amenagement.certificatSignatureStatus.name().equals('FULLY_DELETED') }">
+							Statut Esup-Signature : Certificat supprimé dans Esup-signature
+						</div>
+					</th:block>
+					<div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}"
+					     class="alert alert-danger">
+						Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le
+						motif suivant : <br>
+						<span th:text="${amenagement.motifRefus}"></span>
+					</div>
+					<!--                    <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/dossiers/{dossierId}/amenagements/{amenagementId}/get-avis?disposition=inline#toolbar=0&navpanes=0&scrollbar=0&zoom=100(dossierId=${currentDossier.id}, amenagementId=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>-->
+					<!--                    <embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>-->
+					<th:block th:unless = "${amenagement.certificatSignatureStatus == null || amenagement.certificatSignatureStatus.equals(T(org.esupportail.esupagape.entity.enums.SignatureStatus).DELETED) || amenagement.certificatSignatureStatus.equals(T(org.esupportail.esupagape.entity.enums.SignatureStatus).FULLY_DELETED)}">
+						<embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).ENVOYE) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/dossiers/{dossierId}/amenagements/{amenagementId}/get-avis?disposition=inline#toolbar=0&navpanes=0&scrollbar=0&zoom=100(dossierId=${currentDossier.id}, amenagementId=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
+					</th:block>
+					<embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
+				</th:block>
+				<div th:if="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}"
+				     class="alert alert-danger">
+					Cet aménagement est expiré. Date de fin <span
+						th:text="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}"></span>
+				</div>
+				<div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).SUPPRIME)}"
+				     class="alert alert-danger">
+					Cet aménagement est supprimé
+				</div>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 </main>
 
 <footer th:replace="~{fragments/footer :: black}"></footer>
