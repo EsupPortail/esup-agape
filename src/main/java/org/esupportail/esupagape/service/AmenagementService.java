@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -483,7 +482,7 @@ public class AmenagementService {
     private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model, boolean withSign) throws IOException {
         byte[] savedPdf;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PDDocument modelDocument = Loader.loadPDF(model);
+        PDDocument modelDocument = PDDocument.load(model);
         PDAcroForm pdAcroForm = modelDocument.getDocumentCatalog().getAcroForm();
         byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
         PDFont pdFont = PDTrueTypeFont.load(modelDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
@@ -495,7 +494,7 @@ public class AmenagementService {
         modelDocument.close();
         savedPdf = out.toByteArray();
         for(String fieldName : fieldsNames) {
-            PDDocument toFillDocument = Loader.loadPDF(savedPdf);
+            PDDocument toFillDocument = PDDocument.load(savedPdf);
             PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
             if(pdField != null) {
                 if(pdField instanceof PDSignatureField) {
@@ -514,7 +513,7 @@ public class AmenagementService {
                 savedPdf = out.toByteArray();
             }
         }
-        PDDocument finishedDocument = Loader.loadPDF(savedPdf);
+        PDDocument finishedDocument = PDDocument.load(savedPdf);
         List<PDField> fields = finishedDocument.getDocumentCatalog().getAcroForm().getFields();
         List<PDField> dates = fields.stream().filter(f -> f.getFullyQualifiedName().equals("administrationDate")).toList();
         List<PDField> cleannedFields = fields.stream().filter(f -> !(f instanceof PDSignatureField) && !f.getFullyQualifiedName().equals("administrationDate")).toList();
@@ -523,7 +522,6 @@ public class AmenagementService {
             for(PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
                 if(pdAnnotationWidget.getPage() == null) {
                     pdAnnotationWidget.setPage(finishedDocument.getPage(0));
-//                    continue toto;
                 }
             }
             finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), false);
