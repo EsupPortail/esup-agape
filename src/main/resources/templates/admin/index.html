@@ -88,7 +88,7 @@
                 </table>
             </div>
         </div>
-        <div class="card col-lg-10 mx-auto" th:if="${@environment.getActiveProfiles()[0] == 'dev'}">
+        <div class="card col-lg-10 mx-auto" th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">
             <div class="card-body">
                 <form th:action="@{/admin/su-login}" method="POST" class="form-signin">
                     <h5 class="text-center"><b>Changer d’utilisateur</b></h5>

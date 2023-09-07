@@ -2,7 +2,9 @@ package org.esupportail.esupagape.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -12,6 +14,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.encoding.WinAnsiEncoding;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
@@ -39,7 +42,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -481,7 +483,7 @@ public class AmenagementService {
     private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model, boolean withSign) throws IOException {
         byte[] savedPdf;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PDDocument modelDocument = PDDocument.load(model);
+        PDDocument modelDocument = Loader.loadPDF(model);
         PDAcroForm pdAcroForm = modelDocument.getDocumentCatalog().getAcroForm();
         byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
         PDFont pdFont = PDTrueTypeFont.load(modelDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
@@ -493,7 +495,7 @@ public class AmenagementService {
         modelDocument.close();
         savedPdf = out.toByteArray();
         for(String fieldName : fieldsNames) {
-            PDDocument toFillDocument = PDDocument.load(savedPdf);
+            PDDocument toFillDocument = Loader.loadPDF(savedPdf);
             PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
             if(pdField != null) {
                 if(pdField instanceof PDSignatureField) {
@@ -512,8 +514,24 @@ public class AmenagementService {
                 savedPdf = out.toByteArray();
             }
         }
-        PDDocument finishedDocument = PDDocument.load(savedPdf);
-        finishedDocument.getDocumentCatalog().getAcroForm().flatten(finishedDocument.getDocumentCatalog().getAcroForm().getFields().stream().filter(f -> !(f instanceof PDSignatureField)).collect(Collectors.toList()), true);
+        PDDocument finishedDocument = Loader.loadPDF(savedPdf);
+        List<PDField> fields = finishedDocument.getDocumentCatalog().getAcroForm().getFields();
+        List<PDField> dates = fields.stream().filter(f -> f.getFullyQualifiedName().equals("administrationDate")).toList();
+        List<PDField> cleannedFields = fields.stream().filter(f -> !(f instanceof PDSignatureField) && !f.getFullyQualifiedName().equals("administrationDate")).toList();
+        toto:
+        for(PDField field : cleannedFields) {
+            for(PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
+                if(pdAnnotationWidget.getPage() == null) {
+                    pdAnnotationWidget.setPage(finishedDocument.getPage(0));
+//                    continue toto;
+                }
+            }
+            finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), true);
+        }
+
+        if(!dates.isEmpty()) {
+            finishedDocument.getDocumentCatalog().getAcroForm().getFields().add(dates.get(0));
+        }
         out = new ByteArrayOutputStream();
         finishedDocument.save(out);
         finishedDocument.close();
