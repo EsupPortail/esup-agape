@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ScolariteService {
+
     private static final Logger logger = LoggerFactory.getLogger(ScolariteService.class);
+
     private  ScolariteRepository scolariteRepository;
+
     private final UtilsService utilsService;
 
     public ScolariteService(ScolariteRepository scolariteRepository, UtilsService utilsService) {

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @Controller
 @RequestMapping("/admin")
@@ -55,7 +56,7 @@ public class AdminController {
     }
 
     @GetMapping("/import-individus")
-    public String forceSync(RedirectAttributes redirectAttributes) throws AgapeException {
+    public String forceSync(RedirectAttributes redirectAttributes) throws AgapeException, SQLException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'import est terminé"));
         individuService.importIndividus();
         return "redirect:/admin";

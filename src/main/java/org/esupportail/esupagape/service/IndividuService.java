@@ -32,6 +32,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.Month;
@@ -87,7 +88,7 @@ public class IndividuService {
     }
 
     @Transactional
-    public void importIndividus() throws AgapeException {
+    public void importIndividus() throws AgapeException, SQLException {
         logger.info("Import individus started");
         List<Individu> individus = individuRepository.findAll();
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
