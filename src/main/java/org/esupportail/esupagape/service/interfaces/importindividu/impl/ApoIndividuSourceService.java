@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     }
 
     @Override
-    public List<Individu> getAllIndividuNums() throws AgapeException {
+    public List<Individu> getAllIndividuNums() throws AgapeException, SQLException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<Individu> numEtus = new ArrayList<>();
         String sqlRequest = 
@@ -107,8 +108,9 @@ public class ApoIndividuSourceService implements IndividuSourceService {
                 "    AND ins_adm_etp.eta_pmt_iae = 'P' " +
                 "    AND ins_adm_etp.tem_iae_prm = 'O'" +
                 "    AND ins_adm_etp.cod_cge not in ('NM1')";
+        Connection connection = null;
         try {
-            Connection connection = dataSource.getConnection();
+            connection = dataSource.getConnection();
             new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
                 numEtus.add(new Individu(rs.getString("cod_etu"), rs.getString("lib_nom_pat_ind"), rs.getString("lib_pr1_ind"), rs.getString("cod_sex_etu"), LocalDate.parse(rs.getString("date_nai_ind"), dateTimeFormatter)));
                 while (rs.next()) {
@@ -118,6 +120,10 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             connection.close();
         } catch (Exception e) {
             throw new AgapeException(e.getMessage(), e);
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
         }
         return numEtus;
     }

@@ -11,6 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+
 @EnableScheduling
 @Service
 public class SchedulerService {
@@ -33,7 +35,7 @@ public class SchedulerService {
     }
 
     @Scheduled(cron="00 02 02 * * *")
-    public void importIndividus() throws AgapeException {
+    public void importIndividus() throws AgapeException, SQLException {
         if(applicationProperties.getEnableSchedulerIndividu()) {
             logger.info("Synchro individus");
             individuService.importIndividus();
