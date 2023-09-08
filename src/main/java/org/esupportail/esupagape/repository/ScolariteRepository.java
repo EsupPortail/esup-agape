@@ -27,6 +27,7 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' ")
     Page<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
                                                  @Param("yearFilter") Integer yearFilter,
+                                                 @Param("codComposante") String codComposante,
                                                  Pageable pageable);
 
 }

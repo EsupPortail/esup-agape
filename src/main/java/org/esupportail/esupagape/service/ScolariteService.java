@@ -25,7 +25,8 @@ public class ScolariteService {
         return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, Pageable pageable) {
-        return scolariteRepository.findByIndividuNameScol(fullTextSearch, utilsService.getCurrentYear(), pageable);
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, String codComposante, Pageable pageable) {
+        return scolariteRepository.findByIndividuNameScol(fullTextSearch, utilsService.getCurrentYear(), codComposante,  pageable);
     }
+
 }
