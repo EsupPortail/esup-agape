@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ScolariteService {
+
     private static final Logger logger = LoggerFactory.getLogger(ScolariteService.class);
+
     private  ScolariteRepository scolariteRepository;
+
     private final UtilsService utilsService;
 
     public ScolariteService(ScolariteRepository scolariteRepository, UtilsService utilsService) {
@@ -25,7 +28,8 @@ public class ScolariteService {
         return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, Pageable pageable) {
-        return scolariteRepository.findByIndividuNameScol(fullTextSearch, utilsService.getCurrentYear(), pageable);
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, String codComposante, Pageable pageable) {
+        return scolariteRepository.findByIndividuNameScol(fullTextSearch, utilsService.getCurrentYear(), codComposante,  pageable);
     }
+
 }

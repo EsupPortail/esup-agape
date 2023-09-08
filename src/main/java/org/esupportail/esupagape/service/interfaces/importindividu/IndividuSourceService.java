@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.exception.AgapeException;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface IndividuSourceService {
     Individu getIndividuByNumEtu(String numEtu);
     Individu getIndividuByCodeIne(String codeIne);
     Individu getIndividuByProperties(String name, String firstName, LocalDate dateOfBirth);
-    List<Individu> getAllIndividuNums() throws AgapeException;
+    List<Individu> getAllIndividuNums() throws AgapeException, SQLException;
     Map<String, Classification> getClassificationMap();
 
 }

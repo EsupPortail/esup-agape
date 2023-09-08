@@ -1,9 +1,11 @@
 package org.esupportail.esupagape.web.controller.scolarite;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,34 +42,43 @@ public class AmenagementScolariteController {
     //TOTO création d'un service OUService
     private final LdapPersonService ldapPersonService;
 
-    public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementRepository amenagementRepository, ScolariteService scolariteService1, LdapPersonService ldapPersonService) {
+    private final ApplicationProperties applicationProperties;
+
+
+    public AmenagementScolariteController(AmenagementService amenagementService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementRepository amenagementRepository, LdapPersonService ldapPersonService, ApplicationProperties applicationProperties) {
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.scolariteService = scolariteService;
         this.ldapPersonService = ldapPersonService;
+        this.applicationProperties = applicationProperties;
     }
 
     @GetMapping
     public String list(@RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) String fullTextSearch,
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
+                       @RequestParam(required = false) String codComposante,
                        @PageableDefault(size = 10,
                                sort = "createDate",
-                               direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest httpServletRequest, PersonLdap personLdap, Model model) {
+                               direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest httpServletRequest, PersonLdap personLdap, Model model) throws AgapeException {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
         //TOTO Champ de recherche + prefix supannref id configurable
 
+
         OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
         List<String> codComposantes = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith("{APOGEE}")).toList();
         if (!codComposantes.isEmpty()) {
             Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposantes.get(0).split("}")[1], utilsService.getCurrentYear(), pageable);
+            if (StringUtils.hasText(fullTextSearch)) {
+                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, codComposante, pageable);
+            }
             model.addAttribute("amenagements", amenagements);
             model.addAttribute("codComposante", codComposantes.get(0).split("}")[1]);
         } else {
-            if(httpServletRequest.isUserInRole("ROLE_ADMIN")) {
+            if (httpServletRequest.isUserInRole("ROLE_ADMIN")) {
                 model.addAttribute("amenagements", scolariteService.getFullTextSearchScol(statusAmenagement, null, utilsService.getCurrentYear(), pageable));
             } else {
                 model.addAttribute("amenagements", new PageImpl<>(new ArrayList<>()));

@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.service.datasource;
 
-import com.zaxxer.hikari.HikariDataSource;
+import oracle.jdbc.datasource.impl.OracleDataSource;
 import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
@@ -25,7 +25,8 @@ public class IndividuDataSourceService {
 
     public DataSource getDataSourceByName(String name) {
         logger.info("initialize db " + name + " with driver " + individuSourceProperties.getDataSources().get(name).getDriverClassName());
-        return individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        DataSource dataSource = individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().type(OracleDataSource.class).build();
+        return dataSource;
     }
 
     public JdbcTemplate getJdbcTemplateByName(String name) {
