@@ -28,8 +28,8 @@ public class ScolariteService {
         return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, String codComposante, Pageable pageable) {
-        return scolariteRepository.findByIndividuNameScol(fullTextSearch, utilsService.getCurrentYear(), codComposante,  pageable);
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, String codComposante, Pageable pageable) {
+        return scolariteRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposante,  pageable);
     }
 
 }

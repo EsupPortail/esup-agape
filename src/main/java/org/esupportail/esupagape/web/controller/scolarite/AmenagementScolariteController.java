@@ -58,7 +58,7 @@ public class AmenagementScolariteController {
     public String list(@RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) String fullTextSearch,
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
-                       @RequestParam(required = false) String codComposante,
+                       //@RequestParam(required = false) String codComposante,
                        @PageableDefault(size = 10,
                                sort = "createDate",
                                direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest httpServletRequest, PersonLdap personLdap, Model model) throws AgapeException {
@@ -73,7 +73,7 @@ public class AmenagementScolariteController {
         if (!codComposantes.isEmpty()) {
             Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposantes.get(0).split("}")[1], utilsService.getCurrentYear(), pageable);
             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, codComposante, pageable);
+                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposantes.get(0).split("}")[1], pageable);
             }
             model.addAttribute("amenagements", amenagements);
             model.addAttribute("codComposante", codComposantes.get(0).split("}")[1]);
