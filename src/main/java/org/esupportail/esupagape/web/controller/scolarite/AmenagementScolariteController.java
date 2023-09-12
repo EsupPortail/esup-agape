@@ -57,7 +57,7 @@ public class AmenagementScolariteController {
         if (codComposante != null) {
             Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear(), pageable);
             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, statusAmenagement, codComposante, pageable);
+                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante, pageable);
             }
             model.addAttribute("amenagements", amenagements);
             model.addAttribute("codComposante", codComposante);
