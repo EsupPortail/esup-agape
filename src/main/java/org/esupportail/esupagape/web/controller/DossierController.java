@@ -15,9 +15,7 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.*;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,8 +73,8 @@ public class DossierController {
             model.addAttribute("mails", String.join("\n", dossierService.filteredEmails(dossierFilter)));
             model.addAttribute("dossierFilter", dossierFilter);
         } else {
-            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").and(Sort.by("firstName")).and(Sort.by("year").descending()));
-            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, newPageable));
+//            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name").and(Sort.by("firstName")).and(Sort.by("year").descending()));
+            model.addAttribute("dossiers", dossierService.getFullTextSearch(fullTextSearch, typeIndividu, statusDossier, statusDossierAmenagement, yearFilter, pageable));
         }
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("years", utilsService.getYears());

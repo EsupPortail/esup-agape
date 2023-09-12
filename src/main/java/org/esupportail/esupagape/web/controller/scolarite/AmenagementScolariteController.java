@@ -1,12 +1,17 @@
 package org.esupportail.esupagape.web.controller.scolarite;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.repository.AmenagementRepository;
+import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
+import org.esupportail.esupagape.service.ldap.LdapPersonService;
+import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/scolarite/amenagements")
