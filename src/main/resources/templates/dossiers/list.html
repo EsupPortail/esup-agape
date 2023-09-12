@@ -77,18 +77,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle"
-                        th:classappend="${
-                            dossierIndividuDto.statusDossier.name() == 'SUIVI' ? 'table-success' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'IMPORTE' ? 'table-primary' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'AJOUT_MANUEL' ? 'table-info' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'ACCUEILLI' ? 'table-warning' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'IMPOSSIBLE_A_CONTACTER' ? 'table-danger' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'RECU_PAR_LA_MEDECINE_PREVENTIVE' ? 'table-light' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'RECONDUIT' ? 'table-light' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'NON_RECONDUIT' ? 'table-secondary' : ''
-                            + dossierIndividuDto.statusDossier.name() == 'ANONYMOUS' ? 'table-default' : ''
-                            }">
+                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle" th:style="'--bs-table-bg: ' + ${dossierIndividuDto.statusDossier.backgroundColor} + ' !important'">
                             <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
                             <td class="text-center"><input class="fusion-checkbox form-check-input" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
                             <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
@@ -101,17 +90,7 @@
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
 <!--                            <td th:utext="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier}}">-->
                             <td>
-                            <th:block th:if="${dossierIndividuDto.statusDossier != null}" th:switch="${dossierIndividuDto.statusDossier}">
-                                <span th:case="${dossierIndividuDto.statusDossier.SUIVI}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.SUIVI}}" class="badge text-bg-success"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.IMPORTE}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPORTE}}" class="badge text-bg-import"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.AJOUT_MANUEL}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.AJOUT_MANUEL}}" class="badge text-bg-info"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.ACCUEILLI}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ACCUEILLI}}" class="badge text-bg-warning"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.IMPOSSIBLE_A_CONTACTER}}" class="badge text-bg-danger"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE}}" class="badge text-bg-primary"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.RECONDUIT}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.RECONDUIT}}" class="badge text-bg-primary"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.NON_RECONDUIT}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.NON_RECONDUIT}}" class="badge text-bg-dark"></span>
-                                <span th:case="${dossierIndividuDto.statusDossier.ANONYMOUS}" th:text="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier.ANONYMOUS}}" class="badge text-bg-dark"></span>
-                            </th:block>
+                                <span th:text="#{'dossier.statusDossier.' + ${dossierIndividuDto.statusDossier}}" class="badge" th:style="'background-color: ' + ${dossierIndividuDto.statusDossier.badgeColor} + ' !important'"></span>
                             </td>
                             <td th:if="${dossierIndividuDto.statusDossier == null}">
                                 <span><i class="fa fa-warning"></i></span></td>
