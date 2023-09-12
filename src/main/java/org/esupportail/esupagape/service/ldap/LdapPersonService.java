@@ -2,8 +2,6 @@ package org.esupportail.esupagape.service.ldap;
 
 import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.exception.AgapeException;
-import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.repository.ldap.OrganizationalUnitLdapRepository;
 import org.esupportail.esupagape.repository.ldap.PersonLdapRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,13 +26,10 @@ public class LdapPersonService {
 
     private final PersonLdapRepository personLdapRepository;
 
-    private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
-
-    public LdapPersonService(LdapProperties ldapProperties, LdapTemplate ldapTemplate, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
+    public LdapPersonService(LdapProperties ldapProperties, LdapTemplate ldapTemplate, PersonLdapRepository personLdapRepository) {
         this.ldapProperties = ldapProperties;
         this.ldapTemplate = ldapTemplate;
         this.personLdapRepository = personLdapRepository;
-        this.organizationalUnitLdapRepository = organizationalUnitLdapRepository;
     }
 
     public List<PersonLdap> search(String searchString) {
@@ -77,24 +72,6 @@ public class LdapPersonService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String dateOfBirthString = dateOfBirth.format(dateTimeFormatter);
         return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
-    }
-
-    public OrganizationalUnitLdap getOrganizationalUnitLdap(String supannCodeEntite) throws AgapeJpaException {
-        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannCodeEntite(supannCodeEntite);
-        if(organizationalUnitLdaps.size() > 0) {
-            return organizationalUnitLdaps.get(0);
-        } else {
-            throw new AgapeJpaException(supannCodeEntite + " not fount in OU");
-        }
-    }
-
-    public OrganizationalUnitLdap getEtablissement(String supannEtablissement) {
-        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefIdAndSupannTypeEntite(supannEtablissement, "Etablissement");
-        if(organizationalUnitLdaps.size() > 0) {
-            return organizationalUnitLdaps.get(0);
-        } else {
-            return null;
-        }
     }
 
 }

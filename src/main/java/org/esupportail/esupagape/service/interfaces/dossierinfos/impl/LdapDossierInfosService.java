@@ -4,6 +4,7 @@ import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
+import org.esupportail.esupagape.service.ldap.LdapOrganizationalUnitService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
 import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -24,10 +25,13 @@ public class LdapDossierInfosService implements DossierInfosService {
 
     private final LdapPersonService ldapPersonService;
 
+    private final LdapOrganizationalUnitService ldapOrganizationalUnitService;
+
     private final SiseService siseService;
 
-    public LdapDossierInfosService(LdapPersonService ldapPersonService, SiseService siseService) {
+    public LdapDossierInfosService(LdapPersonService ldapPersonService, LdapOrganizationalUnitService ldapOrganizationalUnitService, SiseService siseService) {
         this.ldapPersonService = ldapPersonService;
+        this.ldapOrganizationalUnitService = ldapOrganizationalUnitService;
         this.siseService = siseService;
     }
 
@@ -39,14 +43,14 @@ public class LdapDossierInfosService implements DossierInfosService {
                 PersonLdap personLdap = personLdaps.get(0);
                 try {
                     if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
-                        OrganizationalUnitLdap organizationalUnitLdap = ldapPersonService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
+                        OrganizationalUnitLdap organizationalUnitLdap = ldapOrganizationalUnitService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
                         dossierInfos.setCodComposante(organizationalUnitLdap.getSupannCodeEntite());
                         dossierInfos.setComposante(organizationalUnitLdap.getDescription());
                         dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
                     }
-                    OrganizationalUnitLdap organizationalUnitLdapEtab = ldapPersonService.getEtablissement(personLdap.getSupannEtablissement());
+                    OrganizationalUnitLdap organizationalUnitLdapEtab = ldapOrganizationalUnitService.getEtablissement(personLdap.getSupannEtablissement());
                     if(organizationalUnitLdapEtab != null) {
-                        dossierInfos.setEtablissement(ldapPersonService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
+                        dossierInfos.setEtablissement(ldapOrganizationalUnitService.getEtablissement(personLdap.getSupannEtablissement()).getDescription());
                     }
                     if(StringUtils.hasText(personLdap.getSupannEtuDiplome())) {
                         String code = personLdap.getSupannEtuDiplome().substring(personLdap.getSupannEtuDiplome().lastIndexOf("}") + 1);
