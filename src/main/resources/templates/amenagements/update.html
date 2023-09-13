@@ -166,7 +166,7 @@
 							<a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
 							   th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis?disposition=inline(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
 							   class="btn btn-primary" title="Afficher l'avis médical">
-								<i class="fa-solid fa-eye"></i>
+								<i class="fa-solid fa-lg fa-eye"></i>
 							</a>
 							<button id="submit-btn" type="submit" title="Enregistrer" class="btn btn-success"
 							        th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
