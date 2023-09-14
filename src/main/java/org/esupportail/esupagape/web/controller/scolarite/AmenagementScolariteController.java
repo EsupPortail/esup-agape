@@ -1,10 +1,12 @@
 package org.esupportail.esupagape.web.controller.scolarite;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
@@ -15,13 +17,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Controller
@@ -35,12 +38,14 @@ public class AmenagementScolariteController {
     private final DossierService dossierService;
 
     private final ScolariteService scolariteService;
+    private final AmenagementService amenagementService;
 
-    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService) {
+    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService) {
         this.userService = userService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.scolariteService = scolariteService;
+        this.amenagementService = amenagementService;
     }
 
     @GetMapping
@@ -90,6 +95,21 @@ public class AmenagementScolariteController {
         model.addAttribute("dossiers", dossier);
         model.addAttribute("amenagement", amenagement);
         return "scolarite/amenagements/show";
+    }
+
+    @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        if(type != null && type.equals("download")) {
+            httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"certificat_" + amenagementId + ".pdf\"");
+        } else {
+            httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_" + amenagementId + ".pdf\"");
+        }
+        amenagementService.getCertificat(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
