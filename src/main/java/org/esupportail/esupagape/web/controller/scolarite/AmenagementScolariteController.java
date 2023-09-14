@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
@@ -26,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/scolarite/amenagements")
@@ -90,12 +94,24 @@ public class AmenagementScolariteController {
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(Amenagement amenagement, Dossier dossier, Model model) {
+    public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
         setModel(model);
-        model.addAttribute("dossiers", dossier);
+        Amenagement amenagement = amenagementService.getById(amenagementId);
         model.addAttribute("amenagement", amenagement);
+        List<Dossier> dossiers = dossierService.getAllByIndividu(amenagement.getDossier().getIndividu().getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
+        model.addAttribute("dossiers", dossiers);
+        model.addAttribute("currentForm", dossierService.getInfos(amenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
+        model.addAttribute("lastDossier", dossiers.get(0));
+        Dossier dossier;
+        try {
+            dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+        } catch (AgapeJpaException e) {
+            dossier = null;
+        }
+        model.addAttribute("currentDossier", dossier);
         return "scolarite/amenagements/show";
     }
+
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
