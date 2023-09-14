@@ -27,7 +27,7 @@
 		<div class="col-12">
 			<div class="float-buttons">
 				<a style="padding: 0"
-				   th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) ||amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+				   th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
 				   th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis?disposition=attachment(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
 				   class="btn btn-primary" title="Télécharger l'avis médical">
                     <span class="fa-stack">
