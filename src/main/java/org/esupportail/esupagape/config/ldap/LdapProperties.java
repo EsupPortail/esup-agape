@@ -18,6 +18,7 @@ public class LdapProperties {
     private String membersOfGroupSearchFilter;
     private String memberSearchFilter;
     private String userIdSearchFilter;
+    private String affectationPrincipaleRefIdPrefix;
 
     private Map<String, String> mappingFiltersGroups = new HashMap<>();
 
@@ -107,5 +108,13 @@ public class LdapProperties {
 
     public void setMappingFiltersGroups(Map<String, String> mappingFiltersGroups) {
         this.mappingFiltersGroups = mappingFiltersGroups;
+    }
+
+    public String getAffectationPrincipaleRefIdPrefix() {
+        return affectationPrincipaleRefIdPrefix;
+    }
+
+    public void setAffectationPrincipaleRefIdPrefix(String affectationPrincipaleRefIdPrefix) {
+        this.affectationPrincipaleRefIdPrefix = affectationPrincipaleRefIdPrefix;
     }
 }

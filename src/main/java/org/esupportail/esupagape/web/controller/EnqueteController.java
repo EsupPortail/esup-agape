@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EnqueteService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,9 +31,9 @@ public class EnqueteController {
     }
 
     @GetMapping
-    public String show(@PathVariable Long dossierId, Model model) {
+    public String show(@PathVariable Long dossierId, PersonLdap personLdap, Model model) {
         setModel(model);
-        Enquete enquete = enqueteService.getAndUpdateByDossierId(dossierId);
+        Enquete enquete = enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
         model.addAttribute("enquete", enquete);
         return "enquete/update";
     }

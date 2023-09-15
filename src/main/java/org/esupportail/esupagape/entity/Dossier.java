@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(
-        uniqueConstraints={@UniqueConstraint(columnNames = {"individu_id", "year"})}
-)
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"individu_id", "year"})})
 public class Dossier {
 
     @Id

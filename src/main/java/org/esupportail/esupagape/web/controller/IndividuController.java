@@ -8,6 +8,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ public class IndividuController {
                          @Valid Individu individu,
                          BindingResult bindingResult,
                          Model model,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes, PersonLdap personLdap) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
             model.addAttribute("individu", new Individu());
@@ -68,7 +69,7 @@ public class IndividuController {
             return "individus/create";
         }
         try {
-            Individu individuOk = individuService.create(individu, typeIndividu, force);
+            Individu individuOk = individuService.create(personLdap, individu, typeIndividu, force);
             logger.info("Nouvel étudiant" + individuOk.getId());
             return "redirect:/individus/" + individuOk.getId() + "/redirect";
         } catch (AgapeRuntimeException e) {
@@ -79,12 +80,12 @@ public class IndividuController {
 
     @PostMapping("/create-by-numetu")
     public String create(@RequestParam(required = false) String force,
-                         String numEtu,
+                         String numEtu, PersonLdap personLdap,
                          RedirectAttributes redirectAttributes) {
         try {
             Individu individu = new Individu();
             individu.setNumEtu(numEtu);
-            Individu individuOk = individuService.create(individu, null, force);
+            Individu individuOk = individuService.create(personLdap, individu, null, force);
             if(individuOk != null) {
                 logger.info("Nouvel étudiant" + individuOk.getId());
                 return "redirect:/individus/" + individuOk.getId() + "/redirect";

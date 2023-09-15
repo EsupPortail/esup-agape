@@ -60,7 +60,13 @@ public class EnqueteService {
     }
 
     @Transactional
-    public void create(Enquete enquete) {
+    public void create(Enquete enquete, String eppn) {
+        if(enquete.getDossier().getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
+            ||
+            enquete.getDossier().getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            dossierService.changeStatutDossier(enquete.getDossier().getId(), StatusDossier.SUIVI, eppn);
+
+        }
         enqueteRepository.save(enquete);
     }
 
@@ -179,17 +185,22 @@ public class EnqueteService {
         enqueteToUpdate.setDossier(dossierService.getById(dossierId));
     }
 
-    private Enquete createByDossierId(Long id) {
+    private Enquete createByDossierId(Long id, String eppn) {
         Enquete enquete = new Enquete();
         Dossier dossier = dossierService.getById(id);
         enquete.setDossier(dossier);
+        if(dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
+                ||
+                dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            dossierService.changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
+        }
         return enqueteRepository.save(enquete);
     }
 
     @Transactional
-    public Enquete getAndUpdateByDossierId(Long id) {
+    public Enquete getAndUpdateByDossierId(Long id, String eppn) {
         Dossier dossier = dossierService.getById(id);
-        Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id));
+        Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id, eppn));
         if (dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
             if (dossier.getIndividu().getGender() != null) {

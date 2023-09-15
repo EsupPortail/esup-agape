@@ -189,7 +189,7 @@ public class AmenagementService {
             throw new AgapeException("Impossible de créer l'aménagement sans date de fin");
         }
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-            dossier.setStatusDossier(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE);
+            dossierService.changeStatutDossier(idDossier, StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE, personLdap.getEduPersonPrincipalName());
         }
 
         amenagement.setDossier(dossier);
@@ -424,7 +424,7 @@ public class AmenagementService {
     @Transactional
     public void getAvis(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
         Amenagement amenagement = getById(id);
-        if(!(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) || amenagement.getStatusAmenagement().equals(StatusAmenagement.REFUSE_ADMINISTRATION))) {
+        if(!(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN) || amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) || amenagement.getStatusAmenagement().equals(StatusAmenagement.REFUSE_ADMINISTRATION))) {
             throw new AgapeException("L'avis ne peut pas être émis");
         }
         byte[] avis;
@@ -469,7 +469,9 @@ public class AmenagementService {
         certificatPdf.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
         certificatPdf.setAutresTempsMajores(amenagement.getAutresTempsMajores());
         certificatPdf.setAmenagementText(amenagementsWithNumbers.toString());
-        certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        if (amenagement.getValideMedecinDate() != null) {
+            certificatPdf.setValideMedecinDate(amenagement.getValideMedecinDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        }
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) && typeWorkflow.equals(TypeWorkflow.CERTIFICAT)) {
             certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -576,10 +578,10 @@ public class AmenagementService {
         try {
             currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
             if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-                currentDossier.setStatusDossier(StatusDossier.RECONDUIT);
+                dossierService.changeStatutDossier(id, StatusDossier.RECONDUIT, personLdap.getEduPersonPrincipalName());
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
+            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), amenagement.getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         currentDossier.setAmenagementPorte(amenagement);
@@ -594,10 +596,10 @@ public class AmenagementService {
         try {
             currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
             if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-                currentDossier.setStatusDossier(StatusDossier.NON_RECONDUIT);
+                dossierService.changeStatutDossier(id, StatusDossier.NON_RECONDUIT, personLdap.getEduPersonPrincipalName());
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(amenagement.getDossier().getIndividu(), null, StatusDossier.NON_RECONDUIT);
+            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), amenagement.getDossier().getIndividu(), null, StatusDossier.NON_RECONDUIT);
         }
         amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);

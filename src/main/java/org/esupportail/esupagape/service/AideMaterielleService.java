@@ -40,7 +40,7 @@ public class AideMaterielleService {
     }
 
     @Transactional
-    public void create(AideMaterielle aideMaterielle, Long dossierId) {
+    public void create(AideMaterielle aideMaterielle, Long dossierId, String eppn) {
         Dossier dossier = dossierService.getById(dossierId);
         if(dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -49,7 +49,7 @@ public class AideMaterielleService {
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)
             || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
             || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
-            dossier.setStatusDossier(StatusDossier.SUIVI);
+
         }
         aideMaterielleRepository.save(aideMaterielle);
     }

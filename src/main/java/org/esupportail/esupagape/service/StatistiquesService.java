@@ -125,28 +125,28 @@ public class StatistiquesService {
 
     }*/
 
-       public Chart getIndividuLineChart() {
-        List<Integer> years = statistiquesRepository.findDistinctYears().stream()
-                .sorted()
-                .collect(Collectors.toList());
+        public Chart getIndividuLineChart() {
+            List<Integer> years = statistiquesRepository.findDistinctYears().stream()
+                    .sorted()
+                    .collect(Collectors.toList());
 
-        List<String> counts = new ArrayList<>();
-        List<Integer> yAxesTicks = null;
+            List<String> counts = new ArrayList<>();
+            List<Integer> yAxesTicks = null;
 
-        for (Integer year : years) {
-            counts.add(String.valueOf(statistiquesRepository.countFindIndividuByYear(year)));
+            for (Integer year : years) {
+                counts.add(String.valueOf(statistiquesRepository.countFindIndividuByYear(year)));
+            }
+
+            Dataset dataset = new Dataset("Nombre d'individus par année", counts, null, null, 1, 0.1,null);
+            List<String> labels = years.stream().map(String::valueOf).collect(Collectors.toList());
+
+            Options options = new Options();
+            options.beginAtZero = true;
+            options.yAxesTicks = yAxesTicks;
+
+            Data data = new Data(labels, Collections.singletonList(dataset));
+            return new Line(data, options);
+
         }
-
-        Dataset dataset = new Dataset("Nombre d'individus par année", counts, null, null, 1, 0.1,null);
-        List<String> labels = years.stream().map(String::valueOf).collect(Collectors.toList());
-
-        Options options = new Options();
-        options.beginAtZero = true;
-        options.yAxesTicks = yAxesTicks;
-
-        Data data = new Data(labels, Collections.singletonList(dataset));
-        return new Line(data, options);
-
-    }
 
 }

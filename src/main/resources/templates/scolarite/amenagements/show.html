@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
-    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
-    <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
-    <head th:replace="~{fragments/head :: head}"></head>
-    <body>
-        <header th:replace="~{fragments/header :: header}"></header>
-        <main class="d-inline-flex">
-            <div class="agape-content agape-content-side">
-               Amenagement show
-             
-            </div>
-        </main>
-        <footer th:replace="~{fragments/footer :: black}"></footer>
-    </body>
+<!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+<!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+<!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div th:replace="~{fragments/side-administratif :: side}"></div>
+
+	<div class="agape-content agape-content-side">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="javascript:history.back();" class="text-center">Liste des aménagements</a>
+				</li>
+			</ol>
+		</nav>
+		<dl>
+			<dt class="col-sm-2">Formation actuelle</dt>
+			<dd class="col-sm-10" th:text="${currentYear} + '-' + ${currentYear + 1} + ' : ' + ${currentForm}"></dd>
+		</dl>
+		<div class="col-12 text-center" style="height: calc(100vh - 240px);">
+			<th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
+				<embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/scolarite/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
+			</th:block>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
 </html>
