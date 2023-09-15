@@ -13,6 +13,7 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AideHumaineService;
 import org.esupportail.esupagape.service.AideMaterielleService;
 import org.esupportail.esupagape.service.PeriodeAideHumaineService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,23 +62,23 @@ public class AideController {
     }
 
     @PostMapping("/create-aide-materiel")
-    public String createAideMaterielle(@PathVariable Long dossierId, @Valid AideMaterielle aideMaterielle, BindingResult bindingResult, Model model) {
+    public String createAideMaterielle(@PathVariable Long dossierId, @Valid AideMaterielle aideMaterielle, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model);
             return "aides/list";
         }
-        aideMaterielleService.create(aideMaterielle, dossierId);
+        aideMaterielleService.create(aideMaterielle, dossierId, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
 
     @PostMapping("/create-aide-humaine")
-    public String createAideHumaine(@PathVariable Long dossierId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, Model model) {
+    public String createAideHumaine(@PathVariable Long dossierId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model);
             return "aides/list";
         }
-        AideHumaine savedHumaine = aideHumaineService.create(aideHumaine, dossierId);
+        AideHumaine savedHumaine = aideHumaineService.create(aideHumaine, dossierId, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + savedHumaine.getId() + "/update";
     }
 

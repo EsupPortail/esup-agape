@@ -19,14 +19,15 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
-            "where (upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +
+            "where ((upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +
             "or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%'))) " +
-            "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))) " +
-            "and (:yearFilter is null or d.year = :yearFilter) " +
-            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
-            "and a.statusAmenagement = 'VISE_ADMINISTRATION' ")
+            "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%')))) " +
+            "and (d.year = :yearFilter) " +
+            "and (a.dossier.codComposante  = :codComposante) " +
+            "and a.statusAmenagement = :statusAmenagement")
     Page<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
-                                                 @Param("yearFilter") Integer yearFilter,
+                                             StatusAmenagement statusAmenagement,
+                                             @Param("yearFilter") Integer yearFilter,
                                                  @Param("codComposante") String codComposante,
                                                  Pageable pageable);
 

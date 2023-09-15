@@ -17,7 +17,6 @@
                 <li class="breadcrumb-item">
                     <span th:if="${porte}">Aménagements pouvants beneficier d'une portabilitée</span>
                     <span th:if="${!porte}" th:text="'Liste des aménagements ' + ${currentYear}"></span>
-
                 </li>
             </ol>
         </nav>
@@ -88,7 +87,7 @@
                     </form>
                     <table class="table table-striped table-responsive">
                         <thead class="text-center table-dark">
-                            <tr >
+                            <tr>
                                 <th>Année</th>
                                 <th>Composante</th>
                                 <th><a class="sorted link-light" sd:pagination-sort="createDate">Date de création</a> </th>
@@ -101,7 +100,6 @@
                                 <th>Motif du refus</th>
                                 <th>Mail individu</th>
                                 <th>Voir</th>
-
                             </tr>
                         </thead>
                         <tbody>

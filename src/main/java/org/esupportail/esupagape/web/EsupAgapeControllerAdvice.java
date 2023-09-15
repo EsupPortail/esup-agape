@@ -3,6 +3,7 @@ package org.esupportail.esupagape.web;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -55,7 +56,9 @@ public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
     @ModelAttribute
     public void globalAttributes(Model model) {
         model.addAttribute("userName", userService.getUserName());
-        model.addAttribute("personLdap", userService.getPersonLdap());
+        PersonLdap personLdap = userService.getPersonLdap();
+        model.addAttribute("personLdap", personLdap);
+        model.addAttribute("composante", userService.getComposante(personLdap));
         if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("dev")) {
             model.addAttribute("profile", environment.getActiveProfiles()[0]);
         }
