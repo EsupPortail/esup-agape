@@ -29,7 +29,7 @@
                     <dd class="col-sm-7" th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
                     <dt>Statut du dossier</dt>
                     <dd>
-                        <span th:text="#{'dossier.statusDossier.' + ${currentDossier.statusDossier}}" class="badge" th:style="'background-color: ' + ${currentDossier.statusDossier.badgeColor} + ' !important'"></span>
+                        <span th:text="#{'dossier.statusDossier.' + ${currentDossier.statusDossier}}" class="badge" th:style="'background-color: ' + ${currentDossier.statusDossier.badgeColor} + ' !important; color: ' + ${currentDossier.statusDossier.textColor} + ' !important;'"></span>
                     </dd>
                     <dt>Statut aménagement</dt>
                     <dd th:text="${currentDossier.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} : 'Pas d\'aménagement'"></dd>

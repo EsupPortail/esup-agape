@@ -90,7 +90,7 @@
                             <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
 <!--                            <td th:utext="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier}}">-->
                             <td>
-                                <span th:text="#{'dossier.statusDossier.' + ${dossierIndividuDto.statusDossier}}" class="badge" th:style="'background-color: ' + ${dossierIndividuDto.statusDossier.badgeColor} + ' !important'"></span>
+                                <span th:text="#{'dossier.statusDossier.' + ${dossierIndividuDto.statusDossier}}" class="badge"  th:style="'background-color: ' + ${dossierIndividuDto.statusDossier.badgeColor} + ' !important; color: ' + ${dossierIndividuDto.statusDossier.textColor} + ' !important;'"></span>
                             </td>
                             <td th:if="${dossierIndividuDto.statusDossier == null}">
                                 <span><i class="fa fa-warning"></i></span></td>

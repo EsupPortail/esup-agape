@@ -39,9 +39,9 @@
 							</div>
 						</div>
 					</form>
-					<table  class="table table-striped table-responsive">
+					<table class="table table-striped table-responsive">
 						<thead class="text-center table-dark">
-						<tr style="text-align: left">
+						<tr>
 							<th>Composante</th>
 							<th><a class="sorted link-light" sd:pagination-sort="createDate">Date create</a></th>
 							<th><a class="sorted link-light" sd:pagination-sort="endDate">Date fin</a></th>
@@ -53,7 +53,8 @@
 						</tr>
 						</thead>
 						<tbody>
-						<th:block th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" th:each="amenagement : ${amenagements}">
+						<th:block th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+								th:each="amenagement : ${amenagements}">
 							<tr style="text-align: left">
 								<td th:text="${amenagement.dossier.composante}"></td>
 								<td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
@@ -62,12 +63,10 @@
 								<td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
 								<td th:text="${amenagement.nomMedecin}"></td>
 								<td th:text="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)} ? #{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}} : ''"></td>
-								<td>
-									<ul class="list-group list-group-horizontal">
+								<td class="text-center" style="width:100px;">
+									<ul class="list-group list-group-horizontal" style="display: block;">
 										<li class="list-group-item border-0 p-1 bg-transparent">
-											<a class="btn btn-info"
-											   th:href="@{/scolarite/amenagements/{amenagementId}(amenagementId=${amenagement.id})}"
-											   role="button"><i class="fa-solid fa-eye"></i>
+											<a class="btn btn-info" th:href="@{/scolarite/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="fa-solid fa-eye"></i>
 											</a>
 										</li>
 									</ul>
