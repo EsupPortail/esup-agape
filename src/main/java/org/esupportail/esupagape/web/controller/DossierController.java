@@ -13,6 +13,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.*;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Pageable;
@@ -133,16 +134,16 @@ public class DossierController {
 
     @PutMapping("/{dossierId}")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    public String update(@PathVariable Long dossierId, @Valid Dossier dossier) {
-        dossierService.update(dossierId, dossier);
-        enqueteService.getAndUpdateByDossierId(dossierId);
+    public String update(@PathVariable Long dossierId, @Valid Dossier dossier, PersonLdap personLdap) {
+        dossierService.update(dossierId, dossier, personLdap.getEduPersonPrincipalName());
+        enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId;
     }
 
     @PutMapping("/{dossierId}/update-dossier-individu")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    public String update(@PathVariable Long dossierId, @Valid DossierIndividuForm dossierIndividuForm) {
-        dossierService.updateDossierIndividu(dossierId, dossierIndividuForm);
+    public String update(@PathVariable Long dossierId, @Valid DossierIndividuForm dossierIndividuForm, PersonLdap personLdap) {
+        dossierService.updateDossierIndividu(dossierId, dossierIndividuForm, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId;
     }
 

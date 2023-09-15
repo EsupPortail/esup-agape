@@ -38,18 +38,6 @@ public class EntretienService {
     }
 
     @Transactional
-    public void save(Entretien entretien) {
-        Dossier dossier = dossierService.getById(entretien.getDossier().getId());
-        if (dossier.getYear() != utilsService.getCurrentYear()) {
-            throw new AgapeYearException();
-        }
-        if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-            dossier.setStatusDossier(StatusDossier.ACCUEILLI);
-        }
-        entretienRepository.save(entretien);
-    }
-
-    @Transactional
     public void create(Entretien entretien, Long idDossier, PersonLdap personLdap) {
         Dossier dossier = dossierService.getById(idDossier);
         if (dossier.getYear() != utilsService.getCurrentYear()) {
@@ -58,7 +46,7 @@ public class EntretienService {
         entretien.setDossier(dossier);
         entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
-        dossier.setStatusDossier(StatusDossier.ACCUEILLI);
+        dossierService.changeStatutDossier(idDossier, StatusDossier.SUIVI, personLdap.getEduPersonPrincipalName());
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {

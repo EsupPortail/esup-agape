@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.entity.enums;
 
 public enum StatusDossier {
+
     IMPORTE("rgba(125, 125, 218, 1)", "rgba(125, 125, 218, 0.3)"),
     AJOUT_MANUEL("", ""),
     RECU_PAR_LA_MEDECINE_PREVENTIVE("", ""),

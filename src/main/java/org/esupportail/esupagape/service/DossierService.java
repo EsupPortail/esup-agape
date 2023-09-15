@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
@@ -30,9 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -57,22 +57,24 @@ public class DossierService {
 
     private final EntityManager em;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, SyncService syncService, EntityManager em) {
+    private final LogService logService;
+
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, SyncService syncService, EntityManager em, LogService logService) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
         this.syncService = syncService;
         this.em = em;
+        this.logService = logService;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
     }
 
-    public Dossier create(Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
+    public Dossier create(String eppn, Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);
-        dossier.setStatusDossier(statusDossier);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
         } else if (typeIndividu != null) {
@@ -82,7 +84,15 @@ public class DossierService {
         }
         dossierRepository.save(dossier);
         individu.getDossiers().add(dossier);
+        changeStatutDossier(dossier.getId(), statusDossier, eppn);
         return dossier;
+    }
+
+    @Transactional
+    public void changeStatutDossier(Long id, StatusDossier statusDossier, String eppn) {
+        Dossier dossier = getById(id);
+        logService.create(eppn, id, dossier.getStatusDossier().name(), statusDossier.name());
+        dossier.setStatusDossier(statusDossier);
     }
 
     public void deleteDossier(Long id) {
@@ -130,7 +140,7 @@ public class DossierService {
     }
 
     @Transactional
-    public void update(Long id, Dossier dossier) {
+    public void update(Long id, Dossier dossier, String eppn) {
         Dossier dossierToUpdate = getById(id);
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -157,7 +167,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
-        dossierToUpdate.setStatusDossier(StatusDossier.ACCUEILLI);
+        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
     }
 
     public DossierInfos getInfos(Individu individu, Integer year) {
@@ -180,12 +190,12 @@ public class DossierService {
     }
 
     @Transactional
-    public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm) {
+    public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm, String eppn) {
         Dossier dossierToUpdate = getById(id);
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        dossierToUpdate.setStatusDossier(dossierIndividuForm.getStatusDossier());
+        changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
         if (dossierIndividuForm.getType() != null) {
             dossierToUpdate.setType(dossierIndividuForm.getType());
@@ -510,10 +520,10 @@ public class DossierService {
     }
 
     @Transactional
-    public void anonymiseDossiers(Individu individu) {
+    public void anonymiseDossiers(Individu individu, String eppn) {
         List<Dossier> dossiers = dossierRepository.findAllByIndividuId(individu.getId());
         for (Dossier dossier : dossiers) {
-            dossier.setStatusDossier(StatusDossier.ANONYMOUS);
+            changeStatutDossier(dossier.getId(), StatusDossier.ANONYMOUS, eppn);
         }
     }
 
