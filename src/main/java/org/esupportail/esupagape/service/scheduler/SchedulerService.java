@@ -45,25 +45,25 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 120000)
+    @Scheduled(initialDelay = 1, fixedRate = 600000)
     public void syncEsupSignature() throws AgapeException {
         if(applicationProperties.getEnableSchedulerEsupSignature()) {
-            logger.info("Synchro Esup Signature");
+            logger.debug("Synchro Esup Signature");
             amenagementService.syncEsupSignatureAmenagements();
-            logger.info("Synchro Esup Signature terminée");
+            logger.debug("Synchro Esup Signature terminée");
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 120000)
+    @Scheduled(initialDelay = 1, fixedRate = 600000)
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
-            logger.info("Synchro Aménagements");
+            logger.debug("Synchro Aménagements");
             amenagementService.syncAllAmenagements();
-            logger.info("Synchro Aménagements terminée");
+            logger.debug("Synchro Aménagements terminée");
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 300000)
+    @Scheduled(cron="00 02 02 * * *")
     public void anonymiseOldDossiers() {
         if(applicationProperties.getEnableSchedulerAnonymise()) {
             logger.info("Anonymisation des anciens dossiers ");
