@@ -18,10 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Order(1)
@@ -68,7 +65,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
             individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSchacDateOfBirth(), DateTimeFormatter.ofPattern("yyyyMMdd")));
             individuInfos.setAffectation(personLdap.getSupannEntiteAffectationPrincipale());
-            individuInfos.setYear(personLdap.getSupannEtuAnneeInscription());
+            individuInfos.setYear(personLdap.getSupannEtuAnneeInscription().stream().max(Comparator.comparing(Integer::valueOf)).orElse(null));
             try {
                 individuInfos.setPhotoId(ldapPersonService.getPersonLdapAttribute(personLdap.getUid(), applicationProperties.getMappingPhotoIdToLdapField()));
             } catch (AgapeException e) {
