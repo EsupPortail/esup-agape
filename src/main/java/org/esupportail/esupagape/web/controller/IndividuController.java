@@ -87,7 +87,7 @@ public class IndividuController {
             individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(personLdap, individu, null, force);
             if(individuOk != null) {
-                logger.info("Nouvel étudiant" + individuOk.getId());
+                logger.info("Nouvel étudiant " + individuOk.getId());
                 return "redirect:/individus/" + individuOk.getId() + "/redirect";
             } else {
                 redirectAttributes.addFlashAttribute("message", new Message("danger", "Individu non trouvé dans les référentiels"));
