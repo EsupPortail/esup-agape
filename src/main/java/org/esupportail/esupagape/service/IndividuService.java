@@ -195,14 +195,14 @@ public class IndividuService {
                 Dossier dossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
                 syncService.syncDossier(dossier.getId());
             }
-            try {
-                syncService.syncIndividu(individuTestIsExist.getId());
-            } catch (AgapeJpaException e) {
-                throw new RuntimeException(e);
-            }
             return individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(personLdap.getEduPersonPrincipalName(), individu, typeIndividu, force);
+        }
+        try {
+            syncService.syncIndividu(individu.getId());
+        } catch (AgapeJpaException e) {
+            throw new RuntimeException(e);
         }
         return individu;
     }
