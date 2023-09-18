@@ -52,7 +52,7 @@ public final class PersonLdap {
 	private @Attribute(name = "supannCodeINE") String supannCodeINE;
 	private @Attribute(name = "supannEtuId") String supannEtuId;
 	private @Attribute(name = "supannEtuEtape") String supannEtuEtape;
-	private @Attribute(name = "supannEtuAnneeInscription") String supannEtuAnneeInscription;
+	private @Attribute(name = "supannEtuAnneeInscription") List<String> supannEtuAnneeInscription;
 	private @Attribute(name = "supannEtuSecteurDisciplinaire") String supannEtuSecteurDisciplinaire;
 	private @Attribute(name = "supannEtuDiplome") String supannEtuDiplome;
 	private @Attribute(name = "supannEtuTypeDiplome") String supannEtuTypeDiplome;
@@ -386,11 +386,11 @@ public final class PersonLdap {
 		this.supannEtuEtape = supannEtuEtape;
 	}
 
-	public String getSupannEtuAnneeInscription() {
+	public List<String> getSupannEtuAnneeInscription() {
 		return supannEtuAnneeInscription;
 	}
 
-	public void setSupannEtuAnneeInscription(String supannEtuAnneeInscription) {
+	public void setSupannEtuAnneeInscription(List<String> supannEtuAnneeInscription) {
 		this.supannEtuAnneeInscription = supannEtuAnneeInscription;
 	}
 
