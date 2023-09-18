@@ -71,6 +71,7 @@ public class DossierService {
         this.dossierRepository = dossierRepository;
     }
 
+    @Transactional
     public Dossier create(String eppn, Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
@@ -91,7 +92,11 @@ public class DossierService {
     @Transactional
     public void changeStatutDossier(Long id, StatusDossier statusDossier, String eppn) {
         Dossier dossier = getById(id);
-        logService.create(eppn, id, dossier.getStatusDossier().name(), statusDossier.name());
+        String initialStatus = "";
+        if (dossier.getStatusDossier() != null) {
+            initialStatus = dossier.getStatusDossier().name();
+        }
+        logService.create(eppn, id, initialStatus, statusDossier.name());
         dossier.setStatusDossier(statusDossier);
     }
 
