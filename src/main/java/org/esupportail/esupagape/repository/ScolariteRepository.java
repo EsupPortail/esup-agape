@@ -14,6 +14,7 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
             "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION'" +
+            "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
             "and (:yearFilter is null or d.year = :yearFilter)")
 
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
@@ -24,6 +25,7 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%')))) " +
             "and (d.year = :yearFilter) " +
             "and (a.dossier.codComposante  = :codComposante) " +
+            "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
             "and a.statusAmenagement = :statusAmenagement")
     Page<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
                                              StatusAmenagement statusAmenagement,
