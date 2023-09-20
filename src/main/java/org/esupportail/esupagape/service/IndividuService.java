@@ -366,6 +366,7 @@ public class IndividuService {
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
+            individu.setPhotoId("");
             if(StringUtils.hasText(individu.getFixCP())) {
                 individu.setFixCP(individu.getFixCP().substring(0, 2));
             }
