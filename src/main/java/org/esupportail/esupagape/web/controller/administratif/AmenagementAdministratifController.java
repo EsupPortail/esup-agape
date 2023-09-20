@@ -12,6 +12,7 @@ import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -72,14 +73,19 @@ public class AmenagementAdministratifController {
             statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
         Page<Amenagement> amenagements;
-        if (StringUtils.hasText(fullTextSearch)) {
-            amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
-        } else if (porte) {
-            amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
-            statusAmenagements.clear();
-            statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
+         if (porte) {
+             amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+             if (StringUtils.hasText(fullTextSearch)) {
+                amenagements = new PageImpl<>(amenagements.stream().filter(amenagement -> amenagement.getDossier().getIndividu().getName().equals(fullTextSearch) || amenagement.getDossier().getIndividu().getFirstName().equals(fullTextSearch) || amenagement.getDossier().getIndividu().getNumEtu().equals(fullTextSearch)).toList());
+             }
+             statusAmenagements.clear();
+             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
         } else {
-            amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
+            if (StringUtils.hasText(fullTextSearch)) {
+                amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);
+            } else {
+                amenagements = amenagementService.getFullTextSearch(statusAmenagement, codComposante, yearFilter, pageable);
+            }
         }
         model.addAttribute("statusAmenagements", statusAmenagements);
         model.addAttribute("amenagements", amenagements);
@@ -89,6 +95,7 @@ public class AmenagementAdministratifController {
         model.addAttribute("codComposante", codComposante);
         model.addAttribute("porte", porte);
         model.addAttribute("yearFilter", yearFilter);
+        model.addAttribute("fullTextSearch", fullTextSearch);
         setModel(model);
         return "administratif/amenagements/list";
     }

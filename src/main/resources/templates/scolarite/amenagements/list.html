@@ -14,19 +14,6 @@
 				<div class="col-12">
 					<form th:action="@{/scolarite/amenagements}" method="get">
 						<div class="row mt-1 mb-2 g-1">
-							<div class="col-2" style="width: 350px;">
-								<div class="input-group">
-									<label class="input-group-text">Année universitaire</label>
-									<select class="form-select" name="yearFilter">
-										<option disabled selected hidden value="">Choisir</option>
-										<option th:selected="${yearFilter == year.number}"
-										        th:each="year : ${years}"
-										        th:value="${year.number}"
-										        th:text="${year.number} + ' - ' + ${year.number + 1} "></option>
-									</select>
-								</div>
-							</div>
-
 							<form id="search-form" th:action="@{/scolarite/amenagements}" method="get">
 								<input class="col-2 form-control" style="max-width: 600px" type="text"
 								       placeholder="Rechercher par nom, prénom" name="fullTextSearch"
@@ -53,7 +40,8 @@
 						</tr>
 						</thead>
 						<tbody>
-						<th:block th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+						<th:block
+								th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
 								th:each="amenagement : ${amenagements}">
 							<tr style="text-align: left">
 								<td th:text="${amenagement.dossier.composante}"></td>
@@ -66,7 +54,9 @@
 								<td class="text-center" style="width:100px;">
 									<ul class="list-group list-group-horizontal" style="display: block;">
 										<li class="list-group-item border-0 p-1 bg-transparent">
-											<a class="btn btn-info" th:href="@{/scolarite/amenagements/{amenagementId}(amenagementId=${amenagement.id})}" role="button"><i class="fa-solid fa-eye"></i>
+											<a class="btn btn-info"
+											   th:href="@{/scolarite/amenagements/{amenagementId}(amenagementId=${amenagement.id})}"
+											   role="button"><i class="fa-solid fa-eye"></i>
 											</a>
 										</li>
 									</ul>
