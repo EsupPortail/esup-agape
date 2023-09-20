@@ -351,7 +351,7 @@ public class IndividuService {
     @Transactional
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
-        if (individu != null && !individu.getNumEtu().startsWith("Anonyme")) {
+        if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
             logger.info("anonymise " + individu.getNumEtu());
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
@@ -366,6 +366,7 @@ public class IndividuService {
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
+            individu.setPhotoId("");
             if(StringUtils.hasText(individu.getFixCP())) {
                 individu.setFixCP(individu.getFixCP().substring(0, 2));
             }

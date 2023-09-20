@@ -282,7 +282,7 @@ public class AmenagementService {
     }
 
     public Long countToPorte() {
-        return amenagementRepository.countToPorte(utilsService.getCurrentYear());
+        return amenagementRepository.countToPorte(utilsService.getCurrentYear() - 1);
     }
 
     @Transactional
