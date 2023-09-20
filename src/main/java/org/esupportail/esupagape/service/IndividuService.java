@@ -199,10 +199,12 @@ public class IndividuService {
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(personLdap.getEduPersonPrincipalName(), individu, typeIndividu, force);
         }
-        try {
-            syncService.syncIndividu(individu.getId());
-        } catch (AgapeJpaException e) {
-            throw new RuntimeException(e);
+        if (individu.getId() != null) {
+            try {
+                syncService.syncIndividu(individu.getId());
+            } catch (AgapeJpaException e) {
+                throw new RuntimeException(e);
+            }
         }
         return individu;
     }
