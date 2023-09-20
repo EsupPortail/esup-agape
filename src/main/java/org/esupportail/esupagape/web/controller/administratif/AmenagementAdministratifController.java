@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller.administratif;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
@@ -24,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,13 +73,19 @@ public class AmenagementAdministratifController {
             statusAmenagements.remove(StatusAmenagement.ENVOYE);
         }
         Page<Amenagement> amenagements;
-         if (porte) {
-             amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
-             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = new PageImpl<>(amenagements.stream().filter(amenagement -> amenagement.getDossier().getIndividu().getName().equals(fullTextSearch) || amenagement.getDossier().getIndividu().getFirstName().equals(fullTextSearch) || amenagement.getDossier().getIndividu().getNumEtu().equals(fullTextSearch)).toList());
-             }
-             statusAmenagements.clear();
-             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
+        if (porte) {
+            if (StringUtils.hasText(fullTextSearch)) {
+                amenagements = new PageImpl<>(amenagementService.getFullTextSearchPorte(codComposante, yearFilter, Pageable.unpaged()).getContent()
+                        .stream()
+                        .filter(amenagement -> amenagement.getDossier().getIndividu().getName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getFirstName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getNumEtu().equals(fullTextSearch))
+                        .sorted(Comparator.comparing(Amenagement::getAdministrationDate).reversed())
+                        .limit(1)
+                        .toList());
+            } else {
+                amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+            }
+            statusAmenagements.clear();
+            statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
         } else {
             if (StringUtils.hasText(fullTextSearch)) {
                 amenagements = amenagementService.getByIndividuNamePortable(fullTextSearch, pageable);

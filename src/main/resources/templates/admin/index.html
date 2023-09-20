@@ -87,6 +87,23 @@
                     </tr>
                 </table>
             </div>
+            <h1>Sessions</h1>
+            <table class="table">
+                <thead class="table-dark">
+                <tr>
+                    <th>Login</th>
+                    <th>Session</th>
+                    <th>Dernière requête</th>
+                </tr>
+                </thead>
+            <th:block th:each="curentSessions : ${sessions}">
+                <tr>
+                    <td th:text="${curentSessions.principal.username}"></td>
+                    <td th:text="${curentSessions.sessionId}"></td>
+                    <td th:text="${curentSessions.lastRequest}"></td>
+                </tr>
+            </th:block>
+            </table>
         </div>
         <div class="card col-lg-10 mx-auto" th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">
             <div class="card-body">
