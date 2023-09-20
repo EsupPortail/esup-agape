@@ -351,7 +351,7 @@ public class IndividuService {
     @Transactional
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
-        if (individu != null && !individu.getNumEtu().startsWith("Anonyme")) {
+        if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
             logger.info("anonymise " + individu.getNumEtu());
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
