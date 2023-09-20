@@ -4,102 +4,168 @@
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <main class="d-inline-flex">
-    <div class="agape-content">
-        <div class="agape-tab-content bg-white p-3">
-            <h1>Tâches</h1>
-            <hr>
-            <ul>
-                <li class="m-1"><a role="button" href="/admin/import-individus" class="btn btn-dark">Forcer l'import des
-                    individus</a></li>
-                <li class="m-1"><a role="button" href="/admin/sync-individus" class="btn btn-dark">Forcer la synchro des
-                    individus</a></li>
-                <li class="m-1"><a role="button" href="/admin/sync-dossiers" class="btn btn-dark">Forcer la synchro des
-                    dossiers</a></li>
-                <li class="m-1"><a role="button" href="/admin/anonymise-dossiers" class="btn btn-dark">Forcer l’anonymisation des
-                    dossiers</a></li>
-                <li class="m-1"><a role="button" href="/admin/refresh-sise" class="btn btn-dark">Actualiser le fichier SISE</a></li>
-                <li class="m-1" th:if="${esupSignaturePresent}"><a role="button" href="/admin/sync-esup-signature" class="btn btn-dark">Forcer synchro esup signature</a></li>
-            </ul>
-
-            <h1>Import</h1>
-            <hr>
-            <h3>Nomenclature du ministère</h3>
-            <h6>Le format attendu : ficher au format CSV,
-                en-tête,
-                séparateur de chaîne de caractère = '""',
-                séparateur de champ  = ' ;',
-                3 colonnes pour les codes ,
-                2 colonnes pour les libellés</h6>
-            <form th:action="@{/admin/import-codes-ministere}" method="post" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".csv"><br>
-                <button class="btn btn-primary mt-2" type="submit">Importer codes</button>
-            </form>
-            <form th:action="@{/admin/import-libelles-ministere}" method="post" enctype="multipart/form-data">
-                <input class="mt-2" type="file" name="file" accept=".csv"><br>
-                <button class="btn btn-primary mt-2" type="submit">Importer libellés</button>
-            </form>
-            <form th:action="@{/admin/import-libelles-amenagement}" method="post" enctype="multipart/form-data">
-                <input class="mt-2" type="file" name="file" accept=".csv"><br>
-                <button class="btn btn-primary mt-2" type="submit">Importer libellés aménagement</button>
-            </form>
-            <h1>Années</h1>
-            <hr>
-            <div class="col-6 mx-auto">
-                <form th:action="@{/admin/add-year}" th:method="post">
-                    <div class="input-group mb-3">
-                    <label for="number" class="input-group-text">Ajouter une année</label>
-                    <input id="number" class="form-control" type="number" min="1900" max="3000" name="number" >
-                    <input class="btn btn-success" type="submit" value="Ajouter">
-                    </div>
-                </form>
-                <table class="table table-striped">
-                    <tr th:each="year : ${years}">
-                        <td th:text="${year.number}"></td>
-                        <td>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    th:data-bs-target="'#delete-year-' + ${year.id}">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                            <div class="modal fade" th:id="'delete-year-' + ${year.id}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            Confirmez la suppression de l’année ?
-                                            <!-- <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
-                                                <input type="hidden" name="id" th:value="${year.id}">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    Annuler
-                                                </button>
-                                                <input class="btn btn-success" type="submit" value="Valider">
-                                            </form>-->
-                                            <form th:action="@{/admin/delete-year}" th:method="delete" class="float-end">
-                                                <input type="hidden" name="idYear" th:value="${year.id}">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    Annuler
-                                                </button>
-                                                <input class="btn btn-success" type="submit" value="Valider">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="card col-lg-10 mx-auto" th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">
-            <div class="card-body">
-                <form th:action="@{/admin/su-login}" method="POST" class="form-signin">
-                    <h5 class="text-center"><b>Changer d’utilisateur</b></h5>
-                    <br/>
-                    <input type="text" id="username" name="username" th:placeholder="Identifiant"
-                        class="form-control"/> <br/>
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
-                </form>
-            </div>
-        </div>
-    </div>
+	<div class="agape-content">
+		<nav>
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<button class="nav-link active" id="nav-tasks-tab" data-bs-toggle="tab" data-bs-target="#nav-tasks"
+				        type="button" role="tab" aria-controls="nav-tasks" aria-selected="true">Tâches
+				</button>
+				<button class="nav-link" id="nav-imports-tab" data-bs-toggle="tab" data-bs-target="#nav-imports"
+				        type="button" role="tab" aria-controls="nav-imports" aria-selected="false">Imports
+				</button>
+				<button class="nav-link" id="nav-years-tab" data-bs-toggle="tab" data-bs-target="#nav-years"
+				        type="button" role="tab" aria-controls="nav-years" aria-selected="false">Années
+				</button>
+				<button class="nav-link" id="nav-sessions-tab" data-bs-toggle="tab" data-bs-target="#nav-sessions" type="button"
+						role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions
+				</button>
+				<button class="nav-link" id="nav-su-tab" data-bs-toggle="tab" data-bs-target="#nav-su" type="button"
+				        role="tab" aria-controls="nav-su" aria-selected="false" th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">SU
+				</button>
+			</div>
+		</nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-tasks" role="tabpanel"
+			     aria-labelledby="nav-tasks-tab">
+				<h1>Tâches</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<ul>
+						<li class="m-1"><a role="button" href="/admin/import-individus" class="btn btn-dark">Forcer
+							l'import
+							des
+							individus</a></li>
+						<li class="m-1"><a role="button" href="/admin/sync-individus" class="btn btn-dark">Forcer la
+							synchro
+							des
+							individus</a></li>
+						<li class="m-1"><a role="button" href="/admin/sync-dossiers" class="btn btn-dark">Forcer la
+							synchro
+							des
+							dossiers</a></li>
+						<li class="m-1"><a role="button" href="/admin/anonymise-dossiers" class="btn btn-dark">Forcer
+							l’anonymisation des
+							dossiers</a></li>
+						<li class="m-1"><a role="button" href="/admin/refresh-sise" class="btn btn-dark">Actualiser le
+							fichier SISE</a></li>
+						<li class="m-1" th:if="${esupSignaturePresent}">
+							<a role="button" href="/admin/sync-esup-signature" class="btn btn-dark">Forcer synchro esup signature</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="nav-imports" role="tabpanel" aria-labelledby="nav-imports-tab">
+				<h1>Imports</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<h3>Nomenclature du ministère</h3>
+					<h6>Format attendu :<br/>
+						Ficher au format CSV <br/>
+						Un en-tête <br/>
+						Séparateur de chaîne de caractère = ' "" '<br/>
+						Séparateur de champ = ';'<br/>
+						3 colonnes pour les codes <br/>
+						2 colonnes pour les libellés</h6>
+					<form th:action="@{/admin/import-codes-ministere}" method="post" enctype="multipart/form-data">
+						<input type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer codes</button>
+					</form>
+					<form th:action="@{/admin/import-libelles-ministere}" method="post" enctype="multipart/form-data">
+						<input class="mt-2" type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer libellés</button>
+					</form>
+					<form th:action="@{/admin/import-libelles-amenagement}" method="post" enctype="multipart/form-data">
+						<input class="mt-2" type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer libellés aménagement</button>
+					</form>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="nav-years" role="tabpanel" aria-labelledby="nav-years-tab">
+				<h1>Années</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<form th:action="@{/admin/add-year}" th:method="post">
+						<div class="input-group mb-3">
+							<label for="number" class="input-group-text">Ajouter une année</label>
+							<input id="number" class="form-control" type="number" min="1900" max="3000" name="number">
+							<input class="btn btn-success" type="submit" value="Ajouter">
+						</div>
+					</form>
+					<table class="table table-striped">
+						<tr th:each="year : ${years}">
+							<td th:text="${year.number}"></td>
+							<td>
+								<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+								        th:data-bs-target="'#delete-year-' + ${year.id}">
+									<i class="fa-solid fa-trash"></i>
+								</button>
+								<div class="modal fade" th:id="'delete-year-' + ${year.id}" tabindex="-1"
+								     aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-body">
+												Confirmez la suppression de l’année ?
+												<!-- <form th:action="@{/admin/delete-year/}" th:method="delete" class="float-end">
+													<input type="hidden" name="id" th:value="${year.id}">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+														Annuler
+													</button>
+													<input class="btn btn-success" type="submit" value="Valider">
+												</form>-->
+												<form th:action="@{/admin/delete-year}" th:method="delete"
+												      class="float-end">
+													<input type="hidden" name="idYear" th:value="${year.id}">
+													<button type="button" class="btn btn-secondary"
+													        data-bs-dismiss="modal">
+														Annuler
+													</button>
+													<input class="btn btn-success" type="submit" value="Valider">
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="nav-sessions" role="tabpanel" aria-labelledby="nav-sessions-tab">
+				<h1>Sessions</h1>
+				<table class="table">
+					<thead class="table-dark">
+					<tr>
+						<th>Login</th>
+						<th>Session</th>
+						<th>Dernière requête</th>
+					</tr>
+					</thead>
+					<th:block th:each="curentSessions : ${sessions}">
+						<tr>
+							<td th:text="${curentSessions.principal.username}"></td>
+							<td th:text="${curentSessions.sessionId}"></td>
+							<td th:text="${curentSessions.lastRequest}"></td>
+						</tr>
+					</th:block>
+				</table>
+			</div>
+			<div class="tab-pane fade" id="nav-su" role="tabpanel" aria-labelledby="nav-su-tab" th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">
+				<h1>Switch User</h1>
+				<hr>
+				<div class="card mt-5 col-lg-10 mx-auto"
+				     th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}">
+					<div class="card-body">
+						<form th:action="@{/admin/su-login}" method="POST" class="form-signin">
+							<h5 class="text-center"><b>Changer d’utilisateur</b></h5>
+							<br/>
+							<input type="text" id="username" name="username" th:placeholder="Identifiant"
+							       class="form-control"/> <br/>
+							<input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </main>
 <footer th:replace="~{fragments/footer :: black}"></footer>
 <div th:replace="~{fragments/flash :: flash}"></div>

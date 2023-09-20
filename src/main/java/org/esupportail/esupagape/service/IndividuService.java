@@ -199,10 +199,12 @@ public class IndividuService {
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(personLdap.getEduPersonPrincipalName(), individu, typeIndividu, force);
         }
-        try {
-            syncService.syncIndividu(individu.getId());
-        } catch (AgapeJpaException e) {
-            throw new RuntimeException(e);
+        if (individu.getId() != null) {
+            try {
+                syncService.syncIndividu(individu.getId());
+            } catch (AgapeJpaException e) {
+                throw new RuntimeException(e);
+            }
         }
         return individu;
     }
@@ -351,7 +353,7 @@ public class IndividuService {
     @Transactional
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
-        if (individu != null && !individu.getNumEtu().startsWith("Anonyme")) {
+        if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
             logger.info("anonymise " + individu.getNumEtu());
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
@@ -366,6 +368,7 @@ public class IndividuService {
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
+            individu.setPhotoId("");
             if(StringUtils.hasText(individu.getFixCP())) {
                 individu.setFixCP(individu.getFixCP().substring(0, 2));
             }

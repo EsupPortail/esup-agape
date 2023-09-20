@@ -46,7 +46,7 @@ public class EntretienService {
         entretien.setDossier(dossier);
         entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
-        dossierService.changeStatutDossier(idDossier, StatusDossier.SUIVI, personLdap.getEduPersonPrincipalName());
+        dossierService.changeStatutDossier(idDossier, StatusDossier.ACCUEILLI, personLdap.getEduPersonPrincipalName());
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {

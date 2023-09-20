@@ -70,8 +70,13 @@ public class IndividuController {
         }
         try {
             Individu individuOk = individuService.create(personLdap, individu, typeIndividu, force);
-            logger.info("Nouvel étudiant" + individuOk.getId());
-            return "redirect:/individus/" + individuOk.getId() + "/redirect";
+            if(individuOk.getId() != null) {
+                logger.info("Nouvel étudiant" + individuOk.getId());
+                return "redirect:/individus/" + individuOk.getId() + "/redirect";
+            } else {
+                redirectAttributes.addFlashAttribute("message", new Message("danger", "Individu non trouvé dans les référentiels"));
+                return "redirect:/individus/create";
+            }
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
             return "redirect:/individus/create";
@@ -86,12 +91,12 @@ public class IndividuController {
             Individu individu = new Individu();
             individu.setNumEtu(numEtu);
             Individu individuOk = individuService.create(personLdap, individu, null, force);
-            if(individuOk != null) {
+            if(individuOk.getId() != null) {
                 logger.info("Nouvel étudiant " + individuOk.getId());
                 return "redirect:/individus/" + individuOk.getId() + "/redirect";
             } else {
                 redirectAttributes.addFlashAttribute("message", new Message("danger", "Individu non trouvé dans les référentiels"));
-                return "redirect:/dossiers/";
+                return "redirect:/dossiers";
             }
         } catch (AgapeRuntimeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));

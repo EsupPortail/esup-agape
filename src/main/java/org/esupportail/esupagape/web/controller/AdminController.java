@@ -8,6 +8,9 @@ import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -36,10 +41,12 @@ public class AdminController {
 
     private final MailService mailService;
 
+    private final SessionRegistry sessionRegistry;
+
     public AdminController(
             IndividuService individuService, DossierService dossierService,
             AmenagementService amenagementService, UtilsService utilsService,
-            CsvImportService csvImportService, SiseService siseService, MailService mailService) {
+            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
@@ -47,11 +54,17 @@ public class AdminController {
         this.csvImportService = csvImportService;
         this.siseService = siseService;
         this.mailService = mailService;
+        this.sessionRegistry = sessionRegistry;
     }
 
     @GetMapping
     public String index(Model model) {
         model.addAttribute("years", utilsService.getYears());
+        List<SessionInformation> sessions = new ArrayList<>();
+        for(Object principal : sessionRegistry.getAllPrincipals()) {
+            sessions.addAll(sessionRegistry.getAllSessions(principal, false));
+        }
+        model.addAttribute("sessions", sessions);
         return "admin/index";
     }
 
