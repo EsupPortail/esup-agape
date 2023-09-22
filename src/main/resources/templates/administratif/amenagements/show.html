@@ -36,9 +36,9 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="alert alert-danger" th:if="${amenagement.getIndividuSendDate() == null}">L'aménagement n’a pas été envoyé à l’étudiant</div>
-                <div class="alert alert-danger" th:if="${amenagement.getCertificatSignatureStatus().name().equals('FULLY_DELETED') || amenagement.getCertificatSignatureStatus().name().equals('DELETED')}">L'aménagement ne peut pas être validé car la demande a été supprimée dans esup-signature </div>
-                <div class="alert alert-success" th:if="${amenagement.getIndividuSendDate() != null}">L'aménagement a déjà été envoyé à l’étudiant</div>
+                <div class="alert alert-danger" th:if="${amenagement.individuSendDate == null}">L'aménagement n’a pas été envoyé à l’étudiant</div>
+                <div class="alert alert-danger" th:if="${amenagement.certificatSignatureStatus != null && (amenagement.certificatSignatureStatus.name().equals('FULLY_DELETED') || amenagement.certificatSignatureStatus.name().equals('DELETED'))}">L'aménagement ne peut pas être validé car la demande a été supprimée dans esup-signature </div>
+                <div class="alert alert-success" th:if="${amenagement.individuSendDate != null}">L'aménagement a déjà été envoyé à l’étudiant</div>
                 <dl>
                     <dt class="col-sm-2">Formation actuelle</dt>
                     <dd class="col-sm-10" th:text="${currentYear} + '-' + ${currentYear + 1} + ' : ' + ${currentForm}"></dd>
