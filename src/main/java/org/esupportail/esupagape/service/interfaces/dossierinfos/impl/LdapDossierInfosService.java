@@ -39,7 +39,7 @@ public class LdapDossierInfosService implements DossierInfosService {
     public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, boolean getNotes, DossierInfos dossierInfos) {
         if(individu.getNumEtu() != null) {
             List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(individu.getNumEtu());
-            if (personLdaps.size() > 0) {
+            if (!personLdaps.isEmpty()) {
                 PersonLdap personLdap = personLdaps.get(0);
                 try {
                     if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
@@ -66,7 +66,7 @@ public class LdapDossierInfosService implements DossierInfosService {
                             dossierInfos.setSecteurDisciplinaire(libelleSecteur);
                         }
                     }
-                    if(personLdap.getSupannEtuCursusAnnee() != null && personLdap.getSupannEtuCursusAnnee().size() > 0) {
+                    if(personLdap.getSupannEtuCursusAnnee() != null && !personLdap.getSupannEtuCursusAnnee().isEmpty()) {
                         dossierInfos.setNiveauEtudes(personLdap.getSupannEtuCursusAnnee().get(0).substring(personLdap.getSupannEtuCursusAnnee().get(0).lastIndexOf("}") + 1));
                     }
                 } catch (AgapeJpaException e) {
