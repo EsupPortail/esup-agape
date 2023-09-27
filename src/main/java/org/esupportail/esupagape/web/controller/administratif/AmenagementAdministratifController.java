@@ -75,14 +75,14 @@ public class AmenagementAdministratifController {
         Page<Amenagement> amenagements;
         if (porte) {
             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = new PageImpl<>(amenagementService.getFullTextSearchPorte(codComposante, yearFilter, Pageable.unpaged()).getContent()
+                amenagements = new PageImpl<>(amenagementService.getFullTextSearchPorte(codComposante, yearFilter - 1, Pageable.unpaged()).getContent()
                         .stream()
                         .filter(amenagement -> amenagement.getDossier().getIndividu().getName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getFirstName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getNumEtu().equals(fullTextSearch))
                         .sorted(Comparator.comparing(Amenagement::getAdministrationDate).reversed())
                         .limit(1)
                         .toList());
             } else {
-                amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+                amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter - 1, pageable);
             }
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
