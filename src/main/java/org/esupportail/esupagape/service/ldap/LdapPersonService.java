@@ -7,6 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.*;
+import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.stereotype.Service;
 
 import javax.naming.directory.SearchControls;
@@ -46,23 +50,23 @@ public class LdapPersonService {
     }
 
     public String getPersonLdapAttribute(String authName, String attribute) throws AgapeException {
-        if(attribute != null) {
+        if (attribute != null) {
             String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[]{authName});
             return ldapTemplate.search(ldapProperties.getSearchBase(),
                     formattedFilter,
                     SearchControls.SUBTREE_SCOPE,
                     new String[]{attribute},
                     (AttributesMapper) attrs -> attrs.get(attribute).get().toString()).get(0).toString();
-        }else {
+        } else {
             throw new AgapeException("Attribut is null");
         }
     }
 
     public PersonLdap getPersonLdap(String userName) {
-        String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[] { userName });
+        String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[]{userName});
         List<PersonLdap> personLdaps = ldapTemplate.search(ldapProperties.getSearchBase(), formattedFilter, new PersonLdapAttributesMapper());
         PersonLdap personLdap = null;
-        if(personLdaps.size() > 0) {
+        if (personLdaps.size() > 0) {
             personLdap = personLdaps.get(0);
         }
         return personLdap;
@@ -74,4 +78,22 @@ public class LdapPersonService {
         return personLdapRepository.findBySnAndGivenNameAndSchacDateOfBirth(name, firstName, dateOfBirthString);
     }
 
+//    public List<PersonLdap> searchBySupannEtuIdOrCn(String numEtu, String name) {
+//        return personLdapRepository.findBySupannEtuIdOrCnStartingWithIgnoreCase(numEtu, name);
+//    }
+
+    public List<PersonLdap> findStudents(String search) {
+        AndFilter andFilter = new AndFilter();
+        andFilter.and(new EqualsFilter("eduPersonAffiliation", "student"));
+        andFilter.and(new LikeFilter("cn", "*"+search+"*"));
+
+        LdapQuery query = LdapQueryBuilder.query()
+                .searchScope(SearchScope.ONELEVEL)
+                .base(ldapProperties.getSearchBase())
+                .countLimit(20)
+                .filter(andFilter);
+
+        return  personLdapRepository.findAll(query);
+
+    }
 }

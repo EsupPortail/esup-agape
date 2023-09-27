@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
@@ -8,6 +9,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.ldap.LdapPersonService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.Comparator;
 import java.util.List;
@@ -33,9 +34,12 @@ public class IndividuController {
     private final IndividuService individuService;
     private final DossierService dossierService;
 
-    public IndividuController(IndividuService individuService, DossierService dossierService) {
+    private final LdapPersonService ldapPersonService;
+
+    public IndividuController(IndividuService individuService, DossierService dossierService, LdapPersonService ldapPersonService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
+        this.ldapPersonService = ldapPersonService;
     }
 
     @GetMapping("/{individuId}/redirect")
@@ -125,6 +129,12 @@ public class IndividuController {
         individuService.fusion(ids);
     }
 
+
+    @GetMapping(value = "/autocomplete-search", produces = "application/json")
+    @ResponseBody
+    public List<PersonLdap> autocompleteSearch(String numEtu) {
+        return ldapPersonService.findStudents(numEtu);
+    }
 }
 
 
