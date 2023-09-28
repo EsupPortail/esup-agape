@@ -30,7 +30,7 @@ import java.util.Map;
 
 @Service
 @Order(3)
-@ConditionalOnProperty(value = {"individu-source.data-sources.APO.name", "apogee.etu-url"})
+@ConditionalOnProperty(value = {"individu-source.data-sources.APOGEE.name", "apogee.etu-url"})
 public class ApoIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoIndividuSourceService.class);
@@ -40,7 +40,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
 
     public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant) {
-        this.dataSource = individuDataSourceService.getDataSourceByName("APO");
+        this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
         this.wsApogeeServiceEtudiant = wsApogeeServiceEtudiant;
     }
 

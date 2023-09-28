@@ -274,7 +274,7 @@ public class AmenagementService {
         return amenagementRepository.findByIndividuNamePortable(fullTextSearch, utilsService.getCurrentYear(), pageable);
     }
     public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter, pageable);
+        return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter - 1, pageable);
     }
 
     public Long countToValidate() {

@@ -1,6 +1,6 @@
 package org.esupportail.esupagape.service.datasource;
 
-import oracle.jdbc.datasource.impl.OracleDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
@@ -25,8 +25,16 @@ public class IndividuDataSourceService {
 
     public DataSource getDataSourceByName(String name) {
         logger.info("initialize db " + name + " with driver " + individuSourceProperties.getDataSources().get(name).getDriverClassName());
-        DataSource dataSource = individuSourceProperties.getDataSources().get(name).initializeDataSourceBuilder().type(OracleDataSource.class).build();
-        return dataSource;
+        HikariDataSource ds = new HikariDataSource();
+        ds.setPoolName(name + "-Hikari-Pool");
+        ds.setJdbcUrl(individuSourceProperties.getDataSources().get(name).getUrl());
+        ds.setDriverClassName(individuSourceProperties.getDataSources().get(name).getDriverClassName());
+        ds.setUsername(individuSourceProperties.getDataSources().get(name).getUsername());
+        ds.setPassword(individuSourceProperties.getDataSources().get(name).getPassword());
+        ds.setAutoCommit(false);
+        ds.setMaximumPoolSize(1);
+        ds.setMinimumIdle(0);
+        return ds;
     }
 
     public JdbcTemplate getJdbcTemplateByName(String name) {

@@ -31,6 +31,7 @@ public class IndividuController {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IndividuService individuService;
+
     private final DossierService dossierService;
 
     public IndividuController(IndividuService individuService, DossierService dossierService) {
