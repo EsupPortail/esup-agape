@@ -263,6 +263,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     if (autocompleteSearch !== null) {
         new SlimSelect({
             select: '#autocomplete-search',
+            settings: {
+                openPosition: 'down',
+                placeholderText: 'Choisir un individu parmi la sélection',
+                searchPlaceholder: 'Rechercher par nom, prénom, n° étudiant',
+                searchText:'Aucun résultat'
+            },
             events: {
                 // addable: function (value) {
                 //
