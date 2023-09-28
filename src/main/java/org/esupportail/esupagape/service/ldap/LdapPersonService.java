@@ -85,7 +85,8 @@ public class LdapPersonService {
     public List<PersonLdap> findStudents(String search) {
         AndFilter andFilter = new AndFilter();
         andFilter.and(new EqualsFilter("eduPersonAffiliation", "student"));
-        andFilter.and(new LikeFilter("cn", "*"+search+"*"));
+//        andFilter.and(new LikeFilter("cn", "*"+search+"*"));
+        andFilter.and(new OrFilter().or(new LikeFilter("cn", "*" + search + "*")).or(new EqualsFilter("supannEtuId", search)));
 
         LdapQuery query = LdapQueryBuilder.query()
                 .searchScope(SearchScope.ONELEVEL)
