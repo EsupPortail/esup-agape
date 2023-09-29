@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             settings: {
                 openPosition: 'down',
                 placeholderText: 'Choisir un individu parmi la sélection',
-                searchPlaceholder: 'Rechercher par nom, prénom, n° étudiant',
+                searchPlaceholder: 'Rechercher par nom, prénom, n° étudiant, n° INE',
                 searchText:'Aucun résultat'
             },
             events: {
@@ -286,8 +286,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 // },
                 search: (search, currentData) => {
                     return new Promise((resolve, reject) => {
-                        if (search.length < 2) {
-                            return reject('Nécessite au minimum 2 caractères')
+                        if (search.length < 3) {
+                            return reject('Nécessite au minimum 3 caractères')
                         }
                         fetch('/individus/autocomplete-search?numEtu=' + search,
                             {

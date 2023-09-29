@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.filter.*;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.LikeFilter;
+import org.springframework.ldap.filter.OrFilter;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.query.SearchScope;
@@ -17,6 +20,7 @@ import javax.naming.directory.SearchControls;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -85,8 +89,10 @@ public class LdapPersonService {
     public List<PersonLdap> findStudents(String search) {
         AndFilter andFilter = new AndFilter();
         andFilter.and(new EqualsFilter("eduPersonAffiliation", "student"));
-//        andFilter.and(new LikeFilter("cn", "*"+search+"*"));
-        andFilter.and(new OrFilter().or(new LikeFilter("cn", "*" + search + "*")).or(new EqualsFilter("supannEtuId", search)));
+        andFilter.and(new OrFilter()
+                .or(new LikeFilter("cn", search + "*"))
+                .or(new LikeFilter("supannEtuId", search + "*"))
+                .or(new LikeFilter("supannCodeINE", search + "*")));
 
         LdapQuery query = LdapQueryBuilder.query()
                 .searchScope(SearchScope.ONELEVEL)
@@ -94,7 +100,13 @@ public class LdapPersonService {
                 .countLimit(20)
                 .filter(andFilter);
 
-        return  personLdapRepository.findAll(query);
-
+        List<PersonLdap> results = personLdapRepository.findAll(query);
+        for (PersonLdap personLdap : results) {
+            String [] cnParts = personLdap.getCn().split("\\s+");
+            String name = String.join(" ", Arrays.copyOfRange(cnParts, 0, cnParts.length - 1));
+            String firstName = cnParts[cnParts.length - 1];
+            personLdap.setCn(name.trim().toUpperCase() + " " + firstName);
+        }
+        return results;
     }
 }
