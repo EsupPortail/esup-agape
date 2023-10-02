@@ -187,7 +187,7 @@
                                 <h2 class="accordion-header" id="headingOne">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumEtu"
                                             aria-expanded="true" aria-controls="collapseNumEtu">
-                                        Ajout par numéro d’étudiant / code INE / nom de famille
+                                        Ajout d'un étudiant
                                     </button>
                                 </h2>
                                 <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
@@ -224,7 +224,7 @@
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Ajout par code Ine /nom / prénom / date de naissance
+                                        Ajout d'un non étudiant
                                     </button>
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResultError != null ? 'show' : ''}" aria-labelledby="headingTwo" data-bs-parent="#accordionCreateIndividu">
@@ -269,9 +269,9 @@
                                                         <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
                                                     </select>
                                                 </div>
-                                                <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email universitaire</label>
+                                                <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email</label>
                                                 <div class="col-sm-10">
-                                                    <input id="emailEtu" th:field="*{emailEtu}" type="text" class="form-control" required />
+                                                    <input id="emailEtu" th:field="*{emailEtu}" type="text" class="form-control" />
                                                     <p th:if="${#fields.hasErrors('emailEtu')}" th:errorclass="error" th:errors="*{emailEtu}"></p>
                                                 </div>
                                                 <label for="contactPhone" class="col-md-2 col-form-label mb-1">Téléphone</label>
