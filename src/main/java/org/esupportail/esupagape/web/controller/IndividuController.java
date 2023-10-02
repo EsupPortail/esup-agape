@@ -71,6 +71,7 @@ public class IndividuController {
             model.addAttribute("bindingResult", bindingResult);
             model.addAttribute("individu", new Individu());
             model.addAttribute("genders", Gender.values());
+            model.addAttribute("typeIndividuList", TypeIndividu.values());
             return "individus/create";
         }
         try {
