@@ -190,12 +190,12 @@ public class IndividuService {
                 }
             }
         }
+        Dossier newDossier = null;
         if (individuTestIsExist != null) {
             if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
-                Dossier dossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
-                syncService.syncDossier(dossier.getId());
+                newDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
             }
-            return individuTestIsExist;
+            individu = individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
             save(personLdap.getEduPersonPrincipalName(), individu, typeIndividu, force);
         }
@@ -205,6 +205,9 @@ public class IndividuService {
             } catch (AgapeJpaException e) {
                 throw new RuntimeException(e);
             }
+        }
+        if(newDossier != null) {
+            syncService.syncDossier(newDossier.getId());
         }
         return individu;
     }
