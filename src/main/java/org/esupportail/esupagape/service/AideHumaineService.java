@@ -60,7 +60,8 @@ public class AideHumaineService {
         aideHumaine.setDossier(dossier);
         if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)
                 || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
-                || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+                || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)
+                || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
             dossierService.changeStatutDossier(dossierId, StatusDossier.SUIVI, eppn);
         }
         recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaine);

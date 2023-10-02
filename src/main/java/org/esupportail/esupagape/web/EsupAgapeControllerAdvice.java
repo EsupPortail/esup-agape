@@ -58,7 +58,7 @@ public class EsupAgapeControllerAdvice extends ResponseEntityExceptionHandler {
         model.addAttribute("userName", userService.getUserName());
         PersonLdap personLdap = userService.getPersonLdap();
         model.addAttribute("personLdap", personLdap);
-        model.addAttribute("composante", userService.getComposante(personLdap));
+        model.addAttribute("composante", userService.getComposanteLibelle(personLdap));
         if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("dev")) {
             model.addAttribute("profile", environment.getActiveProfiles()[0]);
         }

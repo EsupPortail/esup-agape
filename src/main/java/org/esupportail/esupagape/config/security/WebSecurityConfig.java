@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -235,7 +234,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    @Profile("dev")
+//    @Profile("dev")
     public SwitchUserFilter switchUserFilter() {
         SwitchUserFilter switchUserFilter = new SwitchUserFilter();
         switchUserFilter.setSwitchUserUrl("/admin/su-login");
