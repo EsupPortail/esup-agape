@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.UserOthersAffectations;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
@@ -42,14 +44,18 @@ public class AmenagementScolariteController {
     private final DossierService dossierService;
 
     private final ScolariteService scolariteService;
+
     private final AmenagementService amenagementService;
 
-    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService) {
+    private final UserOthersAffectationsRepository userOthersAffectationsRepository;
+
+    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
         this.userService = userService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.scolariteService = scolariteService;
         this.amenagementService = amenagementService;
+        this.userOthersAffectationsRepository = userOthersAffectationsRepository;
     }
 
     @GetMapping
@@ -63,8 +69,15 @@ public class AmenagementScolariteController {
             yearFilter = utilsService.getCurrentYear();
         }
         String codComposante = userService.getComposante(personLdap);
+        Page<Amenagement> amenagements;
         if (codComposante != null) {
-            Page<Amenagement> amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear(), pageable);
+            List<Amenagement> amenagementsList = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear());
+            //if other composante in table codComposanteAdds
+            List<String> codComposanteAdds = userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList();
+            for(String codComposanteAdd : codComposanteAdds) {
+                amenagementsList.addAll(scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteAdd, utilsService.getCurrentYear()));
+            }
+            amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
             if (StringUtils.hasText(fullTextSearch)) {
                 amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante, pageable);
             }

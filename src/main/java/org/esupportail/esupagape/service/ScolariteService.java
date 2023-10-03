@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScolariteService {
 
@@ -26,6 +28,10 @@ public class ScolariteService {
 
     public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable) {
         return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter, pageable);
+    }
+
+    public List<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter) {
+        return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter);
     }
 
     public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, String codComposante, Pageable pageable) {

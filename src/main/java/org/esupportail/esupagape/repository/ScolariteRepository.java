@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
     @Query("select distinct a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i  " +
             "where  " +
@@ -18,6 +20,15 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "and (:yearFilter is null or d.year = :yearFilter)")
 
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
+
+    @Query("select distinct a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i  " +
+            "where  " +
+            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
+            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
+            "and a.statusAmenagement = 'VISE_ADMINISTRATION'" +
+            "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
+            "and (:yearFilter is null or d.year = :yearFilter)")
+    List<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter);
 
     @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
             "where ((upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +

@@ -265,8 +265,10 @@
                                                 <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
                                                 <div class="col-sm-10">
                                                     <select id="typeIndividu" class="form-select" name="typeIndividu" required>
-                                                        <option></option>
-                                                        <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                                        <option value="">Choisir</option>
+                                                        <option th:each="enumType : ${typeIndividuList}"
+                                                                th:value="${enumType}"
+                                                                th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
                                                     </select>
                                                 </div>
                                                 <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email</label>
