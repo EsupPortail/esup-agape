@@ -20,20 +20,16 @@
             <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResult == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
                 <div class="accordion-body">
                     <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
-                        <div class="row">
-                            <label for="numEtu" class="form-label col-2">Numéro étudiant ou code INE</label>
-                            <div class="mb-3 col-2">
-                                <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
-                            </div>
+                        <label for="numEtu" class="form-label col-2">Numéro étudiant ou code INE</label>
+                        <div class="mb-3 col-2">
+                            <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
                         </div>
-                        <div class="row">
-                            <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
-                            <div class="mb-3 col-2">
-                                <input id="force" name="force" type="checkbox" class="form-check-input">
-                            </div>
-                            <div>
-                                <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
-                            </div>
+                        <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
+                        <div class="mb-3 col-2">
+                            <input id="force" name="force" type="checkbox" class="form-check-input">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
                         </div>
                     </form>
 

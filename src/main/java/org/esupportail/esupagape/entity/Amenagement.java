@@ -185,6 +185,10 @@ public class Amenagement {
         return classification;
     }
 
+    public void setClassification(Set<Classification> classification) {
+        this.classification = classification;
+    }
+
     public String getMailMedecin() {
         return mailMedecin;
     }

@@ -193,30 +193,19 @@
                                 <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
                                     <div class="accordion-body">
                                         <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
-<!--                                            <div class="row">-->
-<!--                                                <label for="numEtu" class="form-label col-2">Numéro étudiant ou code INE</label>-->
-<!--                                                <div class="mb-3 col-2">-->
-<!--                                                    <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-                                            <div class="row">
-                                                <label for="autocomplete-search" class="form-label col-2">Numéro étudiant/code INE ou nom de famille</label>
-                                                <div class="mb-3 col-9">
-                                                    <select id="autocomplete-search" name="numEtu">
-                                                    </select>
-                                                </div>
+                                            <label for="autocomplete-search" class="form-label">Numéro étudiant/code INE ou nom de famille</label>
+                                            <div class="mb-3">
+                                                <select id="autocomplete-search" name="numEtu">
+                                                </select>
                                             </div>
-                                            <div class="row form-check">
-                                                <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
-                                                <div class="mb-3 col-2">
-                                                    <input id="force" name="force" type="checkbox" class="form-check-input">
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-success btn-lg mt-4" type="submit">Enregistrer</button>
-                                                </div>
+                                            <div class="form-check">
+                                                <input id="force" name="force" type="checkbox" class="form-check-input">
+                                                <label for="force" class="form-check-label">Forcer l’ajout</label>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success btn-lg mt-4" type="submit">Enregistrer</button>
                                             </div>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
