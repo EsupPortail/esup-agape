@@ -112,10 +112,6 @@ public class Enquete {
         return modFrmn;
     }
 
-    public void setModFrmn(Set<ModFrmn> modFrmn) {
-        this.modFrmn = modFrmn;
-    }
-
     public String getCodSco() {
         return codSco;
     }
