@@ -156,8 +156,16 @@ public class Dossier {
         return classifications;
     }
 
+    public void setClassifications(Set<Classification> classifications) {
+        this.classifications = classifications;
+    }
+
     public Set<TypeSuiviHandisup> getTypeSuiviHandisup() {
         return typeSuiviHandisup;
+    }
+
+    public void setTypeSuiviHandisup(Set<TypeSuiviHandisup> typeSuiviHandisup) {
+        this.typeSuiviHandisup = typeSuiviHandisup;
     }
 
     public Etat getEtat() {
