@@ -63,7 +63,7 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(cron="${toto}")
+    @Scheduled(cron="00 02 02 * * *")
     public void anonymiseOldDossiers() {
         if(applicationProperties.getEnableSchedulerAnonymise()) {
             logger.info("Anonymisation des anciens dossiers ");
