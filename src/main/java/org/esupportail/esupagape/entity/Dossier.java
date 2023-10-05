@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,11 +29,11 @@ public class Dossier {
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Classification> classifications;
+    private Set<Classification> classifications = new HashSet<>();
 
     @ElementCollection(targetClass = TypeSuiviHandisup.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<TypeSuiviHandisup> typeSuiviHandisup;
+    private Set<TypeSuiviHandisup> typeSuiviHandisup = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private Etat etat;
@@ -40,7 +41,7 @@ public class Dossier {
     @ElementCollection(targetClass = Mdph.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
 //TODO plusieurs possible + synchro avec l'enquete
-    private Set<Mdph>  mdphs;
+    private Set<Mdph> mdphs = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private RentreeProchaine rentreeProchaine;
@@ -155,16 +156,8 @@ public class Dossier {
         return classifications;
     }
 
-    public void setClassifications(Set<Classification> classifications) {
-        this.classifications = classifications;
-    }
-
     public Set<TypeSuiviHandisup> getTypeSuiviHandisup() {
         return typeSuiviHandisup;
-    }
-
-    public void setTypeSuiviHandisup(Set<TypeSuiviHandisup> typeSuiviHandisup) {
-        this.typeSuiviHandisup = typeSuiviHandisup;
     }
 
     public Etat getEtat() {

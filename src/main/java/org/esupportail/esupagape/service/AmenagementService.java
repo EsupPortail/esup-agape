@@ -231,7 +231,7 @@ public class AmenagementService {
 
             Set<Classification> selectedClassifications = amenagement.getClassification();
             if(amenagement.getAutorisation().equals(Autorisation.OUI)) {
-                amenagementToUpdate.setClassification(selectedClassifications);
+                amenagementToUpdate.getClassification().addAll(selectedClassifications);
             } else {
                 amenagementToUpdate.getClassification().clear();
             }
@@ -246,9 +246,7 @@ public class AmenagementService {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             if(autorisation.equals(Autorisation.OUI)) {
                 if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
-                    dossier.setClassifications(selectedClassifications);
-                } else {
-                    dossier.setClassifications(Collections.emptySet());
+                    dossier.getClassifications().addAll(selectedClassifications);
                 }
             } else if (autorisation.equals(Autorisation.NON)) {
                 dossier.getClassifications().clear();
