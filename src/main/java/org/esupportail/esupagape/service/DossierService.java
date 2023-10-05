@@ -150,11 +150,11 @@ public class DossierService {
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
-        dossierToUpdate.setClassifications(dossier.getClassifications());
+        dossierToUpdate.getClassifications().addAll(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdphs(dossier.getMdphs());
         dossierToUpdate.setTaux(dossier.getTaux());
-        dossierToUpdate.setTypeSuiviHandisup(dossier.getTypeSuiviHandisup());
+        dossierToUpdate.getTypeSuiviHandisup().addAll(dossier.getTypeSuiviHandisup());
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEmployee(dossier.getEmployee());
         dossierToUpdate.setAlternance(dossier.getAlternance());

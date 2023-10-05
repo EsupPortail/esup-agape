@@ -49,7 +49,7 @@ public class Amenagement {
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Classification> classification;
+    private Set<Classification> classification = new HashSet<>();
 
     private String mailMedecin;
 
@@ -183,10 +183,6 @@ public class Amenagement {
 
     public Set<Classification> getClassification() {
         return classification;
-    }
-
-    public void setClassification(Set<Classification> classification) {
-        this.classification = classification;
     }
 
     public String getMailMedecin() {

@@ -23,7 +23,7 @@ public class Enquete {
 
     @ElementCollection(targetClass=ModFrmn.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<ModFrmn> modFrmn;
+    private Set<ModFrmn> modFrmn = new HashSet<>();
 
     private String codSco;
 
