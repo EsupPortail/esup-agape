@@ -324,7 +324,50 @@ document.addEventListener("DOMContentLoaded", function (event) {
         });
     }
 
+// Gestion nouvelle affectation de composantes
 
+    const autocompleteSearchUid = document.getElementById('autocomplete-search-uid');
+    if (autocompleteSearchUid !== null) {
+        new SlimSelect({
+            select: '#autocomplete-search-uid',
+            settings: {
+                openPosition: 'down',
+                placeholderText: 'Choisir un individu parmi la sélection',
+                searchPlaceholder: 'Rechercher par nom, uid',
+                searchText:'Aucun résultat'
+            },
+            events: {
+                search: (search, currentData) => {
+                    return new Promise((resolve, reject) => {
+                        if (search.length < 3) {
+                            return reject('Nécessite au minimum 3 caractères')
+                        }
+                        fetch('/admin/autocomplete-search-uid?uid=' + search,
+                            {
+                                method: 'GET'
+                            }
+                        )
+                            .then((response) => response.json())
+                            .then((json) => {
+                                // Traitez les données JSON comme prévu
+                                const options = json.map((personLdap) => {
+                                    return {
+                                        text: `${personLdap.cn} ${personLdap.uid}`,
+                                        value: `${personLdap.uid}`
+                                    };
+                                });
+                                resolve(options);
+                            })
+                            .catch(function(error) {
+                                // Gérez les erreurs ici
+                                console.error('Erreur lors de la requête fetch :', error);
+                                reject(error);
+                            });
+                    })
+                }
+            }
+        });
+    }
 
     //Gestion automatique des slimselect
         document.querySelectorAll(".agape-slim-select").forEach(function (element) {

@@ -1,9 +1,13 @@
 package org.esupportail.esupagape.web.controller;
 
 import jakarta.mail.MessagingException;
+import org.esupportail.esupagape.entity.UserOthersAffectations;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
 import org.esupportail.esupagape.service.*;
+import org.esupportail.esupagape.service.ldap.LdapPersonService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -43,10 +47,18 @@ public class AdminController {
 
     private final SessionRegistry sessionRegistry;
 
+    private final UserOthersAffectationsService userOthersAffectationsService;
+
+    private final UserOthersAffectationsRepository userOthersAffectationsRepository;
+
+    private final LdapPersonService ldapPersonService;
+
+
+
     public AdminController(
             IndividuService individuService, DossierService dossierService,
             AmenagementService amenagementService, UtilsService utilsService,
-            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry) {
+            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
@@ -55,6 +67,9 @@ public class AdminController {
         this.siseService = siseService;
         this.mailService = mailService;
         this.sessionRegistry = sessionRegistry;
+        this.userOthersAffectationsService = userOthersAffectationsService;
+        this.userOthersAffectationsRepository = userOthersAffectationsRepository;
+        this.ldapPersonService = ldapPersonService;
     }
 
     @GetMapping
@@ -200,4 +215,38 @@ public class AdminController {
         }
         return "redirect:/admin";
     }
+
+
+    @PostMapping(value = "/add-userOthersAffectations")
+    public String createAffectation(@RequestParam String uid, @RequestParam String[] codComposante, RedirectAttributes redirectAttributes) {
+        if (codComposante != null && codComposante.length > 0) {
+            for (String cod : codComposante) {
+                List<UserOthersAffectations> existingAffectation = userOthersAffectationsRepository.findByUidAndCodComposante(uid, cod);
+
+                if (existingAffectation.isEmpty()) {
+                    userOthersAffectationsService.addUserOthersAffectations(uid, cod);
+                    redirectAttributes.addFlashAttribute("message", new Message("success", "L'affectation a été ajoutée pour " + cod));
+
+                } else {
+                    redirectAttributes.addFlashAttribute("message", new Message("danger", "L'affectation existe déjà pour " + cod));
+                }
+            }
+        }
+        return "redirect:/admin";
+    }
+
+
+    @DeleteMapping(value = "/delete-userOthersAffectations")
+    public String deleteUserOthersAffectations(@RequestParam Long id) {
+        userOthersAffectationsService.deleteUserOthersAffectations(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping(value = "/autocomplete-search-uid", produces = "application/json")
+    @ResponseBody
+    public List<PersonLdap> autocompleteSearchUid(String uid) {
+        return ldapPersonService.findEmployees(uid);
+    }
+
+
 }

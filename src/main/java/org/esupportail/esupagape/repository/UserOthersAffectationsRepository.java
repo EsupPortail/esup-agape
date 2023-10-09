@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserOthersAffectationsRepository extends JpaRepository <UserOthersAffectations, Long> {
     List<UserOthersAffectations> findByUid(String uid);
+
+    List<UserOthersAffectations> findByUidAndCodComposante(String uid, String codComposante);
 }
