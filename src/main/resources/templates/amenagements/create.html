@@ -143,7 +143,7 @@
                                                         th:unless="${classification == T(org.esupportail.esupagape.entity.enums.Classification).NON_COMMUNIQUE || classification == T(org.esupportail.esupagape.entity.enums.Classification).REFUS}"
                                                         th:text="#{'dossier.classification.' + ${classification}}"
                                                         th:value="${classification}"
-                                                        th:selected="${currentDossier.classifications != null && currentDossier.classifications.contains(classification)}"></option>
+                                                        th:selected="${currentDossier.classifications.contains(classification)}"></option>
                                             </select>
                                         </div>
                                     </div>

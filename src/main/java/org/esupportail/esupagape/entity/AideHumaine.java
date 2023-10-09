@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class AideHumaine {
 
     @ElementCollection(targetClass = FonctionAidant.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<FonctionAidant> fonctionAidants;
+    private Set<FonctionAidant> fonctionAidants = new HashSet<>();
 
     @OneToMany(mappedBy = "aideHumaine", cascade = CascadeType.REMOVE)
     private List<PeriodeAideHumaine> periodeAideHumaines = new ArrayList<>();
@@ -77,8 +78,6 @@ public class AideHumaine {
     public void setStatusAideHumaine(StatusAideHumaine statusAideHumaine) {
         this.statusAideHumaine = statusAideHumaine;
     }
-
-
 
     public String getNumEtuAidant() {
         return numEtuAidant;

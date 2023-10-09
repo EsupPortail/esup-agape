@@ -192,8 +192,11 @@ public class IndividuService {
         }
         Dossier newDossier = null;
         if (individuTestIsExist != null) {
-            if (individuTestIsExist.getDossiers().stream().noneMatch(dossier -> dossier.getYear().equals(utilsService.getCurrentYear()))) {
+            List<Dossier> dossiers = individuTestIsExist.getDossiers().stream().filter(dossier -> dossier.getYear().equals(utilsService.getCurrentYear())).toList();
+            if (dossiers.isEmpty()) {
                 newDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
+            } else {
+                newDossier = dossiers.get(0);
             }
             individu = individuTestIsExist;
         } else if (StringUtils.hasText(individu.getCodeIne()) && StringUtils.hasText(individu.getName()) && StringUtils.hasText(individu.getFirstName()) && individu.getDateOfBirth() != null && StringUtils.hasText(individu.getSex())) {
