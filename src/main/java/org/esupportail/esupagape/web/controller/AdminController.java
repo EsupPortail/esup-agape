@@ -80,6 +80,7 @@ public class AdminController {
             sessions.addAll(sessionRegistry.getAllSessions(principal, false));
         }
         model.addAttribute("sessions", sessions);
+        model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
         return "admin/index";
     }
 

@@ -176,29 +176,18 @@
 				<h1>Affectations</h1>
 				<hr>
 				<div class="col-6 mx-auto">
-					<form th:action="@{/admin/add-userOthersAffectations}" method="post">
-						<!--						<div class="mb-3">-->
-						<!--							<label for="uid" class="form-label">Ajouter un UID</label>-->
-						<!--							<input type="text" name="uid" id="uid" class="form-control" placeholder="UID" required>-->
-						<!--						</div>-->
-						<!--						<div class="mb-3">-->
-						<!--							<label for="codComposante" class="form-label">Ajouter une composante</label>-->
-						<!--							<input type="text" name="codComposante" id="codComposante" class="form-control" placeholder="Code Composante" required>-->
-						<!--						</div>-->
-						<div class="row">
-							<label for="autocomplete-search-uid" class="form-label col-2">Employé-e-s</label>
-							<div class="mb-3">
-								<select id="autocomplete-search-uid" name="uid">
-								</select>
-							</div>
-							<label for="codComposante" class="form-label col-2">Composantes</label>
-							<div class="mb-3">
-								<input type="text" name="codComposante" id="codComposante" class="form-control"
-								       placeholder="Code Composante">
-							</div>
+					<form th:action="@{/admin/add-userOthersAffectations}" method="post" class="d-flex flex-column">
+						<div class="mb-3">
+							<label for="autocomplete-search-uid" class="form-label">Employé-e-s</label>
+							<select id="autocomplete-search-uid" name="uid" class="form-control"></select>
 						</div>
-						<button type="submit" class="btn btn-primary">Ajouter</button>
+						<div class="mb-3">
+							<label for="codComposante" class="form-label">Composantes</label>
+							<input type="text" name="codComposante" id="codComposante" class="form-control" placeholder="Code Composante">
+						</div>
+						<button type="submit" class="btn btn-primary align-self-end">Ajouter</button>
 					</form>
+
 					<table class="table table-striped">
 						<tr th:each="userOtherAffectation : ${userOthersAffectations}">
 							<td th:text="${userOtherAffectation.uid}"></td>
