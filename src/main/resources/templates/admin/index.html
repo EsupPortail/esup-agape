@@ -194,20 +194,18 @@
 							<td th:text="${userOtherAffectation.codComposante}"></td>
 							<td>
 								<button type="button" class="btn btn-danger" data-bs-toggle="modal"
-								        th:data-bs-target="'#delete-affectation-' + ${userOtherAffectation.id}">
+								        th:data-bs-target="'#delete-userOthersAffectations-' + ${userOtherAffectation.id}">
 									<i class="fa-solid fa-trash"></i>
 								</button>
-								<div class="modal fade" th:id="'delete-affectation-' + ${userOtherAffectation.id}"
-								     tabindex="-1"
+								<div class="modal fade" th:id="'delete-userOthersAffectations-' + ${userOtherAffectation.id}" tabindex="-1"
 								     aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-body">
-												Confirmez la suppression de l’affectation ?
-												<form th:action="@{/admin/delete-userOthersAffectations}" method="post"
+												Confirmez la suppression de l’année ?
+												<form th:action="@{/admin/delete-userOthersAffectations}" th:method="delete"
 												      class="float-end">
-													<input type="hidden" name="id"
-													       th:value="${userOtherAffectation.id}">
+													<input type="hidden" name="id" th:value="${userOtherAffectation.id}">
 													<button type="button" class="btn btn-secondary"
 													        data-bs-dismiss="modal">
 														Annuler

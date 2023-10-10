@@ -29,9 +29,8 @@ public class UserOthersAffectationsService {
 
     @Transactional
     public void deleteUserOthersAffectations(Long id) {
-        Optional<UserOthersAffectations> userOthersAffectations = userOthersAffectationsRepository.findById(id);
-        userOthersAffectationsRepository.delete(userOthersAffectations.get());
-
+        UserOthersAffectations userOthersAffectations = userOthersAffectationsRepository.findById(id).orElseThrow();
+        userOthersAffectationsRepository.deleteById(userOthersAffectations.getId());
     }
 
     public void addUserOthersAffectations(String uid, String codComposante) {

@@ -236,13 +236,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-
     @DeleteMapping(value = "/delete-userOthersAffectations")
     public String deleteUserOthersAffectations(@RequestParam Long id) {
         userOthersAffectationsService.deleteUserOthersAffectations(id);
         return "redirect:/admin";
     }
-
     @GetMapping(value = "/autocomplete-search-uid", produces = "application/json")
     @ResponseBody
     public List<PersonLdap> autocompleteSearchUid(String uid) {
