@@ -71,16 +71,32 @@ public class AmenagementScolariteController {
         String codComposante = userService.getComposante(personLdap);
         Page<Amenagement> amenagements;
         if (codComposante != null) {
-            List<Amenagement> amenagementsList = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear());
-            //if other composante in table codComposanteAdds
             List<String> codComposanteAdds = userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList();
-            for(String codComposanteAdd : codComposanteAdds) {
-                amenagementsList.addAll(scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteAdd, utilsService.getCurrentYear()));
-            }
-            amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
+            List<Amenagement> amenagementsList;
             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante, pageable);
+                amenagementsList = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante);
+                //if other composante in table codComposanteAdds
+                for(String codComposanteAdd : codComposanteAdds) {
+                    amenagementsList.addAll(scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteAdd));
+                }
+            } else {
+                amenagementsList = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear());
+                //if other composante in table codComposanteAdds
+                for(String codComposanteAdd : codComposanteAdds) {
+                    amenagementsList.addAll(scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteAdd, utilsService.getCurrentYear()));
+                }
             }
+
+            amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
+
+
+            /*if (StringUtils.hasText(fullTextSearch)) {
+                //amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante, pageable);
+                for(String codComposanteAdd : codComposanteAdds) {
+
+                }
+                amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
+            }*/
             model.addAttribute("amenagements", amenagements);
             model.addAttribute("codComposante", codComposante);
         } else {

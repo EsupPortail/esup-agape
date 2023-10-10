@@ -38,10 +38,9 @@ public interface ScolariteRepository extends JpaRepository <Amenagement, Long>{
             "and (a.dossier.codComposante  = :codComposante) " +
             "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
             "and a.statusAmenagement = :statusAmenagement")
-    Page<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
+    List<Amenagement> findByIndividuNameScol(@Param("fullTextSearch") String fullTextSearch,
                                              StatusAmenagement statusAmenagement,
                                              @Param("yearFilter") Integer yearFilter,
-                                                 @Param("codComposante") String codComposante,
-                                                 Pageable pageable);
+                                             @Param("codComposante") String codComposante);
 
 }

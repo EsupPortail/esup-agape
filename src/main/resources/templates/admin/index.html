@@ -16,13 +16,18 @@
 				<button class="nav-link" id="nav-years-tab" data-bs-toggle="tab" data-bs-target="#nav-years"
 				        type="button" role="tab" aria-controls="nav-years" aria-selected="false">Années
 				</button>
-				<button class="nav-link" id="nav-sessions-tab" data-bs-toggle="tab" data-bs-target="#nav-sessions" type="button"
-						role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions
+				<button class="nav-link" id="nav-sessions-tab" data-bs-toggle="tab" data-bs-target="#nav-sessions"
+				        type="button"
+				        role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions
 				</button>
 				<button class="nav-link" id="nav-su-tab" data-bs-toggle="tab" data-bs-target="#nav-su" type="button"
 				        role="tab" aria-controls="nav-su" aria-selected="false">
-<!--						th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
-				SU
+					<!--						th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
+					SU
+				</button>
+				<button class="nav-link" id="nav-affectations-tab" data-bs-toggle="tab"
+				        data-bs-target="#nav-affectations" type="button"
+				        role="tab" aria-controls="nav-affectations" aria-selected="false">Affectations
 				</button>
 			</div>
 		</nav>
@@ -51,7 +56,8 @@
 						<li class="m-1"><a role="button" href="/admin/refresh-sise" class="btn btn-dark">Actualiser le
 							fichier SISE</a></li>
 						<li class="m-1" th:if="${esupSignaturePresent}">
-							<a role="button" href="/admin/sync-esup-signature" class="btn btn-dark">Forcer synchro esup signature</a></li>
+							<a role="button" href="/admin/sync-esup-signature" class="btn btn-dark">Forcer synchro esup
+								signature</a></li>
 					</ul>
 				</div>
 			</div>
@@ -151,7 +157,7 @@
 				</table>
 			</div>
 			<div class="tab-pane fade" id="nav-su" role="tabpanel" aria-labelledby="nav-su-tab">
-<!--				 th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
+				<!--				 th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
 				<h1>Switch User</h1>
 				<hr>
 				<div class="card mt-5 col-lg-10 mx-auto">
@@ -164,6 +170,55 @@
 							<input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
 						</form>
 					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="nav-affectations" role="tabpanel" aria-labelledby="nav-affectations-tab">
+				<h1>Affectations</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<form th:action="@{/admin/add-userOthersAffectations}" method="post" class="d-flex flex-column">
+						<div class="mb-3">
+							<label for="autocomplete-search-uid" class="form-label">Employé-e-s</label>
+							<select id="autocomplete-search-uid" name="uid" class="form-control"></select>
+						</div>
+						<div class="mb-3">
+							<label for="codComposante" class="form-label">Composantes</label>
+							<input type="text" name="codComposante" id="codComposante" class="form-control" placeholder="Code Composante">
+						</div>
+						<button type="submit" class="btn btn-primary align-self-end">Ajouter</button>
+					</form>
+
+					<table class="table table-striped">
+						<tr th:each="userOtherAffectation : ${userOthersAffectations}">
+							<td th:text="${userOtherAffectation.uid}"></td>
+							<td th:text="${userOtherAffectation.codComposante}"></td>
+							<td>
+								<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+								        th:data-bs-target="'#delete-userOthersAffectations-' + ${userOtherAffectation.id}">
+									<i class="fa-solid fa-trash"></i>
+								</button>
+								<div class="modal fade" th:id="'delete-userOthersAffectations-' + ${userOtherAffectation.id}" tabindex="-1"
+								     aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-body">
+												Confirmez la suppression de l’année ?
+												<form th:action="@{/admin/delete-userOthersAffectations}" th:method="delete"
+												      class="float-end">
+													<input type="hidden" name="id" th:value="${userOtherAffectation.id}">
+													<button type="button" class="btn btn-secondary"
+													        data-bs-dismiss="modal">
+														Annuler
+													</button>
+													<input class="btn btn-success" type="submit" value="Valider">
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
