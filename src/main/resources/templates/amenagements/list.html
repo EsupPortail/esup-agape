@@ -62,7 +62,7 @@
                                                         title="Voir"
                                                         th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
                                                         class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
-                                                <a sec:authorize="hasRole('ROLE_MANAGER')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+                                                <a sec:authorize="hasRole('ROLE_MANAGER') && !hasRole('ROLE_ADMIN')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
                                                    title="Voir"
                                                    th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
                                                    class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
