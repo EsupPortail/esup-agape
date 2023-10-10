@@ -240,8 +240,8 @@
 
         <dependency>
             <groupId>gouv.education</groupId>
-            <artifactId>apogee-ws</artifactId>
-            <version>63050</version>
+            <artifactId>apo-webservices-client</artifactId>
+            <version>64030</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
