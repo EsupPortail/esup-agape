@@ -68,6 +68,7 @@ public class AmenagementController {
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         return "amenagements/show";
     }
+
     @GetMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
