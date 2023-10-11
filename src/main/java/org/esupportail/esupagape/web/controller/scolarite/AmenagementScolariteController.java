@@ -61,6 +61,8 @@ public class AmenagementScolariteController {
     public String list(@RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) String fullTextSearch,
                        @RequestParam(required = false) String composanteFilter,
+                       @RequestParam(required = false) String campusFilter,
+                       @RequestParam(required = false) Boolean viewedFilter,
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @PageableDefault(size = 10,
                                sort = "createDate",
@@ -75,15 +77,24 @@ public class AmenagementScolariteController {
         if (codComposante != null) {
             userCodComposantes.add(codComposante);
         }
-        if(StringUtils.hasText(composanteFilter)) {
+        if (StringUtils.hasText(composanteFilter)) {
             codComposanteToDisplay.add(composanteFilter);
         } else {
             codComposanteToDisplay.addAll(userCodComposantes);
         }
+        String viewedByUid = null;
+        String notViewedByUid = null;
+        if (viewedFilter != null) {
+            if (viewedFilter) {
+                viewedByUid = personLdap.getUid();
+            } else  {
+                notViewedByUid = personLdap.getUid();
+            }
+        }
         if (StringUtils.hasText(fullTextSearch)) {
-            amenagements = amenagementService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteToDisplay, pageable);
+            amenagements = amenagementService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteToDisplay, campusFilter, viewedByUid, notViewedByUid, pageable);
         } else {
-            amenagements = amenagementService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, utilsService.getCurrentYear(), pageable);
+            amenagements = amenagementService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, campusFilter, viewedByUid, notViewedByUid, utilsService.getCurrentYear(), pageable);
         }
         model.addAttribute("amenagements", amenagements);
         Map<String, String> composantes = new HashMap<>();
@@ -93,7 +104,10 @@ public class AmenagementScolariteController {
         model.addAttribute("composantes", composantes);
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("statusAmenagement", StatusAmenagement.values());
+        model.addAttribute("campuses", dossierService.getAllCampus());
         model.addAttribute("composanteFilter", composanteFilter);
+        model.addAttribute("campusFilter", campusFilter);
+        model.addAttribute("viewedFilter", viewedFilter);
         model.addAttribute("fullTextSearch", fullTextSearch);
         setModel(model);
         return "scolarite/amenagements/list";

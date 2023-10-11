@@ -23,6 +23,21 @@
 								</th:block>
 							</select>
 							</div>
+							<div class="col-2">
+								<select class="form-select" name="campusFilter">
+									<option value="" disabled selected hidden>Filtre par campus</option>
+									<th:block th:each="campus : ${campuses}">
+										<option th:selected="${campusFilter == campus}" th:value="${campus}" th:text="${campus}"></option>
+									</th:block>
+								</select>
+							</div>
+							<div class="col-2">
+								<select class="form-select" name="viewedFilter">
+									<option value="" disabled selected hidden>Filtre par statut</option>
+									<option th:selected="${viewedFilter != null && viewedFilter}" value="true">Lu</option>
+									<option th:selected="${viewedFilter != null && !viewedFilter}" value="false">Non lu</option>
+								</select>
+							</div>
 							<input class="col-2 form-control" style="max-width: 600px" type="text"
 								   placeholder="Rechercher par nom, prénom" name="fullTextSearch"
 								   th:value="${fullTextSearch}">
@@ -38,8 +53,9 @@
 						<tr>
 							<th></th>
 							<th>Composante</th>
+							<th>Campus</th>
 							<th><a class="sorted link-light" sd:pagination-sort="createDate">Date create</a></th>
-							<th><a class="sorted link-light" sd:pagination-sort="endDate">Date fin</a></th>
+							<th><a class="sorted link-light" sd:pagination-sort="endDate" style="max-width: 200px;">Date fin</a></th>
 							<th>Numéro d’étudiant</th>
 							<th>Nom</th>
 							<th>Temps majoré</th>
@@ -55,8 +71,9 @@
 							<tr style="text-align: left" th:classappend="${amenagement.viewByUid.contains(personLdap.uid) ? '' : 'fw-bold'}">
 								<td><i class="fa fa-flag text-danger" th:unless="${amenagement.viewByUid.contains(personLdap.uid)}"></i></td>
 								<td th:text="${amenagement.dossier.composante}"></td>
+								<td th:text="${amenagement.dossier.campus}"></td>
 								<td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
-								<td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+								<td style="max-width: 200px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden" th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
 								<td th:text="${amenagement.dossier.individu.numEtu}"></td>
 								<td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' +  amenagement.dossier.individu.firstName}"></td>
 								<td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>

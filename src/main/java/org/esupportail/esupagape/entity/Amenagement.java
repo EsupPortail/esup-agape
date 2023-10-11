@@ -93,7 +93,7 @@ public class Amenagement {
     @ManyToOne(fetch = FetchType.LAZY)
     private Document certificat;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private Set<String> viewByUid = new HashSet<>();
 
     public Long getId() {

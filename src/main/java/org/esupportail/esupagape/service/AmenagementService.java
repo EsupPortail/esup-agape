@@ -258,12 +258,12 @@ public class AmenagementService {
         }
     }
 
-    public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, Integer yearFilter, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearchScol(statusAmenagement, codComposantes, yearFilter, pageable);
+    public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearchScol(statusAmenagement, codComposantes, campus, viewedByUid, notViewedByUid, yearFilter, pageable);
     }
 
-    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, List<String> codComposantes, Pageable pageable) {
-        return amenagementRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposantes, pageable);
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Pageable pageable) {
+        return amenagementRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposantes, campus, viewedByUid, notViewedByUid, pageable);
     }
 
     public Page<Amenagement> findAllPaged(Pageable pageable) {
