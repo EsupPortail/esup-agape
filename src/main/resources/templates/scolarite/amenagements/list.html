@@ -4,6 +4,7 @@
 <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
 <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
 <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+<!--/*@thymesVar id="composantes" type="java.util.Map<java.lang.String, java.lang.String>"*/-->
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
@@ -14,12 +15,18 @@
 				<div class="col-12">
 					<form th:action="@{/scolarite/amenagements}" method="get">
 						<div class="row mt-1 mb-2 g-1">
-							<form id="search-form" th:action="@{/scolarite/amenagements}" method="get">
-								<input class="col-2 form-control" style="max-width: 600px" type="text"
-								       placeholder="Rechercher par nom, prénom" name="fullTextSearch"
-								       th:value="${fullTextSearch}">
-							</form>
-							<div class="col-12 col-xl-2" style="white-space: nowrap;">
+							<div class="col-2">
+							<select class="form-select" name="composanteFilter">
+								<option value="" disabled selected hidden>Filtre par composante</option>
+								<th:block th:each="composante : ${composantes.entrySet()}">
+									<option th:selected="${composanteFilter == composante.key}" th:value="${composante.key}" th:text="${composante.value}"></option>
+								</th:block>
+							</select>
+							</div>
+							<input class="col-2 form-control" style="max-width: 600px" type="text"
+								   placeholder="Rechercher par nom, prénom" name="fullTextSearch"
+								   th:value="${fullTextSearch}">
+							<div class="col-2 col-xl-2" style="white-space: nowrap;">
 								<input class="btn btn-success" type="submit" value="Rechercher">
 								<a class="btn btn-secondary" id="btnClear"
 								   th:href="@{/scolarite/amenagements}">Effacer</a>
@@ -32,6 +39,7 @@
 							<th>Composante</th>
 							<th><a class="sorted link-light" sd:pagination-sort="createDate">Date create</a></th>
 							<th><a class="sorted link-light" sd:pagination-sort="endDate">Date fin</a></th>
+							<th>Numéro d’étudiant</th>
 							<th>Nom</th>
 							<th>Temps majoré</th>
 							<th>Nom médecin</th>
@@ -47,6 +55,7 @@
 								<td th:text="${amenagement.dossier.composante}"></td>
 								<td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
 								<td th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+								<td th:text="${amenagement.dossier.individu.numEtu}"></td>
 								<td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' +  amenagement.dossier.individu.firstName}"></td>
 								<td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
 								<td th:text="${amenagement.nomMedecin}"></td>

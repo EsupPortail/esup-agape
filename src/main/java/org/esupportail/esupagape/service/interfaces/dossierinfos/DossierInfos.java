@@ -9,6 +9,7 @@ public class DossierInfos {
     String libelleFormation;
     String libelleFormationPrec;
     String etablissement;
+    String campus;
     String formAddress;
     String noteS1;
     String resultatS1;
@@ -71,6 +72,14 @@ public class DossierInfos {
 
     public void setEtablissement(String etablissement) {
         this.etablissement = etablissement;
+    }
+
+    public String getCampus() {
+        return campus;
+    }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
     }
 
     public String getFormAddress() {

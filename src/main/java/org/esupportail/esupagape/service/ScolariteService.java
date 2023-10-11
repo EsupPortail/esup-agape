@@ -26,17 +26,12 @@ public class ScolariteService {
         this.utilsService = utilsService;
     }
 
-    public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable) {
-        return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter, pageable);
+    public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, Integer yearFilter, Pageable pageable) {
+        return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposantes, yearFilter, pageable);
     }
 
-    public List<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter) {
-        return scolariteRepository.findByFullTextSearchScol(statusAmenagement, codComposante, yearFilter);
-    }
-
-
-    public List<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, String codComposante) {
-        return scolariteRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposante);
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, List<String> codComposantes, Pageable pageable) {
+        return scolariteRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposantes, pageable);
     }
 
 }

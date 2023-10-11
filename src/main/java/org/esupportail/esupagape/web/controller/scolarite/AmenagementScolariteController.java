@@ -12,11 +12,11 @@ import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ScolariteService;
+import org.esupportail.esupagape.service.ldap.LdapOrganizationalUnitService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -28,9 +28,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,20 +45,24 @@ public class AmenagementScolariteController {
 
     private final AmenagementService amenagementService;
 
+    private final LdapOrganizationalUnitService ldapOrganizationalUnitService;
+
     private final UserOthersAffectationsRepository userOthersAffectationsRepository;
 
-    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
+    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService, LdapOrganizationalUnitService ldapOrganizationalUnitService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
         this.userService = userService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.scolariteService = scolariteService;
         this.amenagementService = amenagementService;
+        this.ldapOrganizationalUnitService = ldapOrganizationalUnitService;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
     }
 
     @GetMapping
     public String list(@RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) String fullTextSearch,
+                       @RequestParam(required = false) String composanteFilter,
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @PageableDefault(size = 10,
                                sort = "createDate",
@@ -70,45 +72,31 @@ public class AmenagementScolariteController {
         }
         String codComposante = userService.getComposante(personLdap);
         Page<Amenagement> amenagements;
+        List<String> codComposanteToDisplay = new ArrayList<>();
+        List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList());
         if (codComposante != null) {
-            List<String> codComposanteAdds = userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList();
-            List<Amenagement> amenagementsList;
-            if (StringUtils.hasText(fullTextSearch)) {
-                amenagementsList = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante);
-                //if other composante in table codComposanteAdds
-                for(String codComposanteAdd : codComposanteAdds) {
-                    amenagementsList.addAll(scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteAdd));
-                }
-            } else {
-                amenagementsList = scolariteService.getFullTextSearchScol(statusAmenagement, codComposante, utilsService.getCurrentYear());
-                //if other composante in table codComposanteAdds
-                for(String codComposanteAdd : codComposanteAdds) {
-                    amenagementsList.addAll(scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteAdd, utilsService.getCurrentYear()));
-                }
-            }
-
-            amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
-
-
-            /*if (StringUtils.hasText(fullTextSearch)) {
-                //amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposante, pageable);
-                for(String codComposanteAdd : codComposanteAdds) {
-
-                }
-                amenagements = new PageImpl<>(amenagementsList, pageable, amenagementsList.size());
-            }*/
-            model.addAttribute("amenagements", amenagements);
-            model.addAttribute("codComposante", codComposante);
-        } else {
-            if (httpServletRequest.isUserInRole("ROLE_ADMIN")) {
-                model.addAttribute("amenagements", scolariteService.getFullTextSearchScol(statusAmenagement, null, utilsService.getCurrentYear(), pageable));
-            } else {
-                model.addAttribute("amenagements", new PageImpl<>(new ArrayList<>()));
-            }
+            userCodComposantes.add(codComposante);
         }
+        if(StringUtils.hasText(composanteFilter)) {
+            codComposanteToDisplay.add(composanteFilter);
+        } else {
+            codComposanteToDisplay.addAll(userCodComposantes);
+        }
+        if (StringUtils.hasText(fullTextSearch)) {
+            amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteToDisplay, pageable);
+        } else {
+            amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, utilsService.getCurrentYear(), pageable);
+        }
+        model.addAttribute("amenagements", amenagements);
+        Map<String, String> composantes = new HashMap<>();
+        for(String userCodComposante : userCodComposantes) {
+            composantes.put(userCodComposante, ldapOrganizationalUnitService.getOrganizationalUnitLdap(userCodComposante).getDescription());
+        }
+        model.addAttribute("composantes", composantes);
         model.addAttribute("yearFilter", yearFilter);
-        model.addAttribute("composantes", dossierService.getAllComposantes());
         model.addAttribute("statusAmenagement", StatusAmenagement.values());
+        model.addAttribute("composanteFilter", composanteFilter);
+        model.addAttribute("fullTextSearch", fullTextSearch);
         setModel(model);
         return "scolarite/amenagements/list";
     }
