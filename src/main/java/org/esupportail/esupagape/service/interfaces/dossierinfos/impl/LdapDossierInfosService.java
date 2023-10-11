@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.interfaces.dossierinfos.impl;
 
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Order(2)
@@ -29,10 +32,13 @@ public class LdapDossierInfosService implements DossierInfosService {
 
     private final SiseService siseService;
 
-    public LdapDossierInfosService(LdapPersonService ldapPersonService, LdapOrganizationalUnitService ldapOrganizationalUnitService, SiseService siseService) {
+    private final ApplicationProperties applicationProperties;
+
+    public LdapDossierInfosService(LdapPersonService ldapPersonService, LdapOrganizationalUnitService ldapOrganizationalUnitService, SiseService siseService, ApplicationProperties applicationProperties) {
         this.ldapPersonService = ldapPersonService;
         this.ldapOrganizationalUnitService = ldapOrganizationalUnitService;
         this.siseService = siseService;
+        this.applicationProperties = applicationProperties;
     }
 
     @Override
@@ -41,6 +47,16 @@ public class LdapDossierInfosService implements DossierInfosService {
             List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(individu.getNumEtu());
             if (!personLdaps.isEmpty()) {
                 PersonLdap personLdap = personLdaps.get(0);
+                if(!personLdap.getMemberOf().isEmpty()) {
+                    Pattern pattern = Pattern.compile("cn=adhoc\\.campus\\.([^.-]+)-");
+                    String campus = personLdap.getMemberOf().stream().filter(s -> s.contains(applicationProperties.getMemberOfCampusFilter())).findFirst().orElse(null);
+                    if(campus != null) {
+                        Matcher matcher = pattern.matcher(campus);
+                        if (matcher.find()) {
+                            dossierInfos.setCampus(StringUtils.capitalize(matcher.group(1)));
+                        }
+                    }
+                }
                 try {
                     if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
                         OrganizationalUnitLdap organizationalUnitLdap = ldapOrganizationalUnitService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());

@@ -230,6 +230,10 @@ public class DossierService {
         return dossierRepository.findAllLibelleFormation();
     }
 
+    public List<String> getAllCampus() {
+        return dossierRepository.findAllCampus().stream().filter(StringUtils::hasText).toList();
+    }
+
     @Transactional
     public void addAttachment(Long id, MultipartFile[] multipartFiles) throws AgapeException {
         Dossier dossier = getById(id);

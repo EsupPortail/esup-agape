@@ -459,6 +459,17 @@
 							</div>
 						</div>
 						<div class="row mb-1 align-items-baseline"
+							 th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="composante">Campus</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<input disabled id="campus" type="text" class="form-control"
+									   th:value="${currentDossier.campus}"
+									   th:readonly="${currentDossier.campus != ''}">
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline"
 						     th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
 							<div class="col-4" style="width: 250px;">
 								<label class="form-label" for="rentreeProchaine">Filière envisagée</label>

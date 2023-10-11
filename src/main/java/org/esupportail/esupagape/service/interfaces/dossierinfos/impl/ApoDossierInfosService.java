@@ -43,7 +43,7 @@ public class ApoDossierInfosService implements DossierInfosService {
                         continue;
                     }
                     dossierInfos.setCodComposante(insAdmEtpDTO.getComposante().getCodComposante());
-                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
+//                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
                     dossierInfos.setLibelleFormation(insAdmEtpDTO.getEtape().getLibWebVet());
                     if(getNotes) {
                         ContratPedagogiqueResultatElpEprDTO5[] resultatElpEprDTOs = wsApogeeServicePedago
