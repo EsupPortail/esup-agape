@@ -8,7 +8,17 @@
 <header th:replace="~{fragments/header :: header}"></header>
 <main class="d-inline-flex">
 	<div th:replace="~{fragments/side-administratif :: side}"></div>
-
+	<div class="float-buttons">
+		<button title="Marquer comme lu" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#markAsViewModal" th:unless="${amenagement.viewByUid.contains(personLdap.uid)}">
+			<i class="fa-regular fa-flag"></i>
+		</button>
+		<button title="Marquer comme non lu" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#markAsNotViewModal" th:if="${amenagement.viewByUid.contains(personLdap.uid)}">
+			<span class="fa-stack">
+				<i class="fa-regular fa-flag" style="margin-left: -15px;"></i>
+				<i class="fa-solid fa-slash fa-stack-1x" style="margin-left: -6px; margin-top: -3px; "></i>
+			</span>
+		</button>
+	</div>
 	<div class="agape-content agape-content-side">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
@@ -28,6 +38,38 @@
 		</div>
 	</div>
 </main>
+<div class="modal fade" id="markAsViewModal" tabindex="-1" aria-labelledby="markAsViewModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="markAsViewModalLabel">Marquer cet aménagement comme lu</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form th:method="post" th:action="@{'/scolarite/amenagements/' + ${amenagement.id} + '/viewed'}">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-success">Valider</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="markAsNotViewModal" tabindex="-1" aria-labelledby="markAsNotViewModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="markAsNotViewModalLabel">Marquer cet aménagement comme non lu</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form th:method="post" th:action="@{'/scolarite/amenagements/' + ${amenagement.id} + '/not-viewed'}">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-success">Valider</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 <footer th:replace="~{fragments/footer :: black}"></footer>
 <div th:replace="~{fragments/flash :: flash}"></div>
 </body>

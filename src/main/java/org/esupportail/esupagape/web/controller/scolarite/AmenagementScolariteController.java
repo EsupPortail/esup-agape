@@ -11,11 +11,11 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
-import org.esupportail.esupagape.service.ScolariteService;
 import org.esupportail.esupagape.service.ldap.LdapOrganizationalUnitService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.*;
@@ -41,19 +42,16 @@ public class AmenagementScolariteController {
 
     private final DossierService dossierService;
 
-    private final ScolariteService scolariteService;
-
     private final AmenagementService amenagementService;
 
     private final LdapOrganizationalUnitService ldapOrganizationalUnitService;
 
     private final UserOthersAffectationsRepository userOthersAffectationsRepository;
 
-    public AmenagementScolariteController(UserService userService, UtilsService utilsService, ScolariteService scolariteService, DossierService dossierService, AmenagementService amenagementService, LdapOrganizationalUnitService ldapOrganizationalUnitService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
+    public AmenagementScolariteController(UserService userService, UtilsService utilsService, DossierService dossierService, AmenagementService amenagementService, LdapOrganizationalUnitService ldapOrganizationalUnitService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
         this.userService = userService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
-        this.scolariteService = scolariteService;
         this.amenagementService = amenagementService;
         this.ldapOrganizationalUnitService = ldapOrganizationalUnitService;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
@@ -83,9 +81,9 @@ public class AmenagementScolariteController {
             codComposanteToDisplay.addAll(userCodComposantes);
         }
         if (StringUtils.hasText(fullTextSearch)) {
-            amenagements = scolariteService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteToDisplay, pageable);
+            amenagements = amenagementService.getByIndividuNameScol(fullTextSearch, StatusAmenagement.VISE_ADMINISTRATION, codComposanteToDisplay, pageable);
         } else {
-            amenagements = scolariteService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, utilsService.getCurrentYear(), pageable);
+            amenagements = amenagementService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, utilsService.getCurrentYear(), pageable);
         }
         model.addAttribute("amenagements", amenagements);
         Map<String, String> composantes = new HashMap<>();
@@ -110,6 +108,20 @@ public class AmenagementScolariteController {
         model.addAttribute("years", utilsService.getYears());
     }
 
+    @PostMapping("/{amenagementId}/viewed")
+    public String viewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        amenagementService.viewedByUid(amenagementId, personLdap.getUid());
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement marqué comme lu"));
+        return "redirect:/scolarite/amenagements/" + amenagementId;
+    }
+
+    @PostMapping("/{amenagementId}/not-viewed")
+    public String notViewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        amenagementService.notViewedByUid(amenagementId, personLdap.getUid());
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement marqué comme non lu"));
+        return "redirect:/scolarite/amenagements/" + amenagementId;
+    }
+
     @GetMapping("/{amenagementId}")
     public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
         setModel(model);
@@ -128,7 +140,6 @@ public class AmenagementScolariteController {
         model.addAttribute("currentDossier", dossier);
         return "scolarite/amenagements/show";
     }
-
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody

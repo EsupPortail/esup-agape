@@ -1,10 +1,10 @@
 package org.esupportail.esupagape.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.esupportail.esupagape.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -92,6 +92,9 @@ public class Amenagement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Document certificat;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> viewByUid = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -315,5 +318,13 @@ public class Amenagement {
 
     public void setCertificat(Document certificat) {
         this.certificat = certificat;
+    }
+
+    public Set<String> getViewByUid() {
+        return viewByUid;
+    }
+
+    public void setViewByUid(Set<String> viewByUid) {
+        this.viewByUid = viewByUid;
     }
 }

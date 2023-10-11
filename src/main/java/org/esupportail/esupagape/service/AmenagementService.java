@@ -258,7 +258,13 @@ public class AmenagementService {
         }
     }
 
+    public Page<Amenagement> getFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearchScol(statusAmenagement, codComposantes, yearFilter, pageable);
+    }
 
+    public Page<Amenagement> getByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, List<String> codComposantes, Pageable pageable) {
+        return amenagementRepository.findByIndividuNameScol(fullTextSearch, statusAmenagement, utilsService.getCurrentYear(), codComposantes, pageable);
+    }
 
     public Page<Amenagement> findAllPaged(Pageable pageable) {
         return amenagementRepository.findAll(pageable);
@@ -692,5 +698,17 @@ public class AmenagementService {
             }
         }
         libelleAmenagementRepository.save(libelleAmenagement);
+    }
+
+    @Transactional
+    public void viewedByUid(Long amenagementId, String uid) {
+        Amenagement amenagement = getById(amenagementId);
+        amenagement.getViewByUid().add(uid);
+    }
+
+    @Transactional
+    public void notViewedByUid(Long amenagementId, String uid) {
+        Amenagement amenagement = getById(amenagementId);
+        amenagement.getViewByUid().remove(uid);
     }
 }
