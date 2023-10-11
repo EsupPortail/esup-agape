@@ -5,13 +5,14 @@ import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"individu_id", "year"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"individu_id", "year"})})
 public class Dossier {
 
     @Id
@@ -87,7 +88,6 @@ public class Dossier {
     private Boolean alternance;
 
     private Boolean scholarshipHolder;
-
     @ManyToOne
     private Individu individu;
 
