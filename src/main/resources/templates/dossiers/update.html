@@ -208,6 +208,25 @@
 
 							</div>
 						</div>
+						<div class="row mb-1 align-items-baseline mt-5">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="EmployeeYes">Étudiant(e) boursier(e)</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<h1></h1>
+								<input disabled class="form-check-input" type="radio" name="scholarshipholder" id="scholarshipholderYes"
+								       value="true" th:checked="${currentDossier.scholarshipHolder == true}">
+								<label class="form-check-label" for="scholarshipholderYes">
+									Oui
+								</label>
+								<input disabled class="form-check-input" type="radio" name="scholarshipholder" id="scholarshipholderNo"
+								       value="false" th:checked="${currentDossier.scholarshipHolder == false}">
+								<label class="form-check-label me-5" for="scholarshipholderNo">
+									Non
+								</label>
+
+							</div>
+						</div>
 					</div>
 
 					<div class="col-6">
