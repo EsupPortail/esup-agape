@@ -5,13 +5,14 @@ import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"individu_id", "year"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"individu_id", "year"})})
 public class Dossier {
 
     @Id
@@ -74,6 +75,8 @@ public class Dossier {
 
     private String formAddress;
 
+    private String campus;
+
     private String codComposante;
 
     private String composante;
@@ -86,6 +89,9 @@ public class Dossier {
 
     private Boolean alternance;
 
+    private Boolean hasScholarship;
+
+    private Boolean atypie;
     @ManyToOne
     private Individu individu;
 
@@ -280,6 +286,14 @@ public class Dossier {
         this.formAddress = formAddress;
     }
 
+    public String getCampus() {
+        return campus;
+    }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
+    }
+
     public String getCodComposante() {
         return codComposante;
     }
@@ -326,6 +340,22 @@ public class Dossier {
 
     public void setAlternance(Boolean alternance) {
         this.alternance = alternance;
+    }
+
+    public Boolean getHasScholarship() {
+        return hasScholarship;
+    }
+
+    public void setHasScholarship(Boolean hasScholarship) {
+        this.hasScholarship = hasScholarship;
+    }
+
+    public Boolean getAtypie() {
+        return atypie;
+    }
+
+    public void setAtypie(Boolean atypie) {
+        this.atypie = atypie;
     }
 
     public Individu getIndividu() {

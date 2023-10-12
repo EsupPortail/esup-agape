@@ -43,8 +43,14 @@ public class ApoDossierInfosService implements DossierInfosService {
                         continue;
                     }
                     dossierInfos.setCodComposante(insAdmEtpDTO.getComposante().getCodComposante());
-                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
+//                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
                     dossierInfos.setLibelleFormation(insAdmEtpDTO.getEtape().getLibWebVet());
+                    if (insAdmEtpDTO.getBourse() != null) {
+                        dossierInfos.setHasScholarship("02".equals(insAdmEtpDTO.getBourse().getCodeBourse()));
+                    } else {
+                        dossierInfos.setHasScholarship(false);
+                    }
+
                     if(getNotes) {
                         ContratPedagogiqueResultatElpEprDTO5[] resultatElpEprDTOs = wsApogeeServicePedago
                                 .recupererResultatsElpEprDTO(individu.getNumEtu(), annee.toString(), insAdmEtpDTO.getEtape().getCodeEtp(),

@@ -99,7 +99,24 @@ public class LdapPersonService {
                 .countLimit(20)
                 .filter(andFilter);
 
-        return  personLdapRepository.findAll(query);
+        return personLdapRepository.findAll(query);
 
     }
+
+    public List<PersonLdap> findEmployees(String search) {
+        AndFilter andFilter = new AndFilter();
+        andFilter.and(new EqualsFilter("eduPersonAffiliation", "employee"));
+        andFilter.and(new EqualsFilter("eduPersonAffiliation", "member"));
+        andFilter.and(new OrFilter()
+                .or(new LikeFilter("cn", search + "*"))
+                .or(new LikeFilter("uid", search + "*")));
+
+        LdapQuery query = LdapQueryBuilder.query()
+                .searchScope(SearchScope.ONELEVEL)
+                .base(ldapProperties.getSearchBase())
+                .countLimit(20)
+                .filter(andFilter);
+        return personLdapRepository.findAll(query);
+    }
+
 }

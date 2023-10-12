@@ -98,7 +98,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/dossiers/*/aides/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .requestMatchers("/dossiers/*/enquete", "/dossiers/*/enquete/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI")
                 .requestMatchers("/dossiers/*/amenagements").hasAnyRole("ADMIN", "MANAGER", "MEDECIN")
-                .requestMatchers("/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MEDECIN")
+                .requestMatchers("/dossiers/*/amenagements/**").hasAnyRole("ADMIN", "MANAGER", "MEDECIN")
                 .requestMatchers("/exports", "/exports/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/statistiques", "/statistiques/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")

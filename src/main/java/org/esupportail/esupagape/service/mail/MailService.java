@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,6 +65,27 @@ public class MailService {
         mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
         mimeMessage.setTo(new InternetAddress(to));
         send(mimeMessage.getMimeMessage());
+        logger.info("send test email for " + to);
+    }
+
+    public void sendAlert(List<String> to) throws MessagingException {
+        if (!checkMailSender()) {
+            return;
+        }
+        final Context ctx = new Context(Locale.FRENCH);
+        setTemplate(ctx);
+        MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
+        String htmlContent = templateEngine.process("mail/email-alert.html", ctx);
+        addInLineImages(mimeMessage, htmlContent);
+        mimeMessage.setSubject("Nouveau certificat d'aménagement validé");
+        mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
+        List<InternetAddress> internetAddresses = new ArrayList<>();
+        for (String s : to) {
+            internetAddresses.add(new InternetAddress(s));
+        }
+        mimeMessage.setTo(internetAddresses.toArray(InternetAddress[]::new));
+        send(mimeMessage.getMimeMessage());
+        logger.info("send alert email for " + to);
     }
 
     @Transactional
@@ -84,6 +106,7 @@ public class MailService {
         FileUtils.copyInputStreamToFile(inputStream, certificatFile);
         mimeMessage.addAttachment("certificat_amenagement.pdf", certificatFile);
         send(mimeMessage.getMimeMessage());
+        logger.info("send certificat email for " + to);
     }
 
     private void send(MimeMessage mimeMessage) {
@@ -98,23 +121,6 @@ public class MailService {
         mimeMessage.addInline("logo-univ", new ClassPathResource("/static/images/logo-univ.png", MailService.class));
     }
 
-    public void sendTest(List<String> recipientsEmails) throws MessagingException {
-        if (!checkMailSender()) {
-            return;
-        }
-        final Context ctx = new Context(Locale.FRENCH);
-        final MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper message;
-        message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        message.setSubject("esup-signature test mail");
-        message.setFrom(applicationProperties.getApplicationEmail());
-        message.setTo(recipientsEmails.toArray(String[]::new));
-        String htmlContent = templateEngine.process("mail/email-test.html", ctx);
-        message.setText(htmlContent, true);
-        logger.info("send test email for " + recipientsEmails.get(0));
-        mailSender.send(mimeMessage);
-    }
-
     private void setTemplate(Context ctx) {
         try {
             ctx.setVariable("logo", getBase64Image(new ClassPathResource("/static/images/logo.png", MailService.class).getInputStream(), "logo.png"));
@@ -126,7 +132,7 @@ public class MailService {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("error while setting template", e);
         }
     }
 

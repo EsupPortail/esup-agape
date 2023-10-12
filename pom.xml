@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.esupportail</groupId>
     <artifactId>esupagape</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Esup-Agape</name>
     <description>Esup-Agape</description>
@@ -240,8 +240,8 @@
 
         <dependency>
             <groupId>gouv.education</groupId>
-            <artifactId>apogee-ws</artifactId>
-            <version>63050</version>
+            <artifactId>apo-webservices-client</artifactId>
+            <version>64030</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
