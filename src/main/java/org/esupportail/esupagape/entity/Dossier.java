@@ -89,7 +89,7 @@ public class Dossier {
 
     private Boolean alternance;
 
-    private Boolean scholarshipHolder;
+    private Boolean hasScholarship;
 
     private Boolean atypie;
     @ManyToOne
@@ -342,12 +342,12 @@ public class Dossier {
         this.alternance = alternance;
     }
 
-    public Boolean getScholarshipHolder() {
-        return scholarshipHolder;
+    public Boolean getHasScholarship() {
+        return hasScholarship;
     }
 
-    public void setScholarshipHolder(Boolean scholarshipHolder) {
-        this.scholarshipHolder = scholarshipHolder;
+    public void setHasScholarship(Boolean hasScholarship) {
+        this.hasScholarship = hasScholarship;
     }
 
     public Boolean getAtypie() {

@@ -159,6 +159,7 @@ public class SyncService {
                 if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
                 }
+                dossier.setHasScholarship(dossierInfos.getHasScholarship());
             }
         }
     }

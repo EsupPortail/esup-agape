@@ -234,12 +234,12 @@
 							<div class="col-12 col-xxl-8">
 								<h1></h1>
 								<input disabled class="form-check-input" type="radio" name="scholarshipHolder" id="scholarshipHolderYes"
-								       value="true" th:checked="${currentDossier.scholarshipHolder == true}">
+								       value="true" th:checked="${currentDossier.hasScholarship == true}" readonly>
 								<label class="form-check-label" for="scholarshipHolderYes">
 									Oui
 								</label>
 								<input disabled class="form-check-input" type="radio" name="scholarshipHolder" id="scholarshipHolderNo"
-								       value="false" th:checked="${currentDossier.scholarshipHolder == false}">
+								       value="false" th:checked="${currentDossier.hasScholarship == false}" readonly>
 								<label class="form-check-label me-5" for="scholarshipHolderNo">
 									Non
 								</label>
