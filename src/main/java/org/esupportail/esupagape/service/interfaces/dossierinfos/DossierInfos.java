@@ -17,6 +17,8 @@ public class DossierInfos {
     String resultatS2;
     String noteAnn;
     String resultatAnn;
+    Boolean hasScholarship;
+
 
     public String getCodComposante() {
         return codComposante;
@@ -136,5 +138,13 @@ public class DossierInfos {
 
     public void setResultatAnn(String resultatAnn) {
         this.resultatAnn = resultatAnn;
+    }
+
+    public Boolean getHasScholarship() {
+        return hasScholarship;
+    }
+
+    public void setHasScholarship(Boolean hasScholarship) {
+        this.hasScholarship = hasScholarship;
     }
 }

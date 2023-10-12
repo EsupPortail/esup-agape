@@ -158,7 +158,6 @@ public class DossierService {
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEmployee(dossier.getEmployee());
         dossierToUpdate.setAlternance(dossier.getAlternance());
-        dossierToUpdate.setScholarshipHolder(dossier.getScholarshipHolder());
         dossierToUpdate.setAtypie(dossier.getAtypie());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
