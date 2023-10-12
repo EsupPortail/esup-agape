@@ -45,7 +45,7 @@ public class UserService {
 
     public String getComposante(PersonLdap personLdap) {
         OrganizationalUnitLdap organizationalUnitLdap = ldapOrganizationalUnitService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
-        List<String> codComposantes = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith(ldapProperties.getAffectationPrincipaleRefIdPrefix())).toList();
+        List<String> codComposantes = organizationalUnitLdap.getSupannRefId().stream().filter(s -> s.toUpperCase().startsWith(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo())).toList();
         if (!codComposantes.isEmpty()) {
             return codComposantes.get(0).split("}")[1];
         }

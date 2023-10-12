@@ -68,6 +68,7 @@
                         </th:block>
                         <th:block th:if="${amenagement.certificatSignatureStatus != null}">
                             <h1>La validation du certificat est prise en charge par Esup-Signature</h1>
+                            <a th:href="${esupSignatureUrl}" target="_blank">Cliquez ici pour accéder à la demande</a>
                             <div class="alert alert-warning" th:if="${amenagement.certificatSignatureStatus.name().equals('PENDING')}">
                                 Statut Esup-Signature : En cours de signature par l’administration
                             </div>
@@ -82,7 +83,7 @@
                             </div>
                         </th:block>
                         <div th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" class="alert alert-danger">
-                            Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
+                            Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
                             <span th:text="${amenagement.motifRefus}"></span>
                         </div>
                         <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-avis#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>

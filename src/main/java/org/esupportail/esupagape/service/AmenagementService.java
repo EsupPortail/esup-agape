@@ -18,6 +18,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
 import org.esupportail.esupagape.config.ApplicationProperties;
+import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.*;
 import org.esupportail.esupagape.entity.enums.*;
@@ -26,6 +27,10 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
+import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
+import org.esupportail.esupagape.repository.ldap.OrganizationalUnitLdapRepository;
+import org.esupportail.esupagape.repository.ldap.PersonLdapRepository;
+import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.mail.MailService;
 import org.esupportail.esupagape.service.utils.EsupSignatureService;
@@ -57,6 +62,7 @@ public class AmenagementService {
     private static final Logger logger = LoggerFactory.getLogger(AmenagementService.class);
 
     private final ApplicationProperties applicationProperties;
+    private final LdapProperties ldapProperties;
     private final AmenagementRepository amenagementRepository;
     private final DossierService dossierService;
     private final ObjectMapper objectMapper;
@@ -66,9 +72,13 @@ public class AmenagementService {
     private final MailService mailService;
     private final DocumentService documentService;
     private final LibelleAmenagementRepository libelleAmenagementRepository;
+    private final UserOthersAffectationsRepository userOthersAffectationsRepository;
+    private final PersonLdapRepository personLdapRepository;
+    private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
 
-    public AmenagementService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository) {
+    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
         this.applicationProperties = applicationProperties;
+        this.ldapProperties = ldapProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierService = dossierService;
         this.objectMapper = objectMapper;
@@ -78,6 +88,9 @@ public class AmenagementService {
         this.mailService = mailService;
         this.documentService = documentService;
         this.libelleAmenagementRepository = libelleAmenagementRepository;
+        this.userOthersAffectationsRepository = userOthersAffectationsRepository;
+        this.personLdapRepository = personLdapRepository;
+        this.organizationalUnitLdapRepository = organizationalUnitLdapRepository;
     }
 
     public Amenagement getById(Long id) {
@@ -380,6 +393,7 @@ public class AmenagementService {
                         amenagement.getDossier());
                 amenagement.setCertificat(certificat);
                 sendAmenagementToIndividu(amenagementId, false);
+                sendAlert(amenagementId);
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -659,10 +673,10 @@ public class AmenagementService {
                 amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
+                sendAlert(amenagement.getId());
             }
         }
     }
-
 
     @Transactional
     public void sendAmenagementToIndividu(long amenagementId, boolean force) {
@@ -682,6 +696,33 @@ public class AmenagementService {
                 amenagement.setIndividuSendDate(LocalDateTime.now());
             } catch (Exception e) {
                 logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId, e);
+            }
+        }
+    }
+
+    @Transactional
+    public void sendAlert(long amenagementId) {
+        Amenagement amenagement = getById(amenagementId);
+        List<String> to = new ArrayList<>();
+        if(StringUtils.hasText(applicationProperties.getTestEmail())) {
+            to.add(applicationProperties.getTestEmail());
+        } else {
+            List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefId(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() + amenagement.getDossier().getCodComposante());
+            List<String> affectations = organizationalUnitLdaps.stream().map(OrganizationalUnitLdap::getSupannCodeEntite).distinct().toList();
+            List<PersonLdap> personLdaps = personLdapRepository.findByMemberOf(ldapProperties.getScolariteMemberOfSearch());
+            List<UserOthersAffectations> userOthersAffectations = userOthersAffectationsRepository.findByCodComposante(amenagement.getDossier().getCodComposante());
+            List<String> uids = userOthersAffectations.stream().map(UserOthersAffectations::getUid).toList();
+            for(PersonLdap personLdap : personLdaps) {
+                if(uids.contains(personLdap.getUid()) || affectations.contains(personLdap.getSupannEntiteAffectationPrincipale())) {
+                    to.add(personLdap.getMail());
+                }
+            }
+        }
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+            try {
+                mailService.sendAlert(to);
+            } catch (Exception e) {
+                logger.warn("Impossible d'envoyer le mail d'alerte, amenagement : " + amenagementId, e);
             }
         }
     }

@@ -18,7 +18,9 @@ public class LdapProperties {
     private String membersOfGroupSearchFilter;
     private String memberSearchFilter;
     private String userIdSearchFilter;
-    private String affectationPrincipaleRefIdPrefix;
+    private String affectationPrincipaleRefIdPrefixFromApo;
+    private String affectationPrincipaleRefIdPrefixFromRh;
+    private String scolariteMemberOfSearch;
 
     private Map<String, String> mappingFiltersGroups = new HashMap<>();
 
@@ -110,11 +112,27 @@ public class LdapProperties {
         this.mappingFiltersGroups = mappingFiltersGroups;
     }
 
-    public String getAffectationPrincipaleRefIdPrefix() {
-        return affectationPrincipaleRefIdPrefix;
+    public String getAffectationPrincipaleRefIdPrefixFromApo() {
+        return affectationPrincipaleRefIdPrefixFromApo;
     }
 
-    public void setAffectationPrincipaleRefIdPrefix(String affectationPrincipaleRefIdPrefix) {
-        this.affectationPrincipaleRefIdPrefix = affectationPrincipaleRefIdPrefix;
+    public void setAffectationPrincipaleRefIdPrefixFromApo(String affectationPrincipaleRefIdPrefixFromApo) {
+        this.affectationPrincipaleRefIdPrefixFromApo = affectationPrincipaleRefIdPrefixFromApo;
+    }
+
+    public String getAffectationPrincipaleRefIdPrefixFromRh() {
+        return affectationPrincipaleRefIdPrefixFromRh;
+    }
+
+    public void setAffectationPrincipaleRefIdPrefixFromRh(String affectationPrincipaleRefIdPrefixFromRh) {
+        this.affectationPrincipaleRefIdPrefixFromRh = affectationPrincipaleRefIdPrefixFromRh;
+    }
+
+    public String getScolariteMemberOfSearch() {
+        return scolariteMemberOfSearch;
+    }
+
+    public void setScolariteMemberOfSearch(String scolariteMemberOfSearch) {
+        this.scolariteMemberOfSearch = scolariteMemberOfSearch;
     }
 }
