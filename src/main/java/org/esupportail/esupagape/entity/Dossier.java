@@ -90,6 +90,8 @@ public class Dossier {
     private Boolean alternance;
 
     private Boolean scholarshipHolder;
+
+    private Boolean atypie;
     @ManyToOne
     private Individu individu;
 
@@ -346,6 +348,14 @@ public class Dossier {
 
     public void setScholarshipHolder(Boolean scholarshipHolder) {
         this.scholarshipHolder = scholarshipHolder;
+    }
+
+    public Boolean getAtypie() {
+        return atypie;
+    }
+
+    public void setAtypie(Boolean atypie) {
+        this.atypie = atypie;
     }
 
     public Individu getIndividu() {
