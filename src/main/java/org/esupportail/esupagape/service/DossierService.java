@@ -389,15 +389,26 @@ public class DossierService {
             predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
         }
 
-        if (dossierFilter.getSuiviHandisup() != null) {
-            List<Predicate> suiviHandisupPredicates = new ArrayList<>();
-            if (dossierFilter.getSuiviHandisup()) {
-                suiviHandisupPredicates.add(cb.isTrue(dossierRoot.get("suiviHandisup")));
+        if (dossierFilter.getAtypie() != null) {
+            List<Predicate> atypiePredicates = new ArrayList<>();
+            if (dossierFilter.getAtypie()) {
+                atypiePredicates.add(cb.isTrue(dossierRoot.get("atypie")));
             } else {
-                suiviHandisupPredicates.add(cb.isFalse(dossierRoot.get("suiviHandisup")));
-                suiviHandisupPredicates.add(cb.isNull(dossierRoot.get("suiviHandisup")));
+                atypiePredicates.add(cb.isFalse(dossierRoot.get("atypie")));
+                atypiePredicates.add(cb.isNull(dossierRoot.get("atypie")));
             }
-            predicates.add(cb.or(suiviHandisupPredicates.toArray(Predicate[]::new)));
+            predicates.add(cb.or(atypiePredicates.toArray(Predicate[]::new)));
+        }
+
+        if (dossierFilter.getHasScholarship() != null) {
+            List<Predicate> suiviHasScholarshipPredicates = new ArrayList<>();
+            if (dossierFilter.getHasScholarship()) {
+                suiviHasScholarshipPredicates.add(cb.isTrue(dossierRoot.get("hasScholarship")));
+            } else {
+                suiviHasScholarshipPredicates.add(cb.isFalse(dossierRoot.get("hasScholarship")));
+                suiviHasScholarshipPredicates.add(cb.isNull(dossierRoot.get("hasScholarship")));
+            }
+            predicates.add(cb.or(suiviHasScholarshipPredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> composantePredicates = new ArrayList<>();
         for (String codComposante : dossierFilter.getComposante()) {
@@ -488,6 +499,16 @@ public class DossierService {
         }
         if (fonctionAidantPredicates.size() > 0) {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
+        }
+        if (dossierFilter.getHasScholarship() != null) {
+            List<Predicate> hasScholarshipPredicates = new ArrayList<>();
+            if (dossierFilter.getHasScholarship()) {
+                hasScholarshipPredicates.add(cb.isTrue(dossierRoot.get("hasScholarship")));
+            } else {
+                hasScholarshipPredicates.add(cb.isFalse(dossierRoot.get("hasScholarship")));
+                hasScholarshipPredicates.add(cb.isNull(dossierRoot.get("hasScholarship")));
+            }
+            predicates.add(cb.or(hasScholarshipPredicates.toArray(Predicate[]::new)));
         }
 
         if (dossierFilter.getNewDossier() != null) {
