@@ -225,7 +225,6 @@
 								<label class="form-check-label me-5" for="EmployeeNo">
 									Non
 								</label>
-
 							</div>
 						</div>
 						<div class="row mb-1 align-items-baseline mt-2">
@@ -244,6 +243,77 @@
 								<label class="form-check-label me-5" for="scholarshipHolderNo">
 									Non
 								</label>
+							</div>
+						</div>
+						<div class="alert alert-info">
+							<h5>Données relatives à l’année courante (<span
+									th:text="${currentYear} + '-' + ${currentYear+1}"></span>)</h5>
+							<div class="row mb-1 align-items-baseline">
+								<div class="col-4">
+									<label class="form-label" for="niveauEtudes">Niveau d’études</label>
+								</div>
+								<div class="col-8">
+									<div class="input-group">
+										<input disabled
+										       id="niveauEtudes"
+										       name="niveauEtudes"
+										       type="text"
+										       class="form-control"
+										       th:value="${currentDossier.niveauEtudes}"
+										       th:readonly="${currentDossier.niveauEtudes != ''}">
+										<a onclick="toggleInputLock('niveauEtudes');"
+										   role="button"
+										   id="niveauEtudesEdit"
+										   class="btn btn-light border-secondary border-opacity-25 d-none">
+											<i class="fa-solid fa-pen"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1 align-items-baseline">
+								<div class="col-4">
+									<label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>
+								</div>
+								<div class="col-8">
+									<div class="input-group">
+                                            <textarea disabled
+                                                      id="secteurDisciplinaire"
+                                                      name="secteurDisciplinaire"
+                                                      type="text"
+                                                      class="form-control"
+                                                      th:value="${currentDossier.secteurDisciplinaire}"
+                                                      th:readonly="${currentDossier.secteurDisciplinaire != ''}">
+                                            </textarea>
+										<a onclick="toggleInputLock('secteurDisciplinaire');"
+										   role="button"
+										   id="secteurDisciplinaireEdit"
+										   class="btn btn-light border-secondary border-opacity-25 d-none">
+											<i class="fa-solid fa-pen"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1 align-items-baseline">
+								<div class="col-4">
+									<label class="form-label" for="formAddress">Adresse de formation</label>
+								</div>
+								<div class="col-8">
+									<div class="input-group">
+                                            <textarea disabled
+                                                      id="formAddress"
+                                                      name="formAddress"
+                                                      type="text"
+                                                      class="form-control"
+                                                      th:value="${currentDossier.formAddress}"
+                                                      th:readonly="${currentDossier.formAddress != ''}"></textarea>
+										<a onclick="toggleInputLock('formAddress');"
+										   role="button"
+										   id="formAddressEdit"
+										   class="btn btn-light border-secondary border-opacity-25 d-none">
+											<i class="fa-solid fa-pen"></i>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -305,126 +375,6 @@
 								</label>
 							</div>
 						</div>
-
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="niveauEtudes">Niveau d’études</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="niveauEtudes"-->
-						<!--                                                    name="niveauEtudes"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.niveauEtudes}"-->
-						<!--                                                    th:readonly="${currentDossier.niveauEtudes != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('niveauEtudes');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="niveauEtudesEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="secteurDisciplinaire"-->
-						<!--                                                    name="secteurDisciplinaire"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.secteurDisciplinaire}"-->
-						<!--                                                    th:readonly="${currentDossier.secteurDisciplinaire != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('secteurDisciplinaire');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="secteurDisciplinaireEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="libelleFormation">Formation</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <textarea rows="3"-->
-						<!--                                                    disabled-->
-						<!--                                                    id="libelleFormation"-->
-						<!--                                                    name="libelleFormation"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    style="min-height:60px; resize: none;"-->
-						<!--                                                    th:text="${currentDossier.libelleFormation}"-->
-						<!--                                                    th:readonly="${currentDossier.libelleFormation != ''}"></textarea>-->
-						<!--                                            <a onclick="toggleInputLock('libelleFormation');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="libelleFormationEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="libelleFormation">Formation année précédente</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <textarea rows="3"-->
-						<!--                                                    disabled-->
-						<!--                                                    id="libelleFormationPrec"-->
-						<!--                                                    name="libelleFormationPrec"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    style="min-height:60px; resize: none;"-->
-						<!--                                                    th:text="${currentDossier.libelleFormationPrec}"-->
-						<!--                                                    th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="composante">Composante</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}" th:readonly="${currentDossier.composante != ''}">-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="formAddress">Adresse de formation</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="formAddress"-->
-						<!--                                                    name="formAddress"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.formAddress}"-->
-						<!--                                                    th:readonly="${currentDossier.formAddress != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('formAddress');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="formAddressEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-
 
 						<div class="row mb-1 align-items-baseline">
 							<div class="col-4" style="width: 250px;">
@@ -505,77 +455,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="alert alert-info">
-							<h5>Données relatives à l’année courante (<span
-									th:text="${currentYear} + '-' + ${currentYear+1}"></span>)</h5>
-							<div class="row mb-1 align-items-baseline">
-								<div class="col-4">
-									<label class="form-label" for="niveauEtudes">Niveau d’études</label>
-								</div>
-								<div class="col-8">
-									<div class="input-group">
-										<input disabled
-										       id="niveauEtudes"
-										       name="niveauEtudes"
-										       type="text"
-										       class="form-control"
-										       th:value="${currentDossier.niveauEtudes}"
-										       th:readonly="${currentDossier.niveauEtudes != ''}">
-										<a onclick="toggleInputLock('niveauEtudes');"
-										   role="button"
-										   id="niveauEtudesEdit"
-										   class="btn btn-light border-secondary border-opacity-25 d-none">
-											<i class="fa-solid fa-pen"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="row mb-1 align-items-baseline">
-								<div class="col-4">
-									<label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>
-								</div>
-								<div class="col-8">
-									<div class="input-group">
-                                            <textarea disabled
-                                                      id="secteurDisciplinaire"
-                                                      name="secteurDisciplinaire"
-                                                      type="text"
-                                                      class="form-control"
-                                                      th:value="${currentDossier.secteurDisciplinaire}"
-                                                      th:readonly="${currentDossier.secteurDisciplinaire != ''}">
-                                            </textarea>
-										<a onclick="toggleInputLock('secteurDisciplinaire');"
-										   role="button"
-										   id="secteurDisciplinaireEdit"
-										   class="btn btn-light border-secondary border-opacity-25 d-none">
-											<i class="fa-solid fa-pen"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="row mb-1 align-items-baseline">
-								<div class="col-4">
-									<label class="form-label" for="formAddress">Adresse de formation</label>
-								</div>
-								<div class="col-8">
-									<div class="input-group">
-                                            <textarea disabled
-                                                      id="formAddress"
-                                                      name="formAddress"
-                                                      type="text"
-                                                      class="form-control"
-                                                      th:value="${currentDossier.formAddress}"
-                                                      th:readonly="${currentDossier.formAddress != ''}"></textarea>
-										<a onclick="toggleInputLock('formAddress');"
-										   role="button"
-										   id="formAddressEdit"
-										   class="btn btn-light border-secondary border-opacity-25 d-none">
-											<i class="fa-solid fa-pen"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</form>
