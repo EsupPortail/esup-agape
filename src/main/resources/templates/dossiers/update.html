@@ -259,9 +259,9 @@
 										       name="niveauEtudes"
 										       type="text"
 										       class="form-control"
-										       th:value="${currentDossier.niveauEtudes}"
-										       th:readonly="${currentDossier.niveauEtudes != ''}">
+										       th:value="${currentDossier.niveauEtudes}" readonly>
 										<a onclick="toggleInputLock('niveauEtudes');"
+										   th:if="${currentDossier.niveauEtudes == ''}"
 										   role="button"
 										   id="niveauEtudesEdit"
 										   class="btn btn-light border-secondary border-opacity-25 d-none">
@@ -281,10 +281,11 @@
                                                       name="secteurDisciplinaire"
                                                       type="text"
                                                       class="form-control"
-                                                      th:value="${currentDossier.secteurDisciplinaire}"
-                                                      th:readonly="${currentDossier.secteurDisciplinaire != ''}">
+                                                      th:text="${currentDossier.secteurDisciplinaire}"
+                                                      readonly>
                                             </textarea>
 										<a onclick="toggleInputLock('secteurDisciplinaire');"
+										   th:if="${currentDossier.secteurDisciplinaire == ''}"
 										   role="button"
 										   id="secteurDisciplinaireEdit"
 										   class="btn btn-light border-secondary border-opacity-25 d-none">
@@ -304,9 +305,10 @@
                                                       name="formAddress"
                                                       type="text"
                                                       class="form-control"
-                                                      th:value="${currentDossier.formAddress}"
-                                                      th:readonly="${currentDossier.formAddress != ''}"></textarea>
+                                                      th:text="${currentDossier.formAddress}"
+                                                      readonly></textarea>
 										<a onclick="toggleInputLock('formAddress');"
+										   th:if="${currentDossier.formAddress == ''}"
 										   role="button"
 										   id="formAddressEdit"
 										   class="btn btn-light border-secondary border-opacity-25 d-none">
@@ -382,14 +384,15 @@
 							</div>
 							<div class="col-12 col-xxl-8">
 								<div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormation"
-                                                      name="libelleFormation"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormation}"
-                                                      th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
+									<textarea rows="3"
+											  disabled
+											  id="libelleFormation"
+											  name="libelleFormation"
+											  class="form-control"
+											  style="min-height:60px; resize: none;"
+											  th:text="${currentDossier.libelleFormation}"
+											  th:readonly="${currentDossier.libelleFormation != ''}">
+									</textarea>
 									<a onclick="toggleInputLock('libelleFormation');"
 									   role="button"
 									   id="libelleFormationEdit"
@@ -406,14 +409,16 @@
 							</div>
 							<div class="col-12 col-xxl-8">
 								<div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormationPrec"
-                                                      name="libelleFormationPrec"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormationPrec}"
-                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
+									<textarea rows="3"
+											  disabled
+											  id="libelleFormationPrec"
+											  name="libelleFormationPrec"
+											  class="form-control"
+											  style="min-height:60px; resize: none;"
+											  th:text="${currentDossier.libelleFormationPrec}"
+											  th:readonly="${currentDossier.libelleFormationPrec != ''}">
+
+									</textarea>
 								</div>
 							</div>
 						</div>
