@@ -37,6 +37,10 @@ public class DossierFilter {
     private List<TypeAideMaterielle> typeAideMaterielle;
     private List<FonctionAidant> fonctionAidants;
 
+    private Boolean hasScholarship;
+
+    private Boolean atypie;
+
     public List<Integer> getYear() {
         return year;
     }
@@ -203,5 +207,21 @@ public class DossierFilter {
 
     public void setFonctionAidants(List<FonctionAidant> fonctionAidants) {
         this.fonctionAidants = fonctionAidants;
+    }
+
+    public Boolean getHasScholarship() {
+        return hasScholarship;
+    }
+
+    public void setHasScholarship(Boolean hasScholarship) {
+        this.hasScholarship = hasScholarship;
+    }
+
+    public Boolean getAtypie() {
+        return atypie;
+    }
+
+    public void setAtypie(Boolean atypie) {
+        this.atypie = atypie;
     }
 }
