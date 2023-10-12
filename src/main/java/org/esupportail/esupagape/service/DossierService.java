@@ -158,6 +158,7 @@ public class DossierService {
         dossierToUpdate.setSuiviHandisup(dossier.getSuiviHandisup());
         dossierToUpdate.setEmployee(dossier.getEmployee());
         dossierToUpdate.setAlternance(dossier.getAlternance());
+        dossierToUpdate.setAtypie(dossier.getAtypie());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setRentreeProchaine(dossier.getRentreeProchaine());
         dossierToUpdate.setCommentaire(dossier.getCommentaire());
@@ -227,6 +228,10 @@ public class DossierService {
 
     public List<String> getAllLibelleFormation() {
         return dossierRepository.findAllLibelleFormation();
+    }
+
+    public List<String> getAllCampus() {
+        return dossierRepository.findAllCampus().stream().filter(StringUtils::hasText).toList();
     }
 
     @Transactional

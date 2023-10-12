@@ -174,6 +174,26 @@
 								</th:block>
 							</div>
 						</div>
+						<div class="row mb-1 align-items-baseline mt-2">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="atypieYes">Atypie friendly</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<h1></h1>
+								<input disabled class="form-check-input" type="radio" name="atypie" id="atypieYes"
+								       value="true" th:checked="${currentDossier.atypie == true}">
+								<label class="form-check-label" for="atypieYes">
+									Oui
+								</label>
+
+								<input disabled class="form-check-input" type="radio" name="atypie" id="atypieNo"
+								       value="false" th:checked="${currentDossier.atypie == false}">
+								<label class="form-check-label me-5" for="atypieNo">
+									Non
+								</label>
+
+							</div>
+						</div>
 						<div class="row mb-1 align-items-baseline">
 							<div class="col-4" style="width: 250px;">
 								<label class="form-label" for="commentaire">Commentaire</label>
@@ -188,7 +208,7 @@
                                                   th:text="${currentDossier.commentaire}"></textarea>
 							</div>
 						</div>
-						<div class="row mb-1 align-items-baseline mt-5">
+						<div class="row mb-1 align-items-baseline mt-2">
 							<div class="col-4" style="width: 250px;">
 								<label class="form-label" for="EmployeeYes">Étudiant(e) salarié(e)</label>
 							</div>
@@ -205,255 +225,24 @@
 								<label class="form-check-label me-5" for="EmployeeNo">
 									Non
 								</label>
-
 							</div>
 						</div>
-					</div>
-
-					<div class="col-6">
-						<h4>Parcours</h4>
-						<hr>
-						<div class="row mb-1 align-items-baseline"
-						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+						<div class="row mb-1 align-items-baseline mt-2">
 							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="typeFormation">Type de formation</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<select disabled id="typeFormation" name="typeFormation" type="text" class="form-select"
-								        th:value="${currentDossier.typeFormation}">
-									<option value="" disabled selected hidden>Choisir</option>
-									<option th:selected="${currentDossier.typeFormation == typeFormation}"
-									        th:each="typeFormation : ${typeFormations}"
-									        th:text="#{'enquete.typFrmn.' +${typeFormation}}"
-									        th:value="${typeFormation}"></option>
-								</select>
-							</div>
-						</div>
-						<div class="row mb-1 align-items-baseline"
-						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="modeFormation">Modalités de formation</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<select disabled id="modeFormation" name="modeFormation" type="text" class="form-select"
-								        th:value="${currentDossier.modeFormation}">
-									<option value="" disabled selected hidden>Choisir</option>
-									<option th:if="${modeFormation != T(org.esupportail.esupagape.entity.enums.enquete.ModFrmn).A}"
-									        th:selected="${currentDossier.modeFormation == modeFormation}"
-									        th:each="modeFormation : ${modeFormations}"
-									        th:text="#{'enquete.modFrmn.' +${modeFormation}}"
-									        th:value="${modeFormation}"></option>
-								</select>
-							</div>
-						</div>
-						<div class="row mb-1 align-items-baseline">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="AlternanceYes">Alternance</label>
+								<label class="form-label" for="scholarshipHolderYes">Étudiant(e) boursier(e)</label>
 							</div>
 							<div class="col-12 col-xxl-8">
 								<h1></h1>
-								<input disabled class="form-check-input" type="radio" name="alternance"
-								       id="AlternanceYes" value="true"
-								       th:checked="${currentDossier.alternance == true}">
-								<label class="form-check-label" for="AlternanceYes">
+								<input disabled class="form-check-input" type="radio" name="scholarshipHolder" id="scholarshipHolderYes"
+								       value="true" th:checked="${currentDossier.hasScholarship == true}" readonly>
+								<label class="form-check-label" for="scholarshipHolderYes">
 									Oui
 								</label>
-
-								<input disabled class="form-check-input" type="radio" name="alternance"
-								       id="AlternanceNo" value="false"
-								       th:checked="${currentDossier.alternance == false}">
-								<label class="form-check-label me-5" for="AlternanceNo">
+								<input disabled class="form-check-input" type="radio" name="scholarshipHolder" id="scholarshipHolderNo"
+								       value="false" th:checked="${currentDossier.hasScholarship == false}" readonly>
+								<label class="form-check-label me-5" for="scholarshipHolderNo">
 									Non
 								</label>
-							</div>
-						</div>
-
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="niveauEtudes">Niveau d’études</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="niveauEtudes"-->
-						<!--                                                    name="niveauEtudes"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.niveauEtudes}"-->
-						<!--                                                    th:readonly="${currentDossier.niveauEtudes != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('niveauEtudes');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="niveauEtudesEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="secteurDisciplinaire"-->
-						<!--                                                    name="secteurDisciplinaire"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.secteurDisciplinaire}"-->
-						<!--                                                    th:readonly="${currentDossier.secteurDisciplinaire != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('secteurDisciplinaire');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="secteurDisciplinaireEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="libelleFormation">Formation</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <textarea rows="3"-->
-						<!--                                                    disabled-->
-						<!--                                                    id="libelleFormation"-->
-						<!--                                                    name="libelleFormation"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    style="min-height:60px; resize: none;"-->
-						<!--                                                    th:text="${currentDossier.libelleFormation}"-->
-						<!--                                                    th:readonly="${currentDossier.libelleFormation != ''}"></textarea>-->
-						<!--                                            <a onclick="toggleInputLock('libelleFormation');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="libelleFormationEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="libelleFormation">Formation année précédente</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <textarea rows="3"-->
-						<!--                                                    disabled-->
-						<!--                                                    id="libelleFormationPrec"-->
-						<!--                                                    name="libelleFormationPrec"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    style="min-height:60px; resize: none;"-->
-						<!--                                                    th:text="${currentDossier.libelleFormationPrec}"-->
-						<!--                                                    th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline" th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="composante">Composante</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <input disabled id="composante" type="text" class="form-control" th:value="${currentDossier.composante}" th:readonly="${currentDossier.composante != ''}">-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-						<!--                                <div class="row mb-1 align-items-baseline">-->
-						<!--                                    <div class="col-4" style="width: 250px;">-->
-						<!--                                        <label class="form-label" for="formAddress">Adresse de formation</label>-->
-						<!--                                    </div>-->
-						<!--                                    <div class="col-12 col-xxl-8">-->
-						<!--                                        <div class="input-group">-->
-						<!--                                            <input disabled-->
-						<!--                                                    id="formAddress"-->
-						<!--                                                    name="formAddress"-->
-						<!--                                                    type="text"-->
-						<!--                                                    class="form-control"-->
-						<!--                                                    th:value="${currentDossier.formAddress}"-->
-						<!--                                                    th:readonly="${currentDossier.formAddress != ''}">-->
-						<!--                                            <a onclick="toggleInputLock('formAddress');"-->
-						<!--                                                    role="button"-->
-						<!--                                                    id="formAddressEdit"-->
-						<!--                                                    class="btn btn-light border-secondary border-opacity-25 d-none"-->
-						<!--                                                    th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-						<!--                                                <i class="fa-solid fa-pen"></i>-->
-						<!--                                            </a>-->
-						<!--                                        </div>-->
-						<!--                                    </div>-->
-						<!--                                </div>-->
-
-
-						<div class="row mb-1 align-items-baseline">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="libelleFormation">Formation</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormation"
-                                                      name="libelleFormation"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormation}"
-                                                      th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
-									<a onclick="toggleInputLock('libelleFormation');"
-									   role="button"
-									   id="libelleFormationEdit"
-									   class="btn btn-light border-secondary border-opacity-25 d-none">
-										<!-- th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
-										<i class="fa-solid fa-pen"></i>
-									</a>
-								</div>
-							</div>
-						</div>
-						<div class="row mb-1 align-items-baseline">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="libelleFormation">Formation année précédente</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<div class="input-group">
-                                            <textarea rows="3"
-                                                      disabled
-                                                      id="libelleFormationPrec"
-                                                      name="libelleFormationPrec"
-                                                      class="form-control"
-                                                      style="min-height:60px; resize: none;"
-                                                      th:text="${currentDossier.libelleFormationPrec}"
-                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
-								</div>
-							</div>
-						</div>
-						<div class="row mb-1 align-items-baseline"
-						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="composante">Composante</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<input disabled id="composante" type="text" class="form-control"
-								       th:value="${currentDossier.composante}"
-								       th:readonly="${currentDossier.composante != ''}">
-							</div>
-						</div>
-						<div class="row mb-1 align-items-baseline"
-						     th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
-							<div class="col-4" style="width: 250px;">
-								<label class="form-label" for="rentreeProchaine">Filière envisagée</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<select disabled id="rentreeProchaine" name="rentreeProchaine" type="text"
-								        class="form-select" th:value="${currentDossier.rentreeProchaine}">
-									<option value="" disabled selected hidden>Choisir</option>
-									<option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}"
-									        th:each="rentreeProchaine : ${rentreeProchaines}"
-									        th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}"
-									        th:value="${rentreeProchaine}"></option>
-								</select>
 							</div>
 						</div>
 						<div class="alert alert-info">
@@ -527,6 +316,146 @@
 								</div>
 							</div>
 						</div>
+					</div>
+
+					<div class="col-6">
+						<h4>Parcours</h4>
+						<hr>
+						<div class="row mb-1 align-items-baseline"
+						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="typeFormation">Type de formation</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<select disabled id="typeFormation" name="typeFormation" type="text" class="form-select"
+								        th:value="${currentDossier.typeFormation}">
+									<option value="" disabled selected hidden>Choisir</option>
+									<option th:selected="${currentDossier.typeFormation == typeFormation}"
+									        th:each="typeFormation : ${typeFormations}"
+									        th:text="#{'enquete.typFrmn.' +${typeFormation}}"
+									        th:value="${typeFormation}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline"
+						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="modeFormation">Modalités de formation</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<select disabled id="modeFormation" name="modeFormation" type="text" class="form-select"
+								        th:value="${currentDossier.modeFormation}">
+									<option value="" disabled selected hidden>Choisir</option>
+									<option th:if="${modeFormation != T(org.esupportail.esupagape.entity.enums.enquete.ModFrmn).A}"
+									        th:selected="${currentDossier.modeFormation == modeFormation}"
+									        th:each="modeFormation : ${modeFormations}"
+									        th:text="#{'enquete.modFrmn.' +${modeFormation}}"
+									        th:value="${modeFormation}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="AlternanceYes">Alternance</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<h1></h1>
+								<input disabled class="form-check-input" type="radio" name="alternance"
+								       id="AlternanceYes" value="true"
+								       th:checked="${currentDossier.alternance == true}">
+								<label class="form-check-label" for="AlternanceYes">
+									Oui
+								</label>
+
+								<input disabled class="form-check-input" type="radio" name="alternance"
+								       id="AlternanceNo" value="false"
+								       th:checked="${currentDossier.alternance == false}">
+								<label class="form-check-label me-5" for="AlternanceNo">
+									Non
+								</label>
+							</div>
+						</div>
+
+						<div class="row mb-1 align-items-baseline">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="libelleFormation">Formation</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<div class="input-group">
+                                            <textarea rows="3"
+                                                      disabled
+                                                      id="libelleFormation"
+                                                      name="libelleFormation"
+                                                      class="form-control"
+                                                      style="min-height:60px; resize: none;"
+                                                      th:text="${currentDossier.libelleFormation}"
+                                                      th:readonly="${currentDossier.libelleFormation != ''}"></textarea>
+									<a onclick="toggleInputLock('libelleFormation');"
+									   role="button"
+									   id="libelleFormationEdit"
+									   class="btn btn-light border-secondary border-opacity-25 d-none">
+										<!-- th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">-->
+										<i class="fa-solid fa-pen"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="libelleFormation">Formation année précédente</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<div class="input-group">
+                                            <textarea rows="3"
+                                                      disabled
+                                                      id="libelleFormationPrec"
+                                                      name="libelleFormationPrec"
+                                                      class="form-control"
+                                                      style="min-height:60px; resize: none;"
+                                                      th:text="${currentDossier.libelleFormationPrec}"
+                                                      th:readonly="${currentDossier.libelleFormationPrec != ''}"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline"
+						     th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="composante">Composante</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<input disabled id="composante" type="text" class="form-control"
+								       th:value="${currentDossier.composante}"
+								       th:readonly="${currentDossier.composante != ''}">
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline"
+							 th:if="${currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="composante">Campus</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<input disabled id="campus" type="text" class="form-control"
+									   th:value="${currentDossier.campus}"
+									   th:readonly="${currentDossier.campus != ''}">
+							</div>
+						</div>
+						<div class="row mb-1 align-items-baseline"
+						     th:if="${currentDossier.type != T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT}">
+							<div class="col-4" style="width: 250px;">
+								<label class="form-label" for="rentreeProchaine">Filière envisagée</label>
+							</div>
+							<div class="col-12 col-xxl-8">
+								<select disabled id="rentreeProchaine" name="rentreeProchaine" type="text"
+								        class="form-select" th:value="${currentDossier.rentreeProchaine}">
+									<option value="" disabled selected hidden>Choisir</option>
+									<option th:selected="${currentDossier.rentreeProchaine == rentreeProchaine}"
+									        th:each="rentreeProchaine : ${rentreeProchaines}"
+									        th:text="#{'dossier.rentreeProchaine.' +${rentreeProchaine}}"
+									        th:value="${rentreeProchaine}"></option>
+								</select>
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</form>

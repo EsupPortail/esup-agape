@@ -131,6 +131,9 @@ public class SyncService {
                 if (StringUtils.hasText(dossierInfos.getCodComposante())) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }
+                if (StringUtils.hasText(dossierInfos.getCampus())) {
+                    dossier.setCampus(dossierInfos.getCampus());
+                }
                 if (StringUtils.hasText(dossierInfos.getComposante())) {
                     dossier.setComposante(dossierInfos.getComposante().trim());
                 }
@@ -156,6 +159,7 @@ public class SyncService {
                 if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
                 }
+                dossier.setHasScholarship(dossierInfos.getHasScholarship());
             }
         }
     }

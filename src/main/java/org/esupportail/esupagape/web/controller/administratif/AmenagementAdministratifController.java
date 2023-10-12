@@ -125,6 +125,8 @@ public class AmenagementAdministratifController {
         model.addAttribute("dossiers", dossiers);
         model.addAttribute("currentForm", dossierService.getInfos(amenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
         model.addAttribute("lastDossier", dossiers.get(0));
+        amenagementService.syncEsupSignature(amenagementId);
+        model.addAttribute("esupSignatureUrl", applicationProperties.getEsupSignatureUrl() + "/user/signrequests/" + amenagement.getCertificatSignatureId());
         Dossier dossier;
         try {
             dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());

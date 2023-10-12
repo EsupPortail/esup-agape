@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface PersonLdapRepository extends LdapRepository<PersonLdap> {
     List<PersonLdap> findByEduPersonPrincipalName(String eppn);
+    List<PersonLdap> findByMemberOf(String group);
     List<PersonLdap> findByUid(String uid);
     List<PersonLdap> findByMail(String mail);
     List<PersonLdap> findBySupannEtuId(String numEtu);

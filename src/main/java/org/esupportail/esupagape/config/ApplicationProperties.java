@@ -61,6 +61,11 @@ public class ApplicationProperties {
     private List<String> esupSignatureValideursEmails = new ArrayList<>();
 
     /**
+     * Filtre ldap pour récupérer le campus depuis memberOf
+     */
+    private String memberOfCampusFilter = "cn=adhoc.campus";
+
+    /**
      * Affiche un texte en filigrane, ex : Plateforme de test
      */
     private String filigrane = "";
@@ -163,6 +168,14 @@ public class ApplicationProperties {
 
     public void setEsupSignatureValideursEmails(List<String> esupSignatureValideursEmails) {
         this.esupSignatureValideursEmails = esupSignatureValideursEmails;
+    }
+
+    public String getMemberOfCampusFilter() {
+        return memberOfCampusFilter;
+    }
+
+    public void setMemberOfCampusFilter(String memberOfCampusFilter) {
+        this.memberOfCampusFilter = memberOfCampusFilter;
     }
 
     public String getFiligrane() {

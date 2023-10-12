@@ -16,6 +16,7 @@ public final class PersonLdap {
 	private @Attribute(name = "cn") String cn;
 	private @Attribute(name = "sn") String sn;
 	private @Attribute(name = "givenName") String givenName;
+	private @Attribute(name = "memberOf") List<String> memberOf;
 	private @Attribute(name = "displayName") String displayName;
 	private @Attribute(name = "schacDateOfBirth") String schacDateOfBirth;
 	private @Attribute(name = "schacPlaceOfBirth") String schacPlaceOfBirth;
@@ -96,6 +97,14 @@ public final class PersonLdap {
 
 	public void setGivenName(String givenName) {
 		this.givenName = givenName;
+	}
+
+	public List<String> getMemberOf() {
+		return memberOf;
+	}
+
+	public void setMemberOf(List<String> memberOf) {
+		this.memberOf = memberOf;
 	}
 
 	public String getDisplayName() {
