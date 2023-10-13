@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.ldap;
 
+import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.service.security.GroupService;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -14,6 +15,8 @@ import java.util.*;
 
 public class LdapGroupService implements GroupService {
 
+    private final LdapProperties ldapProperties;
+
     Map<String, String> ldapFiltersGroups;
 
     private LdapTemplate ldapTemplate;
@@ -23,6 +26,10 @@ public class LdapGroupService implements GroupService {
     private String groupSearchFilter;
 
     private String memberSearchFilter;
+
+    public LdapGroupService(LdapProperties ldapProperties) {
+        this.ldapProperties = ldapProperties;
+    }
 
     public void setLdapFiltersGroups(Map<String, String> ldapFiltersGroups) {
         this.ldapFiltersGroups = ldapFiltersGroups;
@@ -47,7 +54,8 @@ public class LdapGroupService implements GroupService {
     @Override
     public List<String> getGroups(String eppn) {
         String username = eppn.replaceAll("@.*", "");
-        List<String> dns = ldapTemplate.search(LdapQueryBuilder.query().attributes("dn").where("uid").is(username),
+        String formattedFilter = MessageFormat.format(ldapProperties.getUserIdSearchFilter(), (Object[]) new String[] { username });
+        List<String> dns = ldapTemplate.search(LdapQueryBuilder.query().attributes("dn").filter(formattedFilter),
                 (ContextMapper<String>) ctx -> {
                     DirContextAdapter searchResultContext = (DirContextAdapter) ctx;
                     return searchResultContext.getNameInNamespace();
