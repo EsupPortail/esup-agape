@@ -203,7 +203,7 @@ public class WebSecurityConfig {
         for(Map.Entry<String, String> entry : ldapProperties.getMappingFiltersGroups().entrySet()) {
             ldapFiltersGroups.put(entry.getValue(), entry.getKey());
         }
-        LdapGroupService ldapGroupService = new LdapGroupService();
+        LdapGroupService ldapGroupService = new LdapGroupService(ldapProperties);
         ldapGroupService.setLdapFiltersGroups(ldapFiltersGroups);
         ldapGroupService.setLdapTemplate(ldapTemplate);
         ldapGroupService.setGroupSearchBase(ldapProperties.getGroupSearchBase());

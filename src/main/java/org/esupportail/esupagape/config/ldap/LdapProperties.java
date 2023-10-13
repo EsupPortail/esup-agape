@@ -8,20 +8,41 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "ldap")
 public class LdapProperties {
 
-    private String searchBase;
-    private String listSearchBase;
-    private String listSearchFilter;
-    private String groupSearchBase;
-    private String groupSearchFilter;
-    private String allGroupsSearchFilter;
-    private String groupNameAttribut;
-    private String membersOfGroupSearchFilter;
-    private String memberSearchFilter;
-    private String userIdSearchFilter;
+    /**
+     * LDAP base de recherche des utilisateurs.
+     */
+    private String searchBase = "ou=people";
+    /**
+     * LDAP base de recherche des groupes.
+     */
+    private String groupSearchBase = "ou=groups";
+    /**
+     * LDAP filtre de recherche des groupes d’un utilisateur.
+     */
+    private String groupSearchFilter = "member={0}";
+    /**
+     * LDAP filtre de recherche des membres d’un groupe.
+     */
+    private String memberSearchFilter = "(&(uid={0})({1}))";
+    /**
+     * LDAP attribut de recherche des utilisateurs.
+     */
+    private String userIdSearchFilter = "(uid={0})";
+    /**
+     * LDAP prefix de l’attribut affectationPrincipale supannRefId pour apogee.
+     */
     private String affectationPrincipaleRefIdPrefixFromApo;
+    /**
+     * LDAP prefix de l’attribut affectationPrincipale supannRefId pour l’application rh.
+     */
     private String affectationPrincipaleRefIdPrefixFromRh;
+    /**
+     * LDAP filtre de recherche des membres du groupe scolarité.
+     */
     private String scolariteMemberOfSearch;
-
+    /**
+     * LDAP filtre pour la création de groupes dynamiques
+     */
     private Map<String, String> mappingFiltersGroups = new HashMap<>();
 
     public String getSearchBase() {
@@ -32,21 +53,6 @@ public class LdapProperties {
         this.searchBase = searchBase;
     }
 
-    public String getListSearchBase() {
-        return listSearchBase;
-    }
-
-    public void setListSearchBase(String listSearchBase) {
-        this.listSearchBase = listSearchBase;
-    }
-
-    public String getListSearchFilter() {
-        return listSearchFilter;
-    }
-
-    public void setListSearchFilter(String listSearchFilter) {
-        this.listSearchFilter = listSearchFilter;
-    }
 
     public String getGroupSearchBase() {
         return groupSearchBase;
@@ -62,30 +68,6 @@ public class LdapProperties {
 
     public void setGroupSearchFilter(String groupSearchFilter) {
         this.groupSearchFilter = groupSearchFilter;
-    }
-
-    public String getAllGroupsSearchFilter() {
-        return allGroupsSearchFilter;
-    }
-
-    public void setAllGroupsSearchFilter(String allGroupsSearchFilter) {
-        this.allGroupsSearchFilter = allGroupsSearchFilter;
-    }
-
-    public String getGroupNameAttribut() {
-        return groupNameAttribut;
-    }
-
-    public void setGroupNameAttribut(String groupNameAttribut) {
-        this.groupNameAttribut = groupNameAttribut;
-    }
-
-    public String getMembersOfGroupSearchFilter() {
-        return membersOfGroupSearchFilter;
-    }
-
-    public void setMembersOfGroupSearchFilter(String membersOfGroupSearchFilter) {
-        this.membersOfGroupSearchFilter = membersOfGroupSearchFilter;
     }
 
     public String getMemberSearchFilter() {
