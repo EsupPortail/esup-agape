@@ -2,6 +2,7 @@ package org.esupportail.esupagape.repository;
 
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
@@ -60,4 +61,5 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select d.id from Dossier d")
     List<Long> findIdsAll();
 
+    List<Dossier> findByAmenagementPorte(Amenagement amenagement);
 }

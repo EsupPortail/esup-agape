@@ -92,29 +92,33 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
     Page<Amenagement> findByFullTextSearchAdmin(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
 
 
-    @Query("select distinct a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i  " +
-            "where  " +
-            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
-            "and a.dossier.codComposante in (:codComposantes) " +
-            "and (:campus is null or a.dossier.campus = :campus) " +
-            "and (:viewedByUid is null or :viewedByUid member of a.viewByUid) " +
-            "and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid) " +
-            "and a.statusAmenagement = 'VISE_ADMINISTRATION'" +
-            "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
-            "and (:yearFilter is null or d.year = :yearFilter)")
+    @Query("""
+            select distinct a from Amenagement a join Dossier d on (a.dossier = d or a = d.amenagementPorte) join Individu i on d.individu = i
+            where (:statusAmenagement is null or a.statusAmenagement = :statusAmenagement)
+            and d.codComposante in (:codComposantes)
+            and (:campus is null or a.dossier.campus = :campus)
+            and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
+            and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
+            and a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)
+            and (:yearFilter is null or d.year = :yearFilter)
+            """)
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Integer yearFilter, Pageable pageable);
 
-    @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
-            "where ((upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +
-            "or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%'))) " +
-            "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%')))) " +
-            "and (d.year = :yearFilter) " +
-            "and (a.dossier.codComposante in (:codComposantes)) " +
-            "and (:campus is null or a.dossier.campus = :campus) " +
-            "and (:viewedByUid is null or :viewedByUid member of a.viewByUid) " +
-            "and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid) " +
-            "and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)" +
-            "and a.statusAmenagement = :statusAmenagement")
+    @Query("""
+            select a from Amenagement a join Dossier d on (a.dossier = d or a = d.amenagementPorte) join Individu i on d.individu = i
+            where ((upper(i.firstName) like upper(concat('%', :fullTextSearch)))
+            or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(i.numEtu) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))))
+            and (d.year = :yearFilter)
+            and (d.codComposante in (:codComposantes))
+            and (:campus is null or d.campus = :campus)
+            and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
+            and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
+            and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)
+            and a.statusAmenagement = :statusAmenagement
+            """)
     Page<Amenagement> findByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, Integer yearFilter, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Pageable pageable);
 
 }
