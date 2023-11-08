@@ -462,13 +462,19 @@ public class AmenagementService {
 
     private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow, boolean withSign) throws IOException {
         CertificatPdf certificatPdf = new CertificatPdf();
-        certificatPdf.setName(amenagement.getDossier().getIndividu().getName());
-        certificatPdf.setFirstname(amenagement.getDossier().getIndividu().getFirstName());
-        certificatPdf.setDateOfBirth(amenagement.getDossier().getIndividu().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        certificatPdf.setLibelleFormation(amenagement.getDossier().getLibelleFormation());
-        certificatPdf.setSite(amenagement.getDossier().getComposante());
-        certificatPdf.setAddress(amenagement.getDossier().getIndividu().getFixAddress() + " " + amenagement.getDossier().getIndividu().getFixCP() + " " + amenagement.getDossier().getIndividu().getFixCity());
-        certificatPdf.setNumEtu(amenagement.getDossier().getIndividu().getNumEtu());
+        Dossier dossier = amenagement.getDossier();
+        try {
+            dossier = dossierService.getDossierByAmenagementPorte(amenagement);
+        } catch (AgapeException e) {
+            logger.debug("Amenagement porte not found");
+        }
+        certificatPdf.setName(dossier.getIndividu().getName());
+        certificatPdf.setFirstname(dossier.getIndividu().getFirstName());
+        certificatPdf.setDateOfBirth(dossier.getIndividu().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        certificatPdf.setLibelleFormation(dossier.getLibelleFormation());
+        certificatPdf.setSite(dossier.getComposante());
+        certificatPdf.setAddress(dossier.getIndividu().getFixAddress() + " " + amenagement.getDossier().getIndividu().getFixCP() + " " + amenagement.getDossier().getIndividu().getFixCity());
+        certificatPdf.setNumEtu(dossier.getIndividu().getNumEtu());
         if(amenagement.getTypeAmenagement().equals(TypeAmenagement.CURSUS)) {
             certificatPdf.setEndDate(messageSource.getMessage("amenagement.typeAmenagement.CURSUS", null, Locale.getDefault()));
         } else {
@@ -537,7 +543,6 @@ public class AmenagementService {
         List<PDField> fields = finishedDocument.getDocumentCatalog().getAcroForm().getFields();
         List<PDField> dates = fields.stream().filter(f -> f.getFullyQualifiedName().equals("administrationDate")).toList();
         List<PDField> cleannedFields = fields.stream().filter(f -> !(f instanceof PDSignatureField) && !f.getFullyQualifiedName().equals("administrationDate")).toList();
-        toto:
         for(PDField field : cleannedFields) {
             for(PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
                 if(pdAnnotationWidget.getPage() == null) {

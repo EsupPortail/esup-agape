@@ -558,6 +558,15 @@ public class DossierService {
         }
     }
 
+    public Dossier getDossierByAmenagementPorte(Amenagement amenagement) throws AgapeException {
+        List<Dossier> dossiers= dossierRepository.findByAmenagementPorte(amenagement);
+        if(!dossiers.isEmpty()) {
+            return dossiers.get(0);
+        } else {
+            throw new AgapeException("No dossier found for amenagement porte : " + amenagement.getId());
+        }
+    }
+
 
 //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
