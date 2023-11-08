@@ -610,6 +610,7 @@ public class AmenagementService {
         currentDossier.setAmenagementPorte(amenagement);
         currentDossier.setMailValideurPortabilite(personLdap.getMail());
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
+        sendAlert(id);
     }
 
     @Transactional
@@ -727,7 +728,7 @@ public class AmenagementService {
             try {
                 mailService.sendAlert(to);
             } catch (Exception e) {
-                logger.warn("Impossible d'envoyer le mail d'alerte, amenagement : " + amenagementId, e);
+                logger.warn("Impossible d'envoyer le mail d'alerte, aménagement : " + amenagementId, e);
             }
         }
     }
