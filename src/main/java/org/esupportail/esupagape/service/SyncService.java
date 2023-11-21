@@ -65,6 +65,9 @@ public class SyncService {
         if (StringUtils.hasText(individuInfos.getGenre())) {
             individu.setGender(Gender.valueOf(individuInfos.getGenre()));
         }
+        if (individuInfos.getDateOfBirth() != null) {
+            individu.setDateOfBirth(individuInfos.getDateOfBirth());
+        }
         if (StringUtils.hasText(individuInfos.getNationalite())) {
             individu.setNationalite(individuInfos.getNationalite());
         }
