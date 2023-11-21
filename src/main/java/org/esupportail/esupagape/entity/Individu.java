@@ -68,6 +68,7 @@ public class Individu {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
     private LocalDate dateAnonymisation;
 
     @OneToMany(mappedBy = "individu", orphanRemoval = true)

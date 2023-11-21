@@ -1,11 +1,22 @@
 package org.esupportail.esupagape.dtos.forms;
 
+import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.entity.enums.TypeIndividu;
+
+import java.time.LocalDate;
 
 public class DossierIndividuForm {
 
     Long id;
+
+    String name;
+
+    String firstName;
+
+    LocalDate dateOfBirth;
+
+    Gender gender;
 
     String numEtu;
 
@@ -21,6 +32,38 @@ public class DossierIndividuForm {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String getNumEtu() {

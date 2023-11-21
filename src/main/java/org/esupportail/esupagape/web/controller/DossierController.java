@@ -114,7 +114,7 @@ public class DossierController {
         model.addAttribute("typeFormations", TypFrmn.values());
         model.addAttribute("modeFormations", ModFrmn.values());
         model.addAttribute("age", individuService.computeAge(dossier.getIndividu()));
-        model.addAttribute("dossierIndividuFrom", new DossierIndividuForm());
+        model.addAttribute("dossierIndividuForm", new DossierIndividuForm());
         model.addAttribute("attachments", dossierService.getAttachments(dossier.getId()));
         return "dossiers/update";
     }
