@@ -203,6 +203,12 @@ public class DossierService {
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
         dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
+        if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
+            dossierToUpdate.getIndividu().setName(dossierIndividuForm.getName());
+            dossierToUpdate.getIndividu().setFirstName(dossierIndividuForm.getFirstName());
+            dossierToUpdate.getIndividu().setDateOfBirth(dossierIndividuForm.getDateOfBirth());
+            dossierToUpdate.getIndividu().setGender(dossierIndividuForm.getGender());
+        }
         if (dossierIndividuForm.getType() != null) {
             dossierToUpdate.setType(dossierIndividuForm.getType());
         }

@@ -36,7 +36,7 @@
                     </ol>
                 </nav>
                 <div style="height: 30px;"></div>
-                <table class="table table-responsive table-bordered" style="width: 100%">
+                <table class="table table-responsive table-bordered table-sm" style="width: 100%">
                     <thead class="table-dark">
                         <tr>
                             <th scope="col" style="width: 30px;">
@@ -94,7 +94,7 @@
                             </td>
                             <td th:if="${dossierIndividuDto.statusDossier == null}">
                                 <span><i class="fa fa-warning"></i></span></td>
-                            <td th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
+                            <td style="font-size: smaller;" th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"
                                     class="d-none d-sm-none d-md-table-cell"></td>
                             <td>
                                 <ul class="list-group list-group-horizontal">

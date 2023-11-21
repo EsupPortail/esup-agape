@@ -713,14 +713,16 @@ public class AmenagementService {
         if(StringUtils.hasText(applicationProperties.getTestEmail())) {
             to.add(applicationProperties.getTestEmail());
         } else {
-            List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefId(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() + amenagement.getDossier().getCodComposante());
-            List<String> affectations = organizationalUnitLdaps.stream().map(OrganizationalUnitLdap::getSupannCodeEntite).distinct().toList();
-            List<PersonLdap> personLdaps = personLdapRepository.findByMemberOf(ldapProperties.getScolariteMemberOfSearch());
-            List<UserOthersAffectations> userOthersAffectations = userOthersAffectationsRepository.findByCodComposante(amenagement.getDossier().getCodComposante());
-            List<String> uids = userOthersAffectations.stream().map(UserOthersAffectations::getUid).toList();
-            for(PersonLdap personLdap : personLdaps) {
-                if(uids.contains(personLdap.getUid()) || affectations.contains(personLdap.getSupannEntiteAffectationPrincipale())) {
-                    to.add(personLdap.getMail());
+            if(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() != null) {
+                List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefId(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() + amenagement.getDossier().getCodComposante());
+                List<String> affectations = organizationalUnitLdaps.stream().map(OrganizationalUnitLdap::getSupannCodeEntite).distinct().toList();
+                List<PersonLdap> personLdaps = personLdapRepository.findByMemberOf(ldapProperties.getScolariteMemberOfSearch());
+                List<UserOthersAffectations> userOthersAffectations = userOthersAffectationsRepository.findByCodComposante(amenagement.getDossier().getCodComposante());
+                List<String> uids = userOthersAffectations.stream().map(UserOthersAffectations::getUid).toList();
+                for (PersonLdap personLdap : personLdaps) {
+                    if (uids.contains(personLdap.getUid()) || affectations.contains(personLdap.getSupannEntiteAffectationPrincipale())) {
+                        to.add(personLdap.getMail());
+                    }
                 }
             }
         }
