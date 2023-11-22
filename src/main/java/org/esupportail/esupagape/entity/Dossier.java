@@ -110,8 +110,8 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Amenagement> amenagements = new ArrayList<>();
 
-    @ManyToOne
-    private Amenagement amenagementPorte;
+    @ManyToMany
+    private List<Amenagement> amenagementsPortes = new ArrayList<>();
 
     private String mailValideurPortabilite;
 
@@ -406,12 +406,12 @@ public class Dossier {
         this.amenagements = amenagements;
     }
 
-    public Amenagement getAmenagementPorte() {
-        return amenagementPorte;
+    public List<Amenagement> getAmenagementsPortes() {
+        return amenagementsPortes;
     }
 
-    public void setAmenagementPorte(Amenagement amenagementPorte) {
-        this.amenagementPorte = amenagementPorte;
+    public void setAmenagementsPortes(List<Amenagement> amenagementsPortes) {
+        this.amenagementsPortes = amenagementsPortes;
     }
 
     public String getMailValideurPortabilite() {

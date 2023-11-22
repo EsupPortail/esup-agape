@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
-import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
@@ -234,11 +233,11 @@ public class EnqueteService {
                     enquete.getModFrmn().add(ModFrmn.A);
                 }
             }
-            Amenagement amenagement = amenagementService.isAmenagementValid(id);
-            if (amenagement != null) {
+            Boolean isAmenagementTempsMajore = amenagementService.isAmenagementTempsMajore(id);
+            if (isAmenagementTempsMajore != null) {
                 enquete.getCodMeae().add(CodMeae.AE4);
                 enquete.getCodMeae().remove(CodMeae.AE0);
-                if (amenagement.getTempsMajore() != null || StringUtils.hasText(amenagement.getAutresTempsMajores())) {
+                if (isAmenagementTempsMajore) {
                     enquete.getCodMeae().add(CodMeae.AE7);
                 }
             }

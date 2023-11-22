@@ -30,7 +30,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
             and (:typeIndividu is null or d.type = :typeIndividu)
             and (:statusDossier is null or d.statusDossier = :statusDossier)
             and (:statusDossierAmenagement is null or d.statusDossierAmenagement = :statusDossierAmenagement)
-            and (:yearFilter is null or d.year = :yearFilter)
+            and (:yearFilter is null or d.year = :yearFilter) order by d.year desc
             """)
     Page<DossierIndividuDto> findByFullTextSearch(String fullTextSearch, TypeIndividu typeIndividu, StatusDossier statusDossier, StatusDossierAmenagement statusDossierAmenagement, Integer yearFilter, Pageable pageable);
 
@@ -61,5 +61,5 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select d.id from Dossier d")
     List<Long> findIdsAll();
 
-    List<Dossier> findByAmenagementPorte(Amenagement amenagement);
+    List<Dossier> findByAmenagementsPortesContains(Amenagement amenagement);
 }

@@ -97,22 +97,23 @@ public class AmenagementService {
         return amenagementRepository.findById(id).orElseThrow();
     }
 
+    @Transactional
     public Page<Amenagement> findByDossier(Long dossierId) {
         Dossier dossier = dossierService.getById(dossierId);
-        if(dossier.getAmenagementPorte() != null) {
-            return new PageImpl<>(List.of(dossier.getAmenagementPorte()), Pageable.unpaged(), 1);
+        if(!dossier.getAmenagementsPortes().isEmpty()) {
+            return new PageImpl<>(dossier.getAmenagementsPortes(), Pageable.unpaged(), 1);
         }
         return amenagementRepository.findByDossierId(dossierId, Pageable.unpaged());
     }
 
-    public Amenagement isAmenagementValid(Long dossierId) {
+    public Boolean isAmenagementTempsMajore(Long dossierId) {
         Dossier dossier = dossierService.getById(dossierId);
-        if(dossier.getAmenagementPorte() != null) {
-            return dossier.getAmenagementPorte();
+        if(!dossier.getAmenagementsPortes().isEmpty()) {
+            return dossier.getAmenagementsPortes().stream().anyMatch(amenagement -> (amenagement.getTempsMajore() != null && !amenagement.getTempsMajore().equals(TempsMajore.AUCUN)) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
         }
         List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
-        if(amenagements.size() > 0 && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
-            return amenagements.get(0);
+        if(!amenagements.isEmpty() && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
+            return amenagements.stream().anyMatch(amenagement -> amenagement.getTempsMajore() != null || !amenagement.getTempsMajore().equals(TempsMajore.AUCUN) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
         }
         return null;
     }
@@ -290,8 +291,13 @@ public class AmenagementService {
     public Page<Amenagement> getByIndividuNamePortable(String fullTextSearch, Pageable pageable) {
         return amenagementRepository.findByIndividuNamePortable(fullTextSearch, utilsService.getCurrentYear(), pageable);
     }
-    public Page<Amenagement> getFullTextSearchPorte(String codComposante, Integer yearFilter, Pageable pageable) {
-        return amenagementRepository.findByFullTextSearchPortable(codComposante, yearFilter - 1, pageable);
+
+    public Page<Amenagement> getPortable(String codComposante, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByPortable(codComposante, yearFilter, pageable);
+    }
+
+    public Page<Amenagement> getFullTextSearchPorte(String fullTextSearch, String codComposante, Integer yearFilter, Pageable pageable) {
+        return amenagementRepository.findByFullTextSearchPortable(fullTextSearch, codComposante, yearFilter, pageable);
     }
 
     public Long countToValidate() {
@@ -299,7 +305,7 @@ public class AmenagementService {
     }
 
     public Long countToPorte() {
-        return amenagementRepository.countToPorte(utilsService.getCurrentYear() - 1);
+        return amenagementRepository.countToPorte(utilsService.getCurrentYear());
     }
 
     @Transactional
@@ -464,7 +470,7 @@ public class AmenagementService {
         CertificatPdf certificatPdf = new CertificatPdf();
         Dossier dossier = amenagement.getDossier();
         try {
-            dossier = dossierService.getDossierByAmenagementPorte(amenagement);
+            dossier = dossierService.getDossierByAmenagementsPortes(amenagement);
         } catch (AgapeException e) {
             logger.debug("Amenagement porte not found");
         }
@@ -607,7 +613,7 @@ public class AmenagementService {
             currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), amenagement.getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
         }
         currentDossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
-        currentDossier.setAmenagementPorte(amenagement);
+        currentDossier.getAmenagementsPortes().add(amenagement);
         currentDossier.setMailValideurPortabilite(personLdap.getMail());
         currentDossier.setNomValideurPortabilite(personLdap.getDisplayName());
         sendAlert(id);
@@ -759,5 +765,12 @@ public class AmenagementService {
     public void notViewedByUid(Long amenagementId, String uid) {
         Amenagement amenagement = getById(amenagementId);
         amenagement.getViewByUid().remove(uid);
+    }
+
+    @Transactional
+    public boolean isPortable(Long amenagementId, Long currentDossier) {
+        Amenagement amenagement = getById(amenagementId);
+        Dossier dossier = dossierService.getById(currentDossier);
+        return !dossier.getAmenagementsPortes().contains(amenagement);
     }
 }
