@@ -98,7 +98,7 @@ public class WebSecurityConfig {
                 }
             }
             String finalHasIpAddresses = hasIpAddresses.toString();
-            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/actuator/**").access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
+            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/actuator", "/actuator/**").access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
         }
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
