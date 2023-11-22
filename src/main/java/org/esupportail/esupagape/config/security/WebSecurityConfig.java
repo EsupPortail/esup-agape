@@ -34,6 +34,7 @@ import org.springframework.security.ldap.search.LdapUserSearch;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -86,6 +87,19 @@ public class WebSecurityConfig {
         http.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class);
         http.logout(logout -> logout.invalidateHttpSession(true)
                                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
+        StringBuilder hasIpAddresses = new StringBuilder();
+        int nbIps = 0;
+        if(webSecurityProperties.getWsAccessAuthorizeIps() != null) {
+            for (String ip : webSecurityProperties.getWsAccessAuthorizeIps()) {
+                nbIps++;
+                hasIpAddresses.append("hasIpAddress('").append(ip).append("')");
+                if(nbIps < webSecurityProperties.getWsAccessAuthorizeIps().length) {
+                    hasIpAddresses.append(" or ");
+                }
+            }
+            String finalHasIpAddresses = hasIpAddresses.toString();
+            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/actuator/**").access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
+        }
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
                 .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
