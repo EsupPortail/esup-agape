@@ -46,6 +46,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.*;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties({LdapProperties.class, CasProperties.class, WebSecurityProperties.class})
@@ -87,6 +89,19 @@ public class WebSecurityConfig {
         http.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class);
         http.logout(logout -> logout.invalidateHttpSession(true)
                                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
+        StringBuilder hasIpAddresses = new StringBuilder();
+        int nbIps = 0;
+        if(webSecurityProperties.getWsAccessAuthorizeIps() != null) {
+            for (String ip : webSecurityProperties.getWsAccessAuthorizeIps()) {
+                nbIps++;
+                hasIpAddresses.append("hasIpAddress('").append(ip).append("')");
+                if(nbIps < webSecurityProperties.getWsAccessAuthorizeIps().length) {
+                    hasIpAddresses.append(" or ");
+                }
+            }
+            String finalHasIpAddresses = hasIpAddresses.toString();
+            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(antMatcher("/actuator/**")).access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
+        }
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
                 .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
@@ -105,19 +120,6 @@ public class WebSecurityConfig {
                 .requestMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")
                 .requestMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE")
                 .anyRequest().hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE"));
-        StringBuilder hasIpAddresses = new StringBuilder();
-        int nbIps = 0;
-        if(webSecurityProperties.getWsAccessAuthorizeIps() != null) {
-            for (String ip : webSecurityProperties.getWsAccessAuthorizeIps()) {
-                nbIps++;
-                hasIpAddresses.append("hasIpAddress('").append(ip).append("')");
-                if(nbIps < webSecurityProperties.getWsAccessAuthorizeIps().length) {
-                    hasIpAddresses.append(" or ");
-                }
-            }
-            String finalHasIpAddresses = hasIpAddresses.toString();
-            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/actuator", "/actuator/**").access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
-        }
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
