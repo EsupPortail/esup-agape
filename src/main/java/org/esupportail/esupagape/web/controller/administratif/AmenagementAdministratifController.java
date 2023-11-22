@@ -13,7 +13,6 @@ import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -55,7 +54,6 @@ public class AmenagementAdministratifController {
                        @RequestParam(required = false) String codComposante,
                        @RequestParam(required = false) Integer yearFilter,
                        @RequestParam(required = false) Boolean porte,
-                       @RequestParam(required = false) String name,
                        @RequestParam(required = false) String fullTextSearch,
                        @PageableDefault(size = 10,
                                sort = "createDate",
@@ -75,14 +73,9 @@ public class AmenagementAdministratifController {
         Page<Amenagement> amenagements;
         if (porte) {
             if (StringUtils.hasText(fullTextSearch)) {
-                amenagements = new PageImpl<>(amenagementService.getFullTextSearchPorte(codComposante, yearFilter, Pageable.unpaged()).getContent()
-                        .stream()
-                        .filter(amenagement -> amenagement.getDossier().getIndividu().getName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getFirstName().equalsIgnoreCase(fullTextSearch) || amenagement.getDossier().getIndividu().getNumEtu().equals(fullTextSearch))
-                        .sorted(Comparator.comparing(Amenagement::getAdministrationDate).reversed())
-                        .limit(1)
-                        .toList());
+                amenagements = amenagementService.getFullTextSearchPorte(fullTextSearch, codComposante, yearFilter, pageable);
             } else {
-                amenagements = amenagementService.getFullTextSearchPorte(codComposante, yearFilter, pageable);
+                amenagements = amenagementService.getPortable(codComposante, yearFilter, pageable);
             }
             statusAmenagements.clear();
             statusAmenagements.add(StatusAmenagement.VISE_ADMINISTRATION);
@@ -130,6 +123,7 @@ public class AmenagementAdministratifController {
         Dossier dossier;
         try {
             dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            model.addAttribute("isPortable", amenagementService.isPortable(amenagementId, dossier.getId()));
         } catch (AgapeJpaException e) {
             dossier = null;
         }

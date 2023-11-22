@@ -58,18 +58,35 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             where (:codComposante is null or a.dossier.codComposante  = :codComposante)
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :yearFilter)
-            and (select count(*) from Dossier d1 where d1.individu = d.individu and d1.amenagementPorte = a) = 0
+            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
             and a.typeAmenagement = 'CURSUS'
             and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
-    Page<Amenagement> findByFullTextSearchPortable(String codComposante, Integer yearFilter, Pageable pageable);
+    Page<Amenagement> findByPortable(String codComposante, Integer yearFilter, Pageable pageable);
+
+    @Query("""
+            select distinct a from Amenagement a
+            join Dossier d on a.dossier = d
+            where
+            ((upper(a.dossier.individu.firstName) like upper(concat('%', :fullTextSearch)))
+            or (upper(concat(a.dossier.individu.name, ' ', a.dossier.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(a.dossier.individu.numEtu) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(concat(a.dossier.individu.firstName, ' ', a.dossier.individu.name)) like upper(concat('%', :fullTextSearch, '%'))))
+            and (:codComposante is null or a.dossier.codComposante  = :codComposante)
+            and a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (d.year < :yearFilter)
+            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
+            and a.typeAmenagement = 'CURSUS'
+            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
+            """)
+    Page<Amenagement> findByFullTextSearchPortable(String fullTextSearch, String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query("""
             select count(distinct a) from Amenagement a
             left join Dossier d on a.dossier = d
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (d.year < :currentYear)
-            and (select count(*) from Dossier d1 where d1.individu = d.individu and d1.amenagementPorte = a) = 0
+            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
             and a.typeAmenagement = 'CURSUS'
             and (d.individu.desinscrit is null or d.individu.desinscrit = false)
             """)
@@ -93,7 +110,7 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
 
 
     @Query("""
-            select distinct a from Amenagement a join Dossier d on (a.dossier = d or a = d.amenagementPorte) join Individu i on d.individu = i
+            select distinct a from Amenagement a join Dossier d on (a.dossier = d or a member of d.amenagementsPortes) join Individu i on d.individu = i
             where (:statusAmenagement is null or a.statusAmenagement = :statusAmenagement)
             and d.codComposante in (:codComposantes)
             and (:campus is null or a.dossier.campus = :campus)
@@ -106,7 +123,7 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Integer yearFilter, Pageable pageable);
 
     @Query("""
-            select a from Amenagement a join Dossier d on (a.dossier = d or a = d.amenagementPorte) join Individu i on d.individu = i
+            select a from Amenagement a join Dossier d on (a.dossier = d or a member of d.amenagementsPortes) join Individu i on d.individu = i
             where ((upper(i.firstName) like upper(concat('%', :fullTextSearch)))
             or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%')))
             or (upper(i.numEtu) like upper(concat('%', :fullTextSearch, '%')))

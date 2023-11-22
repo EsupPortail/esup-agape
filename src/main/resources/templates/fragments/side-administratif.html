@@ -14,8 +14,8 @@
                 <dd th:text="${amenagement.dossier.composante}"></dd>
                 <dt>Statut</dt>
                 <dd th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></dd>
-                <dt th:if="${lastDossier.amenagementPorte != null}">Portabilité effectuée par</dt>
-                <dd th:if="${lastDossier.amenagementPorte != null}" th:text="${lastDossier.nomValideurPortabilite}"></dd>
+                <dt th:if="${lastDossier.amenagementsPortes != null}">Portabilité effectuée par</dt>
+                <dd th:if="${lastDossier.amenagementsPortes != null}" th:text="${lastDossier.nomValideurPortabilite}"></dd>
                 <dt>Nom du médecin</dt>
                 <dd th:text="${amenagement.nomMedecin}"></dd>
                 <dt>Date de fin</dt>
