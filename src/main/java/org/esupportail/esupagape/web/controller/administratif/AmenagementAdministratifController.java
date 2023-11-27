@@ -125,6 +125,7 @@ public class AmenagementAdministratifController {
             dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
             model.addAttribute("isPortable", amenagementService.isPortable(amenagementId, dossier.getId()));
         } catch (AgapeJpaException e) {
+            model.addAttribute("isPortable", true);
             dossier = null;
         }
         model.addAttribute("currentDossier", dossier);
