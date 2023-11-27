@@ -607,7 +607,7 @@ public class AmenagementService {
         try {
             currentDossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
             if(currentDossier.getStatusDossier().equals(StatusDossier.IMPORTE) || currentDossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-                dossierService.changeStatutDossier(id, StatusDossier.RECONDUIT, personLdap.getEduPersonPrincipalName());
+                dossierService.changeStatutDossier(currentDossier.getId(), StatusDossier.RECONDUIT, personLdap.getEduPersonPrincipalName());
             }
         } catch (AgapeJpaException e) {
             currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), amenagement.getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
