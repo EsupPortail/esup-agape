@@ -53,8 +53,6 @@ public class AdminController {
 
     private final LdapPersonService ldapPersonService;
 
-
-
     public AdminController(
             IndividuService individuService, DossierService dossierService,
             AmenagementService amenagementService, UtilsService utilsService,
@@ -81,6 +79,7 @@ public class AdminController {
         }
         model.addAttribute("sessions", sessions);
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
+        model.addAttribute("amenagementsToResend", amenagementService.getAmenagementToResend());
         return "admin/index";
     }
 
@@ -218,7 +217,7 @@ public class AdminController {
     }
 
 
-    @PostMapping(value = "/add-userOthersAffectations")
+    @PostMapping(value = "/add-user-others-affectations")
     public String createAffectation(@RequestParam String uid, @RequestParam String[] codComposante, RedirectAttributes redirectAttributes) {
         if (codComposante != null && codComposante.length > 0) {
             for (String cod : codComposante) {
@@ -241,11 +240,16 @@ public class AdminController {
         userOthersAffectationsService.deleteUserOthersAffectations(id);
         return "redirect:/admin";
     }
+
     @GetMapping(value = "/autocomplete-search-uid", produces = "application/json")
     @ResponseBody
     public List<PersonLdap> autocompleteSearchUid(String uid) {
         return ldapPersonService.findEmployees(uid);
     }
 
-
+    @PostMapping(value = "/resend-amenagements")
+    public String resendAmenagements(RedirectAttributes redirectAttributes) {
+        amenagementService.resendAmenagements();
+        return "redirect:/admin";
+    }
 }

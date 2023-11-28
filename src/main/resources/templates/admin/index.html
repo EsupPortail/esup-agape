@@ -29,6 +29,10 @@
 				        data-bs-target="#nav-affectations" type="button"
 				        role="tab" aria-controls="nav-affectations" aria-selected="false">Affectations
 				</button>
+				<button class="nav-link" id="nav-amenagement-to-resend-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-amenagement-to-resend" type="button"
+						role="tab" aria-controls="nav-affectations" aria-selected="false">Retransmettre les aménagements
+				</button>
 			</div>
 		</nav>
 		<div class="tab-content" id="nav-tabContent">
@@ -176,7 +180,7 @@
 				<h1>Affectations</h1>
 				<hr>
 				<div class="col-6 mx-auto">
-					<form th:action="@{/admin/add-userOthersAffectations}" method="post" class="d-flex flex-column">
+					<form th:action="@{/admin/add-user-others-affectations}" method="post" class="d-flex flex-column">
 						<div class="mb-3">
 							<label for="autocomplete-search-uid" class="form-label">Employé-e-s</label>
 							<select id="autocomplete-search-uid" name="uid" class="form-control"></select>
@@ -221,6 +225,19 @@
 					</table>
 				</div>
 			</div>
+			<div class="tab-pane fade" id="nav-amenagement-to-resend" role="tabpanel" aria-labelledby="nav-amenagement-to-resend-tab">
+				<!--				 th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
+				<h1>Aménagements à retransmettre : <span th:text="${amenagementsToResend.size()}"></span></h1>
+				<hr>
+				<div class="card mt-5 col-lg-10 mx-auto">
+					<div class="card-body">
+						<form th:action="@{/admin/resend-amenagements}" method="POST" class="form-signin">
+							<input class="btn btn-lg btn-primary btn-block" type="submit" value="Retransmettre les aménagements"/>
+						</form>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 </main>

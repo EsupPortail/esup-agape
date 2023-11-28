@@ -773,4 +773,17 @@ public class AmenagementService {
         Dossier dossier = dossierService.getById(currentDossier);
         return !dossier.getAmenagementsPortes().contains(amenagement);
     }
+
+    @Transactional
+    public List<Amenagement> getAmenagementToResend() {
+        return amenagementRepository.findAmenagementToResend(LocalDateTime.parse("31/12/2023 23:59:59", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+    }
+
+    @Transactional
+    public void resendAmenagements() {
+        List<Amenagement> amenagements = getAmenagementToResend();
+        for(Amenagement amenagement : amenagements) {
+            sendAmenagementToIndividu(amenagement.getId(), false);
+        }
+    }
 }
