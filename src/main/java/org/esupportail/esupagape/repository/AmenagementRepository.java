@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AmenagementRepository extends JpaRepository<Amenagement, Long> {
@@ -138,4 +139,8 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             """)
     Page<Amenagement> findByIndividuNameScol(String fullTextSearch, StatusAmenagement statusAmenagement, Integer yearFilter, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Pageable pageable);
 
+    @Query("""
+        select a from Amenagement a where a.certificatSignatureId is not null and a.statusAmenagement = 'VISE_ADMINISTRATION' and a.individuSendDate is null and (a.typeAmenagement = 'CURSUS' or a.endDate >= :date)
+        """)
+    List<Amenagement> findAmenagementToResend(LocalDateTime date);
 }
