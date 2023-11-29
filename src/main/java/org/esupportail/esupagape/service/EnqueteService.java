@@ -229,7 +229,7 @@ public class EnqueteService {
             if (dossier.getModeFormation() != null) {
                 enquete.getModFrmn().clear();
                 enquete.getModFrmn().add(dossier.getModeFormation());
-                if (dossier.getAlternance()) {
+                if (dossier.getAlternance() != null && dossier.getAlternance()) {
                     enquete.getModFrmn().add(ModFrmn.A);
                 }
             }
