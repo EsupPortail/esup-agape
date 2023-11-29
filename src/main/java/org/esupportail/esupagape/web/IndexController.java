@@ -1,4 +1,4 @@
-package org.esupportail.esupagape.web.controller;
+package org.esupportail.esupagape.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
