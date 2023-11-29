@@ -89,6 +89,11 @@ public class WebSecurityConfig {
         http.addFilterBefore(casAuthenticationFilter(), BasicAuthenticationFilter.class);
         http.logout(logout -> logout.invalidateHttpSession(true)
                                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
+        http.csrf(csrf -> csrf.ignoringRequestMatchers(antMatcher("/resources/**"))
+                .ignoringRequestMatchers(antMatcher("/webjars/**"))
+                .ignoringRequestMatchers(antMatcher("/ws/**"))
+                .ignoringRequestMatchers(antMatcher("/actuator/**")));
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         StringBuilder hasIpAddresses = new StringBuilder();
         int nbIps = 0;
         if(webSecurityProperties.getWsAccessAuthorizeIps() != null) {
@@ -101,6 +106,7 @@ public class WebSecurityConfig {
             }
             String finalHasIpAddresses = hasIpAddresses.toString();
             http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(antMatcher("/actuator/**")).access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
+            http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(antMatcher("/ws/**")).access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
         }
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
@@ -120,7 +126,6 @@ public class WebSecurityConfig {
                 .requestMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")
                 .requestMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE")
                 .anyRequest().hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE"));
-        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
 
