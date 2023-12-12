@@ -100,10 +100,10 @@ public class AmenagementService {
     @Transactional
     public Page<Amenagement> findByDossier(Long dossierId) {
         Dossier dossier = dossierService.getById(dossierId);
-        if(!dossier.getAmenagementsPortes().isEmpty()) {
-            return new PageImpl<>(dossier.getAmenagementsPortes(), Pageable.unpaged(), 1);
-        }
-        return amenagementRepository.findByDossierId(dossierId, Pageable.unpaged());
+        List<Amenagement> amenagements = new ArrayList<>();
+        amenagements.addAll(dossier.getAmenagementsPortes());
+        amenagements.addAll(amenagementRepository.findByDossierId(dossierId));
+        return new PageImpl<>(amenagements, Pageable.unpaged(), amenagements.size());
     }
 
     public Boolean isAmenagementTempsMajore(Long dossierId) {
