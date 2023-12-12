@@ -18,7 +18,7 @@ public class ApplicationProperties {
     private String codeEtab;
 
     /**
-     * Adresse email du contact technique de l’application
+     * Adresse email du from
      */
     private String applicationEmail = "esup.agape@univ-ville.fr";
 

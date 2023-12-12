@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface AmenagementRepository extends JpaRepository<Amenagement, Long> {
 
-    Page<Amenagement> findByDossierId(Long dossierId, Pageable pageable);
+    List<Amenagement> findByDossierId(Long dossierId);
 
     @Query("select a from Amenagement a where a.dossier.id = :dossierId and a.statusAmenagement = :statusAmenagement order by a.administrationDate desc")
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
