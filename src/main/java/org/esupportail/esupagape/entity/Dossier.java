@@ -59,9 +59,6 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private ModFrmn modeFormation;
 
-    @Enumerated(EnumType.STRING)
-    StatusDossierAmenagement statusDossierAmenagement;
-
     @Column(columnDefinition = "TEXT")
     private String commentaire;
 
@@ -108,23 +105,12 @@ public class Dossier {
     private List<AideHumaine> aidesHumaines = new ArrayList<>();
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
-    private List<Amenagement> amenagements = new ArrayList<>();
-
-    @ManyToMany
-    private List<Amenagement> amenagementsPortes = new ArrayList<>();
-
-    private String mailValideurPortabilite;
-
-    private String nomValideurPortabilite;
-
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> attachments;
 
     private Boolean newDossier = true;
-
 
     public Long getId() {
         return id;
@@ -228,14 +214,6 @@ public class Dossier {
 
     public void setModeFormation(ModFrmn modeFormation) {
         this.modeFormation = modeFormation;
-    }
-
-    public StatusDossierAmenagement getStatusDossierAmenagement() {
-        return statusDossierAmenagement;
-    }
-
-    public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {
-        this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
     public String getCommentaire() {
@@ -396,38 +374,6 @@ public class Dossier {
 
     public void setAidesHumaines(List<AideHumaine> aidesHumaines) {
         this.aidesHumaines = aidesHumaines;
-    }
-
-    public List<Amenagement> getAmenagements() {
-        return amenagements;
-    }
-
-    public void setAmenagements(List<Amenagement> amenagements) {
-        this.amenagements = amenagements;
-    }
-
-    public List<Amenagement> getAmenagementsPortes() {
-        return amenagementsPortes;
-    }
-
-    public void setAmenagementsPortes(List<Amenagement> amenagementsPortes) {
-        this.amenagementsPortes = amenagementsPortes;
-    }
-
-    public String getMailValideurPortabilite() {
-        return mailValideurPortabilite;
-    }
-
-    public void setMailValideurPortabilite(String mailValideurPortabilite) {
-        this.mailValideurPortabilite = mailValideurPortabilite;
-    }
-
-    public String getNomValideurPortabilite() {
-        return nomValideurPortabilite;
-    }
-
-    public void setNomValideurPortabilite(String nomValideurPortabilite) {
-        this.nomValideurPortabilite = nomValideurPortabilite;
     }
 
     public List<Document> getDocuments() {

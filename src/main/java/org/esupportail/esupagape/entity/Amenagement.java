@@ -17,9 +17,6 @@ public class Amenagement {
     @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private Dossier dossier;
-
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
@@ -102,14 +99,6 @@ public class Amenagement {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Dossier getDossier() {
-        return dossier;
-    }
-
-    public void setDossier(Dossier dossier) {
-        this.dossier = dossier;
     }
 
     public Autorisation getAutorisation() {
