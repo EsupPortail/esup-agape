@@ -2,6 +2,7 @@ package org.esupportail.esupagape.web.controller.scolarite;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.UserOthersAffectations;
@@ -74,6 +75,10 @@ public class AmenagementScolariteController {
         Page<Amenagement> amenagements;
         List<String> codComposanteToDisplay = new ArrayList<>();
         List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList());
+        if(userCodComposantes.contains("ALL_ACCESS")) {
+            userCodComposantes.clear();
+            userCodComposantes.addAll(dossierService.getAllComposantes().stream().map(ComposanteDto::getCod).distinct().toList());
+        }
         if (codComposante != null) {
             userCodComposantes.add(codComposante);
         }
@@ -99,7 +104,9 @@ public class AmenagementScolariteController {
         model.addAttribute("amenagements", amenagements);
         Map<String, String> composantes = new HashMap<>();
         for(String userCodComposante : userCodComposantes) {
-            composantes.put(userCodComposante, ldapOrganizationalUnitService.getOrganizationalUnitLdap(userCodComposante).getDescription());
+            if(userCodComposante != null) {
+                composantes.put(userCodComposante, ldapOrganizationalUnitService.getOrganizationalUnitLdap(userCodComposante).getDescription());
+            }
         }
         model.addAttribute("composantes", composantes);
         model.addAttribute("yearFilter", yearFilter);
