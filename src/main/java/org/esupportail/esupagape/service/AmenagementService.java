@@ -687,8 +687,8 @@ public class AmenagementService {
         List<Amenagement> amenagementsToSync = dossierAmenagementRepository.findDossierAmenagementByLastYear(utilsService.getCurrentYear()).stream().filter(da -> da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)).map(DossierAmenagement::getAmenagement).toList();
         for(Amenagement amenagement : amenagementsToSync) {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
-            if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now)) {
-                DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+            DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+            if(!dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE) && !isDossierContainsAmenagementCursus(dossierAmenagement.getDossier()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now)) {
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
@@ -786,6 +786,12 @@ public class AmenagementService {
     @Transactional
     public boolean isDossierContainsAmenagement(Dossier dossier) {
         return !dossierAmenagementRepository.findDossierAmenagementByDossier(dossier).isEmpty();
+    }
+
+    @Transactional
+    public boolean isDossierContainsAmenagementCursus(Dossier dossier) {
+        List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByDossier(dossier);
+        return !dossierAmenagements.isEmpty() && dossierAmenagements.stream().anyMatch(da -> da.getAmenagement().getTypeAmenagement().equals(TypeAmenagement.CURSUS));
     }
 
     @Transactional
