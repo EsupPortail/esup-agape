@@ -480,7 +480,7 @@ public class AmenagementService {
 
     private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow, boolean withSign) throws IOException {
         CertificatPdf certificatPdf = new CertificatPdf();
-        DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+        DossierAmenagement dossierAmenagement = amenagement.getDossierAmenagements().stream().toList().get(0);
         if(dossierAmenagement.getDossier() == null) {
             throw new AgapeYearException();
         }
