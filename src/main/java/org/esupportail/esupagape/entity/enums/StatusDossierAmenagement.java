@@ -6,6 +6,7 @@ public enum StatusDossierAmenagement {
     EN_ATTENTE,
     VALIDE,
     PORTE,
-    EXPIRE
+    EXPIRE,
+    REFUSE,
 
 }

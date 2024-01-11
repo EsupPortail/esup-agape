@@ -126,7 +126,7 @@
                                                         class="form-check-input"
                                                         th:value="${autorisation}"
                                                         required>
-                                                <label class="form-check-label" th:for="${autorisation}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                                                <label class="form-check-label" th:for="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
                                             </div>
                                         </th:block>
                                     </div>
