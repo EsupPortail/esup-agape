@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.DossierAmenagement;
 import org.esupportail.esupagape.entity.UserOthersAffectations;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
@@ -147,14 +148,15 @@ public class AmenagementScolariteController {
     public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
+        DossierAmenagement dossierAmenagement = amenagementService.getDossierAmenagementOfCurrentYear(amenagement);
         model.addAttribute("amenagement", amenagement);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(amenagement.getDossier().getIndividu().getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
+        List<Dossier> dossiers = dossierService.getAllByIndividu(dossierAmenagement.getDossier().getIndividu().getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
         model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentForm", dossierService.getInfos(amenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
+        model.addAttribute("currentForm", dossierService.getInfos(dossierAmenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
         model.addAttribute("lastDossier", dossiers.get(0));
         Dossier dossier;
         try {
-            dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            dossier = dossierService.getCurrent(dossierAmenagement.getDossier().getIndividu().getId());
         } catch (AgapeJpaException e) {
             dossier = null;
         }

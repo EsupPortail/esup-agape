@@ -4,7 +4,6 @@ import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
-import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
@@ -125,9 +124,6 @@ public class SyncService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if (dossier.getAmenagements().isEmpty() && dossier.getAmenagementsPortes() == null) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
-        }
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, false, new DossierInfos());
             if (dossierInfos != null) {

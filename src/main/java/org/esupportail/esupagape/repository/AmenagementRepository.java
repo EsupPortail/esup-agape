@@ -14,32 +14,26 @@ import java.util.List;
 
 public interface AmenagementRepository extends JpaRepository<Amenagement, Long> {
 
-    List<Amenagement> findByDossierId(Long dossierId);
-
-    @Query("select a from Amenagement a where a.dossier.id = :dossierId and a.statusAmenagement = :statusAmenagement order by a.administrationDate desc")
+    @Query("select da.amenagement from DossierAmenagement da where da.dossier.id = :dossierId and da.amenagement.statusAmenagement = :statusAmenagement order by da.amenagement.administrationDate desc")
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
 
-    List<Amenagement> findByStatusAmenagement(StatusAmenagement statusAmenagement);
-
-    List<Amenagement> findByStatusAmenagementAndDossierYear(StatusAmenagement statusAmenagement, int year);
-
-    @Query("select distinct a from Amenagement a join Dossier d on a.dossier = d " +
+    @Query("select distinct a from Amenagement a join DossierAmenagement da on da.amenagement = a " +
             "where " +
             "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
-            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
+            "and (:codComposante is null or da.dossier.codComposante  = :codComposante) " +
             "and a.statusAmenagement != 'BROUILLON' and a.statusAmenagement != 'SUPPRIME'" +
-            "and (:yearFilter is null or d.year = :yearFilter)")
+            "and (:yearFilter is null or da.lastYear = :yearFilter)")
     Page<Amenagement> findByFullTextSearch(StatusAmenagement statusAmenagement, String codComposante, Integer yearFilter, Pageable pageable);
 
 
-    @Query("select a from Amenagement a join Dossier d on a.dossier = d join Individu i on d.individu = i " +
+    @Query("select a from Amenagement a join DossierAmenagement da on da.amenagement = a join Individu i on da.dossier.individu = i " +
             "where (upper(i.firstName) like upper(concat('%', :fullTextSearch))) " +
             "or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%'))) " +
             "or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))) " +
-            "or (upper(d.individu.numEtu) = upper(:fullTextSearch)) " +
-            "or (upper(d.individu.codeIne) = upper(:fullTextSearch)) " +
-            "and (d.year < :yearFilter) " +
-            "and d.individu.desinscrit != true " +
+            "or (upper(da.dossier.individu.numEtu) = upper(:fullTextSearch)) " +
+            "or (upper(da.dossier.individu.codeIne) = upper(:fullTextSearch)) " +
+            "and (da.lastYear < :yearFilter) " +
+            "and da.dossier.individu.desinscrit != true " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
             "and a.typeAmenagement = 'CURSUS'")
     Page<Amenagement> findByIndividuNamePortable(@Param("fullTextSearch") String fullTextSearch,
@@ -47,91 +41,90 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
                                                  Pageable pageable);
 
 
-    @Query("select count(a) from Amenagement a join Dossier d on a.dossier = d " +
+    @Query("select count(a) from Amenagement a join DossierAmenagement da on da.amenagement = a " +
             "where " +
             "a.statusAmenagement = 'VALIDE_MEDECIN' " +
-            "and (:yearFilter is null or d.year = :yearFilter)")
+            "and (:yearFilter is null or da.lastYear = :yearFilter)")
     Long countToValidate(Integer yearFilter);
 
     @Query("""
             select distinct a from Amenagement a
-            join Dossier d on a.dossier = d
-            where (:codComposante is null or a.dossier.codComposante  = :codComposante)
+            join DossierAmenagement da on da.amenagement = a
+            where (:codComposante is null or da.dossier.codComposante  = :codComposante)
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
-            and (d.year < :yearFilter)
-            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
+            and (da.lastYear < :yearFilter)
+            and a not in (select da1.amenagement from DossierAmenagement da1 where da1.lastYear = :yearFilter)
             and a.typeAmenagement = 'CURSUS'
-            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
+            and (da.dossier.individu.desinscrit is null or da.dossier.individu.desinscrit = false)
             """)
     Page<Amenagement> findByPortable(String codComposante, Integer yearFilter, Pageable pageable);
 
     @Query("""
-            select distinct a from Amenagement a
-            join Dossier d on a.dossier = d
-            where
-            ((upper(a.dossier.individu.firstName) like upper(concat('%', :fullTextSearch)))
-            or (upper(concat(a.dossier.individu.name, ' ', a.dossier.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')))
-            or (upper(a.dossier.individu.numEtu) like upper(concat('%', :fullTextSearch, '%')))
-            or (upper(concat(a.dossier.individu.firstName, ' ', a.dossier.individu.name)) like upper(concat('%', :fullTextSearch, '%'))))
-            and (:codComposante is null or a.dossier.codComposante  = :codComposante)
-            and a.statusAmenagement = 'VISE_ADMINISTRATION'
-            and (d.year < :yearFilter)
-            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
-            and a.typeAmenagement = 'CURSUS'
-            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
-            """)
-    Page<Amenagement> findByFullTextSearchPortable(String fullTextSearch, String codComposante, Integer yearFilter, Pageable pageable);
-
-    @Query("""
             select count(distinct a) from Amenagement a
-            left join Dossier d on a.dossier = d
+            left join DossierAmenagement da on da.amenagement = a
             where a.statusAmenagement = 'VISE_ADMINISTRATION'
-            and (d.year < :currentYear)
-            and (select count(*) from Dossier d1 where d1.individu = d.individu and a member of d1.amenagementsPortes) = 0
+            and (da.lastYear < :currentYear)
+            and a not in (select da1.amenagement from DossierAmenagement da1 where da1.lastYear = :currentYear)
             and a.typeAmenagement = 'CURSUS'
-            and (d.individu.desinscrit is null or d.individu.desinscrit = false)
+            and (da.dossier.individu.desinscrit is null or da.dossier.individu.desinscrit = false)
             """)
     Long countToPorte(Integer currentYear);
 
+    @Query("""
+            select distinct a from Amenagement a
+            join DossierAmenagement da on da.amenagement = a
+            where
+            ((upper(da.dossier.individu.firstName) like upper(concat('%', :fullTextSearch)))
+            or (upper(concat(da.dossier.individu.name, ' ', da.dossier.individu.firstName)) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(da.dossier.individu.numEtu) like upper(concat('%', :fullTextSearch, '%')))
+            or (upper(concat(da.dossier.individu.firstName, ' ', da.dossier.individu.name)) like upper(concat('%', :fullTextSearch, '%'))))
+            and (:codComposante is null or da.dossier.codComposante  = :codComposante)
+            and a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (da.lastYear < :yearFilter)
+            and a.typeAmenagement = 'CURSUS'
+            and (da.dossier.individu.desinscrit is null or da.dossier.individu.desinscrit = false)
+            """)
+    Page<Amenagement> findByFullTextSearchPortable(String fullTextSearch, String codComposante, Integer yearFilter, Pageable pageable);
+
     @Query(value = "select a from Amenagement a " +
-            "join Dossier d on a.dossier = d " +
-            "join Individu i on d.individu = i " +
+            "join DossierAmenagement da on da.amenagement = a " +
+            "join Individu i on da.dossier.individu = i " +
             "where " +
             "i = :individu " +
             "and a.statusAmenagement = 'VISE_ADMINISTRATION' " +
-            "and (d.year < :yearFilter)")
+            "and (da.lastYear < :yearFilter)")
     List<Amenagement> findAmenagementPrec(Individu individu, Integer yearFilter);
 
-    @Query(value = "select a from Amenagement a " +
+    @Query(value = "select da.amenagement from DossierAmenagement da " +
             "where " +
-            "(:statusAmenagement is null or a.statusAmenagement = :statusAmenagement) " +
-            "and (:codComposante is null or a.dossier.codComposante  = :codComposante) " +
-            "order by a.administrationDate desc")
+            "(:statusAmenagement is null or da.amenagement.statusAmenagement = :statusAmenagement) " +
+            "and (:codComposante is null or da.dossier.codComposante  = :codComposante) " +
+            "order by da.amenagement.administrationDate desc")
     Page<Amenagement> findByFullTextSearchAdmin(StatusAmenagement statusAmenagement, String codComposante, Pageable pageable);
 
 
     @Query("""
-            select distinct a from Amenagement a join Dossier d on (a.dossier = d or a member of d.amenagementsPortes) join Individu i on d.individu = i
+            select a from Amenagement a join DossierAmenagement da on da.amenagement = a join Individu i on da.dossier.individu = i
             where (:statusAmenagement is null or a.statusAmenagement = :statusAmenagement)
-            and d.codComposante in (:codComposantes)
-            and (:campus is null or a.dossier.campus = :campus)
+            and da.dossier.codComposante in (:codComposantes)
+            and (:campus is null or da.dossier.campus = :campus)
             and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
             and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)
-            and (:yearFilter is null or d.year = :yearFilter)
+            and (:yearFilter is null or da.lastYear = :yearFilter)
             """)
     Page<Amenagement> findByFullTextSearchScol(StatusAmenagement statusAmenagement, List<String> codComposantes, String campus, String viewedByUid, String notViewedByUid, Integer yearFilter, Pageable pageable);
 
     @Query("""
-            select a from Amenagement a join Dossier d on (a.dossier = d or a member of d.amenagementsPortes) join Individu i on d.individu = i
+            select a from Amenagement a join DossierAmenagement da on da.amenagement = a join Individu i on da.dossier.individu = i
             where ((upper(i.firstName) like upper(concat('%', :fullTextSearch)))
             or (upper(concat(i.name, ' ', i.firstName)) like upper(concat('%', :fullTextSearch, '%')))
             or (upper(i.numEtu) like upper(concat('%', :fullTextSearch, '%')))
             or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))))
-            and (d.year = :yearFilter)
-            and (d.codComposante in (:codComposantes))
-            and (:campus is null or d.campus = :campus)
+            and (da.lastYear = :yearFilter)
+            and (da.dossier.codComposante in (:codComposantes))
+            and (:campus is null or da.dossier.campus = :campus)
             and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
             and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
             and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)

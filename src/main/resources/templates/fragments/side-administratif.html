@@ -9,13 +9,13 @@
                 <dt>Année du dernier dossier</dt>
                 <dd th:text="${lastDossier.year} + '-' + ${lastDossier.year + 1}"></dd>
                 <dt>Année de validation de l’aménagement</dt>
-                <dd th:text="${amenagement.dossier.year} + '-' + ${amenagement.dossier.year + 1}"></dd>
+                <dd th:text="${amenagement.lastDossierAmenagement.dossier.year} + '-' + ${amenagement.lastDossierAmenagement.dossier.year + 1}"></dd>
                 <dt>Composante</dt>
-                <dd th:text="${amenagement.dossier.composante}"></dd>
+                <dd th:text="${amenagement.lastDossierAmenagement.dossier.composante}"></dd>
                 <dt>Statut</dt>
                 <dd th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></dd>
-                <dt th:if="${lastDossier.amenagementsPortes != null}">Portabilité effectuée par</dt>
-                <dd th:if="${lastDossier.amenagementsPortes != null}" th:text="${lastDossier.nomValideurPortabilite}"></dd>
+                <dt th:if="${amenagement.lastDossierAmenagement.nomValideurPortabilite != null}">Portabilité effectuée par</dt>
+                <dd th:if="${amenagement.lastDossierAmenagement.nomValideurPortabilite != null}" th:text="${amenagement.lastDossierAmenagement.nomValideurPortabilite}"></dd>
                 <dt>Nom du médecin</dt>
                 <dd th:text="${amenagement.nomMedecin}"></dd>
                 <dt>Date de fin</dt>
