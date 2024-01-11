@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
+import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -113,16 +114,17 @@ public class AmenagementAdministratifController {
     public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
+        Individu individu = amenagement.getDossierAmenagements().stream().toList().get(0).getDossier().getIndividu();
         model.addAttribute("amenagement", amenagement);
-        List<Dossier> dossiers = dossierService.getAllByIndividu(amenagement.getDossier().getIndividu().getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
+        List<Dossier> dossiers = dossierService.getAllByIndividu(individu.getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
         model.addAttribute("dossiers", dossiers);
-        model.addAttribute("currentForm", dossierService.getInfos(amenagement.getDossier().getIndividu(), utilsService.getCurrentYear()).getLibelleFormation());
+        model.addAttribute("currentForm", dossierService.getInfos(individu, utilsService.getCurrentYear()).getLibelleFormation());
         model.addAttribute("lastDossier", dossiers.get(0));
         amenagementService.syncEsupSignature(amenagementId);
         model.addAttribute("esupSignatureUrl", applicationProperties.getEsupSignatureUrl() + "/user/signrequests/" + amenagement.getCertificatSignatureId());
         Dossier dossier;
         try {
-            dossier = dossierService.getCurrent(amenagement.getDossier().getIndividu().getId());
+            dossier = dossierService.getCurrent(individu.getId());
             model.addAttribute("isPortable", amenagementService.isPortable(amenagementId, dossier.getId()));
         } catch (AgapeJpaException e) {
             model.addAttribute("isPortable", true);

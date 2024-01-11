@@ -105,20 +105,20 @@
                         <tbody>
                             <th:block th:each="amenagement : ${amenagements}">
                                 <tr>
-                                    <td th:text="${amenagement.dossier.year + '-' + (amenagement.dossier.year+1)}"></td>
-                                    <td th:text="${amenagement.dossier.composante}"></td>
+                                    <td th:text="${amenagement.lastDossierAmenagement.lastYear + '-' + (amenagement.lastDossierAmenagement.lastYear+1)}"></td>
+                                    <td th:text="${amenagement.lastDossierAmenagement.dossier.composante}"></td>
                                     <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${amenagement.typeAmenagement.name() != 'CURSUS'} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td>
-                                        <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.dossier.statusDossierAmenagement}}"
-                                            th:classappend="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>
+                                        <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement}}"
+                                            th:classappend="${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>
                                     </td>
-                                    <td th:text="${#strings.toUpperCase(amenagement.dossier.individu.name) + ' ' + amenagement.dossier.individu.firstName}"></td>
+                                    <td th:text="${#strings.toUpperCase(amenagement.lastDossierAmenagement.dossier.individu.name) + ' ' + amenagement.lastDossierAmenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
                                     <td th:text="${amenagement.nomMedecin}"></td>
                                     <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
                                     <td th:text="${amenagement.motifRefus}"></td>
-                                    <td th:text="${amenagement.dossier.individu.emailEtu}"></td>
+                                    <td th:text="${amenagement.lastDossierAmenagement.dossier.individu.emailEtu}"></td>
                                     <td class="text-center" style="width: 100px;">
                                         <ul class="list-group list-group-horizontal" style="display: block;">
                                             <li class="list-group-item border-0 p-1 bg-transparent">
