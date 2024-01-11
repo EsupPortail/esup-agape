@@ -6,6 +6,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,9 @@ public class Amenagement {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence")
     @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
+
+    @OneToMany(mappedBy = "amenagement", fetch = FetchType.EAGER)
+    Set<DossierAmenagement> dossierAmenagements;
 
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
@@ -99,6 +103,14 @@ public class Amenagement {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<DossierAmenagement> getDossierAmenagements() {
+        return dossierAmenagements;
+    }
+
+    public void setDossierAmenagements(Set<DossierAmenagement> dossierAmenagements) {
+        this.dossierAmenagements = dossierAmenagements;
     }
 
     public Autorisation getAutorisation() {
@@ -315,5 +327,13 @@ public class Amenagement {
 
     public void setViewByUid(Set<String> viewByUid) {
         this.viewByUid = viewByUid;
+    }
+
+    public Dossier getDossierByYear(int year) {
+        return dossierAmenagements.stream().filter(d -> d.getLastYear() == year).findFirst().get().getDossier();
+    }
+
+    public DossierAmenagement getLastDossierAmenagement() {
+        return dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).get();
     }
 }

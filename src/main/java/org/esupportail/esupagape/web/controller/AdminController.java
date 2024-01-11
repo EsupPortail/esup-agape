@@ -169,8 +169,7 @@ public class AdminController {
     }
 
     @PostMapping("/import-codes-ministere")
-    public String importCsv(@RequestParam("file") MultipartFile file,
-                            RedirectAttributes redirectAttributes) {
+    public String importCsv(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if(!file.isEmpty()) {
             try {
                 csvImportService.importCsv(file);
@@ -185,8 +184,7 @@ public class AdminController {
     }
 
     @PostMapping("/import-libelles-ministere")
-    public String importCsvLibelle(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+    public String importCsvLibelle(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if(!file.isEmpty()) {
             try {
                 csvImportService.importCsvLibelle(file);
@@ -201,8 +199,7 @@ public class AdminController {
     }
 
     @PostMapping("/import-libelles-amenagement")
-    public String importLibelleAmenagement(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+    public String importLibelleAmenagement(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if(!file.isEmpty()) {
             try {
                 csvImportService.importCsvLibelleAmenagement(file);

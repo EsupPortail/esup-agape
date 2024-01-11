@@ -38,7 +38,6 @@ public class CsvImportService {
         enqueteEnumFilFmtScoRepository.deleteAll();
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
         csvFormat.setDelimiter(";");
-        csvFormat.setHeader();
         csvFormat.setSkipHeaderRecord(true);
         List<CSVRecord> csvRecords = csvFormat.build().parse(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)).getRecords();
         List<EnqueteEnumFilFmtSco> enqueteEnumFilFmtScos = new ArrayList<>();
@@ -61,9 +60,7 @@ public class CsvImportService {
         enqueteEnumFilFmtScoLibelleRepository.deleteAllInBatch();
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
         csvFormat.setDelimiter(";");
-        csvFormat.setHeader();
         csvFormat.setSkipHeaderRecord(true);
-
         List<CSVRecord> csvRecords = csvFormat.build().parse(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)).getRecords();
         List<EnqueteEnumFilFmtScoLibelle> enqueteEnumFilFmtScoLibelles = new ArrayList<>();
         for (CSVRecord csvRecord : csvRecords) {
@@ -81,9 +78,7 @@ public class CsvImportService {
         libelleAmenagementRepository.deleteAllInBatch();
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
         csvFormat.setDelimiter(";");
-//        csvFormat.setHeader();
-//        csvFormat.setSkipHeaderRecord(true);
-
+        csvFormat.setSkipHeaderRecord(true);
         List<CSVRecord> csvRecords = csvFormat.build().parse(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)).getRecords();
         List<LibelleAmenagement> libelleAmenagements = new ArrayList<>();
         for (CSVRecord csvRecord : csvRecords) {

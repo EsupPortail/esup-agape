@@ -26,6 +26,12 @@ public class Dossier {
     private StatusDossier statusDossier;
 
     @Enumerated(EnumType.STRING)
+    private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
+
+    @OneToMany(mappedBy = "dossier")
+    private List<DossierAmenagement> dossierAmenagements;
+
+    @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
@@ -134,6 +140,22 @@ public class Dossier {
 
     public void setStatusDossier(StatusDossier statusDossier) {
         this.statusDossier = statusDossier;
+    }
+
+    public List<DossierAmenagement> getDossierAmenagements() {
+        return dossierAmenagements;
+    }
+
+    public void setDossierAmenagements(List<DossierAmenagement> dossierAmenagements) {
+        this.dossierAmenagements = dossierAmenagements;
+    }
+
+    public StatusDossierAmenagement getStatusDossierAmenagement() {
+        return statusDossierAmenagement;
+    }
+
+    public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {
+        this.statusDossierAmenagement = statusDossierAmenagement;
     }
 
     public Autorisation getAutorisation() {

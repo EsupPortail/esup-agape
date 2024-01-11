@@ -11,12 +11,15 @@ public class DossierAmenagement {
     @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
+    private Integer lastYear;
+
     @ManyToOne
     private Dossier dossier;
 
     @ManyToOne
     private Amenagement amenagement;
 
+    @Enumerated(EnumType.STRING)
     private StatusDossierAmenagement statusDossierAmenagement;
 
     private String mailValideurPortabilite;
@@ -29,6 +32,14 @@ public class DossierAmenagement {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getLastYear() {
+        return lastYear;
+    }
+
+    public void setLastYear(Integer lastYear) {
+        this.lastYear = lastYear;
     }
 
     public Dossier getDossier() {

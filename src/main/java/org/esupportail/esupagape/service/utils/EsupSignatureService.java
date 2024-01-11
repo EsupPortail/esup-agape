@@ -6,14 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Document;
+import org.esupportail.esupagape.entity.DossierAmenagement;
 import org.esupportail.esupagape.entity.enums.SignatureStatus;
 import org.esupportail.esupagape.entity.enums.StatusAmenagement;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
-import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.service.DocumentService;
-import org.esupportail.esupagape.service.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -38,26 +37,20 @@ public class EsupSignatureService {
     private final Logger logger = LoggerFactory.getLogger(EsupSignatureService.class);
 
     private final ApplicationProperties applicationProperties;
-    private final AmenagementRepository amenagementRepository;
     private final DocumentService documentService;
 
-    private final MailService mailService;
-
-    public EsupSignatureService(ApplicationProperties applicationProperties, AmenagementRepository amenagementRepository, DocumentService documentService, MailService mailService) {
+    public EsupSignatureService(ApplicationProperties applicationProperties, DocumentService documentService) {
         this.applicationProperties = applicationProperties;
-        this.amenagementRepository = amenagementRepository;
         this.documentService = documentService;
-        this.mailService = mailService;
     }
 
     @Transactional
-    public void send(Long amenagementId, byte[] bytes, TypeWorkflow typeWorkflow) {
-        Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
+    public void send(Amenagement amenagement, byte[] bytes, TypeWorkflow typeWorkflow) {
         String title = "";
         String signRequestId;
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("createByEppn", "system");
-        String nomFichier = "amenagement_" + amenagementId + ".pdf";
+        String nomFichier = "amenagement_" + amenagement.getId() + ".pdf";
         ByteArrayResource contentsAsResource = new ByteArrayResource(bytes) {
             @Override
             public String getFilename() {
@@ -103,51 +96,49 @@ public class EsupSignatureService {
     }
 
     @Transactional
-    public void getLastPdf(Long amenagementId, TypeWorkflow typeWorkflow) {
-        Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
+    public void getLastPdf(DossierAmenagement dossierAmenagement, TypeWorkflow typeWorkflow) {
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
-            if (amenagement.getAvisSignatureStatus() == null || !amenagement.getAvisSignatureStatus().equals(SignatureStatus.COMPLETED)) {
+            if (dossierAmenagement.getAmenagement().getAvisSignatureStatus() == null || !dossierAmenagement.getAmenagement().getAvisSignatureStatus().equals(SignatureStatus.COMPLETED)) {
                 return;
             }
-            signId = amenagement.getAvisSignatureId();
+            signId = dossierAmenagement.getAmenagement().getAvisSignatureId();
         } else {
-            if (amenagement.getCertificatSignatureStatus() == null || !amenagement.getCertificatSignatureStatus().equals(SignatureStatus.COMPLETED)) {
+            if (dossierAmenagement.getAmenagement().getCertificatSignatureStatus() == null || !dossierAmenagement.getAmenagement().getCertificatSignatureStatus().equals(SignatureStatus.COMPLETED)) {
                 return;
             }
-            signId = amenagement.getCertificatSignatureId();
+            signId = dossierAmenagement.getAmenagement().getCertificatSignatureId();
         }
         RestTemplate restTemplate = new RestTemplate();
         String urlStatus = String.format("%s/ws/signrequests/get-last-file/%s", applicationProperties.getEsupSignatureUrl(), signId);
         ResponseEntity<byte[]> bytes = restTemplate.getForEntity(urlStatus, byte[].class);
         byte[] pdf = bytes.getBody();
-        Document document = documentService.createDocument(new ByteArrayInputStream(pdf), "Avis_" + amenagementId, "application/pdf", amenagementId, Amenagement.class.getSimpleName(), amenagement.getDossier());
+        Document document = documentService.createDocument(new ByteArrayInputStream(pdf), "Avis_" + dossierAmenagement.getAmenagement().getId(), "application/pdf", dossierAmenagement.getAmenagement().getId(), Amenagement.class.getSimpleName(), dossierAmenagement.getDossier());
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
-            amenagement.setAvis(document);
-            amenagement.setAvisSignatureStatus(SignatureStatus.DOWNLOADED);
+            dossierAmenagement.getAmenagement().setAvis(document);
+            dossierAmenagement.getAmenagement().setAvisSignatureStatus(SignatureStatus.DOWNLOADED);
         } else {
-            amenagement.setCertificat(document);
-            amenagement.setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
+            dossierAmenagement.getAmenagement().setCertificat(document);
+            dossierAmenagement.getAmenagement().setCertificatSignatureStatus(SignatureStatus.DOWNLOADED);
         }
-        deletePDF(amenagementId, typeWorkflow);
+        deletePDF(dossierAmenagement.getAmenagement(), typeWorkflow);
     }
     
     @Transactional
-    public SignatureStatus getStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
-        Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
+    public SignatureStatus getStatus(DossierAmenagement dossierAmenagement, TypeWorkflow typeWorkflow) {
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
-            SignatureStatus avisSignatureStatus = amenagement.getAvisSignatureStatus();
+            SignatureStatus avisSignatureStatus = dossierAmenagement.getAmenagement().getAvisSignatureStatus();
             if (avisSignatureStatus != null && avisSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
                 return avisSignatureStatus;
             }
-            signId = amenagement.getAvisSignatureId();
+            signId = dossierAmenagement.getAmenagement().getAvisSignatureId();
         } else {
-            SignatureStatus certificatSignatureStatus = amenagement.getCertificatSignatureStatus();
+            SignatureStatus certificatSignatureStatus = dossierAmenagement.getAmenagement().getCertificatSignatureStatus();
             if (certificatSignatureStatus != null && certificatSignatureStatus.equals(SignatureStatus.DOWNLOADED)) {
                 return certificatSignatureStatus;
             }
-            signId = amenagement.getCertificatSignatureId();
+            signId = dossierAmenagement.getAmenagement().getCertificatSignatureId();
         }
         RestTemplate restTemplate = new RestTemplate();
         if (signId == null || signId.isEmpty()) {
@@ -157,19 +148,19 @@ public class EsupSignatureService {
             ResponseEntity<String> responseEntityStatus = restTemplate.getForEntity(urlStatus, String.class);
             SignatureStatus signatureStatus = SignatureStatus.valueOf(responseEntityStatus.getBody().toUpperCase().replace('-', '_'));
             if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
-                amenagement.setAvisSignatureStatus(signatureStatus);
+                dossierAmenagement.getAmenagement().setAvisSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
-                    amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
-                    amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
+                    dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
-                    amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
-                    amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+                    dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.SUPPRIME);
+                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
             } else {
-                amenagement.setCertificatSignatureStatus(signatureStatus);
+                dossierAmenagement.getAmenagement().setCertificatSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
-                    amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
-                    amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                    dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
+                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
                     String urlSignRequest = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
                     ResponseEntity<String> responseEntitySignRequest = restTemplate.getForEntity(urlSignRequest, String.class);
@@ -180,16 +171,15 @@ public class EsupSignatureService {
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                    amenagement.setMotifRefus(((HashMap<String, Object>)((ArrayList) signRequestMap.get("comments")).get(0)).get("text").toString());
-                    amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
-                    amenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+                    dossierAmenagement.getAmenagement().setMotifRefus(((HashMap<String, Object>)((ArrayList) signRequestMap.get("comments")).get(0)).get("text").toString());
+                    dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
+                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
             }
             return signatureStatus;
         }
     }
-    public void deletePDF(Long amenagementId, TypeWorkflow typeWorkflow) {
-        Amenagement amenagement = amenagementRepository.findById(amenagementId).orElseThrow();
+    public void deletePDF(Amenagement amenagement, TypeWorkflow typeWorkflow) {
         String signId;
         if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
             signId = amenagement.getAvisSignatureId();

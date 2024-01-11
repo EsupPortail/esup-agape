@@ -202,7 +202,6 @@ public class DossierService {
             throw new AgapeYearException();
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
-        dossierToUpdate.setStatusDossierAmenagement(dossierToUpdate.getStatusDossierAmenagement());
         if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
             dossierToUpdate.getIndividu().setName(dossierIndividuForm.getName());
             dossierToUpdate.getIndividu().setFirstName(dossierIndividuForm.getFirstName());
@@ -564,15 +563,26 @@ public class DossierService {
         }
     }
 
-    public Dossier getDossierByAmenagementsPortes(Amenagement amenagement) throws AgapeException {
-        List<Dossier> dossiers= dossierRepository.findByAmenagementsPortesContains(amenagement);
-        if(!dossiers.isEmpty()) {
-            return dossiers.get(0);
+    public void updateStatusDossierAmenagement(Dossier dossier, StatusDossierAmenagement statusDossierAmenagement) {
+        if(statusDossierAmenagement.equals(StatusDossierAmenagement.NON)) {
+            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE) || da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+            } else {
+                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
+                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                }
+                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+                }
+            }
+        } else if(statusDossierAmenagement.equals(StatusDossierAmenagement.VALIDE)) {
+            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE))) {
+                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+            }
         } else {
-            throw new AgapeException("No dossier found for amenagement porte : " + amenagement.getId());
+            dossier.setStatusDossierAmenagement(statusDossierAmenagement);
         }
     }
-
 
 //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
