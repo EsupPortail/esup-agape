@@ -32,7 +32,7 @@
 			<dd class="col-sm-10" th:text="${currentYear} + '-' + ${currentYear + 1} + ' : ' + ${currentForm}"></dd>
 		</dl>
 		<div class="col-12 text-center" style="height: calc(100vh - 240px);">
-			<th:block th:unless="${amenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
+			<th:block th:unless="${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
 				<embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/scolarite/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
 			</th:block>
 		</div>
