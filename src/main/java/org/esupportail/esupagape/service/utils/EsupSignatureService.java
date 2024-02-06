@@ -161,6 +161,7 @@ public class EsupSignatureService {
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
                     dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                     dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                    dossierAmenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
                     String urlSignRequest = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
                     ResponseEntity<String> responseEntitySignRequest = restTemplate.getForEntity(urlSignRequest, String.class);
