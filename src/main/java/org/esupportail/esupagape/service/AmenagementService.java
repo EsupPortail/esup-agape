@@ -400,6 +400,7 @@ public class AmenagementService {
                 amenagement.setNomValideur(personLdap.getDisplayName());
                 amenagement.setUidValideur(personLdap.getUid());
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                dossierAmenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                 Document certificat = documentService.createDocument(
                         new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true)),
