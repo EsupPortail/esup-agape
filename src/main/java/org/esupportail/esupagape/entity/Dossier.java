@@ -60,10 +60,10 @@ public class Dossier {
     private Taux taux;
 
     @Enumerated(EnumType.STRING)
-    private TypFrmn typeFormation;
+    private TypFrmn typeFormation = TypFrmn.I;
 
     @Enumerated(EnumType.STRING)
-    private ModFrmn modeFormation;
+    private ModFrmn modeFormation = ModFrmn.P;
 
     @Column(columnDefinition = "TEXT")
     private String commentaire;
@@ -90,7 +90,7 @@ public class Dossier {
 
     private Boolean employee;
 
-    private Boolean alternance;
+    private Boolean alternance = false;
 
     private Boolean hasScholarship;
 
