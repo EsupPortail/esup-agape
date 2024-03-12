@@ -105,8 +105,9 @@ public class LdapPersonService {
 
     public List<PersonLdap> findEmployees(String search) {
         AndFilter andFilter = new AndFilter();
-        andFilter.and(new EqualsFilter("eduPersonAffiliation", "employee"));
-        andFilter.and(new EqualsFilter("eduPersonAffiliation", "member"));
+        andFilter.and(new OrFilter()
+                .or(new EqualsFilter("eduPersonAffiliation", "employee"))
+                .or(new EqualsFilter("eduPersonAffiliation", "member")));
         andFilter.and(new OrFilter()
                 .or(new LikeFilter("cn", search + "*"))
                 .or(new LikeFilter("uid", search + "*")));
