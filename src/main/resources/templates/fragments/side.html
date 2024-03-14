@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <div th:fragment="side" class="agape-side bg-light position-sticky">
+        <div class="p-2">
+            <span class="fs-6 card bg-primary text-white mb-3 ps-3">Fiche</span>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <img th:src="'/individus/photo/' + ${currentDossier.individu.id}" alt="" class="me-4" width="120">
+                    </div>
+                    <div class="col-6">
+                        <dt>N° Étudiant</dt>
+                        <dd th:text="${currentDossier.individu.numEtu}"></dd>
+                        <dt>Nom</dt>
+                        <dd th:text="${#strings.toUpperCase(currentDossier.individu.name)}"></dd>
+                        <dt>Prénom</dt>
+                        <dd th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.firstName))}"></dd>
+                    </div>
+                </div>
+                <dl class="row">
+                    <dt class="col-sm-5">N° Ine</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.codeIne}"></dd>
+                    <dt class="col-sm-5">Login</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.eppn}"></dd>
+                    <dt class="col-sm-5">Date de naissance</dt>
+                    <dd class="col-sm-7" th:text="|${#temporals.format(currentDossier.individu.dateOfBirth, 'dd/MM/yyyy')} (${age} ans)|"></dd>
+                    <dt class="col-sm-5">Type d'individu</dt>
+                    <dd class="col-sm-7" th:text="#{'dossier.typeIndividu.' + ${currentDossier.type}}"></dd>
+                    <dt>Statut du dossier</dt>
+                    <dd>
+                        <span th:text="#{'dossier.statusDossier.' + ${currentDossier.statusDossier}}" class="badge" th:style="'background-color: ' + ${currentDossier.statusDossier.badgeColor} + ' !important; color: ' + ${currentDossier.statusDossier.textColor} + ' !important;'"></span>
+                    </dd>
+                    <dt>Statut aménagement</dt>
+                    <dd>
+                        <span class="badge bg-secondary" th:text="${currentDossier.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} : 'Pas d\'aménagement'"></span>
+                    </dd>
+                    <dt class="col-sm-5">Genre</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>
+                    <dt class="col-sm-5">Nationalité</dt>
+                    <dd class="col-sm-7" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.nationalite))}"></dd>
+                </dl>
+            </div>
+            <span class="fs-6 card bg-primary text-white mb-3 ps-3">Contacts</span>
+            <div class="container">
+                <dl class="row">
+                    <dt>Email universitaire</dt>
+                    <dd th:text="${currentDossier.individu.emailEtu}"></dd>
+                    <dt class="col-sm-5">Téléphone</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.contactPhone}"></dd>
+                    <!-- <dt class="col-sm-5">Téléphone fixe</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixPhone}"></dd>-->
+                    <dt class="col-sm-5">Code postal</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixCP}"></dd>
+                    <dt class="col-sm-5">Ville</dt>
+                    <dd class="col-sm-7" th:text="${currentDossier.individu.fixCity}"></dd>
+                </dl>
+            </div>
+            <!-- <span class="fs-6 card text-bg-primary mb-3 ps-3">Adresses</span>
+            <div class="accordion" id="accordionAddress">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddress1" aria-expanded="false" aria-controls="collapseAddress1">
+                            Adresse annuelle
+                        </button>
+                    </h2>
+                    <div id="collapseAddress1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionAddress">
+                        <div class="accordion-body">
+                            <ul>
+                                <li th:text="${currentDossier.individu.currentAddress}">Adresse annuelle</li>
+                                <li th:text="${currentDossier.individu.currentCP}"></li>
+                                <li th:text="${currentDossier.individu.currentCity}"></li>
+                                <li th:text="${currentDossier.individu.currentCountry}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddress2" aria-expanded="false" aria-controls="collapseAddress2">
+                            Adresse fixe
+                        </button>
+                    </h2>
+                    <div id="collapseAddress2" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionAddress">
+                        <div class="accordion-body">
+                            <ul>
+                                <li th:text="${currentDossier.individu.fixAddress}">Adresse fixe</li>
+                                <li th:text="${currentDossier.individu.fixCP}"></li>
+                                <li th:text="${currentDossier.individu.fixCity}"></li>
+                                <li th:text="${currentDossier.individu.fixCountry}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+    </div>
+</html>

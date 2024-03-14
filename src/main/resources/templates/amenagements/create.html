@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <!--/*@thymesVar id="amenagement" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+    <head th:replace="~{fragments/head :: head}"></head>
+    <body>
+        <header th:replace="~{fragments/header :: header}"></header>
+        <main class="d-inline-flex">
+            <div th:replace="~{fragments/side :: side}"></div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{'/dossiers/' + ${currentDossier.id}}">Dossier <span th:text="${currentDossier.individu.firstName + ' ' + currentDossier.individu.name}"></span></a>
+                        </li>
+                        <li class="breadcrumb-item active">Aménagements</li>
+                    </ol>
+                </nav>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='amenagements')}"></div>
+                <div class="agape-tab-content bg-white p-3">
+                    <h4>Ajout d’un aménagement d’examen</h4>
+                    <hr>
+                    <form id="amenagementForm" th:method="post" th:action="@{/dossiers/{id}/amenagements/create(id=${currentDossier.id})}" th:object="${amenagement}">
+                        <div id="form-background" class="row">
+                            <div class="col-12 col-xl-6">
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="typeAmenagement"><span class="star">*</span> Type d’aménagement</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select id="typeAmenagement"
+                                                type="text"
+                                                class="form-select"
+                                                th:name="typeAmenagement"
+                                                th:value="${typeAmenagement}"
+                                                validationMessage="Veuillez sélectionner un type d'aménagement"
+                                                required>
+                                            <option value="" disabled selected hidden>Choisir</option>
+                                            <option th:each="typeAmenagement : ${typeAmenagements}"
+                                                    th:text="#{'amenagement.typeAmenagement.' +${typeAmenagement}}"
+                                                    th:value="${typeAmenagement}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="amenagement-end-date" class="row mb-1 align-items-baseline d-none">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label th:for="end-date" class="form-label">Date de fin</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}">
+                                        <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label"><span class="star">*</span> Types d’épreuves</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select id="typeEpreuves" class="agape-slim-select" name="typeEpreuves" th:field="*{typeEpreuves}" size="1" multiple required>
+                                            <th:block th:each="typeEpreuve : ${typeEpreuves}">
+                                                <option th:id="${typeEpreuve}" th:value="${typeEpreuve}" th:text="#{'amenagement.typeEpreuve.' +${typeEpreuve}}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label for="autre-typeEpreuve" class="form-label">Autre type d’épreuve</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <input id="autre-typeEpreuve" type="text" class="form-control" th:field="*{autresTypeEpreuve}">
+                                        <p th:if="${#fields.hasErrors('autresTypeEpreuve')}" th:errorclass="error" th:errors="*{autresTypeEpreuve}"></p>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label" for="tempsMajore"><span class="star">*</span> Temps majoré</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <select id="tempsMajore" type="text" class="form-select" name="tempsMajore" th:value="${amenagement.tempsMajore}" required>
+                                            <option value="" disabled selected hidden>Choisir</option>
+                                            <option th:each="tempsMajore : ${tempsMajores}"
+                                                    th:text="#{'amenagement.tempsMajore.' +${tempsMajore}}"
+                                                    th:value="${tempsMajore}"
+                                                    th:selected="${tempsMajore.equals(amenagement.tempsMajore)}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label for="autres-temp-majore" class="form-label">Autres temps majorés</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <input id="autres-temp-majore" type="text" class="form-control" th:field="*{autresTempsMajores}">
+                                        <p th:if="${#fields.hasErrors('autresTempsMajores')}" th:errorclass="error" th:errors="*{autresTempsMajores}"></p>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label th:for="amenagement-text" class="form-label">Aménagement</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <div class="agape-amenagement-textarea-wrapper">
+                                            <textarea id="amenagement-text" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
+                                        </div>
+                                        <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-6">
+                                <div class="row mb-1">
+                                    <div class="col-4" style="width: 250px;">
+                                        <label class="form-label"><span class="star">*</span> Autorisation de transmission</label>
+                                    </div>
+                                    <div class="col-12 col-xxl-8">
+                                        <th:block th:each="autorisation : ${autorisations}">
+                                            <div class="form-check">
+                                                <input th:id="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}"
+                                                        name="autorisation"
+                                                        type="radio"
+                                                        class="form-check-input"
+                                                        th:value="${autorisation}"
+                                                        required>
+                                                <label class="form-check-label" th:for="'autorisation' + ${#strings.capitalize(#strings.toLowerCase(autorisation))}" th:text="#{'dossier.autorisation.' +${autorisation}}"></label>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div id="classificationDiv" class="d-none">
+                                    <div class="row mb-1 align-items-baseline">
+                                        <div class="col-4" style="width: 250px;">
+                                            <label class="form-label select-label" th:for="classification"><span class="star">*</span> Classification du
+                                                handicap</label>
+                                        </div>
+                                        <div class="col-12 col-xxl-8">
+                                            <select multiple id="classification" name="classification" size="1" class="agape-slim-select-search">
+                                                <option th:each="classification : ${classifications}"
+                                                        th:unless="${classification == T(org.esupportail.esupagape.entity.enums.Classification).NON_COMMUNIQUE || classification == T(org.esupportail.esupagape.entity.enums.Classification).REFUS}"
+                                                        th:text="#{'dossier.classification.' + ${classification}}"
+                                                        th:value="${classification}"
+                                                        th:selected="${currentDossier.classifications.contains(classification)}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="float-buttons">
+                                    <button title="Enregistrer" type="submit" class="btn btn-success">
+                                        <i class="fa-solid fa-save"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="alert alert-warning mt-2" role="alert">
+                    <span class="star">*</span> Ces champs sont obligatoires. Merci de les renseigner avant d'enregistrer.
+                </div>
+            </div>
+            <div id="amenagement-help" class="bg-white d-none" style="width:400px;position: absolute;right: 20px; top:100px; overflow-y: scroll; height: 70%; margin-top: 50px;">
+                <div class="list-group">
+                <th:block th:each="libelle : ${libellesAmenagement}">
+                    <a class="list-group-item list-group-item-action"  th:text="${libelle.title}" onclick="selectText(this)"></a>
+                </th:block>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
+    </body>
+</html>

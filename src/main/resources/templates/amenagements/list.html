@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="individu" type="org.esupportail.esupagape.entity.Individu"*/-->
+    <!--/*@thymesVar id="currentDossier" type="org.esupportail.esupagape.entity.Dossier"*/-->
+    <!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+    <head th:replace="~{fragments/head :: head}"></head>
+    <body>
+        <header th:replace="~{fragments/header :: header}"></header>
+        <main class="d-inline-flex">
+            <div th:if="${currentYear == currentDossier.year}" class="float-buttons">
+                <a sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MEDECIN')" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/create'" title="Ajouter un aménagement d'examen" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i></a>
+            </div>
+            <div th:replace="~{fragments/side :: side}"></div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a th:href="@{'/dossiers/' + ${currentDossier.id}}">Dossier <span th:text="${currentDossier.individu.firstName + ' ' + currentDossier.individu.name}"></span></a>
+                        </li>
+                        <li class="breadcrumb-item active">Aménagements</li>
+                    </ol>
+                </nav>
+                <div th:replace="~{fragments/tabs-years :: tabs-years}"></div>
+                <div th:replace="~{fragments/tabs-content :: tabs-content(active='amenagements')}"></div>
+                <div class="agape-tab-content bg-white p-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="w-100">
+                                <h4>Aménagements d’examen <span th:if="${currentDossier.statusDossierAmenagement} != null" th:text="'(' + #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} + ')'"></span></h4>
+                            </div>
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Date de création</th>
+                                        <th>Type d’aménagement</th>
+                                        <th class="d-none d-lg-table-cell d-xl-table-cell">Temps Majoré</th>
+                                        <th class="d-none d-lg-table-cell d-xl-table-cell">Aménagements</th>
+                                        <th>Nom du médecin</th>
+                                        <th>Statut aménagement</th>
+                                        <th>Motif du refus</th>
+                                        <th style="width: 200px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <th:block th:each="amenagement : ${amenagements}">
+                                        <tr>
+                                            <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${amenagement.typeAmenagement == T(org.esupportail.esupagape.entity.enums.TypeAmenagement).DATE} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+                                            <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}" class=" d-none d-lg-table-cell d-xl-table-cell"></td>
+                                            <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell" style="max-width: 150px;">
+                                                <pre th:text="${amenagement.amenagementText}"></pre>
+                                            </td>
+                                            <td th:text="${amenagement.nomMedecin}"></td>
+                                            <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
+                                            <td th:text="${amenagement.motifRefus}"></td>
+                                            <td>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"
+                                                        title="Voir"
+                                                        th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
+                                                        class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
+                                                <a sec:authorize="hasRole('ROLE_MANAGER') && !hasRole('ROLE_ADMIN')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+                                                   title="Voir"
+                                                   th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
+                                                   class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) && currentYear == currentDossier.year}"
+                                                        title="Modifier" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'"
+                                                        class="btn btn-warning"><i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="|${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).ENVOYE) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && currentYear == currentDossier.year}|"
+                                                        data-bs-toggle="modal"
+                                                        title="Supprimer"
+                                                        href="#"
+                                                        data-bs-target="#modal-warning"
+                                                        th:attr="data-bs-target='#modal-warning'+${amenagement.id}"
+                                                        class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <div class="modal modal-warning fade in" th:id="modal-warning+${amenagement.id}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <form th:action="@{/dossiers/{id}/amenagements/{amenagementId}/delete(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
+                                                                    th:method="delete">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title fs-5" th:id="'delete-amenagement-label' + ${amenagement.id}">Suppression d’un aménagement</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet aménagement?
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
+                                                                        Annuler
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
+    </body>
+</html>
