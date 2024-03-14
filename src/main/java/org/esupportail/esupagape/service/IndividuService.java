@@ -334,8 +334,8 @@ public class IndividuService {
                 int yearOfBirth = individu.getDateOfBirth().getYear();
                 individu.setDateOfBirth(LocalDate.of(yearOfBirth, Month.JANUARY, 1));
             }
-            individu.setEppn("example@univ-rouen.fr");
-            individu.setEmailEtu("exampleetu@univ-rouen.fr");
+            individu.setEppn("anonyme@univ-ville.fr");
+            individu.setEmailEtu("mail.anonyme@univ-ville.fr");
             individu.setContactPhone("0000000000");
             individu.setFixAddress("");
             individu.setFixCity("");
@@ -347,7 +347,7 @@ public class IndividuService {
             LocalDate currentDate = LocalDate.now();
             LocalDate anonymisationDateLimit = individu.getDateAnonymisation();
             boolean hasHelpPreviousYear = false;
-            if (anonymisationDateLimit != null) {
+                if (anonymisationDateLimit != null) {
                 for (Dossier dossier : dossiers) {
                     List<AideHumaine> aidesHumaines = dossier.getAidesHumaines();
                     for (AideHumaine aideHumaine : aidesHumaines) {
@@ -370,7 +370,7 @@ public class IndividuService {
                         aideHumaine.setNumEtuAidant("AnonymeAidant" + aideHumaine.getId());
                         aideHumaine.setNameAidant("AnonymeAidant");
                         aideHumaine.setFirstNameAidant("AnonymeAidant");
-                        aideHumaine.setEmailAidant("exampleAidant@univ-rouen.fr");
+                        aideHumaine.setEmailAidant("mail.anonyme.aidant@univ-ville.fr");
                         aideHumaine.setPhoneAidant("0000000000");
                     }
                 }
