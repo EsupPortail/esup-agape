@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!--/*@thymesVar id="aideHumaine" type="org.esupportail.esupagape.entity.AideHumaine"*/-->
+    <div th:fragment="pj">
+        <div class="modal fade" id="pj-aide-humaine" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="pj-aide-humaine-label">Pièces jointes</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <tr th:if="${piecesJointes.size() > 0}">
+                                <th>Type</th>
+                                <th>Nom</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <th:block th:each="pieceJointe : ${piecesJointes}">
+                                <tr>
+                                    <td th:text="#{'aides.typeDocumentAideHumaine.' + ${pieceJointe.typeDocument}}"></td>
+                                    <td th:text="${pieceJointe.fileName}"></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-info"
+                                                title="Télécharger la pièce-jointe"
+                                                th:href="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/get-document?typeDocumentAideHumaine=' + ${pieceJointe.typeDocument}">
+                                            <i class="fa-solid fa-download"></i></a>
+                                    </td>
+                                    <td>
+                                        <!--<form th:if="${currentYear == currentDossier.year}" onsubmit="return confirm('Confirmez-vous la suppression de la fiche ?');"
+                                              th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/delete-document/' + ${pieceJointe.id}"
+                                              th:method="delete">
+                                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                        </form>-->
+                                            <button th:attr="id=${pieceJointe.id}"
+                                                    data-bs-toggle="modal"
+                                                    title="Supprimer la pièce-jointe"
+                                                    href="#"
+                                                    data-bs-target="#modal-warning"
+                                                    class="btn btn-sm btn-danger"
+                                                    th:data-bs-current-dossier="${currentDossier.id}"
+                                                    th:data-bs-aide-humaine-id="${aideHumaine.id}"
+                                                    th:data-bs-piece-jointe-id="${pieceJointe.id}"
+                                                    th:data-bs-piece-jointe-file-name="${pieceJointe.fileName}"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </table>
+                        <form th:if="${currentYear == currentDossier.year && typeDocumentAideHumainesEmpty.size() > 0}"
+                                class="me-2"
+                                th:action="'/dossiers/' + ${currentDossier.id} + '/aides/aides-humaines/' + ${aideHumaine.id} + '/add-document'"
+                                th:method="post"
+                                enctype="multipart/form-data">
+                            <select name="typeDocumentAideHumaine" class="form-select mb-3">
+                                <th:block th:each="typeDocumentAideHumaine : ${typeDocumentAideHumainesEmpty}">
+                                    <option th:value="${typeDocumentAideHumaine}" th:text="#{'aides.typeDocumentAideHumaine.' + ${typeDocumentAideHumaine}}"></option>
+                                </th:block>
+                            </select>
+                            <div class="input-group mb-2">
+                                <input type="file" name="multipartFiles" multiple class="form-control" required>
+                                <input type="submit" class="btn btn-success " value="Ajouter">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-inline">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal modal-warning fade" id="modal-warning" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="form-modal-warning" th:action="|/dossiers/dossierId/aides/aides-humaines/aideHumaineId/delete-document/pieceJointeId|"
+                            th:method="delete">
+                        <div class="modal-header">
+                            <h5 class="modal-title fs-5"
+                                    th:id="'delete-attachment-label'">
+                                Suppression d'une pièce jointe</h5>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger text-center">Confirmez-vous
+                                la suppression de
+                                cette pièce jointe <br><span id="pieceJointeFileName"></span> ?
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline pull-left"
+                                    data-bs-dismiss="modal">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                    class="btn btn-outline pull-left btn-danger">
+                                Supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const modalWarningPj = document.getElementById('modal-warning')
+            const formModalWarningPj = document.getElementById('form-modal-warning')
+            const spanPieceJointeFileName = document.getElementById('pieceJointeFileName')
+
+            modalWarningPj.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget
+                const currentDossier = button.getAttribute('data-bs-current-dossier')
+                const pieceJointeFileName = button.getAttribute('data-bs-piece-jointe-file-name')
+                const aideHumaineId = button.getAttribute('data-bs-aide-humaine-id')
+                const pieceJointeId = button.getAttribute('data-bs-piece-jointe-id')
+                formModalWarningPj.action = '/dossiers/' + currentDossier + '/aides/aides-humaines/' + aideHumaineId + '/delete-document/' + pieceJointeId
+                spanPieceJointeFileName.textContent = pieceJointeFileName
+            })
+        </script>
+    </div>
+</html>

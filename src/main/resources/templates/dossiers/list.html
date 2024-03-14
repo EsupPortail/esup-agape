@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:sd="http://www.w3.org/1999/xhtml">
+    <head th:replace="~{fragments/head :: head}"></head>
+    <body>
+        <header th:replace="~{fragments/header :: header}"></header>
+        <main class="d-inline-flex">
+            <div class="float-buttons">
+                <div class="d-inline-flex align-middle">
+                    <form id="search-form" th:action="@{/dossiers}" method="get">
+                        <input class="form-control form-control-lg" type="text" placeholder="nom, prénom, numéro étudiant, ine" name="fullTextSearch" id="fullTextSearch" size="40" th:value="${fullTextSearch}">
+                    </form>
+                </div>
+                <button title="Rechercher" class="btn btn-success" onclick="document.getElementById('search-form').submit();">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+                <a class="btn btn-secondary" th:href="@{/}" title="Annuler tous les filtres">
+                    <i class="fa-solid fa-times" style="font-size: 22px"></i>
+                </a>
+                <button title="Ajouter un individu manuellement" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIndividuModal">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button data-bs-toggle="modal" data-bs-target="#mailtoModal" th:if="${mails != null}" class="btn btn-primary" title="Envoyer un email">
+                    <i class="fa-solid fa-mail-bulk" style="font-size: 22px"></i>
+                </button>
+                <button id="fusion-btn" data-bs-toggle="modal" data-bs-target="#fusionModal" class="btn btn-warning d-none" title="Fusionner deux individus">
+                    <i class="fa-solid fa-people-arrows" style="font-size: 22px"></i>
+                </button>
+            </div>
+            <div th:replace="~{fragments/side-filters :: side-filters}"></div>
+            <div class="agape-content agape-content-side">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a th:href="@{/dossiers}" class="text-center ">Liste des dossiers</a>
+                        </li>
+                    </ol>
+                </nav>
+                <div style="height: 30px;"></div>
+                <table class="table table-responsive table-bordered table-sm" style="width: 100%">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width: 30px;">
+                            </th>
+                            <th scope="col" style="width: 30px;">
+                            </th>
+                            <th scope="col" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="year">Année universitaire</a>
+                            </th>
+                            <th scope="col" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="numEtu">Numéro étudiant</a>
+                            </th>
+                            <th scope="col" class="d-none" style="width: 115px;">
+                                <a class="sorted link-light" sd:pagination-sort="numEtu">Code INE</a>
+                            </th>
+                            <th scope="col" class="d-none" style="width: 71px;">
+                                <a class="sorted link-light" sd:pagination-sort="gender">Genre</a>
+                            </th>
+                            <th scope="col" style="width: 150px;">
+                                <a class="sorted link-light" sd:pagination-sort="name">Nom</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="firstName">Prénom</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="dateOfBirth">Date de naissance</a>
+                            </th>
+                            <th scope="col" class=" d-none d-lg-table-cell" style="width: 100px;">
+                                <a class="sorted link-light" sd:pagination-sort="type">Type Individu</a>
+                            </th>
+                            <th scope="col" style="width: 203px;">
+                                <a class="sorted link-light" sd:pagination-sort="statusDossier">Statut du dossier</a>
+                            </th>
+                            <th scope="col" class="d-none d-sm-none d-md-table-cell" style="width: 131px;">
+                                <a class="sorted link-light" sd:pagination-sort="statusDossierAmenagement">Statut des aménagements</a>
+                            </th>
+                            <th scope="col" style="width: 100px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dossierIndividuDto : ${dossiers}" class="align-middle" th:style="'--bs-table-bg: ' + ${dossierIndividuDto.statusDossier.backgroundColor} + ' !important'">
+                            <td class="text-center"><i th:if="${dossierIndividuDto.desinscrit == true}" class="fa fa-warning" title="Individu non présent dans le référentiel"></i></td>
+                            <td class="text-center"><input class="fusion-checkbox form-check-input" type="checkbox" name="fusion-individu-id" th:value="${dossierIndividuDto.individuId}" /></td>
+                            <td th:utext="${dossierIndividuDto.year} + '-' + ${dossierIndividuDto.year +1}"></td>
+                            <td th:utext="${dossierIndividuDto.numEtu}"></td>
+                            <td th:utext="${dossierIndividuDto.codeIne}" class="d-none"></td>
+                            <td th:utext="${dossierIndividuDto.gender != null} ? #{'individu.gender.'+${dossierIndividuDto.gender}} : 'Inconnu'" class="d-none"></td>
+                            <td th:utext="${#strings.toUpperCase(dossierIndividuDto.name)}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></td>
+                            <td th:utext="${#strings.capitalize(#strings.toLowerCase(dossierIndividuDto.firstName))}" class="d-none d-sm-none d-md-table-cell"></td>
+                            <td th:utext="${#temporals.format(dossierIndividuDto.dateOfBirth, 'dd/MM/yyyy')}" class="d-none d-sm-none d-md-table-cell"></td>
+                            <td th:utext="#{'dossier.typeIndividu.' +${dossierIndividuDto.type}}" class="d-none d-lg-table-cell"></td>
+<!--                            <td th:utext="#{'dossier.statusDossier.' +${dossierIndividuDto.statusDossier}}">-->
+                            <td>
+                                <span th:text="#{'dossier.statusDossier.' + ${dossierIndividuDto.statusDossier}}" class="badge"  th:style="'background-color: ' + ${dossierIndividuDto.statusDossier.badgeColor} + ' !important; color: ' + ${dossierIndividuDto.statusDossier.textColor} + ' !important;'"></span>
+                            </td>
+                            <td th:if="${dossierIndividuDto.statusDossier == null}">
+                                <span><i class="fa fa-warning"></i></span></td>
+                            <td class="d-none d-sm-none d-md-table-cell">
+                                <span style="font-size: smaller;" th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"></span>
+                            </td>
+                            <td>
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item border-0 p-1 bg-transparent">
+                                        <a class="btn btn-sm btn-info" title="Voir fiche" th:href="@{/dossiers/{id}(id=${dossierIndividuDto.id})}" role="button"><i class="fa-regular fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a data-bs-toggle="modal" title="Supprimer l'individu" href="#" th:data-bs-target="'#modal-warning-individu-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
+                                            <i class="fa-solid fa-user-xmark"></i></a>
+                                        <div class="modal modal-warning fade in" th:id="'modal-warning-individu-' + ${dossierIndividuDto.id}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/admin/delete-individu/{id}(id=${dossierIndividuDto.individuId})}" th:method="delete">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Suppression d'un individu</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de cet individu : <br>
+                                                                <p th:text="${dossierIndividuDto.name} + ' ' + ${dossierIndividuDto.firstName}" class="fw-bold"></p>
+                                                                <p>Attention cette suppression est irreversible !</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
+                                                                Annuler
+                                                            </button>
+                                                            <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0 p-1 bg-transparent" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
+                                        <a data-bs-toggle="modal" title="Supprimer le dossier" href="#" th:data-bs-target="'#modal-warning-dossier-' + ${dossierIndividuDto.id}" class="btn btn-sm btn-danger">
+                                            <i class="fa-solid fa-trash"></i></a>
+                                        <div class="modal modal-warning fade in" th:id="'modal-warning-dossier-' + ${dossierIndividuDto.id}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{/dossiers/delete-dossier/{id}(id=${dossierIndividuDto.id})}" th:method="delete">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Suppression d'un dossier</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger text-center">Confirmez-vous la suppression de ce dossier : <br>
+                                                                <span th:text="'Dossier:' + ' ' + ${dossierIndividuDto.id} + ' ' + '(' + 'nom = ' + ${dossierIndividuDto.name} + ')'"
+                                                                        class="font-weight-bold"></span> ?
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-bs-dismiss="modal">
+                                                                Annuler
+                                                            </button>
+                                                            <button type="submit" class="btn btn-outline pull-left btn-danger">Supprimer</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav id="pagination" aria-label="pagination">
+                    <div class="col-lg-12 text-center">
+                        <div sd:pagination-summary="">info</div>
+                    </div>
+                    <ul class="d-print-none pagination justify-content-center " sd:pagination="full"></ul>
+                </nav>
+                <div class="alert alert-warning" th:if="${dossiers.isEmpty()}">Aucun individu ne correspond à votre recherche
+                </div>
+            </div>
+        </main>
+        <div class="modal fade" id="addIndividuModal" tabindex="-1" aria-labelledby="addIndividuModalLabel" data-bs-focus="false" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="addIndividuModalLabel">Ajout d’un individu</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumEtu"
+                                            aria-expanded="true" aria-controls="collapseNumEtu">
+                                        Ajout d'un étudiant
+                                    </button>
+                                </h2>
+                                <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResultError == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
+                                    <div class="accordion-body">
+                                        <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
+                                            <label for="autocomplete-search" class="form-label">Numéro étudiant/code INE ou nom de famille</label>
+                                            <div class="mb-3">
+                                                <select id="autocomplete-search" name="numEtu">
+                                                </select>
+                                            </div>
+                                            <div class="form-check">
+                                                <input id="force" name="force" type="checkbox" class="form-check-input">
+                                                <label for="force" class="form-check-label">Forcer l’ajout</label>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success btn-lg mt-4" type="submit">Enregistrer</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Ajout d'un non étudiant
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResultError != null ? 'show' : ''}" aria-labelledby="headingTwo" data-bs-parent="#accordionCreateIndividu">
+                                    <div class="accordion-body">
+                                        <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
+                                            <div class="row mb3">
+                                                <label for="codeIne" class="col-md-2 col-form-label mb-1">Code Ine</label>
+                                                <div class="col-sm-10">
+                                                    <input id="codeIne" th:field="*{codeIne}" type="text" class="form-control"/>
+                                                    <p th:if="${#fields.hasErrors('codeIne')}" th:errorclass="error" th:errors="*{codeIne}"></p>
+                                                </div>
+                                                <label for="name" class="col-md-2 col-form-label mb-1">Nom</label>
+                                                <div class="col-sm-10">
+                                                    <input id="name" th:field="*{name}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
+                                                </div>
+                                                <label for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
+                                                <div class="col-sm-10">
+                                                    <input id="firstName" th:field="*{firstName}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error" th:errors="*{firstName}"></p>
+                                                </div>
+                                                <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Date de naissance</label>
+                                                <div class="col-sm-10">
+                                                    <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" class="form-control mb-1" required />
+                                                    <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error" th:errors="*{dateOfBirth}"></p>
+                                                </div>
+                                                <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
+                                                <div class="col-sm-10">
+                                                    <select th:field="*{gender}" type="text" class="form-select" required>
+                                                        <option value="">Choisir</option>
+                                                        <option th:each="gender : ${genders}"
+                                                                th:selected="${individu.gender == gender}"
+                                                                th:text="#{'individu.gender.' +${gender}}"
+                                                                th:value="${gender}"></option>
+                                                    </select>
+                                                    <p th:if="${#fields.hasErrors('gender')}" th:errorclass="error" th:errors="*{gender}"></p>
+                                                </div>
+                                                <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>
+                                                <div class="col-sm-10">
+                                                    <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                                        <option value="">Choisir</option>
+                                                        <option th:each="enumType : ${typeIndividuList}"
+                                                                th:value="${enumType}"
+                                                                th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                                    </select>
+                                                </div>
+                                                <label for="emailEtu" class="col-md-2 col-form-label mb-1">Email</label>
+                                                <div class="col-sm-10">
+                                                    <input id="emailEtu" th:field="*{emailEtu}" type="text" class="form-control" />
+                                                    <p th:if="${#fields.hasErrors('emailEtu')}" th:errorclass="error" th:errors="*{emailEtu}"></p>
+                                                </div>
+                                                <label for="contactPhone" class="col-md-2 col-form-label mb-1">Téléphone</label>
+                                                <div class="col-sm-10">
+                                                    <input id="contactPhone" th:field="*{contactPhone}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('contactPhone')}" th:errorclass="error" th:errors="*{contactPhone}"></p>
+                                                </div>
+                                                <label for="fixCP" class="col-md-2 col-form-label mb-1">Code postal</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCP" th:field="*{fixCP}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCP')}" th:errorclass="error" th:errors="*{fixCP}"></p>
+                                                </div>
+                                                <label for="fixCity" class="col-md-2 col-form-label mb-1">Ville</label>
+                                                <div class="col-sm-10">
+                                                    <input id="fixCity" th:field="*{fixCity}" type="text" class="form-control" required />
+                                                    <p th:if="${#fields.hasErrors('fixCity')}" th:errorclass="error" th:errors="*{fixCity}"></p>
+                                                </div>
+                                                <label for="force2" class="col-md-2 col-form-label form-check-label mb-1">Forcer l’ajout</label>
+                                                <div class="col-sm-10">
+                                                    <input id="force2" name="force" type="checkbox" class="form-check-input">
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-success btn-lg mt-4" type="submit">Enregistrer</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="mailtoModal" tabindex="-1" aria-labelledby="mailtoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mailtoModalLabel">Liste mail</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="agape-amenagement-textarea-wrapper">
+                            <div class="form-control agape-amenagement-textarea"><pre th:text="${mails}"></pre></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="fusionModal" tabindex="-1" aria-labelledby="fusionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="fusionModalLabel">Fusion d'individus</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Merci de confirmer la fusion des deux individus
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button id="fusion-submit" type="button" th:ea-csrf="${_csrf.token}" class="btn btn-success">Confirmer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{fragments/footer :: black}"></footer>
+        <div th:replace="~{fragments/flash :: flash}"></div>
+    </body>
+</html>

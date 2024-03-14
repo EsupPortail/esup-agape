@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="amenagements" type="java.util.List<org.esupportail.esupagape.entity.Amenagement>"*/-->
+<!--/*@thymesVar id="composantes" type="java.util.Map<java.lang.String, java.lang.String>"*/-->
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content agape-content-side">
+		<div class="agape-tab-content bg-white p-3">
+			<form th:action="@{/scolarite/amenagements}" method="get">
+				<div class="d-inline-flex input-group mb-3">
+					<select class="form-select" name="composanteFilter">
+						<option value="" disabled selected hidden>Filtre par composante</option>
+						<th:block th:each="composante : ${composantes.entrySet()}">
+							<option th:selected="${composanteFilter == composante.key}" th:value="${composante.key}" th:text="${composante.value}"></option>
+						</th:block>
+					</select>
+					<select class="form-select" name="campusFilter">
+						<option value="" disabled selected hidden>Filtre par campus</option>
+						<th:block th:each="campus : ${campuses}">
+							<option th:selected="${campusFilter == campus}" th:value="${campus}" th:text="${campus}"></option>
+						</th:block>
+					</select>
+					<select class="form-select" name="viewedFilter">
+						<option value="" disabled selected hidden>Filtre par statut</option>
+						<option th:selected="${viewedFilter != null && viewedFilter}" value="true">Lu</option>
+						<option th:selected="${viewedFilter != null && !viewedFilter}" value="false">Non lu</option>
+					</select>
+					<input class="form-control" style="max-width: 600px" type="text"
+						   placeholder="Rechercher par nom, prénom" name="fullTextSearch"
+						   th:value="${fullTextSearch}">
+					<input class="btn btn-success" type="submit" value="Rechercher">
+					<a class="btn btn-secondary" id="btnClear"
+					   th:href="@{/scolarite/amenagements}">Effacer</a>
+				</div>
+			</form>
+			<table class="table table-striped table-responsive table-sm">
+				<thead class="text-center table-dark">
+				<tr>
+					<th></th>
+					<th>Composante</th>
+					<th>Campus</th>
+					<th><a class="sorted link-light" sd:pagination-sort="createDate">Date create</a></th>
+					<th><a class="sorted link-light" sd:pagination-sort="endDate" style="max-width: 200px;">Date fin</a></th>
+					<th>Numéro d’étudiant</th>
+					<th>Nom</th>
+					<th>Temps majoré</th>
+					<th>Nom médecin</th>
+					<th><a class="sorted link-light" sd:pagination-sort="statusAmenagement">Statut</a></th>
+					<th>Voir</th>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block
+						th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+						th:each="amenagement : ${amenagements}">
+					<tr style="text-align: left" th:classappend="${amenagement.viewByUid.contains(personLdap.uid) ? '' : 'fw-bold'}">
+						<td><i class="fa fa-flag text-danger" th:unless="${amenagement.viewByUid.contains(personLdap.uid)}"></i></td>
+						<td th:text="${amenagement.lastDossierAmenagement.dossier.composante}"></td>
+						<td th:text="${amenagement.lastDossierAmenagement.dossier.campus}"></td>
+						<td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
+						<td style="max-width: 200px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden" th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
+						<td th:text="${amenagement.lastDossierAmenagement.dossier.individu.numEtu}"></td>
+						<td th:text="${#strings.toUpperCase(amenagement.lastDossierAmenagement.dossier.individu.name) + ' ' +  amenagement.lastDossierAmenagement.dossier.individu.firstName}"></td>
+						<td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
+						<td th:text="${amenagement.nomMedecin}"></td>
+						<td th:text="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)} ? #{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}} : ''"></td>
+						<td class="text-center" style="width:100px;">
+							<ul class="list-group list-group-horizontal" style="display: block;">
+								<li class="list-group-item border-0 p-1 bg-transparent">
+									<a class="btn btn-info"
+									   th:href="@{/scolarite/amenagements/{amenagementId}(amenagementId=${amenagement.id})}"
+									   role="button"><i class="fa-solid fa-eye"></i>
+									</a>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</th:block>
+				</tbody>
+			</table>
+			<nav id="pagination" aria-label="pagination">
+				<div class="col-lg-12 text-center">
+					<div sd:pagination-summary="">info</div>
+				</div>
+				<ul class="d-print-none pagination justify-content-center" sd:pagination="full"></ul>
+			</nav>
+			<div class="alert alert-warning" th:if="${amenagements.isEmpty()}">Aucun aménagement ne correspond à
+				votre recherche
+			</div>
+		</div>
+</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main>
+    <div style="height: 60px;"></div>
+    <h1 class="title-create text-center" th:unless="${bindingResult != null}">Ajout d’un individu</h1>
+    <h1 class="title-create text-center" th:if="${bindingResult != null}">Erreur lors de l’ajout d’un individu</h1>
+    <p class="title-create text-center" th:if="${bindingResult != null}">Merci de vérifier la bonne saisie des informations</p>
+    <p class="title-create text-center text-danger" th:text="${bindingResult.getAllErrors().get(0).getDefaultMessage()}"></p>
+    <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNumEtu"
+                        aria-expanded="true" aria-controls="collapseNumEtu">
+                    Ajout par numéro d’étudiant ou par code INE
+                </button>
+            </h2>
+            <div id="collapseNumEtu" class="accordion-collapse collapse" th:classappend="${bindingResult == null ? 'show' : ''}" aria-labelledby="headingOne" data-bs-parent="#accordionCreateIndividu">
+                <div class="accordion-body">
+                    <form class="container" th:method="post" th:action="@{/individus/create-by-numetu}">
+                        <label for="numEtu" class="form-label col-2">Numéro étudiant ou code INE</label>
+                        <div class="mb-3 col-2">
+                            <input id="numEtu" th:name="numEtu" type="text" class="form-control" required>
+                        </div>
+                        <label for="force" class="form-check-label col-2">Forcer l’ajout</label>
+                        <div class="mb-3 col-2">
+                            <input id="force" name="force" type="checkbox" class="form-check-input">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Ajout par code Ine /nom / prénom / date de naissance
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" th:classappend="${bindingResult != null ? 'show' : ''}" aria-labelledby="headingTwo"
+                 data-bs-parent="#accordionCreateIndividu">
+                <div class="accordion-body">
+                    <form class="container" th:method="post" th:action="@{/individus/create}" th:object="${individu}">
+                        <div class="row mb3">
+                            <label for="codeIne" class="col-md-2 col-form-label mb-1">Code Ine</label>
+                            <div class="col-sm-10">
+                                <input id="codeIne" th:field="*{codeIne}" type="text" class="form-control"/>
+                                <p th:if="${#fields.hasErrors('codeIne')}" th:errorclass="error" th:errors="*{codeIne}"></p>
+                            </div>
+                            <label for="name" class="col-md-2 col-form-label mb-1">Nom</label>
+                            <div class="col-sm-10">
+                                <input id="name" th:field="*{name}" type="text" class="form-control" required />
+                                <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"></p>
+                            </div>
+                            <label for="firstName" class="col-md-2 col-form-label mb-1">Prénom</label>
+                            <div class="col-sm-10">
+                                <input id="firstName" th:field="*{firstName}" type="text" class="form-control" required />
+                                <p th:if="${#fields.hasErrors('firstName')}" th:errorclass="error"
+                                   th:errors="*{firstName}"></p>
+                            </div>
+                            <label for="dateOfBirth" class="col-md-2 col-form-label mb-1">Date de naissance</label>
+                            <div class="col-sm-10">
+                                <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" class="form-control mb-1" required />
+                                <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errorclass="error"
+                                   th:errors="*{dateOfBirth}"></p>
+                            </div>
+<!--                            <label for="typeIndividu" class="col-md-2 col-form-label mb-1">Type</label>-->
+<!--                            <div class="col-sm-10">-->
+<!--                                <select id="typeIndividu" class="form-select" name="typeIndividu" required>-->
+<!--                                    <option></option>-->
+<!--                                    <option th:each="enumType : ${typeIndividuList}" th:value="${enumType}" th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+                            <label th:for="enumType" class="col-md-2 col-form-label mb-1">Type</label>
+                            <div class="col-sm-10">
+                                <select id="typeIndividu" class="form-select" name="typeIndividu" required>
+                                    <option value="">Choisir</option>
+                                    <option th:each="enumType : ${typeIndividuList}"
+                                            th:value="${enumType}"
+                                            th:text="#{'dossier.typeIndividu.' + ${enumType}}"></option>
+                                </select>
+                            </div>
+                            <label th:for="gender" class="col-md-2 col-form-label mb-1">Genre</label>
+                            <div class="col-sm-10">
+                                <select selected th:field="*{gender}" type="text" class="form-select" required>
+                                    <option value="">Choisir</option>
+                                    <option th:each="gender : ${genders}"
+                                            th:selected="${individu.gender == gender}"
+                                            th:text="#{'individu.gender.' +${gender}}"
+                                            th:value="${gender}"></option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('gender')}" th:errorclass="error" th:errors="*{gender}"></p>
+                            </div>
+                            <label for="force2" class="col-md-2 col-form-label form-check-label mb-1">Forcer l’ajout</label>
+                            <div class="col-sm-10">
+                                <input id="force2" name="force" type="checkbox" class="form-check-input">
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-lg mt-4" type="submit">Enregistrer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>
