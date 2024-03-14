@@ -18,7 +18,7 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
                    cast(d.status_dossier AS VARCHAR) as statusDossier,
                    cast(d.status_dossier_amenagement AS VARCHAR) as statusDossierAmenagement,
                    cast((select string_agg(distinct c.classifications, ',') from dossier_classifications as c where c.dossier_id = d.id) AS VARCHAR) as classifications,
-                   cast(d.mdph AS VARCHAR) as mdph,
+                   cast((select string_agg(distinct m.mdphs, ',') from dossier_mdphs as m where m.dossier_id = d.id) AS VARCHAR) as mdph,
                    cast(d.taux AS VARCHAR) as taux,
                    cast((select string_agg(distinct t.type_suivi_handisup, ',') from dossier_type_suivi_handisup as t where t.dossier_id = d.id) AS VARCHAR) as typeSuiviHandisup,
                    cast(d.type_formation AS VARCHAR) as typeFormation,
