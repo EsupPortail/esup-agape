@@ -13,6 +13,11 @@ import java.util.List;
 public class ApplicationProperties {
 
     /**
+     * Chemin d'accès à l'application
+     */
+    private String path;
+
+    /**
      * Code établissement
      */
     private String codeEtab;
@@ -97,6 +102,14 @@ public class ApplicationProperties {
     private String papercutAccountName = "";
 
     private Integer nbDossierNullBeforeAnonymise = -1;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getCodeEtab() {
         return codeEtab;
