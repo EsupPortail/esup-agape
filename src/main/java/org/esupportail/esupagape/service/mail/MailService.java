@@ -123,6 +123,7 @@ public class MailService {
 
     private void setTemplate(Context ctx) {
         try {
+            ctx.setVariable("applicationPath", applicationProperties.getPath());
             ctx.setVariable("logo", getBase64Image(new ClassPathResource("/static/images/logo.png", MailService.class).getInputStream(), "logo.png"));
             ctx.setVariable("logoUrn", getBase64Image(new ClassPathResource("/static/images/logo-univ.png", MailService.class).getInputStream(), "logo-univ.png"));
             try (Reader reader = new InputStreamReader(new ClassPathResource("/static/css/bootstrap.min.css", MailService.class).getInputStream(), UTF_8)) {
