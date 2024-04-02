@@ -119,6 +119,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             });
             connection.close();
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             throw new AgapeException(e.getMessage(), e);
         } finally {
             if(connection != null) {
