@@ -31,9 +31,9 @@ public class IndividuDataSourceService {
         ds.setDriverClassName(individuSourceProperties.getDataSources().get(name).getDriverClassName());
         ds.setUsername(individuSourceProperties.getDataSources().get(name).getUsername());
         ds.setPassword(individuSourceProperties.getDataSources().get(name).getPassword());
-        ds.setAutoCommit(false);
-        ds.setMaximumPoolSize(2);
-        ds.setMinimumIdle(0);
+        //ds.setAutoCommit(false);
+        //ds.setMaximumPoolSize(2);
+        //ds.setMinimumIdle(0);
         return ds;
     }
 
