@@ -17,9 +17,7 @@
             <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">Un nouveau certificat a été validé pour un étudiant de votre composante.</p>
             <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">
                 Vous pouvez le consulter ici :
-                <a href="https://esup-agape.univ-rouen.fr/scolarite/amenagements">
-                    https://esup-agape.univ-rouen.fr/scolarite/amenagements
-                </a>
+                <a th:href="${applicationPath} + '/scolarite/amenagements'" th:text="${applicationPath} + '/scolarite/amenagements'"></a>
             </p>
         </td>
     </tr>
