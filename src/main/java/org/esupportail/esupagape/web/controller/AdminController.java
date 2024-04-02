@@ -75,7 +75,11 @@ public class AdminController {
         model.addAttribute("years", utilsService.getYears());
         List<SessionInformation> sessions = new ArrayList<>();
         for(Object principal : sessionRegistry.getAllPrincipals()) {
-            sessions.addAll(sessionRegistry.getAllSessions(principal, false));
+            for(SessionInformation sessionInformation : sessionRegistry.getAllSessions(principal, false)) {
+                if(sessions.stream().noneMatch(s -> s.getPrincipal().equals(sessionInformation.getPrincipal()))) {
+                    sessions.add(sessionInformation);
+                }
+            }
         }
         model.addAttribute("sessions", sessions);
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
