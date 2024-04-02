@@ -73,6 +73,10 @@ public class DossierService {
 
     @Transactional
     public Dossier create(String eppn, Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
+        Optional<Dossier> optDossier = dossierRepository.findByIndividuIdAndYear(individu.getId(), utilsService.getCurrentYear());
+        if(optDossier.isPresent()) {
+            return optDossier.get();
+        }
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
         dossier.setIndividu(individu);

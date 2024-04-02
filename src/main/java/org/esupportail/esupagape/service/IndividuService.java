@@ -91,16 +91,19 @@ public class IndividuService {
     @Transactional
     public void importIndividus() throws AgapeException, SQLException {
         logger.info("Import individus started");
-        List<Individu> individus = individuRepository.findAll();
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
-            List<Individu> individusToCreate = individusFromSource.stream().filter(individuToCreate -> individus.stream().noneMatch(individuInDataBase -> individuInDataBase.getNumEtu() != null && individuInDataBase.getNumEtu().equals(individuToCreate.getNumEtu())) && excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))).toList();
-            individuRepository.saveAll(individusToCreate);
+            List<Individu> individusToCreate = individusFromSource.stream().filter(individuToCreate -> excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))).toList();
             List<Dossier> dossiers = new ArrayList<>();
             for (Individu individu : individusToCreate) {
                 logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
-                Dossier dossier = dossierService.create("system", individu, null, StatusDossier.IMPORTE);
+                Individu checkIndividu = individuRepository.findByNumEtu(individu.getNumEtu());
+                if(checkIndividu == null) {
+                    checkIndividu = individu;
+                    individuRepository.save(checkIndividu);
+                }
+                Dossier dossier = dossierService.create("system", checkIndividu, null, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
                 individu.getDossiers().add(dossier);
             }
