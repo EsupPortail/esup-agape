@@ -155,7 +155,7 @@
 						<tr>
 							<td th:text="${curentSessions.principal.username}"></td>
 							<td th:text="${curentSessions.sessionId}"></td>
-							<td th:text="${curentSessions.lastRequest}"></td>
+							<td th:text="${now.minute - curentSessions.lastRequest.minutes} + ' minutes'"></td>
 						</tr>
 					</th:block>
 				</table>
