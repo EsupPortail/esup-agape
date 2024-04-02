@@ -24,8 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -83,8 +83,7 @@ public class AdminController {
             }
         }
         model.addAttribute("sessions", sessions);
-        LocalDateTime now = LocalDateTime.now();
-        model.addAttribute("now", now);
+        model.addAttribute("now", new Date());
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
         model.addAttribute("amenagementsToResend", amenagementService.getAmenagementToResend());
         return "admin/index";
