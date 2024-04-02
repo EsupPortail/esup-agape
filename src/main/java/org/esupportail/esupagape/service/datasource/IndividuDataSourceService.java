@@ -32,7 +32,7 @@ public class IndividuDataSourceService {
         ds.setUsername(individuSourceProperties.getDataSources().get(name).getUsername());
         ds.setPassword(individuSourceProperties.getDataSources().get(name).getPassword());
         ds.setAutoCommit(false);
-        ds.setMaximumPoolSize(1);
+        ds.setMaximumPoolSize(2);
         ds.setMinimumIdle(0);
         return ds;
     }
