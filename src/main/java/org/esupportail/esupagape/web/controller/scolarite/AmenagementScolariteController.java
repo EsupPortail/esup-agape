@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.web.controller.scolarite;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Amenagement;
@@ -68,7 +67,7 @@ public class AmenagementScolariteController {
                        @RequestParam(required = false) StatusAmenagement statusAmenagement,
                        @PageableDefault(size = 10,
                                sort = "createDate",
-                               direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest httpServletRequest, PersonLdap personLdap, Model model) throws AgapeException {
+                               direction = Sort.Direction.DESC) Pageable pageable, PersonLdap personLdap, Model model) throws AgapeException {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
