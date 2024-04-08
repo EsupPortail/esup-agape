@@ -39,7 +39,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
 
-    private Map<String, Classification> classificationMap = new HashMap<>();
+    private final Map<String, Classification> classificationMap = new HashMap<>();
 
     public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
