@@ -410,7 +410,7 @@ public class AmenagementService {
                 amenagement.setCertificat(certificat);
                 dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.VALIDE);
                 sendAmenagementToIndividu(amenagementId, false);
-                sendAlert(amenagementId);
+                sendAlert(amenagement);
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -619,7 +619,7 @@ public class AmenagementService {
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.PORTE);
-        sendAlert(id);
+        sendAlert(amenagement);
     }
 
     @Transactional
@@ -693,7 +693,7 @@ public class AmenagementService {
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
-                sendAlert(amenagement.getId());
+                sendAlert(amenagement);
             }
         }
     }
@@ -721,9 +721,7 @@ public class AmenagementService {
         }
     }
 
-    @Transactional
-    public void sendAlert(long amenagementId) {
-        Amenagement amenagement = getById(amenagementId);
+    public void sendAlert(Amenagement amenagement) {
         List<String> to = new ArrayList<>();
         if(StringUtils.hasText(applicationProperties.getTestEmail())) {
             to.add(applicationProperties.getTestEmail());
@@ -746,7 +744,7 @@ public class AmenagementService {
             try {
                 mailService.sendAlert(to);
             } catch (Exception e) {
-                logger.warn("Impossible d'envoyer le mail d'alerte, aménagement : " + amenagementId, e);
+                logger.warn("Impossible d'envoyer le mail d'alerte, aménagement : " + amenagement.getId(), e);
             }
         }
     }
