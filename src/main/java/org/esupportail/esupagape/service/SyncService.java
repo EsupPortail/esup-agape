@@ -107,7 +107,7 @@ public class SyncService {
         try {
             Dossier dossier = dossierRepository.findByIndividuIdAndYear(id, utilsService.getCurrentYear()).orElse(null);
             if (dossier != null && individuInfos.getHandicap() != null) {
-                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE) && individuInfos.getHandicap() != null) {
+                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
                     dossier.getClassifications().add(individuInfos.getHandicap());
                 }
             }
@@ -119,7 +119,7 @@ public class SyncService {
     @Transactional
     public void syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).get();
-        if (dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit() || !dossier.getIndividu().getNumEtu().equals("22206472")) {
+        if (dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
             return;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
