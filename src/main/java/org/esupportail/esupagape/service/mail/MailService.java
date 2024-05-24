@@ -89,7 +89,7 @@ public class MailService {
     }
 
     @Transactional
-    public void sendCertificat(InputStream inputStream, String to) throws MessagingException, IOException {
+    public void sendCertificat(InputStream inputStream, String to) throws Exception {
         if (!checkMailSender()) {
             return;
         }

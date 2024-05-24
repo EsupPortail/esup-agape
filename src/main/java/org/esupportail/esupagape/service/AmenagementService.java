@@ -387,7 +387,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void validationAdministration(Long amenagementId, PersonLdap personLdap) throws AgapeException, IOException {
+    public void validationAdministration(Long amenagementId, PersonLdap personLdap) throws Exception {
         Amenagement amenagement = getById(amenagementId);
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
         if(dossierAmenagement.getDossier() == null) {
@@ -700,25 +700,21 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void sendAmenagementToIndividu(long amenagementId, boolean force) {
+    public void sendAmenagementToIndividu(long amenagementId, boolean force) throws Exception {
         Amenagement amenagement = getById(amenagementId);
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
         String to = dossierAmenagement.getDossier().getIndividu().getEmailEtu();
         if(StringUtils.hasText(applicationProperties.getTestEmail())) to = applicationProperties.getTestEmail();
         if((force || amenagement.getIndividuSendDate() == null) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-            try {
-                byte[] certificat;
-                if(amenagement.getCertificat() != null ) {
-                    certificat = amenagement.getCertificat().getInputStream().readAllBytes();
-                } else {
-                    byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-                    certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
-                }
-                mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
-                amenagement.setIndividuSendDate(LocalDateTime.now());
-            } catch (Exception e) {
-                logger.warn("Impossible d'envoyer le certificat par email, amenagementId : " + amenagementId, e);
+            byte[] certificat;
+            if(amenagement.getCertificat() != null ) {
+                certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+            } else {
+                byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+                certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
             }
+            mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
+            amenagement.setIndividuSendDate(LocalDateTime.now());
         }
     }
 
@@ -800,7 +796,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void resendAmenagements() {
+    public void resendAmenagements() throws Exception {
         List<Amenagement> amenagements = getAmenagementToResend();
         for(Amenagement amenagement : amenagements) {
             sendAmenagementToIndividu(amenagement.getId(), false);
