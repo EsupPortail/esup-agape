@@ -251,7 +251,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/resend-amenagements")
-    public String resendAmenagements(RedirectAttributes redirectAttributes) {
+    public String resendAmenagements(RedirectAttributes redirectAttributes) throws Exception {
         amenagementService.resendAmenagements();
         return "redirect:/admin";
     }
