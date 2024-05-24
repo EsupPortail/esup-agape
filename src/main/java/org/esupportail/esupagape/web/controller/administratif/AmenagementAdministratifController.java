@@ -167,7 +167,7 @@ public class AmenagementAdministratifController {
             }
             amenagementService.validationAdministration(amenagementId, personLdap);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été validé"));
-        } catch (AgapeException | IOException e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
         return "redirect:/administratif/amenagements/" + amenagementId;
@@ -189,7 +189,7 @@ public class AmenagementAdministratifController {
     }
 
     @PostMapping("/{amenagementId}/send")
-    public String send(@PathVariable Long amenagementId) {
+    public String send(@PathVariable Long amenagementId) throws Exception {
         amenagementService.sendAmenagementToIndividu(amenagementId, true);
         return "redirect:/administratif/amenagements/" + amenagementId;
     }
