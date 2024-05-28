@@ -118,7 +118,7 @@ public class SyncService {
 
     @Transactional
     public void syncDossier(Long id) {
-        Dossier dossier = dossierRepository.findById(id).get();
+        Dossier dossier = dossierRepository.findById(id).orElseThrow();
         if (dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
             return;
         }
@@ -128,7 +128,7 @@ public class SyncService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE) && dossier.getClassifications().isEmpty()) {
+        if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && dossier.getClassifications().isEmpty()) {
             try {
                 List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty()).findFirst().orElseThrow().getClassifications());
                 dossier.getClassifications().addAll(classifications);
