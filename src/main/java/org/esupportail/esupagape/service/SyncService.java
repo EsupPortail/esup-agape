@@ -171,6 +171,15 @@ public class SyncService {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
                 }
                 dossier.setHasScholarship(dossierInfos.getHasScholarship());
+                if(dossier.getClassifications().isEmpty()) {
+                    List<Dossier> lastDossiers = dossierRepository.findAllByIndividuId(dossier.getIndividu().getId()).stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList();
+                    for(Dossier lastDossier : lastDossiers) {
+                        if(!lastDossier.getClassifications().isEmpty()) {
+                            dossier.getClassifications().addAll(lastDossier.getClassifications());
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
