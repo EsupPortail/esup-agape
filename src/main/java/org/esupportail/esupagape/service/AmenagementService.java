@@ -646,7 +646,7 @@ public class AmenagementService {
                 dossierAmenagement.getDossier().setStatusDossierAmenagement(dossierAmenagement.getStatusDossierAmenagement());
             }
         } catch (Exception e) {
-            logger.error(e.getMessage() + "on sync amenagement " + amenagement.getId());
+            logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId());
         }
     }
 
