@@ -465,7 +465,9 @@ public class AmenagementService {
         }
         certificatPdf.setNomMedecin(amenagement.getNomMedecin());
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) && typeWorkflow.equals(TypeWorkflow.CERTIFICAT)) {
-            certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            if(amenagement.getAdministrationDate() != null) {
+                certificatPdf.setAdministrationDate(amenagement.getAdministrationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            }
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
