@@ -95,7 +95,7 @@ public class ExportService {
         put("codMeaa", "Autres aides");
         put("autAA", "Autres (à préciser");
         put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
-        put("status", "Terminée");
+        put("finished", "Terminée");
     }};
 
     @Transactional
