@@ -52,7 +52,7 @@
                                         <label th:for="end-date" class="form-label">Date de fin</label>
                                     </div>
                                     <div class="col-12 col-xxl-8">
-                                        <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}">
+                                        <input id="end-date" type="date" class="form-control" th:name="endDate" th:value="${now}" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                                         <p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
                                     </div>
                                 </div>
