@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class AdminController {
         List<SessionInformation> sessions = new ArrayList<>();
         for(Object principal : sessionRegistry.getAllPrincipals()) {
             for(SessionInformation sessionInformation : sessionRegistry.getAllSessions(principal, false)) {
-                if(sessions.stream().noneMatch(s -> s.getPrincipal().equals(sessionInformation.getPrincipal()))) {
+                if(!sessionInformation.isExpired() && sessionInformation.getLastRequest().after(getLastRequestAge()) && sessions.stream().noneMatch(s -> s.getPrincipal().equals(sessionInformation.getPrincipal()))) {
                     sessions.add(sessionInformation);
                 }
             }
@@ -87,6 +88,12 @@ public class AdminController {
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
         model.addAttribute("amenagementsToResend", amenagementService.getAmenagementToResend());
         return "admin/index";
+    }
+
+    private Date getLastRequestAge() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -30);
+        return calendar.getTime();
     }
 
     @GetMapping("/import-individus")
