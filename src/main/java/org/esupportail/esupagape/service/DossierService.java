@@ -560,14 +560,6 @@ public class DossierService {
     }
 
     @Transactional
-    public void anonymiseDossiers(Individu individu, String eppn) {
-        List<Dossier> dossiers = dossierRepository.findAllByIndividuId(individu.getId());
-        for (Dossier dossier : dossiers) {
-            changeStatutDossier(dossier.getId(), StatusDossier.ANONYMOUS, eppn);
-        }
-    }
-
-    @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
         Dossier dossier = getById(dossierId);
         if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
