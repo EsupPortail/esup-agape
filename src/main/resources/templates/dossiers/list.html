@@ -95,7 +95,7 @@
                             <td th:if="${dossierIndividuDto.statusDossier == null}">
                                 <span><i class="fa fa-warning"></i></span></td>
                             <td class="d-none d-sm-none d-md-table-cell">
-                                <span style="font-size: smaller;" th:text="${dossierIndividuDto.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}} : 'Non renseigné'"></span>
+                                <span style="font-size: smaller;" th:text="#{'dossier.statusDossierAmenagement.' + ${dossierIndividuDto.statusDossierAmenagement}}"></span>
                             </td>
                             <td>
                                 <ul class="list-group list-group-horizontal">

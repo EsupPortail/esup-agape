@@ -3,6 +3,7 @@ package org.esupportail.esupagape.service;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
+import org.apache.commons.lang3.BooleanUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.csvs.EnqueteExportCsv;
 import org.esupportail.esupagape.entity.Enquete;
@@ -94,13 +95,14 @@ public class ExportService {
         put("codMeaa", "Autres aides");
         put("autAA", "Autres (à préciser");
         put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
+        put("finished", "Terminée");
     }};
 
     @Transactional
-    public void findEnqueteByYearForCSV(Integer year, Writer writer) throws AgapeException {
+    public void findEnqueteByYearForCSV(Integer year, Writer writer, boolean partial) throws AgapeException {
         List<EnqueteExportCsv> enqueteExportCsvs = new ArrayList<>();
         List<Enquete> enquetes = enqueteService.findAllByDossierYear(year);
-        if(enquetes.stream().anyMatch(enquete -> enquete.getFinished() == null || !enquete.getFinished())) {
+        if(!partial && (enquetes.stream().anyMatch(enquete -> enquete.getFinished() == null || !enquete.getFinished()))) {
             throw new AgapeException("Certaines enquêtes ne sont pas complètes");
         }
         int id = 1;
@@ -129,7 +131,8 @@ public class ExportService {
                     enquete.getAutAE(),
                     String.join("" ,enquete.getCodMeaa().stream().map(codMeaa -> codMeaa.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAA(),
-                    String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList())
+                    String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    BooleanUtils.isTrue(enquete.getFinished()) ? "oui" : "non"
             );
             enqueteExportCsvs.add(enqueteExportCsv);
             id++;
