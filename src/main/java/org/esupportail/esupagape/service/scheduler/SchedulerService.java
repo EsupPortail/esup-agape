@@ -59,7 +59,7 @@ public class SchedulerService {
     @Scheduled(initialDelay = 1, fixedRate = 600000)
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
-            logger.debug("Synchro Aménagements");
+            logger.info("Synchro Aménagements");
             List<Amenagement> amenagementsToSync = amenagementService.getAmenagementsToSync();
             for(Amenagement amenagement : amenagementsToSync) {
                 amenagementService.syncAmenagement(amenagement);

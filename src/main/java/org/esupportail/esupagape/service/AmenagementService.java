@@ -310,6 +310,7 @@ public class AmenagementService {
                 modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
             }
             esupSignatureService.send(amenagement, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, false), TypeWorkflow.CERTIFICAT);
+            logger.info("send amenagement " + id + " to esup-signature");
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new AgapeException("Envoi vers esup-signature impossible", e);
@@ -379,6 +380,8 @@ public class AmenagementService {
             amenagement.setMotifRefus(motif);
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.REFUSE);
             dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.NON);
+            logger.info("amenagement " + id + " refused");
+
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
@@ -566,6 +569,7 @@ public class AmenagementService {
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.PORTE);
+        logger.info("porte amenagement " + id + " by " + personLdap.getMail());
         sendAlert(amenagement);
     }
 
@@ -590,6 +594,8 @@ public class AmenagementService {
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierAmenagement.setLastUpdate(LocalDateTime.now());
         dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.EXPIRE);
+        logger.info("refuse amenagement " + id + " by " + personLdap.getMail());
+
     }
 
     @Transactional
@@ -639,6 +645,7 @@ public class AmenagementService {
             if (!dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE)
                 && !isDossierContainsValidAmenagementCursus(dossierAmenagement.getDossier())
                 && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                logger.info("amenagement " + amenagement.getId() + " EXPIRE");
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
                 dossierAmenagement.getDossier().setStatusDossierAmenagement(dossierAmenagement.getStatusDossierAmenagement());
             } else {
@@ -669,6 +676,7 @@ public class AmenagementService {
             }
             mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             amenagement.setIndividuSendDate(LocalDateTime.now());
+            logger.info("amenagement " + amenagementId + " sended to " + to);
         }
     }
 
