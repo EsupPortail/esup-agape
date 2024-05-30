@@ -64,7 +64,7 @@ public class SchedulerService {
             for(Amenagement amenagement : amenagementsToSync) {
                 amenagementService.syncAmenagement(amenagement);
             }
-            logger.debug("Synchro Aménagements terminée");
+            logger.info("Synchro Aménagements terminée");
         }
     }
 

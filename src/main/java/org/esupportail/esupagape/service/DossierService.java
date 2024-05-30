@@ -567,26 +567,55 @@ public class DossierService {
         }
     }
 
-    public void updateStatusDossierAmenagement(Dossier dossier, StatusDossierAmenagement statusDossierAmenagement) {
-        if(statusDossierAmenagement.equals(StatusDossierAmenagement.NON)) {
-            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE) || da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+    @Transactional
+    public void syncStatusDossierAmenagement(Long dossierId) {
+        Dossier dossier = getById(dossierId);
+        if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
+                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
+                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
+        ) {
+            if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE))) {
+                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else {
-                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
-                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                }
-                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
-                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
-                }
+                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
             }
-        } else if(statusDossierAmenagement.equals(StatusDossierAmenagement.VALIDE)) {
-            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE))) {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-            }
-        } else {
-            dossier.setStatusDossierAmenagement(statusDossierAmenagement);
+        }
+        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+        }
+        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
+            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+        }
+        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && !da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))) {
+            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
         }
     }
+
+//    @Transactional
+//    public void updateStatusDossierAmenagement(Dossier dossier, StatusDossierAmenagement statusDossierAmenagement) {
+//        if(statusDossierAmenagement.equals(StatusDossierAmenagement.NON)) {
+//            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE) || da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+//                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+//            } else {
+//                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
+//                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+//                }
+//                if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+//                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
+//                }
+//            }
+//        } else if(statusDossierAmenagement.equals(StatusDossierAmenagement.VALIDE)) {
+//            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE))) {
+//                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+//            }
+//        } else if(statusDossierAmenagement.equals(StatusDossierAmenagement.EXPIRE)) {
+//            if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE) || da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
+//                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+//            }
+//        } else {
+//            dossier.setStatusDossierAmenagement(statusDossierAmenagement);
+//        }
+//    }
 
 //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
