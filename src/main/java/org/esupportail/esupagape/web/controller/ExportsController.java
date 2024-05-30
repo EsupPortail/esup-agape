@@ -74,7 +74,26 @@ public class ExportsController {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
         try {
             Writer writer = response.getWriter();
-            exportService.findEnqueteByYearForCSV(year, writer);
+            exportService.findEnqueteByYearForCSV(year, writer, false);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/exports");
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        }
+    }
+    @GetMapping("/export-current-enquete-to-csv")
+    public ResponseEntity<Void> exportCurrentEnqueteToCsv(
+            @RequestParam(required = false) Integer year,
+            HttpServletResponse response, RedirectAttributes redirectAttributes) {
+        String fileName = "enquetes-partielles.csv";
+        response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+        try {
+            Writer writer = response.getWriter();
+            exportService.findEnqueteByYearForCSV(year, writer, true);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));

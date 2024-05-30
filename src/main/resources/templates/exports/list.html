@@ -39,6 +39,10 @@
                                     <a title="Exporter toutes les enquêtes en csv" th:href="@{exports/export-enquete-to-csv(year=${yearFilter})}" class="btn btn-outline-primary"><i class="fa-solid fa-magnifying-glass fa-lg"></i></i></a>
                                     Exporter l’enquête
                                 </div>
+                                <div class="col-lg-6 mt-2">
+                                    <a title="Exporter partiel de l’enquête en csv" th:href="@{exports/export-current-enquete-to-csv(year=${yearFilter})}" class="btn btn-outline-primary"><i class="fa-solid fa-magnifying-glass fa-lg"></i></i></a>
+                                    Exporter partiel de l’enquête
+                                </div>
                             </div>
                         </div>
                     </div>
