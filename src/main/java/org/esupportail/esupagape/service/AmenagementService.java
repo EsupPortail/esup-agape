@@ -291,9 +291,9 @@ public class AmenagementService {
                     throw new AgapeException("Impossible de générer l'avis");
                 }
                 amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
-                dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.EN_ATTENTE);
                 logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
+            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
         }
@@ -310,6 +310,7 @@ public class AmenagementService {
                 modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
             }
             esupSignatureService.send(amenagement, generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, false), TypeWorkflow.CERTIFICAT);
+            logger.info("send amenagement " + id + " to esup-signature");
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new AgapeException("Envoi vers esup-signature impossible", e);
@@ -347,7 +348,6 @@ public class AmenagementService {
                 amenagement.setNomValideur(personLdap.getDisplayName());
                 amenagement.setUidValideur(personLdap.getUid());
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                dossierAmenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                 Document certificat = documentService.createDocument(
                         new ByteArrayInputStream(generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true)),
@@ -355,7 +355,7 @@ public class AmenagementService {
                         "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         dossierAmenagement.getDossier());
                 amenagement.setCertificat(certificat);
-                dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.VALIDE);
+                dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
                 sendAmenagementToIndividu(amenagementId, false);
                 sendAlert(amenagement);
             }
@@ -378,7 +378,9 @@ public class AmenagementService {
             amenagement.setUidValideur(personLdap.getUid());
             amenagement.setMotifRefus(motif);
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.REFUSE);
-            dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.NON);
+            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+            logger.info("amenagement " + id + " refused");
+
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
         }
@@ -565,7 +567,8 @@ public class AmenagementService {
         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
-        dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.PORTE);
+        dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+        logger.info("porte amenagement " + id + " by " + personLdap.getMail());
         sendAlert(amenagement);
     }
 
@@ -584,12 +587,14 @@ public class AmenagementService {
             dossierAmenagement = createDossierAmenagement(amenagement, currentDossier);
         }
         dossierAmenagement.setDossier(currentDossier);
-        amenagement.setStatusAmenagement(StatusAmenagement.SUPPRIME);
-        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+        amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
+        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.REFUSE);
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierAmenagement.setLastUpdate(LocalDateTime.now());
-        dossierService.updateStatusDossierAmenagement(dossierAmenagement.getDossier(), StatusDossierAmenagement.EXPIRE);
+        dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+        logger.info("refuse amenagement " + id + " by " + personLdap.getMail());
+
     }
 
     @Transactional
@@ -636,14 +641,17 @@ public class AmenagementService {
         try {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
-            if (!dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE) && !isDossierContainsAmenagementCursus(dossierAmenagement.getDossier()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now)) {
+            if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                logger.info("amenagement " + amenagement.getId() + " EXPIRE");
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-            } else {
-                if (amenagement.getIndividuSendDate() == null) {
-                    sendAmenagementToIndividu(amenagement.getId(), false);
-                    sendAlert(amenagement);
-                }
-                dossierAmenagement.getDossier().setStatusDossierAmenagement(dossierAmenagement.getStatusDossierAmenagement());
+            }
+            if (amenagement.getIndividuSendDate() == null) {
+                sendAmenagementToIndividu(amenagement.getId(), false);
+                sendAlert(amenagement);
+            }
+            Dossier dossier = amenagement.getDossierByYear(utilsService.getCurrentYear());
+            if(dossier != null) {
+                dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
             logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId());
@@ -666,6 +674,7 @@ public class AmenagementService {
             }
             mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             amenagement.setIndividuSendDate(LocalDateTime.now());
+            logger.info("amenagement " + amenagementId + " sended to " + to);
         }
     }
 
@@ -736,9 +745,9 @@ public class AmenagementService {
     }
 
     @Transactional
-    public boolean isDossierContainsAmenagementCursus(Dossier dossier) {
+    public boolean isDossierContainsValidAmenagementCursus(Dossier dossier) {
         List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByDossier(dossier);
-        return !dossierAmenagements.isEmpty() && dossierAmenagements.stream().anyMatch(da -> da.getAmenagement().getTypeAmenagement().equals(TypeAmenagement.CURSUS));
+        return !dossierAmenagements.isEmpty() && dossierAmenagements.stream().anyMatch(da -> da.getAmenagement().getTypeAmenagement().equals(TypeAmenagement.CURSUS) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION));
     }
 
     @Transactional
@@ -755,7 +764,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public List<Amenagement> getAmenagementToSync() {
+    public List<Amenagement> getAmenagementsToSync() {
         return dossierAmenagementRepository.findDossierAmenagementByLastYear(utilsService.getCurrentYear()).stream().filter(da -> da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)).map(DossierAmenagement::getAmenagement).toList();
     }
 }
