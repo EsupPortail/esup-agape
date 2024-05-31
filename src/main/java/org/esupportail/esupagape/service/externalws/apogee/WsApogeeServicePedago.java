@@ -25,11 +25,10 @@ public class WsApogeeServicePedago {
 		logger.debug("recup des resultats dans apogee.");
 		try {
 			List<ContratPedagogiqueResultatElpEprDTO5> resultatElp = apogeePedagoFactory.getInstancePedago().recupererContratPedagogiqueResultatElpEprV6(codEtu, annee, codEtp, codVrsVet, "Apogee", null, null, null, null);
-			return resultatElp.toArray(new ContratPedagogiqueResultatElpEprDTO5[resultatElp.size()]);
+			return resultatElp.toArray(new ContratPedagogiqueResultatElpEprDTO5[0]);
 		} catch (Exception e) {
 			throw new AgapeApogeeException("Erreur lors de la recup des infos pedago Elp : " + codEtu + " error : " + e.getMessage());
 		}
 	}
-	
 
 }

@@ -41,6 +41,7 @@
                                         <th class="d-none d-lg-table-cell d-xl-table-cell">Aménagements</th>
                                         <th>Nom du médecin</th>
                                         <th>Statut aménagement</th>
+                                        <th>Validité</th>
                                         <th>Motif du refus</th>
                                         <th style="width: 200px;">Actions</th>
                                     </tr>
@@ -56,6 +57,7 @@
                                             </td>
                                             <td th:text="${amenagement.nomMedecin}"></td>
                                             <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>
+                                            <td th:text="#{'dossier.statusDossierAmenagement.' +${amenagement.lastDossierAmenagement.statusDossierAmenagement}}"></td>
                                             <td th:text="${amenagement.motifRefus}"></td>
                                             <td>
                                                 <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}"

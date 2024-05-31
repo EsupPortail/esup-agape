@@ -39,9 +39,21 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
 
+    private final Map<String, Classification> classificationMap = new HashMap<>();
+
     public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
         this.wsApogeeServiceEtudiant = wsApogeeServiceEtudiant;
+
+        this.classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
+        this.classificationMap.put("B", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
+        this.classificationMap.put("M", Classification.MOTEUR);
+        this.classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
+        this.classificationMap.put("W", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
+        this.classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
+        this.classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
+        this.classificationMap.put("H", Classification.AUTISME);
+//        this.classificationMap.put("I", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
     }
 
     @Override
@@ -65,8 +77,12 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         InfoAdmEtuDTO4  infoAdmEtuDTO4 = wsApogeeServiceEtudiant.recupererInfosAdmEtu(numEtu);
         if(infoAdmEtuDTO4 != null) {
             if(infoAdmEtuDTO4.getHandicap() != null) {
-                if(getClassificationMap().containsKey(infoAdmEtuDTO4.getHandicap().getCodeHandicap())) {
+                if(infoAdmEtuDTO4.getHandicap().getCodeHandicap() != null && getClassificationMap().containsKey(infoAdmEtuDTO4.getHandicap().getCodeHandicap())) {
                     individuInfos.setHandicap(getClassificationMap().get(infoAdmEtuDTO4.getHandicap().getCodeHandicap()));
+                } else if(infoAdmEtuDTO4.getHandicap().getCodeHandicap() == null) {
+                    individuInfos.setHandicap(Classification.NON_COMMUNIQUE);
+                } else {
+                    individuInfos.setHandicap(Classification.AUTRES_TROUBLES);
                 }
             }
             if(infoAdmEtuDTO4.getNationaliteDTO() != null) {
@@ -119,6 +135,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             });
             connection.close();
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             throw new AgapeException(e.getMessage(), e);
         } finally {
             if(connection != null) {
@@ -130,15 +147,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     @Override
     public Map<String, Classification> getClassificationMap() {
-        Map<String, Classification> classificationMap = new HashMap<>();
-        classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
-        classificationMap.put("M", Classification.MOTEUR);
-        classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
-        classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
-        classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
-        classificationMap.put("H", Classification.AUTISME);
-        classificationMap.put("I", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
-        return classificationMap;
+        return this.classificationMap;
     }
 
 }

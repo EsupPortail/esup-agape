@@ -13,6 +13,7 @@ import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DocumentService;
+import org.esupportail.esupagape.service.DossierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -38,10 +39,12 @@ public class EsupSignatureService {
 
     private final ApplicationProperties applicationProperties;
     private final DocumentService documentService;
+    private final DossierService dossierService;
 
-    public EsupSignatureService(ApplicationProperties applicationProperties, DocumentService documentService) {
+    public EsupSignatureService(ApplicationProperties applicationProperties, DocumentService documentService, DossierService dossierService) {
         this.applicationProperties = applicationProperties;
         this.documentService = documentService;
+        this.dossierService = dossierService;
     }
 
     @Transactional
@@ -161,7 +164,6 @@ public class EsupSignatureService {
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
                     dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                     dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                    dossierAmenagement.getDossier().setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
                     String urlSignRequest = String.format("%s/ws/signrequests/%s", applicationProperties.getEsupSignatureUrl(), signId);
                     ResponseEntity<String> responseEntitySignRequest = restTemplate.getForEntity(urlSignRequest, String.class);
@@ -177,6 +179,7 @@ public class EsupSignatureService {
                     dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
             }
+            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
             return signatureStatus;
         }
     }

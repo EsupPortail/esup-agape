@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content">
+		<nav th:replace="~{fragments/admin-nav :: nav}"></nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-amenagement-to-resend" role="tabpanel" aria-labelledby="nav-amenagement-to-resend-tab">
+				<!--				 th:if="${@environment.getActiveProfiles().length > 0 && @environment.getActiveProfiles()[0] == 'dev'}"-->
+				<h1>Aménagements à retransmettre : <span th:text="${amenagementsToResend.size()}"></span></h1>
+				<hr>
+				<div class="card mt-5 col-lg-10 mx-auto">
+					<div class="card-body">
+						<form th:action="@{/admin/amenagement-resend}" method="POST" class="form-signin">
+							<input class="btn btn-lg btn-primary btn-block" type="submit" value="Retransmettre les aménagements"/>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>

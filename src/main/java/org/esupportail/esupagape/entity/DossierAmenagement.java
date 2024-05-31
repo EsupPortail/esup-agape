@@ -2,6 +2,9 @@ package org.esupportail.esupagape.entity;
 
 import jakarta.persistence.*;
 import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class DossierAmenagement {
@@ -25,6 +28,9 @@ public class DossierAmenagement {
     private String mailValideurPortabilite;
 
     private String nomValideurPortabilite;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime lastUpdate;
 
     public Long getId() {
         return id;
@@ -80,5 +86,13 @@ public class DossierAmenagement {
 
     public void setNomValideurPortabilite(String nomValideurPortabilite) {
         this.nomValideurPortabilite = nomValideurPortabilite;
+    }
+
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

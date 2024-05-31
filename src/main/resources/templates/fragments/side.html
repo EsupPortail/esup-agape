@@ -33,7 +33,7 @@
                     </dd>
                     <dt>Statut aménagement</dt>
                     <dd>
-                        <span class="badge bg-secondary" th:text="${currentDossier.statusDossierAmenagement != null} ? #{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}} : 'Pas d\'aménagement'"></span>
+                        <span class="badge bg-secondary" th:text="#{'dossier.statusDossierAmenagement.' +${currentDossier.statusDossierAmenagement}}"></span>
                     </dd>
                     <dt class="col-sm-5">Genre</dt>
                     <dd class="col-sm-7" th:text="${currentDossier.individu.gender != null} ? #{'individu.gender.'+${currentDossier.individu.gender}} : 'Inconnu'"></dd>

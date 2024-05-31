@@ -27,7 +27,7 @@ public class UtilsService {
 
     public int getCurrentYear() {
         List<Year> years = getYears();
-        if(years.size() == 0) {
+        if(years.isEmpty()) {
             Year year = new Year(computeCurrentYear());
             yearRepository.save(year);
             return year.getNumber();
