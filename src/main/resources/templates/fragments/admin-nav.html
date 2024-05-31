@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<nav th:fragment="nav">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a href="/admin/tasks" th:classappend="${active == 'tasks'} ? 'active' : ''" class="nav-link" id="nav-tasks-tab" role="tab" aria-controls="nav-tasks" aria-selected="true">Tâches
+        </a>
+        <a href="/admin/imports" th:classappend="${active == 'imports'} ? 'active' : ''" class="nav-link" id="nav-imports-tab" role="tab" aria-controls="nav-imports" aria-selected="false">Imports
+        </a>
+        <a href="/admin/years" th:classappend="${active == 'years'} ? 'active' : ''" class="nav-link" id="nav-years-tab" role="tab" aria-controls="nav-years" aria-selected="false">Années
+        </a>
+        <a href="/admin/sessions"  th:classappend="${active == 'sessions'} ? 'active' : ''" class="nav-link" id="nav-sessions-tab"  role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions
+        </a>
+        <a href="/admin/su" th:classappend="${active == 'su'} ? 'active' : ''" class="nav-link" id="nav-su-tab" role="tab" aria-controls="nav-su" aria-selected="false">SU
+        </a>
+        <a href="/admin/affectations" th:classappend="${active == 'affectations'} ? 'active' : ''" class="nav-link" id="nav-affectations-tab" role="tab" aria-controls="nav-affectations" aria-selected="false">Affectations
+        </a>
+        <a href="/admin/amenagement-resend" th:classappend="${active == 'amenagement-resend'} ? 'active' : ''" class="nav-link" id="nav-amenagement-to-resend-tab"  role="tab" aria-controls="nav-affectations" aria-selected="false">Retransmettre les aménagements
+        </a>
+    </div>
+</nav>
+</html>

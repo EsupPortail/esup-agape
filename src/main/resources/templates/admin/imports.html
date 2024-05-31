@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content">
+		<nav th:replace="~{fragments/admin-nav :: nav}"></nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-imports" role="tabpanel" aria-labelledby="nav-imports-tab">
+				<h1>Imports</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<h3>Nomenclature du ministère</h3>
+					<h6>Format attendu :<br/>
+						Ficher au format CSV <br/>
+						Un en-tête <br/>
+						Séparateur de chaîne de caractère = ' "" '<br/>
+						Séparateur de champ = ';'<br/>
+						3 colonnes pour les codes <br/>
+						2 colonnes pour les libellés</h6>
+					<form th:action="@{/admin/import-codes-ministere}" method="post" enctype="multipart/form-data">
+						<input type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer codes</button>
+					</form>
+					<form th:action="@{/admin/import-libelles-ministere}" method="post" enctype="multipart/form-data">
+						<input class="mt-2" type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer libellés</button>
+					</form>
+					<form th:action="@{/admin/import-libelles-amenagement}" method="post" enctype="multipart/form-data">
+						<input class="mt-2" type="file" name="file" accept=".csv"><br>
+						<button class="btn btn-primary mt-2" type="submit">Importer libellés aménagement</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>

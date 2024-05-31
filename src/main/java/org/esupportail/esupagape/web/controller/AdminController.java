@@ -74,6 +74,31 @@ public class AdminController {
 
     @GetMapping
     public String index(Model model) {
+        return "admin/index";
+    }
+
+    @GetMapping("/tasks")
+    public String tasks(Model model) {
+        model.addAttribute("active", "tasks");
+        return "admin/tasks";
+    }
+
+    @GetMapping("/imports")
+    public String imports(Model model) {
+        model.addAttribute("active", "imports");
+        return "admin/imports";
+    }
+
+    @GetMapping("/years")
+    public String years(Model model) {
+        model.addAttribute("active", "years");
+        model.addAttribute("years", utilsService.getYears());
+        return "admin/years";
+    }
+
+    @GetMapping("/sessions")
+    public String session(Model model) {
+        model.addAttribute("active", "sessions");
         model.addAttribute("years", utilsService.getYears());
         List<SessionInformation> sessions = new ArrayList<>();
         for(Object principal : sessionRegistry.getAllPrincipals()) {
@@ -85,9 +110,28 @@ public class AdminController {
         }
         model.addAttribute("sessions", sessions);
         model.addAttribute("now", new Date());
+
+        return "admin/sessions";
+    }
+
+    @GetMapping("/su")
+    public String su(Model model) {
+        model.addAttribute("active", "su");
+        return "admin/su";
+    }
+
+    @GetMapping("/affectations")
+    public String affectations(Model model) {
+        model.addAttribute("active", "affectations");
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
+        return "admin/affectations";
+    }
+
+    @GetMapping("/amenagement-resend")
+    public String amenagementResend(Model model) {
+        model.addAttribute("active", "amenagement-resend");
         model.addAttribute("amenagementsToResend", amenagementService.getAmenagementToResend());
-        return "admin/index";
+        return "admin/amenagement-resend";
     }
 
     private Date getLastRequestAge() {
@@ -100,7 +144,7 @@ public class AdminController {
     public String forceSync(RedirectAttributes redirectAttributes) throws AgapeException, SQLException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'import est terminé"));
         individuService.importIndividus();
-        return "redirect:/admin";
+        return "redirect:/admin/tasks";
     }
 
     @GetMapping("/test-mail")
@@ -118,14 +162,14 @@ public class AdminController {
     public String syncIndividus(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
         individuService.syncAllIndividus();
-        return "redirect:/admin";
+        return "redirect:/admin/tasks";
     }
 
     @GetMapping("/sync-dossiers")
     public String syncDossier(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des dossiers est terminée"));
         dossierService.syncAllDossiers();
-        return "redirect:/admin";
+        return "redirect:/admin/tasks";
     }
 
     @GetMapping("/anonymise-dossiers")
@@ -143,30 +187,32 @@ public class AdminController {
         } catch (FileNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Erreur lors de l'actualisation SISE : " + e.getMessage()));
         }
-        return "redirect:/admin";
+        return "redirect:/admin/tasks";
     }
 
     @GetMapping("/sync-esup-signature")
     public String syncEsupSignature(RedirectAttributes redirectAttributes) throws AgapeException {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro Esup Signature est terminée"));
         amenagementService.syncEsupSignatureAmenagements();
-        return "redirect:/admin";
+        return "redirect:/admin/tasks";
     }
 
     @PostMapping(value = "/add-year")
     public String createYear(@RequestParam Integer number, RedirectAttributes redirectAttributes) {
         try {
             utilsService.addYear(number);
+            redirectAttributes.addFlashAttribute("message", new Message("success", "Année ajoutée"));
         } catch (AgapeJpaException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
-        return "redirect:/admin";
+        return "redirect:/admin/years";
     }
 
     @DeleteMapping(value = "/delete-year")
-    public String deleteYear(@RequestParam Long idYear) {
+    public String deleteYear(@RequestParam Long idYear, RedirectAttributes redirectAttributes) {
         utilsService.deleteYear(idYear);
-        return "redirect:/admin";
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Année supprimée"));
+        return "redirect:/admin/years";
     }
 
     @DeleteMapping(value = "/delete-individu/{idIndividu}")
@@ -193,7 +239,7 @@ public class AdminController {
         } else {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
         }
-        return "redirect:/admin";
+        return "redirect:/admin/imports";
     }
 
     @PostMapping("/import-libelles-ministere")
@@ -208,7 +254,7 @@ public class AdminController {
         } else {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
         }
-        return "redirect:/admin";
+        return "redirect:/admin/imports";
     }
 
     @PostMapping("/import-libelles-amenagement")
@@ -223,7 +269,7 @@ public class AdminController {
         } else {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
         }
-        return "redirect:/admin";
+        return "redirect:/admin/imports";
     }
 
 
@@ -242,13 +288,14 @@ public class AdminController {
                 }
             }
         }
-        return "redirect:/admin";
+        return "redirect:/admin/affectations";
     }
 
     @DeleteMapping(value = "/delete-userOthersAffectations")
-    public String deleteUserOthersAffectations(@RequestParam Long id) {
+    public String deleteUserOthersAffectations(@RequestParam Long id, RedirectAttributes redirectAttributes) {
         userOthersAffectationsService.deleteUserOthersAffectations(id);
-        return "redirect:/admin";
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Affectation supprimée"));
+        return "redirect:/admin/affectations";
     }
 
     @GetMapping(value = "/autocomplete-search-uid", produces = "application/json")
@@ -257,9 +304,10 @@ public class AdminController {
         return ldapPersonService.findEmployees(uid);
     }
 
-    @PostMapping(value = "/resend-amenagements")
+    @PostMapping(value = "/amenagement-resend")
     public String resendAmenagements(RedirectAttributes redirectAttributes) throws Exception {
         amenagementService.resendAmenagements();
-        return "redirect:/admin";
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement envoyés"));
+        return "redirect:/admin/amenagement-resend";
     }
 }
