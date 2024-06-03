@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content">
+		<nav th:replace="~{fragments/admin-nav :: nav}"></nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-tasks" role="tabpanel"
+			     aria-labelledby="nav-tasks-tab">
+				<h1>Tâches</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<ul>
+						<li class="m-1"><a role="button" href="/admin/import-individus" class="btn btn-dark">Forcer
+							l'import
+							des
+							individus</a></li>
+						<li class="m-1"><a role="button" href="/admin/sync-individus" class="btn btn-dark">Forcer la
+							synchro
+							des
+							individus</a></li>
+						<li class="m-1"><a role="button" href="/admin/sync-dossiers" class="btn btn-dark">Forcer la
+							synchro
+							des
+							dossiers</a></li>
+						<li class="m-1"><a role="button" href="/admin/anonymise-dossiers" class="btn btn-dark">Forcer
+							l’anonymisation des
+							dossiers</a></li>
+						<li class="m-1"><a role="button" href="/admin/refresh-sise" class="btn btn-dark">Actualiser le
+							fichier SISE</a></li>
+						<li class="m-1" th:if="${esupSignaturePresent}">
+							<a role="button" href="/admin/sync-esup-signature" class="btn btn-dark">Forcer synchro esup
+								signature</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>
