@@ -27,8 +27,9 @@ public class EnqueteExportCsv {
     String autAA;
     String codAmL;
     String finished;
+    String link;
 
-    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished) {
+    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
         this.nfic = nfic;
         this.id = id;
         this.numetu = numetu;
@@ -52,6 +53,7 @@ public class EnqueteExportCsv {
         this.autAA = autAA;
         this.codAmL = codAmL;
         this.finished = finished;
+        this.link = link;
     }
 
     public String getNfic() {
@@ -252,5 +254,13 @@ public class EnqueteExportCsv {
 
     public void setFinished(String finished) {
         this.finished = finished;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }
