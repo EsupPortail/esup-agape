@@ -134,7 +134,7 @@ public class ExportService {
                     enquete.getAutAA(),
                     String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList()),
                     BooleanUtils.isTrue(enquete.getFinished()) ? "oui" : "non",
-                    applicationProperties.getPath() + "/dossiers/" + enquete.getDossier() + "/enquete"
+                    applicationProperties.getPath() + "/dossiers/" + enquete.getDossier().getId() + "/enquete"
             );
             enqueteExportCsvs.add(enqueteExportCsv);
             id++;
