@@ -345,7 +345,7 @@ public class DossierService {
         for (Integer year : dossierFilter.getYear()) {
             yearPredicates.add(cb.equal(cb.literal(year), dossierRoot.get("year")));
         }
-        if (yearPredicates.size() > 0) {
+        if (!yearPredicates.isEmpty()) {
             predicates.add(cb.or(yearPredicates.toArray(Predicate[]::new)));
         }
 
@@ -353,7 +353,7 @@ public class DossierService {
         for (StatusDossier statusDossier : dossierFilter.getStatusDossier()) {
             statusDossierPredicates.add(cb.equal(cb.literal(statusDossier), dossierRoot.get("statusDossier")));
         }
-        if (statusDossierPredicates.size() > 0) {
+        if (!statusDossierPredicates.isEmpty()) {
             predicates.add(cb.or(statusDossierPredicates.toArray(Predicate[]::new)));
         }
 
@@ -361,7 +361,7 @@ public class DossierService {
         for (StatusDossierAmenagement statusDossierAmenagement : dossierFilter.getStatusDossierAmenagement()) {
             statusDossierAmenagementPredicates.add(cb.equal(cb.literal(statusDossierAmenagement), dossierRoot.get("statusDossierAmenagement")));
         }
-        if (statusDossierAmenagementPredicates.size() > 0) {
+        if (!statusDossierAmenagementPredicates.isEmpty()) {
             predicates.add(cb.or(statusDossierAmenagementPredicates.toArray(Predicate[]::new)));
         }
         if (dossierFilter.getFinished() != null) {
@@ -380,21 +380,21 @@ public class DossierService {
             Expression<Collection<Classification>> classifications = dossierRoot.get("classifications");
             classificationPredicates.add(cb.isMember(cb.literal(classification), classifications));
         }
-        if (classificationPredicates.size() > 0) {
+        if (!classificationPredicates.isEmpty()) {
             predicates.add(cb.or(classificationPredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> typePredicates = new ArrayList<>();
         for (TypeIndividu type : dossierFilter.getType()) {
             typePredicates.add(cb.equal(cb.literal(type), dossierRoot.get("type")));
         }
-        if (typePredicates.size() > 0) {
+        if (!typePredicates.isEmpty()) {
             predicates.add(cb.or(typePredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> mdphPredicates = new ArrayList<>();
         for (Mdph mdph : dossierFilter.getMdph()) {
             mdphPredicates.add(cb.equal(cb.literal(mdph), dossierRoot.get("mdph")));
         }
-        if (mdphPredicates.size() > 0) {
+        if (!mdphPredicates.isEmpty()) {
             predicates.add(cb.or(mdphPredicates.toArray(Predicate[]::new)));
         }
 
@@ -423,7 +423,7 @@ public class DossierService {
         for (String codComposante : dossierFilter.getComposante()) {
             composantePredicates.add(cb.equal(cb.literal(codComposante), dossierRoot.get("codComposante")));
         }
-        if (composantePredicates.size() > 0) {
+        if (!composantePredicates.isEmpty()) {
             predicates.add(cb.or(composantePredicates.toArray(Predicate[]::new)));
         }
 
@@ -431,28 +431,28 @@ public class DossierService {
         for (String secteurDisciplinaire : dossierFilter.getSecteurDisciplinaire()) {
             secteurDisciplinairePredicates.add(cb.equal(cb.literal(secteurDisciplinaire), dossierRoot.get("secteurDisciplinaire")));
         }
-        if (secteurDisciplinairePredicates.size() > 0) {
+        if (!secteurDisciplinairePredicates.isEmpty()) {
             predicates.add(cb.or(secteurDisciplinairePredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> libelleFormationPredicates = new ArrayList<>();
         for (String libelleFormation : dossierFilter.getLibelleFormation()) {
             libelleFormationPredicates.add(cb.equal(cb.literal(libelleFormation), dossierRoot.get("libelleFormation")));
         }
-        if (libelleFormationPredicates.size() > 0) {
+        if (!libelleFormationPredicates.isEmpty()) {
             predicates.add(cb.or(libelleFormationPredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> niveauEtudesPredicates = new ArrayList<>();
         for (String niveauEtudes : dossierFilter.getNiveauEtudes()) {
             niveauEtudesPredicates.add(cb.equal(cb.literal(niveauEtudes), dossierRoot.get("niveauEtudes")));
         }
-        if (niveauEtudesPredicates.size() > 0) {
+        if (!niveauEtudesPredicates.isEmpty()) {
             predicates.add(cb.or(niveauEtudesPredicates.toArray(Predicate[]::new)));
         }
         List<Predicate> typeFormationPredicates = new ArrayList<>();
         for (TypFrmn typFrmn : dossierFilter.getTypFrmn()) {
             typeFormationPredicates.add(cb.equal(cb.literal(typFrmn), dossierRoot.get("typeFormation")));
         }
-        if (typeFormationPredicates.size() > 0) {
+        if (!typeFormationPredicates.isEmpty()) {
             predicates.add(cb.or(typeFormationPredicates.toArray(Predicate[]::new)));
         }
 
@@ -460,7 +460,7 @@ public class DossierService {
         for (ModFrmn modFrmn : dossierFilter.getModFrmn()) {
             modeFormationPredicates.add(cb.equal(cb.literal(modFrmn), dossierRoot.get("modeFormation")));
         }
-        if (modeFormationPredicates.size() > 0) {
+        if (!modeFormationPredicates.isEmpty()) {
             predicates.add(cb.or(modeFormationPredicates.toArray(Predicate[]::new)));
         }
         if (StringUtils.hasText(dossierFilter.getResultatTotal())) {
@@ -472,7 +472,7 @@ public class DossierService {
         for (Gender gender : dossierFilter.getGender()) {
             genderPredicates.add(cb.equal(cb.literal(gender), dossierIndividuJoin.get("gender")));
         }
-        if (genderPredicates.size() > 0) {
+        if (!genderPredicates.isEmpty()) {
             predicates.add(cb.or(genderPredicates.toArray(Predicate[]::new)));
         }
 
@@ -480,7 +480,7 @@ public class DossierService {
         for (Integer yearOfBirth : dossierFilter.getYearOfBirth()) {
             yearOfBirthPredicates.add(cb.between(dossierIndividuJoin.get("dateOfBirth"), LocalDate.of(yearOfBirth, 1, 1), LocalDate.of(yearOfBirth, 12, 31)));
         }
-        if (yearOfBirthPredicates.size() > 0) {
+        if (!yearOfBirthPredicates.isEmpty()) {
             predicates.add(cb.or(yearOfBirthPredicates.toArray(Predicate[]::new)));
         }
 
@@ -488,7 +488,7 @@ public class DossierService {
         for (String fixCP : dossierFilter.getFixCP()) {
             fixCPPredicates.add(cb.equal(cb.literal(fixCP), dossierIndividuJoin.get("fixCP")));
         }
-        if (fixCPPredicates.size() > 0) {
+        if (!fixCPPredicates.isEmpty()) {
             predicates.add(cb.or(fixCPPredicates.toArray(Predicate[]::new)));
         }
 
@@ -497,7 +497,7 @@ public class DossierService {
         for (TypeAideMaterielle typeAideMaterielle : dossierFilter.getTypeAideMaterielle()) {
             typeAideMateriellePredicates.add(cb.equal(cb.literal(typeAideMaterielle), dossierAideMaterielleJoin.get("typeAideMaterielle")));
         }
-        if (typeAideMateriellePredicates.size() > 0) {
+        if (!typeAideMateriellePredicates.isEmpty()) {
             predicates.add(cb.or(typeAideMateriellePredicates.toArray(Predicate[]::new)));
         }
 
@@ -506,7 +506,7 @@ public class DossierService {
             Expression<Collection<FonctionAidant>> fonctionAidants = dossierAideHumaineJoin.get("fonctionAidants");
             fonctionAidantPredicates.add(cb.isMember(cb.literal(fonctionAidant), fonctionAidants));
         }
-        if (fonctionAidantPredicates.size() > 0) {
+        if (!fonctionAidantPredicates.isEmpty()) {
             predicates.add(cb.or(fonctionAidantPredicates.toArray(Predicate[]::new)));
         }
         if (dossierFilter.getHasScholarship() != null) {
@@ -531,7 +531,7 @@ public class DossierService {
         cq.where(predicate);
 
         try {
-            if(pageable.getSort().get().toList().size() > 0) {
+            if(!pageable.getSort().get().toList().isEmpty()) {
                 if (
                         pageable.getSort().get().toList().get(0).getProperty().equals("name")
                         ||
@@ -557,30 +557,6 @@ public class DossierService {
             logger.warn(e.getMessage());
         }
         return em.createQuery(cq);
-    }
-
-    @Transactional
-    public void syncStatusDossierAmenagement(Long dossierId) {
-        Dossier dossier = getById(dossierId);
-        if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
-        ) {
-            if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE))) {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-            } else {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
-            }
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && !da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
-        }
     }
 
 //    @Transactional
