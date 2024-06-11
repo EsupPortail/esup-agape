@@ -67,6 +67,7 @@ public class AmenagementService {
     private final AmenagementRepository amenagementRepository;
     private final DossierAmenagementRepository dossierAmenagementRepository;
     private final DossierService dossierService;
+    private final SyncService syncService;
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
     private final UtilsService utilsService;
@@ -78,12 +79,13 @@ public class AmenagementService {
     private final PersonLdapRepository personLdapRepository;
     private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
 
-    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
+    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, SyncService syncService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
         this.applicationProperties = applicationProperties;
         this.ldapProperties = ldapProperties;
         this.amenagementRepository = amenagementRepository;
         this.dossierAmenagementRepository = dossierAmenagementRepository;
         this.dossierService = dossierService;
+        this.syncService = syncService;
         this.objectMapper = objectMapper;
         this.messageSource = messageSource;
         this.utilsService = utilsService;
@@ -293,7 +295,7 @@ public class AmenagementService {
                 amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
                 logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
-            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+            syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
         }
@@ -355,7 +357,7 @@ public class AmenagementService {
                         "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         dossierAmenagement.getDossier());
                 amenagement.setCertificat(certificat);
-                dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+                syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
                 sendAmenagementToIndividu(amenagementId, false);
                 sendAlert(amenagement);
             }
@@ -378,7 +380,7 @@ public class AmenagementService {
             amenagement.setUidValideur(personLdap.getUid());
             amenagement.setMotifRefus(motif);
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.REFUSE);
-            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+            syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
             logger.info("amenagement " + id + " refused");
 
         } else {
@@ -569,7 +571,7 @@ public class AmenagementService {
         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
-        dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+        syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         logger.info("porte amenagement " + id + " by " + personLdap.getMail());
         sendAlert(amenagement);
     }
@@ -594,7 +596,7 @@ public class AmenagementService {
         dossierAmenagement.setMailValideurPortabilite(personLdap.getMail());
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierAmenagement.setLastUpdate(LocalDateTime.now());
-        dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+        syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         logger.info("refuse amenagement " + id + " by " + personLdap.getMail());
 
     }
@@ -653,7 +655,7 @@ public class AmenagementService {
             }
             Dossier dossier = amenagement.getDossierByYear(utilsService.getCurrentYear());
             if(dossier != null) {
-                dossierService.syncStatusDossierAmenagement(dossier.getId());
+                syncService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
             logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId());
