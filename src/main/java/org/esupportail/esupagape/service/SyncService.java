@@ -116,6 +116,7 @@ public class SyncService {
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
+        if(dossier.getDossierAmenagements() == null) return;
         if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
                 && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
                 && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
