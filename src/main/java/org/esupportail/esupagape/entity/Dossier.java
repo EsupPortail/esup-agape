@@ -29,7 +29,7 @@ public class Dossier {
     private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
 
     @OneToMany(mappedBy = "dossier")
-    private List<DossierAmenagement> dossierAmenagements;
+    private List<DossierAmenagement> dossierAmenagements = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Autorisation autorisation;
