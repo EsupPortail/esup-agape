@@ -23,7 +23,7 @@ public class DossierAmenagement {
     private Amenagement amenagement;
 
     @Enumerated(EnumType.STRING)
-    private StatusDossierAmenagement statusDossierAmenagement;
+    private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
 
     private String mailValideurPortabilite;
 
