@@ -96,6 +96,7 @@ public class ExportService {
         put("autAA", "Autres (à préciser");
         put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
         put("finished", "Terminée");
+        put("link", "Lien");
     }};
 
     @Transactional
@@ -132,7 +133,8 @@ public class ExportService {
                     String.join("" ,enquete.getCodMeaa().stream().map(codMeaa -> codMeaa.name().toLowerCase()).sorted(String::compareTo).toList()),
                     enquete.getAutAA(),
                     String.join("" ,enquete.getCodAmL().stream().map(codAmL -> codAmL.name().toLowerCase()).sorted(String::compareTo).toList()),
-                    BooleanUtils.isTrue(enquete.getFinished()) ? "oui" : "non"
+                    BooleanUtils.isTrue(enquete.getFinished()) ? "oui" : "non",
+                    applicationProperties.getPath() + "/dossiers/" + enquete.getDossier().getId() + "/enquete"
             );
             enqueteExportCsvs.add(enqueteExportCsv);
             id++;
