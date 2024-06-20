@@ -578,17 +578,17 @@ public class DossierService {
     }
 
     @Transactional
-    public void syncDossier(Long id) {
+    public boolean syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
         if (dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
-            return;
+            return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
         } else {
             dossier.setNewDossier(true);
         }
-        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
+        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return false;
         if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && dossier.getClassifications().isEmpty()) {
             try {
                 List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty()).findFirst().orElseThrow().getClassifications());
@@ -644,6 +644,7 @@ public class DossierService {
             }
         }
         syncStatusDossierAmenagement(dossier.getId());
+        return true;
     }
 
 //    @Transactional
