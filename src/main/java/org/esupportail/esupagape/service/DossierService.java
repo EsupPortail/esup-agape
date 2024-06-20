@@ -580,7 +580,7 @@ public class DossierService {
     @Transactional
     public boolean syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
-        if (dossier.getYear() < utilsService.getCurrentYear() || (dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit())) {
+        if (dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
