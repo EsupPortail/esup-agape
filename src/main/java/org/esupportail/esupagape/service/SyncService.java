@@ -55,8 +55,10 @@ public class SyncService {
         List<Long> dossiersIds = dossierRepository.findIdsAll();
         int count = 0;
         for (Long dossierId : dossiersIds) {
-            dossierService.syncDossier(dossierId);
-            enqueteService.getAndUpdateByDossierId(dossierId, "system");
+            boolean toSync = dossierService.syncDossier(dossierId);
+            if (toSync){
+                enqueteService.getAndUpdateByDossierId(dossierId, "system");
+            }
             count++;
         }
         logger.info("Sync dossiers done : " + count);
