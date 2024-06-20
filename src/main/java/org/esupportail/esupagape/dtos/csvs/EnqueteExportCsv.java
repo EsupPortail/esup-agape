@@ -9,6 +9,7 @@ public class EnqueteExportCsv {
     String sexe;
     String typFrmn;
     String modFrmn;
+    String alternance;
     String codSco;
     String codFmt;
     String codFil;
@@ -29,7 +30,7 @@ public class EnqueteExportCsv {
     String finished;
     String link;
 
-    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
+    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String alternance, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
         this.nfic = nfic;
         this.id = id;
         this.numetu = numetu;
@@ -37,6 +38,7 @@ public class EnqueteExportCsv {
         this.sexe = sexe;
         this.typFrmn = typFrmn;
         this.modFrmn = modFrmn;
+        this.alternance = alternance;
         this.codSco = codSco;
         this.codFmt = codFmt;
         this.codFil = codFil;
@@ -110,6 +112,14 @@ public class EnqueteExportCsv {
 
     public void setModFrmn(String modFrmn) {
         this.modFrmn = modFrmn;
+    }
+
+    public String getAlternance() {
+        return alternance;
+    }
+
+    public void setAlternance(String alternance) {
+        this.alternance = alternance;
     }
 
     public String getCodSco() {

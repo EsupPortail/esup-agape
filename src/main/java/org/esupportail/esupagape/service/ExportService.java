@@ -78,6 +78,7 @@ public class ExportService {
         put("sexe", "Sexe");
         put("typFrmn", "Type formation");
         put("modFrmn", "Modalité formation");
+        put("alternance", "Alternance");
         put("codSco", "Année d'études");
         put("codFmt", "Formation");
         put("codFil", "Discipline");
@@ -87,8 +88,8 @@ public class ExportService {
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
         put("codMeahF", "Mesures aides humaines");
-        put("interpH", "supprimé");
-        put("codeurH", "supprimé");
+//        put("interpH", "supprimé");
+//        put("codeurH", "supprimé");
         put("aidHnat", "Autre aide humaine");
         put("codMeae", "Aménagement des examens");
         put("autAE", "Autre aménagement des examens");
@@ -115,7 +116,8 @@ public class ExportService {
                     enquete.getAn(),
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
-                    String.join("" ,enquete.getModFrmn().stream().map(modFrmn -> modFrmn.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
+                    (BooleanUtils.isTrue(enquete.getAlternance())) ? "1" : "",
                     enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase() : "",
                     enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase() : "",
                     enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase() : "",

@@ -4,8 +4,8 @@ import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.AmenagementService;
-import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.IndividuService;
+import org.esupportail.esupagape.service.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,15 +23,15 @@ public class SchedulerService {
 
     private final IndividuService individuService;
 
-    private final DossierService dossierService;
+    private final SyncService syncService;
 
     private final AmenagementService amenagementService;
 
     private final ApplicationProperties applicationProperties;
 
-    public SchedulerService(IndividuService individuService, DossierService dossierService, AmenagementService amenagementService, ApplicationProperties applicationProperties) {
+    public SchedulerService(IndividuService individuService, SyncService syncService, AmenagementService amenagementService, ApplicationProperties applicationProperties) {
         this.individuService = individuService;
-        this.dossierService = dossierService;
+        this.syncService = syncService;
         this.amenagementService = amenagementService;
         this.applicationProperties = applicationProperties;
     }
@@ -42,7 +42,7 @@ public class SchedulerService {
             logger.info("Synchro individus");
             individuService.importIndividus();
             individuService.syncAllIndividus();
-            dossierService.syncAllDossiers();
+            syncService.syncAllDossiers();
             logger.info("Synchro individus terminée");
         }
     }

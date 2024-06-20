@@ -13,7 +13,7 @@ import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.esupportail.esupagape.entity.enums.TypeWorkflow;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.service.DocumentService;
-import org.esupportail.esupagape.service.SyncService;
+import org.esupportail.esupagape.service.DossierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,12 +39,12 @@ public class EsupSignatureService {
 
     private final ApplicationProperties applicationProperties;
     private final DocumentService documentService;
-    private final SyncService syncService;
+    private final DossierService dossierService;
 
-    public EsupSignatureService(ApplicationProperties applicationProperties, DocumentService documentService, SyncService syncService) {
+    public EsupSignatureService(ApplicationProperties applicationProperties, DocumentService documentService, DossierService dossierService) {
         this.applicationProperties = applicationProperties;
         this.documentService = documentService;
-        this.syncService = syncService;
+        this.dossierService = dossierService;
     }
 
     @Transactional
@@ -179,7 +179,7 @@ public class EsupSignatureService {
                     dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
                 }
             }
-            syncService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+            dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
             return signatureStatus;
         }
     }
