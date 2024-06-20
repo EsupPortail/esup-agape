@@ -52,14 +52,14 @@ public class SyncService {
 
     public void syncAllDossiers() {
         logger.info("Sync dossiers started");
-        List<Long> dossiersIds = dossierRepository.findIdsAll();
+        List<Long> dossiersIds = dossierRepository.findIdsAll(utilsService.getCurrentYear());
         int count = 0;
         for (Long dossierId : dossiersIds) {
             boolean toSync = dossierService.syncDossier(dossierId);
             if (toSync){
                 enqueteService.getAndUpdateByDossierId(dossierId, "system");
+                count++;
             }
-            count++;
         }
         logger.info("Sync dossiers done : " + count);
     }
