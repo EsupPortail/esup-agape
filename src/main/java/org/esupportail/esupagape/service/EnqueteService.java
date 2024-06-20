@@ -82,6 +82,9 @@ public class EnqueteService {
         if (enqueteForm.getCodFmt() != null) {
             enqueteToUpdate.setCodFmt(enqueteForm.getCodFmt());
         }
+        if (enqueteForm.getAlternance() != null) {
+            enqueteToUpdate.setAlternance(enqueteForm.getAlternance());
+        }
         if (enqueteForm.getCodFil() != null) {
             enqueteToUpdate.setCodFil(enqueteForm.getCodFil());
         }
@@ -105,7 +108,7 @@ public class EnqueteService {
         if (StringUtils.hasText(enqueteForm.getAHS0())) {
             enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
         } else {
-            if (enqueteForm.getAHS1().size() > 0 || enqueteForm.getAHS2().size() > 0) {
+            if (!enqueteForm.getAHS1().isEmpty() || !enqueteForm.getAHS2().isEmpty()) {
                 for (String AHS1 : enqueteForm.getAHS1()) {
                     enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
                     enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
@@ -227,11 +230,11 @@ public class EnqueteService {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
             if (dossier.getModeFormation() != null) {
-                enquete.getModFrmn().clear();
-                enquete.getModFrmn().add(dossier.getModeFormation());
-                if (dossier.getAlternance() != null && dossier.getAlternance()) {
-                    enquete.getModFrmn().add(ModFrmn.A);
-                }
+                enquete.setModFrmn(dossier.getModeFormation());
+            }
+            enquete.setAlternance(false);
+            if (dossier.getAlternance() != null && dossier.getAlternance()) {
+                enquete.setAlternance(true);
             }
             Boolean isAmenagementTempsMajore = amenagementService.isAmenagementTempsMajore(id);
             if (isAmenagementTempsMajore != null) {

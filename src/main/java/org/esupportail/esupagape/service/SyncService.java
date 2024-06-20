@@ -2,11 +2,11 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.Gender;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
-import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -31,19 +29,37 @@ public class SyncService {
 
     private final DossierRepository dossierRepository;
 
+    private final EnqueteService enqueteService;
+
+    private final DossierService dossierService;
+
     private final List<IndividuSourceService> individuSourceServices;
 
     private final List<DossierInfosService> dossierInfosServices;
 
     private final UtilsService utilsService;
 
-    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, List<IndividuSourceService> individuSourceServices, List<DossierInfosService> dossierInfosServices, UtilsService utilsService) {
+    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, EnqueteService enqueteService, DossierService dossierService, List<IndividuSourceService> individuSourceServices, List<DossierInfosService> dossierInfosServices, UtilsService utilsService) {
         this.individuRepository = individuRepository;
         this.dossierRepository = dossierRepository;
+        this.enqueteService = enqueteService;
+        this.dossierService = dossierService;
         this.individuSourceServices = individuSourceServices;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.utilsService = utilsService;
+    }
+
+    public void syncAllDossiers() {
+        logger.info("Sync dossiers started");
+        List<Long> dossiersIds = dossierRepository.findIdsAll();
+        int count = 0;
+        for (Long dossierId : dossiersIds) {
+            dossierService.syncDossier(dossierId);
+            enqueteService.getAndUpdateByDossierId(dossierId, "system");
+            count++;
+        }
+        logger.info("Sync dossiers done : " + count);
     }
 
     @Transactional
@@ -111,107 +127,6 @@ public class SyncService {
         } catch (AgapeJpaException e) {
             logger.debug(e.getMessage());
         }
-    }
-
-    @Transactional
-    public void syncStatusDossierAmenagement(Long dossierId) {
-        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
-        if(dossier.getDossierAmenagements() == null) return;
-        if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
-        ) {
-            if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE))) {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-            } else {
-                dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
-            }
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-        }
-        if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && !da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))) {
-            dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
-        }
-        if(dossier.getStatusDossier().equals(StatusDossier.NON_RECONDUIT) || dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-            if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE)) {
-                dossier.setStatusDossier(StatusDossier.RECONDUIT);
-            } else if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)) {
-                dossier.setStatusDossier(StatusDossier.AJOUT_MANUEL);
-            }
-        }
-    }
-
-    @Transactional
-    public void syncDossier(Long id) {
-        Dossier dossier = dossierRepository.findById(id).orElseThrow();
-        if (dossier.getYear() < utilsService.getCurrentYear() && dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
-            return;
-        }
-        if (dossier.getIndividu().getDossiers().size() > 1) {
-            dossier.setNewDossier(false);
-        } else {
-            dossier.setNewDossier(true);
-        }
-        if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return;
-        if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && dossier.getClassifications().isEmpty()) {
-            try {
-                List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty()).findFirst().orElseThrow().getClassifications());
-                dossier.getClassifications().addAll(classifications);
-            } catch (Exception e) {
-                logger.debug(e.getMessage());
-            }
-        }
-        for (DossierInfosService dossierInfosService : dossierInfosServices) {
-            DossierInfos dossierInfos = dossierInfosService.getDossierProperties(dossier.getIndividu(), dossier.getYear(), false, false, new DossierInfos());
-            if (dossierInfos != null) {
-                if (StringUtils.hasText(dossierInfos.getCodComposante())) {
-                    dossier.setCodComposante(dossierInfos.getCodComposante());
-                }
-                if (StringUtils.hasText(dossierInfos.getCampus())) {
-                    dossier.setCampus(dossierInfos.getCampus());
-                }
-                if (StringUtils.hasText(dossierInfos.getComposante())) {
-                    dossier.setComposante(dossierInfos.getComposante().trim());
-                }
-                if (StringUtils.hasText(dossierInfos.getLibelleFormation())) {
-                    dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
-                }
-                if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
-                    dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());
-                } else {
-                    if(dossier.getLibelleFormationPrec() == null) {
-                        dossier.setLibelleFormationPrec("");
-                    }
-                }
-                if (StringUtils.hasText(dossierInfos.getFormAddress())) {
-                    dossier.setFormAddress(dossierInfos.getFormAddress());
-                }
-                if (StringUtils.hasText(dossierInfos.getNiveauEtudes())) {
-                    dossier.setNiveauEtudes(dossierInfos.getNiveauEtudes());
-                }
-                if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
-                    dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
-                }
-                if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
-                    dossier.setResultatTotal(dossierInfos.getResultatAnn());
-                }
-                dossier.setHasScholarship(dossierInfos.getHasScholarship());
-                if(dossier.getClassifications().isEmpty()) {
-                    List<Dossier> lastDossiers = dossierRepository.findAllByIndividuId(dossier.getIndividu().getId()).stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList();
-                    for(Dossier lastDossier : lastDossiers) {
-                        if(!lastDossier.getClassifications().isEmpty()) {
-                            dossier.getClassifications().addAll(lastDossier.getClassifications());
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        syncStatusDossierAmenagement(dossier.getId());
     }
 
     public IndividuInfos getIndividuInfosByNumEtu(String numEtu) {

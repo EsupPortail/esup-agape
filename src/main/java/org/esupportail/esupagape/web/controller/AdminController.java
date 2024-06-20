@@ -37,6 +37,8 @@ public class AdminController {
 
     private final DossierService dossierService;
 
+    private final SyncService syncService;
+
     private final AmenagementService amenagementService;
 
     private final UtilsService utilsService;
@@ -56,11 +58,12 @@ public class AdminController {
     private final LdapPersonService ldapPersonService;
 
     public AdminController(
-            IndividuService individuService, DossierService dossierService,
+            IndividuService individuService, DossierService dossierService, SyncService syncService,
             AmenagementService amenagementService, UtilsService utilsService,
             CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
+        this.syncService = syncService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.csvImportService = csvImportService;
@@ -168,7 +171,7 @@ public class AdminController {
     @GetMapping("/sync-dossiers")
     public String syncDossier(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des dossiers est terminée"));
-        dossierService.syncAllDossiers();
+        syncService.syncAllDossiers();
         return "redirect:/admin/tasks";
     }
 

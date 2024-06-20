@@ -21,9 +21,10 @@ public class Enquete {
     @Enumerated(EnumType.STRING)
     private TypFrmn typFrmn;
 
-    @ElementCollection(targetClass=ModFrmn.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<ModFrmn> modFrmn = new HashSet<>();
+    private ModFrmn modFrmn;
+
+    private Boolean alternance = false;
 
     private String codSco;
 
@@ -108,8 +109,20 @@ public class Enquete {
         this.typFrmn = typFrmn;
     }
 
-    public Set<ModFrmn> getModFrmn() {
+    public ModFrmn getModFrmn() {
         return modFrmn;
+    }
+
+    public void setModFrmn(ModFrmn modFrmn) {
+        this.modFrmn = modFrmn;
+    }
+
+    public Boolean getAlternance() {
+        return alternance;
+    }
+
+    public void setAlternance(Boolean alternance) {
+        this.alternance = alternance;
     }
 
     public String getCodSco() {
