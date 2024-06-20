@@ -88,8 +88,8 @@ public class ExportService {
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
         put("codMeahF", "Mesures aides humaines");
-        put("interpH", "supprimé");
-        put("codeurH", "supprimé");
+//        put("interpH", "supprimé");
+//        put("codeurH", "supprimé");
         put("aidHnat", "Autre aide humaine");
         put("codMeae", "Aménagement des examens");
         put("autAE", "Autre aménagement des examens");
