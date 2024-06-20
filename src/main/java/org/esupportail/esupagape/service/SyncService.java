@@ -58,8 +58,8 @@ public class SyncService {
             boolean toSync = dossierService.syncDossier(dossierId);
             if (toSync){
                 enqueteService.getAndUpdateByDossierId(dossierId, "system");
+                count++;
             }
-            count++;
         }
         logger.info("Sync dossiers done : " + count);
     }
