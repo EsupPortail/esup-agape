@@ -93,8 +93,17 @@
 											th:text="${currentDossier.modeFormation == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
 									<div>
 										<input id="modeFormation" name="modFrmn" type="text"
-										       th:value="${currentDossier.alternance == true} ? #{'enquete.modFrmn.' + ${currentDossier.modeFormation}} + ' en alternance' : #{'enquete.modFrmn.' + ${currentDossier.modeFormation}}"
+										       th:value="#{'enquete.modFrmn.' + ${currentDossier.modeFormation}}"
 										       class="form-control" disabled/>
+									</div>
+								</div>
+								<div>
+									<label class="mt-1 form-label" th:for="alternance">Alternance<span
+											th:text="${currentDossier.alternance == null} ? ' (à compléter dans le dossier)' : ''"></span></label>
+									<div>
+										<input id="alternance" name="alternance" type="text"
+											   th:value="${currentDossier.alternance == true} ? 'Oui' : 'Non'"
+											   class="form-control" disabled/>
 									</div>
 								</div>
 								<div>
