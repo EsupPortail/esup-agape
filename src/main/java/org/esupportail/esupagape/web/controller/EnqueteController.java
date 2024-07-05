@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -31,11 +33,17 @@ public class EnqueteController {
     }
 
     @GetMapping
-    public String show(@PathVariable Long dossierId, PersonLdap personLdap, Model model) {
+    public String show(@PathVariable Long dossierId, PersonLdap personLdap, Model model, RedirectAttributes redirectAttributes) {
         setModel(model);
         Enquete enquete = enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
-        model.addAttribute("enquete", enquete);
-        return "enquete/update";
+        if(enquete != null) {
+            model.addAttribute("enquete", enquete);
+            return "enquete/update";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Impossible de charger l'enquête, l'individu n'est pas étudiant");
+            return "redirect:/dossiers/" + dossierId;
+        }
+
     }
 
     @PutMapping("/{enqueteId}/update")
