@@ -34,19 +34,22 @@ public class EnqueteService {
 
     private final UtilsService utilsService;
 
+    private final LogService logService;
+
     public EnqueteService(
             EnqueteRepository enqueteRepository,
             EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository,
             EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
             DossierService dossierService,
             AmenagementService amenagementService,
-            UtilsService utilsService) {
+            UtilsService utilsService, LogService logService) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
+        this.logService = logService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -191,11 +194,7 @@ public class EnqueteService {
         Enquete enquete = new Enquete();
         Dossier dossier = dossierService.getById(id);
         enquete.setDossier(dossier);
-        if(dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
-                ||
-                dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
-            dossierService.changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
-        }
+        logService.create(eppn, id, dossier.getStatusDossier().name(), "Création enquête");
         return enqueteRepository.save(enquete);
     }
 
