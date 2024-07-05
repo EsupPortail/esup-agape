@@ -21,6 +21,7 @@ public class EnqueteForm {
     private String sexe;
     private TypFrmn typFrmn;
     private ModFrmn modFrmn;
+    private Boolean alternance;
     private String codSco;
     private String codFmt;
     private String codFil;
@@ -92,6 +93,14 @@ public class EnqueteForm {
 
     public void setModFrmn(ModFrmn modFrmn) {
         this.modFrmn = modFrmn;
+    }
+
+    public Boolean getAlternance() {
+        return alternance;
+    }
+
+    public void setAlternance(Boolean alternance) {
+        this.alternance = alternance;
     }
 
     public String getCodSco() {

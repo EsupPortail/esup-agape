@@ -57,7 +57,7 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     @Query("select distinct d.campus from Dossier d")
     List<String> findAllCampus();
 
-    @Query("select d.id from Dossier d")
-    List<Long> findIdsAll();
+    @Query("select d.id from Dossier d where (:year is null or d.year = :year)")
+    List<Long> findIdsAll(Integer year);
 
 }

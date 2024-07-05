@@ -213,7 +213,7 @@ public class IndividuService {
             }
         }
         if(newDossier != null) {
-            syncService.syncDossier(newDossier.getId());
+            dossierService.syncDossier(newDossier.getId());
         }
         return individu;
     }
