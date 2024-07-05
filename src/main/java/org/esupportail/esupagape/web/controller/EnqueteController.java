@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class EnqueteController {
             model.addAttribute("enquete", enquete);
             return "enquete/update";
         } else {
-            redirectAttributes.addFlashAttribute("error", "Impossible de charger l'enquête, l'individu n'est pas étudiant");
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Impossible de charger l'enquête, l'individu n'est pas étudiant"));
             return "redirect:/dossiers/" + dossierId;
         }
 
