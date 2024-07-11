@@ -11,9 +11,11 @@ public interface DossierCompletCsvDto {
     String getStatusDossier();
     String getStatusDossierAmenagement();
     String getClassifications();
+    String getPlusieursTroubles();
     String getMdph();
     String getTaux();
     String getTypeSuiviHandisup();
+    String getNiveauEtudes();
     String getTypeFormation();
     String getModeFormation();
     String getLibelleFormation();
