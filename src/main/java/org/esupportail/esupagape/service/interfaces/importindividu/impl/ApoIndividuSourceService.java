@@ -9,6 +9,7 @@ import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceEtudiant;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -39,11 +40,14 @@ public class ApoIndividuSourceService implements IndividuSourceService {
 
     private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
 
+    private final UtilsService utilsService;
+
     private final Map<String, Classification> classificationMap = new HashMap<>();
 
-    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant) {
+    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant, UtilsService utilsService) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
         this.wsApogeeServiceEtudiant = wsApogeeServiceEtudiant;
+        this.utilsService = utilsService;
 
         this.classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
         this.classificationMap.put("B", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
@@ -114,16 +118,15 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         List<Individu> numEtus = new ArrayList<>();
         String sqlRequest = 
                 "SELECT individu.cod_etu, individu.lib_nom_pat_ind, individu.lib_pr1_ind, individu.cod_sex_etu, individu.date_nai_ind " +
-                "FROM individu " +
-                "    INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
-                "    INNER JOIN annee_uni ON ins_adm_etp.cod_anu = annee_uni.cod_anu " +
-                "WHERE annee_uni.eta_anu_iae = 'O' " +
-                "    AND individu.cod_etu IS NOT NULL " +
-                "    AND individu.cod_thp IS NOT NULL " +
-                "    AND ins_adm_etp.eta_iae = 'E' " +
-                "    AND ins_adm_etp.eta_pmt_iae = 'P' " +
-                "    AND ins_adm_etp.tem_iae_prm = 'O'" +
-                "    AND ins_adm_etp.cod_cge not in ('NM1')";
+                        "FROM individu " +
+                        "INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
+                        "WHERE individu.cod_etu IS NOT NULL " +
+                        "AND individu.cod_thp IS NOT NULL " +
+                        "AND ins_adm_etp.cod_anu = '" + utilsService.getCurrentYear() + "' " +
+                        "AND ins_adm_etp.eta_iae = 'E' " +
+                        "AND ins_adm_etp.eta_pmt_iae = 'P' " +
+                        "AND ins_adm_etp.tem_iae_prm = 'O' " +
+                        "AND ins_adm_etp.cod_cge NOT IN ('NM1');";
         Connection connection = null;
         try {
             connection = dataSource.getConnection();

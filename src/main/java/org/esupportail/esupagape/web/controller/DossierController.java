@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
@@ -149,9 +150,9 @@ public class DossierController {
 
     @DeleteMapping(value = "/delete-dossier/{dossierId}")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    public String deleteDossier(@PathVariable Long dossierId) {
+    public String deleteDossier(@PathVariable Long dossierId, HttpServletRequest request) {
         dossierService.deleteDossier(dossierId);
-        return "redirect:/dossiers";
+        return "redirect:" + request.getHeader("referer");
     }
 
     @PostMapping("/{dossierId}/add-attachments")
