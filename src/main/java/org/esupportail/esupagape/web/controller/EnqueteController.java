@@ -7,6 +7,7 @@ import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EnqueteService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.web.viewentity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -31,11 +34,17 @@ public class EnqueteController {
     }
 
     @GetMapping
-    public String show(@PathVariable Long dossierId, PersonLdap personLdap, Model model) {
+    public String show(@PathVariable Long dossierId, PersonLdap personLdap, Model model, RedirectAttributes redirectAttributes) {
         setModel(model);
         Enquete enquete = enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
-        model.addAttribute("enquete", enquete);
-        return "enquete/update";
+        if(enquete != null) {
+            model.addAttribute("enquete", enquete);
+            return "enquete/update";
+        } else {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", "Impossible de charger l'enquête, l'individu n'est pas étudiant"));
+            return "redirect:/dossiers/" + dossierId;
+        }
+
     }
 
     @PutMapping("/{enqueteId}/update")
