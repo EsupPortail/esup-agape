@@ -118,15 +118,15 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         List<Individu> numEtus = new ArrayList<>();
         String sqlRequest = 
                 "SELECT individu.cod_etu, individu.lib_nom_pat_ind, individu.lib_pr1_ind, individu.cod_sex_etu, individu.date_nai_ind " +
-                        "FROM individu " +
-                        "INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
-                        "WHERE individu.cod_etu IS NOT NULL " +
-                        "AND individu.cod_thp IS NOT NULL " +
-                        "AND ins_adm_etp.cod_anu = '" + utilsService.getCurrentYear() + "' " +
-                        "AND ins_adm_etp.eta_iae = 'E' " +
-                        "AND ins_adm_etp.eta_pmt_iae = 'P' " +
-                        "AND ins_adm_etp.tem_iae_prm = 'O' " +
-                        "AND ins_adm_etp.cod_cge NOT IN ('NM1');";
+                    "FROM individu " +
+                    "INNER JOIN ins_adm_etp ON individu.cod_ind = ins_adm_etp.cod_ind " +
+                "WHERE individu.cod_etu IS NOT NULL " +
+                    "AND individu.cod_thp IS NOT NULL " +
+                    "AND ins_adm_etp.cod_anu = '" + utilsService.getCurrentYear() + "' " +
+                    "AND ins_adm_etp.eta_iae = 'E' " +
+                    "AND ins_adm_etp.eta_pmt_iae = 'P' " +
+                    "AND ins_adm_etp.tem_iae_prm = 'O' " +
+                    "AND ins_adm_etp.cod_cge NOT IN ('NM1')";
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
