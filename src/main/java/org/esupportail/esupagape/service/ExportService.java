@@ -7,6 +7,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.csvs.EnqueteExportCsv;
 import org.esupportail.esupagape.entity.Enquete;
+import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.ExportRepository;
@@ -51,9 +52,11 @@ public class ExportService {
         put("statusDossier", "Statut du dossier");
         put("statusDossierAmenagement", "Statut du Dossier Aménagement");
         put("classifications", "Classification du handicap");
+        put("plusieursTroubles", "Plusieurs troubles");
         put("mdph", "Dossier MDPH");
         put("taux", "Taux");
         put("typeSuiviHandisup", "Type de suivi Handisup");
+        put("niveauEtudes", "Niveau d'études");
         put("typeFormation", "Type de formation");
         put("modeFormation", "Modalités de formation");
         put("libelleFormation", "Formation");
@@ -104,6 +107,7 @@ public class ExportService {
     public void findEnqueteByYearForCSV(Integer year, Writer writer, boolean partial) throws AgapeException {
         List<EnqueteExportCsv> enqueteExportCsvs = new ArrayList<>();
         List<Enquete> enquetes = enqueteService.findAllByDossierYear(year);
+        enquetes = enquetes.stream().filter(enquete -> !enquete.getDossier().getStatusDossier().equals(StatusDossier.ACCUEILLI) || !enquete.getDossier().getNewDossier()).toList();
         if(!partial && (enquetes.stream().anyMatch(enquete -> enquete.getFinished() == null || !enquete.getFinished()))) {
             throw new AgapeException("Certaines enquêtes ne sont pas complètes");
         }

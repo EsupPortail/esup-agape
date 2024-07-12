@@ -34,19 +34,22 @@ public class EnqueteService {
 
     private final UtilsService utilsService;
 
+    private final LogService logService;
+
     public EnqueteService(
             EnqueteRepository enqueteRepository,
             EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository,
             EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
             DossierService dossierService,
             AmenagementService amenagementService,
-            UtilsService utilsService) {
+            UtilsService utilsService, LogService logService) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
+        this.logService = logService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -188,21 +191,21 @@ public class EnqueteService {
     }
 
     private Enquete createByDossierId(Long id, String eppn) {
-        Enquete enquete = new Enquete();
         Dossier dossier = dossierService.getById(id);
-        enquete.setDossier(dossier);
-        if(dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)
-                ||
-                dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
-            dossierService.changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
+        if(dossier.getType().equals(TypeIndividu.ETUDIANT)) {
+            Enquete enquete = new Enquete();
+            enquete.setDossier(dossier);
+            logService.create(eppn, id, dossier.getStatusDossier().name(), "Création enquête");
+            return enqueteRepository.save(enquete);
         }
-        return enqueteRepository.save(enquete);
+        return null;
     }
 
     @Transactional
     public Enquete getAndUpdateByDossierId(Long id, String eppn) {
         Dossier dossier = dossierService.getById(id);
         Enquete enquete = enqueteRepository.findByDossierId(id).orElseGet(() -> createByDossierId(id, eppn));
+        if(enquete == null) return null;
         if (dossier.getYear() == utilsService.getCurrentYear()) {
             enquete.setAn(String.valueOf(dossier.getIndividu().getDateOfBirth().getYear()));
             if (dossier.getIndividu().getGender() != null) {

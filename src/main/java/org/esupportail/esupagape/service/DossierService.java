@@ -174,7 +174,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
-        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
+//        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
     }
 
     public DossierInfos getInfos(Individu individu, Integer year) {
