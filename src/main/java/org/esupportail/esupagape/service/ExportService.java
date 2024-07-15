@@ -107,7 +107,7 @@ public class ExportService {
     public void findEnqueteByYearForCSV(Integer year, Writer writer, boolean partial) throws AgapeException {
         List<EnqueteExportCsv> enqueteExportCsvs = new ArrayList<>();
         List<Enquete> enquetes = enqueteService.findAllByDossierYear(year);
-        enquetes = enquetes.stream().filter(enquete -> !enquete.getDossier().getStatusDossier().equals(StatusDossier.ACCUEILLI) || !enquete.getDossier().getNewDossier()).toList();
+        enquetes = enquetes.stream().filter(enquete -> !enquete.getDossier().getStatusDossier().equals(StatusDossier.ACCUEILLI) || enquete.getDossier().getNewDossier()).toList();
         if(!partial && (enquetes.stream().anyMatch(enquete -> enquete.getFinished() == null || !enquete.getFinished()))) {
             throw new AgapeException("Certaines enquêtes ne sont pas complètes");
         }
