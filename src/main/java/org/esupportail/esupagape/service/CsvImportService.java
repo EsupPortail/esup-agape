@@ -35,7 +35,7 @@ public class CsvImportService {
 
     @Transactional
     public void importCsv(MultipartFile file) throws IOException {
-        enqueteEnumFilFmtScoRepository.deleteAll();
+        enqueteEnumFilFmtScoRepository.deleteAllInBatch();
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
         csvFormat.setDelimiter(";");
         csvFormat.setSkipHeaderRecord(true);

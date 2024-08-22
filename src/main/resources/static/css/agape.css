@@ -218,3 +218,7 @@ select[disabled] > option {
     stroke-width: 13px;
     stroke: #23343a;
 }
+
+.ss-main .ss-values .ss-placeholder {
+    padding: revert !important;
+}
