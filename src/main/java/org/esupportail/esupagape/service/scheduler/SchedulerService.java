@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.service.scheduler;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
-import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.IndividuService;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @EnableScheduling
 @Service
@@ -60,10 +58,7 @@ public class SchedulerService {
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
             logger.info("Synchro Aménagements");
-            List<Amenagement> amenagementsToSync = amenagementService.getAmenagementsToSync();
-            for(Amenagement amenagement : amenagementsToSync) {
-                amenagementService.syncAmenagement(amenagement);
-            }
+            amenagementService.syncAllAmenagments();
             logger.info("Synchro Aménagements terminée");
         }
     }

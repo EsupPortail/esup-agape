@@ -168,6 +168,13 @@ public class AdminController {
         return "redirect:/admin/tasks";
     }
 
+    @GetMapping("/sync-amenagements")
+    public String syncAmenagements(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
+        amenagementService.syncAllAmenagments();
+        return "redirect:/admin/tasks";
+    }
+
     @GetMapping("/sync-dossiers")
     public String syncDossier(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des dossiers est terminée"));

@@ -769,4 +769,14 @@ public class AmenagementService {
     public List<Amenagement> getAmenagementsToSync() {
         return dossierAmenagementRepository.findDossierAmenagementByLastYear(utilsService.getCurrentYear()).stream().filter(da -> da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)).map(DossierAmenagement::getAmenagement).toList();
     }
+
+    @Transactional
+    public void syncAllAmenagments() {
+        List<Amenagement> amenagementsToSync = getAmenagementsToSync();
+        for(Amenagement amenagement : amenagementsToSync) {
+            syncAmenagement(amenagement);
+        }
+    }
+
+
 }
