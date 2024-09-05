@@ -92,16 +92,17 @@ public class IndividuService {
     public void importIndividus() throws AgapeException, SQLException {
         logger.info("Import individus started");
         List<ExcludeIndividu> excludeIndividus = excludeIndividuRepository.findAll();
+        int i = 0;
         for (IndividuSourceService individuSourceService : individuSourceServices) {
             List<Individu> individusFromSource = individuSourceService.getAllIndividuNums();
             List<Individu> individusToCreate = individusFromSource.stream().filter(individuToCreate -> excludeIndividus.stream().noneMatch(excludeIndividu -> excludeIndividu.getNumEtuHash().equals(new DigestUtils("SHA3-256").digestAsHex(individuToCreate.getNumEtu())))).toList();
             List<Dossier> dossiers = new ArrayList<>();
             for (Individu individu : individusToCreate) {
-                logger.info("Importing : " + individu.getNumEtu() + " " + individu.getFirstName() + " " + individu.getName());
                 Individu checkIndividu = individuRepository.findByNumEtu(individu.getNumEtu());
                 if(checkIndividu == null) {
                     checkIndividu = individu;
                     individuRepository.save(checkIndividu);
+                    i++;
                 }
                 Dossier dossier = dossierService.create("system", checkIndividu, null, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
@@ -109,7 +110,7 @@ public class IndividuService {
             }
             dossierService.saveAll(dossiers);
         }
-        logger.info("Import individus done");
+        logger.info("Import individus done. " + i + " individus created");
     }
 
     public void syncAllIndividus() {
