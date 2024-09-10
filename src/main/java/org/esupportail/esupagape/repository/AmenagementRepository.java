@@ -107,7 +107,7 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             select a from Amenagement a join DossierAmenagement da on da.amenagement = a join Individu i on da.dossier.individu = i
             where (:statusAmenagement is null or a.statusAmenagement = :statusAmenagement)
             and da.dossier.codComposante in (:codComposantes)
-            and (:campus is null or da.dossier.campus = :campus)
+            and (:campus is null or :campus member of da.dossier.campus)
             and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
             and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
             and a.statusAmenagement = 'VISE_ADMINISTRATION'
@@ -124,7 +124,7 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             or (upper(concat(i.firstName, ' ', i.name)) like upper(concat('%', :fullTextSearch, '%'))))
             and (da.lastYear = :yearFilter)
             and (da.dossier.codComposante in (:codComposantes))
-            and (:campus is null or da.dossier.campus = :campus)
+            and (:campus is null or :campus member of da.dossier.campus)
             and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
             and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
             and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)
