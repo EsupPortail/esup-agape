@@ -49,11 +49,13 @@ public class LdapDossierInfosService implements DossierInfosService {
                 PersonLdap personLdap = personLdaps.get(0);
                 if(!personLdap.getMemberOf().isEmpty()) {
                     Pattern pattern = Pattern.compile("cn=adhoc\\.campus\\.([^.-]+)-");
-                    String campus = personLdap.getMemberOf().stream().filter(s -> s.contains(applicationProperties.getMemberOfCampusFilter())).findFirst().orElse(null);
-                    if(campus != null) {
-                        Matcher matcher = pattern.matcher(campus);
-                        if (matcher.find()) {
-                            dossierInfos.setCampus(StringUtils.capitalize(matcher.group(1)));
+                    List<String> campus = personLdap.getMemberOf().stream().filter(s -> s.contains(applicationProperties.getMemberOfCampusFilter())).toList();
+                    if(!campus.isEmpty()) {
+                        for (String campu : campus) {
+                            Matcher matcher = pattern.matcher(campu);
+                            if (matcher.find()) {
+                                dossierInfos.getCampus().add(StringUtils.capitalize(matcher.group(1)));
+                            }
                         }
                     }
                 }
