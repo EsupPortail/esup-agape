@@ -603,8 +603,8 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getCodComposante())) {
                     dossier.setCodComposante(dossierInfos.getCodComposante());
                 }
-                if (StringUtils.hasText(dossierInfos.getCampus())) {
-                    dossier.setCampus(dossierInfos.getCampus());
+                if (!dossierInfos.getCampus().isEmpty()) {
+                    dossier.getCampus().addAll(dossierInfos.getCampus());
                 }
                 if (StringUtils.hasText(dossierInfos.getComposante())) {
                     dossier.setComposante(dossierInfos.getComposante().trim());
