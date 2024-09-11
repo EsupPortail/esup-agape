@@ -169,8 +169,8 @@
 			<select class="form-select form-select-sm agape-slim-select-sm" th:field="*{typeAideMaterielle}" multiple>
 				<option th:each="typeAideMaterielle : ${typeAideMaterielles}"
 				        th:if="${typeAideMaterielle != null}"
-				        th:value="${typeAideMaterielle}"
-				        th:text="#{'aides.typeAideMaterielle.' +${typeAideMaterielle}}"></option>
+				        th:value="${typeAideMaterielle.id}"
+				        th:text="${typeAideMaterielle.label}"></option>
 			</select>
 		</div>
 		<div class="input-group input-group-sm mb-1">
