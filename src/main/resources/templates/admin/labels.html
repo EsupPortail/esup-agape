@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content">
+		<nav th:replace="~{fragments/admin-nav :: nav}"></nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-tasks" role="tabpanel"
+			     aria-labelledby="nav-tasks-tab">
+				<h1>Labels</h1>
+				<hr>
+				<div class="col-6 mx-auto">
+					<form th:action="@{/admin/add-label}" th:method="post">
+						<div class="input-group mb-3">
+							<label for="type" class="input-group-text">Type</label>
+							<select id="type" class="form-select" name="enumEntityType">
+								<th:block th:each="enumEntityType : ${enumEntityTypes}">
+									<option th:value="${enumEntityType}" th:text="${enumEntityType}"></option>
+								</th:block>
+							</select>
+							<label for="code" class="input-group-text">Code</label>
+							<input id="code" class="form-control" type="text" name="code">
+							<label for="label" class="input-group-text">Label</label>
+							<input id="label" class="form-control" type="text" name="label">
+							<input class="btn btn-success" type="submit" value="Ajouter">
+						</div>
+					</form>
+					<table class="table">
+						<thead class="table-dark">
+						<tr>
+							<th>Type</th>
+							<th>Code</th>
+							<th>Libellé</th>
+							<th></th>
+						</tr>
+						</thead>
+						<th:block th:each="enumEntityAbstract : ${enumEntityAbstracts}">
+							<tr>
+								<td th:text="${enumEntityAbstract.class.simpleName}"></td>
+								<td th:text="${enumEntityAbstract.code}"></td>
+								<td th:text="${enumEntityAbstract.label}"></td>
+								<td>
+									<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+											th:data-bs-target="'#delete-label-' + ${enumEntityAbstract.id}">
+										<i class="fa-solid fa-trash"></i>
+									</button>
+									<div class="modal fade" th:id="'delete-label-' + ${enumEntityAbstract.id}" tabindex="-1"
+										 aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-body">
+													Confirmez la suppression du libellé ?
+													<form th:action="@{/admin/delete-label}" th:method="delete"
+														  class="float-end">
+														<input type="hidden" name="enumEntityType" th:value="${enumEntityAbstract.class.simpleName}">
+														<input type="hidden" name="id" th:value="${enumEntityAbstract.id}">
+														<button type="button" class="btn btn-secondary"
+																data-bs-dismiss="modal">
+															Annuler
+														</button>
+														<input class="btn btn-success" type="submit" value="Valider">
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</th:block>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>
