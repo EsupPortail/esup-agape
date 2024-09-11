@@ -1,10 +1,9 @@
 package org.esupportail.esupagape.entity;
 
+import jakarta.persistence.*;
 import org.esupportail.esupagape.entity.enums.TypeContact;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,8 +23,7 @@ public class Entretien
     @Column(columnDefinition = "TEXT")
     private String compteRendu;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
+    @ManyToOne
     private TypeContact typeContact;
 
     @ManyToOne(optional = false)

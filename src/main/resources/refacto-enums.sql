@@ -10,3 +10,18 @@ SET type_aide_materielle_id = (
 )
 WHERE type_aide_materielle IS NOT NULL;
 
+INSERT INTO public.type_contact (id, code, label) VALUES (nextval('hibernate_sequence'), 'COURRIER', 'Courrier');
+INSERT INTO public.type_contact (id, code, label) VALUES (nextval('hibernate_sequence'), 'MAIL', 'Email');
+INSERT INTO public.type_contact (id, code, label) VALUES (nextval('hibernate_sequence'), 'RENDEZ_VOUS', 'Rendez-vous');
+INSERT INTO public.type_contact (id, code, label) VALUES (nextval('hibernate_sequence'), 'TEL', 'Téléphonique');
+
+UPDATE entretien
+SET type_contact_id = (
+    SELECT t.id
+    FROM type_contact t
+    WHERE t.code = entretien.type_contact
+)
+WHERE type_contact IS NOT NULL;
+
+alter table public.entretien alter column type_contact drop not null;
+
