@@ -43,6 +43,8 @@ public class AdminController {
 
     private final UtilsService utilsService;
 
+    private final EnumsService enumsService;
+
     private final CsvImportService csvImportService;
 
     private final SiseService siseService;
@@ -59,13 +61,14 @@ public class AdminController {
 
     public AdminController(
             IndividuService individuService, DossierService dossierService, SyncService syncService,
-            AmenagementService amenagementService, UtilsService utilsService,
+            AmenagementService amenagementService, UtilsService utilsService, EnumsService enumsService,
             CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.syncService = syncService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
+        this.enumsService = enumsService;
         this.csvImportService = csvImportService;
         this.siseService = siseService;
         this.mailService = mailService;
@@ -78,6 +81,32 @@ public class AdminController {
     @GetMapping
     public String index(Model model) {
         return "admin/index";
+    }
+
+    @GetMapping("/labels")
+    public String labels(Model model) {
+        model.addAttribute("active", "tasks");
+        model.addAttribute("enumEntityAbstracts", enumsService.getAllEnumEntityAbstract());
+        model.addAttribute("enumEntityTypes", enumsService.getEnumTypes());
+        return "admin/labels";
+    }
+
+    @PostMapping(value = "/add-label")
+    public String createLabel(@RequestParam String enumEntityType, @RequestParam String code, @RequestParam String label, RedirectAttributes redirectAttributes) {
+        try {
+            enumsService.addEnumType(enumEntityType, code, label);
+            redirectAttributes.addFlashAttribute("message", new Message("success", "label ajoutée"));
+        } catch (AgapeJpaException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
+        return "redirect:/admin/labels";
+    }
+
+    @DeleteMapping(value = "/delete-label")
+    public String deleteLabel(@RequestParam Long id, @RequestParam String enumEntityType, RedirectAttributes redirectAttributes) {
+        enumsService.deleteEnumType(enumEntityType, id);
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Année supprimée"));
+        return "redirect:/admin/labels";
     }
 
     @GetMapping("/tasks")
@@ -165,6 +194,13 @@ public class AdminController {
     public String syncIndividus(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
         individuService.syncAllIndividus();
+        return "redirect:/admin/tasks";
+    }
+
+    @GetMapping("/sync-amenagements")
+    public String syncAmenagements(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
+        amenagementService.syncAllAmenagments();
         return "redirect:/admin/tasks";
     }
 
@@ -313,4 +349,6 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement envoyés"));
         return "redirect:/admin/amenagement-resend";
     }
+
+
 }

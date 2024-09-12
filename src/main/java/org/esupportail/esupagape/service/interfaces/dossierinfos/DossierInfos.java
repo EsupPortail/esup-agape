@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.service.interfaces.dossierinfos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DossierInfos {
 
     String codComposante;
@@ -9,7 +12,7 @@ public class DossierInfos {
     String libelleFormation;
     String libelleFormationPrec;
     String etablissement;
-    String campus;
+    List<String> campus = new ArrayList<>();
     String formAddress;
     String noteS1;
     String resultatS1;
@@ -76,11 +79,11 @@ public class DossierInfos {
         this.etablissement = etablissement;
     }
 
-    public String getCampus() {
+    public List<String> getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(List<String> campus) {
         this.campus = campus;
     }
 

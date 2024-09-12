@@ -78,7 +78,8 @@ public class Dossier {
 
     private String formAddress;
 
-    private String campus;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> campus = new HashSet<>();
 
     private String codComposante;
 
@@ -286,11 +287,11 @@ public class Dossier {
         this.formAddress = formAddress;
     }
 
-    public String getCampus() {
+    public Set<String> getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(Set<String> campus) {
         this.campus = campus;
     }
 

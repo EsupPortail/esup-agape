@@ -571,7 +571,8 @@ public class AmenagementService {
         dossierAmenagement.setNomValideurPortabilite(personLdap.getDisplayName());
         dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         logger.info("porte amenagement " + id + " by " + personLdap.getMail());
-        sendAlert(amenagement);
+//        sendAlert(amenagement);
+//        sendAmenagementToIndividu(id, true);
     }
 
     @Transactional
@@ -701,7 +702,9 @@ public class AmenagementService {
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
-                mailService.sendAlert(to);
+                if(!to.isEmpty()) {
+                    mailService.sendAlert(to);
+                }
             } catch (Exception e) {
                 logger.warn("Impossible d'envoyer le mail d'alerte, aménagement : " + amenagement.getId(), e);
             }
@@ -769,4 +772,14 @@ public class AmenagementService {
     public List<Amenagement> getAmenagementsToSync() {
         return dossierAmenagementRepository.findDossierAmenagementByLastYear(utilsService.getCurrentYear()).stream().filter(da -> da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)).map(DossierAmenagement::getAmenagement).toList();
     }
+
+    @Transactional
+    public void syncAllAmenagments() {
+        List<Amenagement> amenagementsToSync = getAmenagementsToSync();
+        for(Amenagement amenagement : amenagementsToSync) {
+            syncAmenagement(amenagement);
+        }
+    }
+
+
 }
