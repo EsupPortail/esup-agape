@@ -1,17 +1,19 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.AideMaterielle;
 import org.esupportail.esupagape.entity.PeriodeAideHumaine;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
-import org.esupportail.esupagape.entity.enums.TypeAideMaterielle;
 import org.esupportail.esupagape.entity.enums.TypeDocument;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AideHumaineService;
 import org.esupportail.esupagape.service.AideMaterielleService;
+import org.esupportail.esupagape.service.EnumsService;
 import org.esupportail.esupagape.service.PeriodeAideHumaineService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
@@ -26,8 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,10 +43,13 @@ public class AideController {
 
     private final PeriodeAideHumaineService periodeAideHumaineService;
 
-    public AideController(AideMaterielleService aideMaterielleService, AideHumaineService aideHumaineService, PeriodeAideHumaineService periodeAideHumaineService) {
+    private final EnumsService enumsService;
+
+    public AideController(AideMaterielleService aideMaterielleService, AideHumaineService aideHumaineService, PeriodeAideHumaineService periodeAideHumaineService, EnumsService enumsService) {
         this.aideMaterielleService = aideMaterielleService;
         this.aideHumaineService = aideHumaineService;
         this.periodeAideHumaineService = periodeAideHumaineService;
+        this.enumsService = enumsService;
     }
 
     @GetMapping
@@ -206,7 +209,7 @@ public class AideController {
     }
 
     private void setModel(Model model) {
-        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
+        model.addAttribute("typeAideMaterielles", enumsService.getAllTypeAideMaterielle());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
         model.addAttribute("statusAideHumaines", StatusAideHumaine.values());
         model.addAttribute("typeDocumentAideHumaines", TypeDocument.values());

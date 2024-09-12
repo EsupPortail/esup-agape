@@ -44,13 +44,16 @@ public class DossierController {
 
     private final EnqueteService enqueteService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, SyncService syncService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService) {
+    private final EnumsService enumsService;
+
+    public DossierController(DossierService dossierService, IndividuService individuService, SyncService syncService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService, EnumsService enumsService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.syncService = syncService;
         this.utilsService = utilsService;
         this.documentService = documentService;
         this.enqueteService = enqueteService;
+        this.enumsService = enumsService;
     }
 
     @GetMapping
@@ -94,7 +97,7 @@ public class DossierController {
         model.addAttribute("mdphs", Mdph.values());
         model.addAttribute("fixCPs", individuService.getAllFixCP());
         model.addAttribute("yearOfBirths", individuService.getAllDateOfBirth());
-        model.addAttribute("typeAideMaterielles", TypeAideMaterielle.values());
+        model.addAttribute("typeAideMaterielles", enumsService.getAllTypeAideMaterielle());
         model.addAttribute("fonctionAidants", FonctionAidant.values());
         model.addAttribute("individu", new Individu());
         model.addAttribute("genders", Gender.values());

@@ -2,6 +2,8 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <nav th:fragment="nav">
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a href="/admin/labels" th:classappend="${active == 'labels'} ? 'active' : ''" class="nav-link" id="nav-labels-tab" role="tab" aria-controls="nav-tasks" aria-selected="true">Labels
+        </a>
         <a href="/admin/tasks" th:classappend="${active == 'tasks'} ? 'active' : ''" class="nav-link" id="nav-tasks-tab" role="tab" aria-controls="nav-tasks" aria-selected="true">Tâches
         </a>
         <a href="/admin/imports" th:classappend="${active == 'imports'} ? 'active' : ''" class="nav-link" id="nav-imports-tab" role="tab" aria-controls="nav-imports" aria-selected="false">Imports

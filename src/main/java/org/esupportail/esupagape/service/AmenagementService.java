@@ -572,6 +572,7 @@ public class AmenagementService {
         dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
         logger.info("porte amenagement " + id + " by " + personLdap.getMail());
 //        sendAlert(amenagement);
+//        sendAmenagementToIndividu(id, true);
     }
 
     @Transactional
