@@ -23,6 +23,8 @@ SET type_aide_materielle_id = (
 )
 WHERE type_aide_materielle IS NOT NULL;
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.type_aide_materielle TO esupagape;
+
 -- alter table public.aide_materielle drop column type_aide_materielle;
 
 create table type_contact
@@ -50,6 +52,8 @@ SET type_contact_id = (
     WHERE t.code = entretien.type_contact
 )
 WHERE type_contact IS NOT NULL;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.type_contact TO esupagape;
 
 alter table public.entretien alter column type_contact drop not null;
 -- alter table public.entretien drop column type_contact;
