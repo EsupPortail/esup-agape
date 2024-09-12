@@ -103,6 +103,10 @@ public class ApplicationProperties {
 
     private Integer nbDossierNullBeforeAnonymise = -1;
 
+    private Boolean enableSuiviHandisup = true;
+
+    private Boolean enableAtypie = true;
+
     public String getPath() {
         return path;
     }
@@ -309,5 +313,21 @@ public class ApplicationProperties {
 
     public void setNbDossierNullBeforeAnonymise(Integer nbDossierNullBeforeAnonymise) {
         this.nbDossierNullBeforeAnonymise = nbDossierNullBeforeAnonymise;
+    }
+
+    public Boolean getEnableSuiviHandisup() {
+        return enableSuiviHandisup;
+    }
+
+    public void setEnableSuiviHandisup(Boolean enableSuiviHandisup) {
+        this.enableSuiviHandisup = enableSuiviHandisup;
+    }
+
+    public Boolean getEnableAtypie() {
+        return enableAtypie;
+    }
+
+    public void setEnableAtypie(Boolean enableAtypie) {
+        this.enableAtypie = enableAtypie;
     }
 }

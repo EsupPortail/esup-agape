@@ -15,7 +15,7 @@ public class AideMaterielle {
     @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
     private TypeAideMaterielle typeAideMaterielle;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

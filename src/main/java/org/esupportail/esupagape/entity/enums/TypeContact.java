@@ -1,8 +1,8 @@
 package org.esupportail.esupagape.entity.enums;
 
-public enum TypeContact {
-    COURRIER,
-    MAIL,
-    RENDEZ_VOUS,
-    TEL
+import jakarta.persistence.Entity;
+
+@Entity
+public class TypeContact  extends EnumEntityAbstract {
+
 }

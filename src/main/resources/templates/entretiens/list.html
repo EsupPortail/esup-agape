@@ -49,7 +49,7 @@
                                 <tbody>
                                     <tr th:each="entretien : ${entretiens}" class="align-middle">
                                         <td th:text="${#temporals.format(entretien.date, 'dd/MM/yyyy HH:mm')}"></td>
-                                        <td th:utext="${entretien.typeContact != null} ? #{'entretien.typeContact.' + ${entretien.typeContact}} : 'Non renseigné'"></td>
+                                        <td th:utext="${entretien.typeContact != null} ? ${entretien.typeContact.label} : 'Non renseigné'"></td>
                                         <td th:utext="${entretien.interlocuteur}"></td>
                                         <td class="text-break text-truncate d-none d-lg-table-cell d-xl-table-cell align-middle" style="max-width: 150px;" th:text="${entretien.compteRendu}"></td>
                                         <td>

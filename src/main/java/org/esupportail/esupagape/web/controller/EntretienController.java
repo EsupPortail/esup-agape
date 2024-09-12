@@ -1,10 +1,11 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.entity.enums.TypeContact;
-import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.EntretienService;
+import org.esupportail.esupagape.service.EnumsService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -28,8 +27,11 @@ public class EntretienController {
 
     private final EntretienService entretienService;
 
-    public EntretienController(EntretienService entretienService) {
+    private final EnumsService enumsService;
+
+    public EntretienController(EntretienService entretienService, EnumsService enumsService) {
         this.entretienService = entretienService;
+        this.enumsService = enumsService;
     }
 
     @GetMapping
@@ -39,13 +41,13 @@ public class EntretienController {
         Page<Entretien> entretiens = entretienService.findByDossier(dossierId, pageable);
         model.addAttribute("entretiens", entretiens);
         model.addAttribute("entretien", new Entretien());
-        model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
+        model.addAttribute("typeContacts", enumsService.getAllTypeContact());
         return "entretiens/list";
     }
 
     @GetMapping("/create")
     public String create(Model model) {
-        List<TypeContact> typeContacts = Arrays.asList(TypeContact.values());
+        List<TypeContact> typeContacts = enumsService.getAllTypeContact();
         model.addAttribute("entretien", new Entretien());
         model.addAttribute("typeContacts", typeContacts);
         return "entretiens/list";
@@ -55,7 +57,7 @@ public class EntretienController {
     public String create(@PathVariable Long dossierId, @Valid Entretien entretien, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model, dossierId);
-            model.addAttribute("typeContacts", Arrays.asList(TypeContact.values()));
+            model.addAttribute("typeContacts", enumsService.getAllTypeContact());
             return "entretiens/list";
         }
         entretienService.create(entretien, dossierId, personLdap);
@@ -67,10 +69,10 @@ public class EntretienController {
     }
 
     @GetMapping("/{entretienId}/update")
-    public String updateEntretien(@PathVariable Long entretienId, Model model) throws AgapeException {
+    public String updateEntretien(@PathVariable Long entretienId, Model model) {
         Entretien entretien = entretienService.getById(entretienId);
         model.addAttribute("entretien", entretien);
-        model.addAttribute("typeContacts", TypeContact.values());
+        model.addAttribute("typeContacts", enumsService.getAllTypeContact());
         return "entretiens/update";
     }
 

@@ -22,14 +22,14 @@
                         <div>
                             <th:block th:each="enumTypeContact : ${typeContacts}">
                                 <div>
-                                    <input th:id="${enumTypeContact}"
+                                    <input th:id="${enumTypeContact.code}"
                                             class="form-check-input"
                                             name="typeContact"
                                             size="1"
                                             type="radio"
-                                            th:value="${enumTypeContact}"
+                                            th:value="${enumTypeContact.id}"
                                             required>
-                                    <label th:for="${enumTypeContact}" th:text="#{'entretien.typeContact.' + ${enumTypeContact}}"></label>
+                                    <label th:for="${enumTypeContact.code}" th:text="${enumTypeContact.label}"></label>
                                 </div>
                             </th:block>
                         </div>

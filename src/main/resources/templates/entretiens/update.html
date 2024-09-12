@@ -56,11 +56,11 @@
                                         <input disabled
                                                 type="radio"
                                                 class="form-check-input"
-                                                th:id="${typeContact}"
+                                                th:id="${typeContact.code}"
                                                 name="typeContact"
-                                                th:value="${typeContact}"
-                                                th:checked="${entretien.typeContact == typeContact}">
-                                        <label class="form-check-label" th:for="${typeContact}" th:text="#{'entretien.typeContact.' +${typeContact}}"></label>
+                                                th:value="${typeContact.id}"
+                                                th:checked="${entretien.typeContact.id == typeContact.id}">
+                                        <label class="form-check-label" th:for="${typeContact}" th:text="${typeContact.label}"></label>
                                     </div>
                                 </th:block>
                                 <!-- <div class="mt-3">
