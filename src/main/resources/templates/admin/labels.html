@@ -16,6 +16,7 @@
 						<div class="input-group mb-3">
 							<label for="type" class="input-group-text">Type</label>
 							<select id="type" class="form-select" name="enumEntityType">
+								<option value="">-</option>
 								<th:block th:each="enumEntityType : ${enumEntityTypes}">
 									<option th:value="${enumEntityType}" th:text="${enumEntityType}"></option>
 								</th:block>
@@ -29,15 +30,16 @@
 					</form>
 					<table class="table">
 						<thead class="table-dark">
-						<tr>
-							<th>Type</th>
-							<th>Code</th>
-							<th>Libellé</th>
-							<th></th>
-						</tr>
-						</thead>
-						<th:block th:each="enumEntityAbstract : ${enumEntityAbstracts}">
 							<tr>
+								<th>Type</th>
+								<th>Code</th>
+								<th>Libellé</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="labelTable">
+						<th:block th:each="enumEntityAbstract : ${enumEntityAbstracts}">
+							<tr th:data-type="${enumEntityAbstract.class.simpleName}">
 								<td th:text="${enumEntityAbstract.class.simpleName}"></td>
 								<td th:text="${enumEntityAbstract.code}"></td>
 								<td th:text="${enumEntityAbstract.label}"></td>
@@ -69,7 +71,22 @@
 								</td>
 							</tr>
 						</th:block>
+						</tbody>
 					</table>
+					<script>
+						document.getElementById('type').addEventListener('change', function() {
+							var selectedType = this.value;
+							var rows = document.querySelectorAll('#labelTable tr');
+
+							rows.forEach(function(row) {
+								if (selectedType === '' || row.getAttribute('data-type') === selectedType) {
+									row.style.display = '';
+								} else {
+									row.style.display = 'none';
+								}
+							});
+						});
+					</script>
 				</div>
 			</div>
 		</div>
