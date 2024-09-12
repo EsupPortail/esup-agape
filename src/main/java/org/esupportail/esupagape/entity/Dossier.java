@@ -79,7 +79,7 @@ public class Dossier {
     private String formAddress;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> campus;
+    private Set<String> campus = new HashSet<>();
 
     private String codComposante;
 
