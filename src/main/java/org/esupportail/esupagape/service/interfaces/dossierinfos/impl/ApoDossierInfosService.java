@@ -6,6 +6,7 @@ import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.ResultatElpDTO3;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.exception.AgapeApogeeException;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceAdministratif;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServicePedago;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
@@ -14,9 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.annotation.Order;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Order(1)
@@ -25,11 +33,14 @@ public class ApoDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoDossierInfosService.class);
 
+    DataSource dataSource;
+
     private final WsApogeeServicePedago wsApogeeServicePedago;
 
     private final WsApogeeServiceAdministratif wsApogeeServiceAdministratif;
 
-    public ApoDossierInfosService(WsApogeeServicePedago wsApogeeServicePedago, WsApogeeServiceAdministratif wsApogeeServiceAdministratif) {
+    public ApoDossierInfosService(IndividuDataSourceService individuDataSourceService, WsApogeeServicePedago wsApogeeServicePedago, WsApogeeServiceAdministratif wsApogeeServiceAdministratif) {
+        this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
         this.wsApogeeServicePedago = wsApogeeServicePedago;
         this.wsApogeeServiceAdministratif = wsApogeeServiceAdministratif;
     }
@@ -130,5 +141,34 @@ public class ApoDossierInfosService implements DossierInfosService {
             }
         }
         return dossierInfos;
+    }
+
+    @Override
+    public Map<String, String> getCodComposanteLabels() throws AgapeException, SQLException {
+        Map<String, String> codComposanteLabelsMap = new LinkedHashMap<>();
+        codComposanteLabelsMap.put("ALL_ACCESS", "Toutes les composantes");
+//        List<Individu> numEtus = new ArrayList<>();
+        String sqlRequest =
+                "SELECT composante.cod_cmp, composante.lib_cmp " +
+                        "FROM composante";
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
+                codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
+                while (rs.next()) {
+                    codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
+                }
+            });
+            connection.close();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new AgapeException(e.getMessage(), e);
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+        }
+        return codComposanteLabelsMap;
     }
 }
