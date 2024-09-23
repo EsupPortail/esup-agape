@@ -315,7 +315,7 @@ public class AdminController {
 
     @PostMapping(value = "/add-user-others-affectations")
     public String createAffectation(@RequestParam String uid, @RequestParam String[] codComposante, RedirectAttributes redirectAttributes) {
-        if (codComposante != null && codComposante.length > 0) {
+        if (codComposante != null) {
             for (String cod : codComposante) {
                 List<UserOthersAffectations> existingAffectation = userOthersAffectationsRepository.findByUidAndCodComposante(uid, cod);
 
