@@ -18,7 +18,7 @@
 						</div>
 						<div class="mb-3">
 							<label for="codComposante" class="form-label">Composantes</label>
-							<select name="codComposante" id="codComposante" class="form-control">
+							<select name="codComposante" id="codComposante" class="agape-slim-select-add">
 								<th:block  th:each="codComposanteKey : ${codComposantes.keySet()}">
 									<option th:value="${codComposanteKey}"
 									        th:text="${codComposanteKey} + ' - ' + ${codComposantes.get(codComposanteKey)}"></option>
