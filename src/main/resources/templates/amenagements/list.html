@@ -65,9 +65,9 @@
                                                         th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
                                                         class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
                                                 <a sec:authorize="hasRole('ROLE_MANAGER') && !hasRole('ROLE_ADMIN')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
-                                                   title="Voir"
-                                                   th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
-                                                   class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
+                                                    title="Voir"
+                                                    th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/show'"
+                                                    class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
                                                 <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) && currentYear == currentDossier.year}"
                                                         title="Modifier" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'"
                                                         class="btn btn-warning"><i class="fa-solid fa-pen"></i>

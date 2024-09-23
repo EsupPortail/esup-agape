@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -645,6 +646,19 @@ public class DossierService {
         }
         syncStatusDossierAmenagement(dossier.getId());
         return true;
+    }
+
+    public Map<String, String> getCodComposanteLabels() {
+        Map<String, String> codComposanteLabels = new LinkedHashMap<>();
+        codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
+        for (DossierInfosService dossierInfosService : dossierInfosServices) {
+            try {
+                codComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
+            } catch (AgapeException | SQLException e) {
+                logger.warn(e.getMessage());
+            }
+        }
+        return codComposanteLabels;
     }
 
 //    @Transactional
