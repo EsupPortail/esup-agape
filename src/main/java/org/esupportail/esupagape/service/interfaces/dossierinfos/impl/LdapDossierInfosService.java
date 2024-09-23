@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,5 +94,10 @@ public class LdapDossierInfosService implements DossierInfosService {
             }
         }
         return dossierInfos;
+    }
+
+    @Override
+    public Map<String, String> getCodComposanteLabels() {
+        return Map.of();
     }
 }

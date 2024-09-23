@@ -156,6 +156,7 @@ public class AdminController {
     public String affectations(Model model) {
         model.addAttribute("active", "affectations");
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
+        model.addAttribute("codComposantes", dossierService.getCodComposanteLabels());
         return "admin/affectations";
     }
 
