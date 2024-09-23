@@ -13,7 +13,7 @@ import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Service
 @Order(1)
-@ConditionalOnBean(value = {WsApogeeServicePedago.class, WsApogeeServiceAdministratif.class})
+@ConditionalOnProperty(value = {"individu-source.data-sources.APOGEE.name", "apogee.etu-url"})
 public class ApoDossierInfosService implements DossierInfosService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApoDossierInfosService.class);
