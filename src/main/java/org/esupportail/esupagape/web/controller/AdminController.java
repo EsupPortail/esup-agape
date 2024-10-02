@@ -213,9 +213,9 @@ public class AdminController {
     }
 
     @GetMapping("/anonymise-dossiers")
-    public String anonymiseDossiers(RedirectAttributes redirectAttributes) {
+    public String anonymiseDossiers(RedirectAttributes redirectAttributes, PersonLdap personLdap) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'anonymisation des dossiers est terminée"));
-        individuService.anonymiseOldDossiers();
+        individuService.anonymiseOldDossiers(personLdap.getEduPersonPrincipalName());
         return "redirect:/admin";
     }
 

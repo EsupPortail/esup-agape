@@ -67,7 +67,7 @@ public class SchedulerService {
     public void anonymiseOldDossiers() {
         if(applicationProperties.getEnableSchedulerAnonymise()) {
             logger.info("Anonymisation des anciens dossiers ");
-            individuService.anonymiseOldDossiers();
+            individuService.anonymiseOldDossiers("scheduler");
             logger.info("Anonymisation des anciens dossiers terminée");
         }
     }
