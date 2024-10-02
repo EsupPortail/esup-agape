@@ -189,7 +189,7 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm, String eppn) {
         Dossier dossierToUpdate = getById(id);
-        if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
             throw new AgapeYearException();
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
