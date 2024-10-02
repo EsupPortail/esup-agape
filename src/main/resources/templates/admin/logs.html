@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+	<div class="agape-content">
+		<nav th:replace="~{fragments/admin-nav :: nav}"></nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-years" role="tabpanel" aria-labelledby="nav-years-tab">
+				<h1>Logs</h1>
+				<hr>
+				<div class="col-11 mx-auto">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th>Entity ID</th>
+							<th>Eppn</th>
+							<th>Date</th>
+							<th>Statut initial</th>
+							<th>Actions</th>
+						</tr>
+						</thead>
+						<tr th:each="log : ${logs}">
+							<td th:text="${log.dossierId}"></td>
+							<td th:text="${log.eppn}"></td>
+							<td th:text="${log.date}"></td>
+							<td th:text="${log.initialStatusDossier	}"></td>
+							<td th:text="${log.finalStatusDossier}"></td>
+						</tr>
+					</table>
+					<nav id="pagination" aria-label="pagination">
+						<div class="col-lg-12 text-center">
+							<div sd:pagination-summary="">info</div>
+						</div>
+						<ul class="d-print-none pagination justify-content-center " sd:pagination="full"></ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>
