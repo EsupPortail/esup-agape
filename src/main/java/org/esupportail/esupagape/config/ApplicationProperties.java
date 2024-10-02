@@ -79,6 +79,9 @@ public class ApplicationProperties {
 
     private String signaturesPath;
 
+    /*
+     * Adresse email de test (tous les mails seront envoyés à cette adresse)
+     */
     private String testEmail = "toto@univ-ville.fr";
 
     private Boolean enableSchedulerAnonymise = false;
