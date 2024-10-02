@@ -5,6 +5,7 @@ import org.esupportail.esupagape.entity.enums.StatusDossierAmenagement;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class DossierAmenagement {
@@ -65,7 +66,7 @@ public class DossierAmenagement {
     }
 
     public StatusDossierAmenagement getStatusDossierAmenagement() {
-        return statusDossierAmenagement;
+        return Objects.requireNonNullElse(statusDossierAmenagement, StatusDossierAmenagement.NON);
     }
 
     public void setStatusDossierAmenagement(StatusDossierAmenagement statusDossierAmenagement) {

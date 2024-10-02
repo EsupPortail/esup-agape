@@ -2,6 +2,10 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Log;
 import org.esupportail.esupagape.repository.LogRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,4 +31,7 @@ public class LogService {
         logRepository.save(log);
     }
 
+    public Page<Log> getAll(Pageable pageable) {
+        return logRepository.findAll(pageable);
+    }
 }
