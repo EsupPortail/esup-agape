@@ -125,9 +125,6 @@ public class IndividuController {
     @PostMapping("/fusion")
     @ResponseBody
     public void fusionIndividus(@RequestBody List<Long> ids, PersonLdap personLdap) throws AgapeException {
-        if(ids.size() != 2) {
-            throw new AgapeRuntimeException("non !!");
-        }
         individuService.fusion(ids, personLdap.getEduPersonPrincipalName());
     }
 
