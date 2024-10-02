@@ -13,6 +13,9 @@ import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
@@ -59,10 +62,12 @@ public class AdminController {
 
     private final LdapPersonService ldapPersonService;
 
+    private final LogService logService;
+
     public AdminController(
             IndividuService individuService, DossierService dossierService, SyncService syncService,
             AmenagementService amenagementService, UtilsService utilsService, EnumsService enumsService,
-            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService) {
+            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService, LogService logService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.syncService = syncService;
@@ -76,6 +81,7 @@ public class AdminController {
         this.userOthersAffectationsService = userOthersAffectationsService;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
         this.ldapPersonService = ldapPersonService;
+        this.logService = logService;
     }
 
     @GetMapping
@@ -126,6 +132,13 @@ public class AdminController {
         model.addAttribute("active", "years");
         model.addAttribute("years", utilsService.getYears());
         return "admin/years";
+    }
+
+    @GetMapping("/logs")
+    public String logs(Model model, @PageableDefault(sort = "date", direction = Sort.Direction.DESC, size = 15) Pageable pageable) {
+        model.addAttribute("active", "logs");
+        model.addAttribute("logs", logService.getAll(pageable));
+        return "admin/logs";
     }
 
     @GetMapping("/sessions")

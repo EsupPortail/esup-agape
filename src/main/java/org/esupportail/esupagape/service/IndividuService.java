@@ -438,7 +438,7 @@ public class IndividuService {
             individuRepository.save(individu1);
             individuRepository.save(individu2);
             anonymiseIndividu(individu2.getId(), eppn);
-            logService.create(eppn, individu1.getId(), "", "fusion " + individu1.getId() + " and " + individu2.getId());
+            logService.create(eppn, individu1.getId(), "INDIVIDU", "fusion " + individu1.getId() + " and " + individu2.getId());
         } else {
             throw new AgapeRuntimeException("la date de naissance ne correspond pas");
         }
