@@ -421,7 +421,7 @@ public class IndividuService {
     @Transactional
     public void fusion(List<Long> ids, String eppn) throws AgapeException {
         if(ids.size() != 2 || ids.get(0).equals(ids.get(1))) {
-            throw new AgapeRuntimeException("non !!");
+            throw new AgapeRuntimeException("Impossible de fusionner ces individus");
         }
         ids = ids.stream().sorted(Comparator.comparingLong(Long::longValue).reversed()).toList();
         Individu individu1 = findById(ids.get(0));
