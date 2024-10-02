@@ -329,7 +329,11 @@ public class IndividuService {
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
         if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
-            logger.info("anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+            if(individu.getNumEtu() != null) {
+                logger.info("anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+            } else {
+                logger.info("anonymise anonymous individu");
+            }
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
             individu.setName("Anonyme");
