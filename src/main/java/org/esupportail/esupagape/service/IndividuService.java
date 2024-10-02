@@ -269,7 +269,7 @@ public class IndividuService {
         enqueteService.detachAllByDossiers(id);
         if (StringUtils.hasText(individu.getNumEtu())) {
             ExcludeIndividu excludeIndividu = excludeIndividuRepository.findByNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
-            if (excludeIndividu == null) {
+            if (excludeIndividu == null && StringUtils.hasText(individu.getNumEtu())) {
                 excludeIndividu = new ExcludeIndividu();
                 excludeIndividu.setNumEtuHash(new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
                 excludeIndividuRepository.save(excludeIndividu);
@@ -329,7 +329,7 @@ public class IndividuService {
     public void anonymiseIndividu(Long individuId) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
         if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
-            if(individu.getNumEtu() != null) {
+            if(StringUtils.hasText(individu.getNumEtu())) {
                 logger.info("anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
             } else {
                 logger.info("anonymise anonymous individu");
@@ -419,7 +419,7 @@ public class IndividuService {
         Individu individu1 = findById(ids.get(0));
         Individu individu2 = findById(ids.get(1));
         if(individu1.getDateOfBirth().equals(individu2.getDateOfBirth())) {
-            for (Dossier dossier : individu2.getDossiers()) {
+            for (Dossier dossier : new ArrayList<>(individu2.getDossiers())) {
                 individu1.getDossiers().add(dossier);
                 dossier.setIndividu(individu1);
             }
