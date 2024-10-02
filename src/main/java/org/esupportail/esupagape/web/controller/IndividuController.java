@@ -117,18 +117,18 @@ public class IndividuController {
     }
 
     @PostMapping("/{individuId}/anonymise")
-    public String anonymiseIndividu(@PathVariable("individuId") Long individuId) {
-        individuService.anonymiseIndividu(individuId);
+    public String anonymiseIndividu(@PathVariable("individuId") Long individuId, PersonLdap personLdap) {
+        individuService.anonymiseIndividu(individuId, personLdap.getEduPersonPrincipalName());
         return "redirect:/individus/" + individuId + "/redirect";
     }
 
     @PostMapping("/fusion")
     @ResponseBody
-    public void fusionIndividus(@RequestBody List<Long> ids) throws AgapeException {
+    public void fusionIndividus(@RequestBody List<Long> ids, PersonLdap personLdap) throws AgapeException {
         if(ids.size() != 2) {
             throw new AgapeRuntimeException("non !!");
         }
-        individuService.fusion(ids);
+        individuService.fusion(ids, personLdap.getEduPersonPrincipalName());
     }
 
 

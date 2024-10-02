@@ -65,7 +65,9 @@ public class IndividuService {
 
     private final SyncService syncService;
 
-    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService, SyncService syncService) {
+    private final LogService logService;
+
+    public IndividuService(List<IndividuSourceService> individuSourceServices, ApplicationProperties applicationProperties, IndividuRepository individuRepository, UtilsService utilsService, ExcludeIndividuRepository excludeIndividuRepository, DossierService dossierService, EnqueteService enqueteService, SyncService syncService, LogService logService) {
         this.individuSourceServices = individuSourceServices;
         this.applicationProperties = applicationProperties;
         this.individuRepository = individuRepository;
@@ -74,6 +76,7 @@ public class IndividuService {
         this.dossierService = dossierService;
         this.enqueteService = enqueteService;
         this.syncService = syncService;
+        this.logService = logService;
     }
 
     public Individu getIndividu(String numEtu) {
@@ -326,13 +329,15 @@ public class IndividuService {
     }
 
     @Transactional
-    public void anonymiseIndividu(Long individuId) {
+    public void anonymiseIndividu(Long individuId, String eppn) {
         Individu individu = individuRepository.findById(individuId).orElse(null);
         if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
             if(StringUtils.hasText(individu.getNumEtu())) {
-                logger.info("anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+                logService.create(eppn, individu.getId(), "", "anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+                logger.info("anonymise : "  + individu.getId() + " " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
             } else {
-                logger.info("anonymise anonymous individu");
+                logService.create(eppn, individu.getId(), "", "anonymise");
+                logger.info("anonymise : " + individu.getId());
             }
             individu.setNumEtu("Anonyme" + individu.getId());
             individu.setCodeIne("Anonyme" + individu.getId());
@@ -393,13 +398,13 @@ public class IndividuService {
         List<Individu> individus = individuRepository.findAll();
         for (Individu individu : individus) {
             if (individu.getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).toList().get(0).getYear() <= utilsService.getCurrentYear() - applicationProperties.getAnonymiseDelay()) {
-                anonymiseIndividu(individu.getId());
+                anonymiseIndividu(individu.getId(), "system");
             }
         }
     }
 
     @Transactional
-    public void anonymiseOldDossiers() {
+    public void anonymiseOldDossiers(String eppn) {
         if(applicationProperties.getNbDossierNullBeforeAnonymise() > -1) {
             List<Individu> individus = getAllIndividus();
             for (Individu individu : individus) {
@@ -407,14 +412,17 @@ public class IndividuService {
                         .filter(d -> d.getYear() >= utilsService.getCurrentYear() - applicationProperties.getNbDossierNullBeforeAnonymise())
                         .count();
                 if (countDossiers == 0) {
-                    anonymiseIndividu(individu.getId());
+                    anonymiseIndividu(individu.getId(), eppn);
                 }
             }
         }
     }
 
     @Transactional
-    public void fusion(List<Long> ids) throws AgapeException {
+    public void fusion(List<Long> ids, String eppn) throws AgapeException {
+        if(ids.size() != 2 || ids.get(0).equals(ids.get(1))) {
+            throw new AgapeRuntimeException("non !!");
+        }
         ids = ids.stream().sorted(Comparator.comparingLong(Long::longValue).reversed()).toList();
         Individu individu1 = findById(ids.get(0));
         Individu individu2 = findById(ids.get(1));
@@ -429,7 +437,8 @@ public class IndividuService {
             dossierService.saveAll(dossiers);
             individuRepository.save(individu1);
             individuRepository.save(individu2);
-            anonymiseIndividu(individu2.getId());
+            anonymiseIndividu(individu2.getId(), eppn);
+            logService.create(eppn, individu1.getId(), "", "fusion " + individu1.getId() + " and " + individu2.getId());
         } else {
             throw new AgapeRuntimeException("la date de naissance ne correspond pas");
         }
