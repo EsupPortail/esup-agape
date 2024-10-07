@@ -1,9 +1,9 @@
 package org.esupportail.esupagape.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
-import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
@@ -57,6 +57,8 @@ public class DossierService {
     private final EntityManager em;
 
     private final LogService logService;
+
+    Map<String, String> codComposanteLabels = new HashMap<>();
 
     public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em, LogService logService) {
         this.utilsService = utilsService;
@@ -644,8 +646,8 @@ public class DossierService {
         return true;
     }
 
-    public Map<String, String> getCodComposanteLabels() {
-        Map<String, String> codComposanteLabels = new LinkedHashMap<>();
+    @PostConstruct
+    public void getCodComposanteLabelsFromDossierInfosService() {
         codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             try {
@@ -654,10 +656,17 @@ public class DossierService {
                 logger.warn(e.getMessage());
             }
         }
+    }
+
+    public Map<String, String> getCodComposanteLabels() {
         return codComposanteLabels;
     }
 
-//    @Transactional
+    public void setCodComposanteLabels(Map<String, String> codComposanteLabels) {
+        this.codComposanteLabels = codComposanteLabels;
+    }
+
+    //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
 //        Dossier dossier = getById(id);
 ////        if (dossier.getYear() != utilsService.getCurrentYear()) {
