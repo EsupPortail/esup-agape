@@ -51,16 +51,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-2" style="min-width: 500px;">
+                            <div class="col-2" style="min-width: 760px;">
                                 <div class="input-group">
                                     <label class="input-group-text" th:for="codComposante">Composante</label>
                                     <select id="codComposante" class="form-select" name="codComposante">
                                         <option value="">Choisir</option>
-                                        <option th:selected="${codComposante == composante.cod}"
-                                                th:each="composante: ${composantes}"
-                                                th:if="${composante.cod != null && !composante.cod.isEmpty()}"
-                                                th:value="${composante.cod}"
-                                                th:text="${composante.libelle}"></option>
+                                        <th:block th:each="composante : ${composantes}">
+                                            <option th:if="${composante.cod != null && !composante.cod.isEmpty()}"
+                                                    th:selected="${codComposante == composante.cod}"
+                                                    th:value="${composante.cod}"
+                                                    th:text="${composante.libelle}">
+                                            </option>
+                                        </th:block>
                                     </select>
                                 </div>
                             </div>

@@ -42,8 +42,11 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
 
     List<Dossier> findAllByIndividuId(Long id);
 
-    @Query("select distinct d.codComposante as cod, d.composante as libelle from Dossier d order by cod")
+    @Query("SELECT d.codComposante as cod, d.composante as libelle " +
+            "FROM Dossier d " +
+            "WHERE d.codComposante IS NOT NULL AND d.composante IS NOT NULL ")
     List<ComposanteDto> findAllComposantes();
+
 
     @Query("select distinct d.niveauEtudes as niv from Dossier d group by d.niveauEtudes")
     List<String> findAllNiveaux();
