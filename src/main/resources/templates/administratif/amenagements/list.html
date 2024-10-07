@@ -56,11 +56,10 @@
                                     <label class="input-group-text" th:for="codComposante">Composante</label>
                                     <select id="codComposante" class="form-select" name="codComposante">
                                         <option value="">Choisir</option>
-                                        <th:block th:each="composante : ${composantes}">
-                                            <option th:if="${composante.cod != null && !composante.cod.isEmpty()}"
-                                                    th:selected="${codComposante == composante.cod}"
-                                                    th:value="${composante.cod}"
-                                                    th:text="${composante.libelle}">
+                                        <th:block th:each="composante : ${codComposantes.entrySet()}">
+                                            <option th:selected="${codComposante == composante.key}"
+                                                    th:value="${composante.key}"
+                                                    th:text="${composante.value}">
                                             </option>
                                         </th:block>
                                     </select>
