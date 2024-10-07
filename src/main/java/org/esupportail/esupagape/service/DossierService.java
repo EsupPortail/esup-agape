@@ -210,14 +210,6 @@ public class DossierService {
         }
     }
 
-    public List<ComposanteDto> getAllComposantes() {
-        Map<String, ComposanteDto> uniqueComposantes = new LinkedHashMap<>();
-        for (ComposanteDto composante : dossierRepository.findAllComposantes()) {
-            uniqueComposantes.putIfAbsent(composante.getCod(), composante);
-        }
-        return new ArrayList<>(uniqueComposantes.values());
-    }
-
     public List<String> getAllNiveauEtudes() {
         return dossierRepository.findAllNiveaux();
     }

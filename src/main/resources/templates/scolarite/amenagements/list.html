@@ -12,7 +12,7 @@
 				<div class="d-inline-flex input-group mb-3">
 					<select class="form-select" name="composanteFilter">
 						<option value="" disabled selected hidden>Filtre par composante</option>
-						<th:block th:each="composante : ${composantes.entrySet()}">
+						<th:block th:each="composante : ${codComposantes.entrySet()}">
 							<option th:selected="${composanteFilter == composante.key}" th:value="${composante.key}" th:text="${composante.value}"></option>
 						</th:block>
 					</select>
