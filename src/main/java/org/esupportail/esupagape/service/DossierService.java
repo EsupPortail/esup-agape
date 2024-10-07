@@ -651,6 +651,7 @@ public class DossierService {
         codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             try {
+                logger.info("Getting codComposanteLabels from " + dossierInfosService.getClass().getSimpleName());
                 codComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
             } catch (AgapeException | SQLException e) {
                 logger.warn(e.getMessage());
