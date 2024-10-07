@@ -1,7 +1,6 @@
 package org.esupportail.esupagape.web.controller.scolarite;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.DossierAmenagement;
@@ -12,7 +11,6 @@ import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
 import org.esupportail.esupagape.service.AmenagementService;
 import org.esupportail.esupagape.service.DossierService;
-import org.esupportail.esupagape.service.ldap.LdapOrganizationalUnitService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UserService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -30,7 +28,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,16 +46,13 @@ public class AmenagementScolariteController {
 
     private final AmenagementService amenagementService;
 
-    private final LdapOrganizationalUnitService ldapOrganizationalUnitService;
-
     private final UserOthersAffectationsRepository userOthersAffectationsRepository;
 
-    public AmenagementScolariteController(UserService userService, UtilsService utilsService, DossierService dossierService, AmenagementService amenagementService, LdapOrganizationalUnitService ldapOrganizationalUnitService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
+    public AmenagementScolariteController(UserService userService, UtilsService utilsService, DossierService dossierService, AmenagementService amenagementService, UserOthersAffectationsRepository userOthersAffectationsRepository) {
         this.userService = userService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
-        this.ldapOrganizationalUnitService = ldapOrganizationalUnitService;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
     }
 
@@ -72,12 +70,13 @@ public class AmenagementScolariteController {
             yearFilter = utilsService.getCurrentYear();
         }
         String codComposante = userService.getComposante(personLdap);
+        Map<String, String> codComposantes = dossierService.getCodComposanteLabels();
         Page<Amenagement> amenagements;
         List<String> codComposanteToDisplay = new ArrayList<>();
         List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList());
         if(userCodComposantes.contains("ALL_ACCESS")) {
             userCodComposantes.clear();
-            userCodComposantes.addAll(dossierService.getAllComposantes().stream().map(ComposanteDto::getCod).distinct().toList());
+            userCodComposantes.addAll(codComposantes.keySet());
         }
         if (codComposante != null) {
             userCodComposantes.add(codComposante);
@@ -102,13 +101,7 @@ public class AmenagementScolariteController {
             amenagements = amenagementService.getFullTextSearchScol(statusAmenagement, codComposanteToDisplay, campusFilter, viewedByUid, notViewedByUid, utilsService.getCurrentYear(), pageable);
         }
         model.addAttribute("amenagements", amenagements);
-        Map<String, String> composantes = new HashMap<>();
-        for(String userCodComposante : userCodComposantes) {
-            if(userCodComposante != null) {
-                composantes.put(userCodComposante, ldapOrganizationalUnitService.getOrganizationalUnitLdap(userCodComposante).getDescription());
-            }
-        }
-        model.addAttribute("composantes", composantes);
+        model.addAttribute("codComposantes", codComposantes);
         model.addAttribute("yearFilter", yearFilter);
         model.addAttribute("statusAmenagement", StatusAmenagement.values());
         model.addAttribute("campuses", dossierService.getAllCampus());

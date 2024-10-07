@@ -88,9 +88,10 @@
 		<div class="input-group input-group-sm mb-1">
 			<label class="input-group-text col-6">Composante</label>
 			<select class="form-select form-select-sm agape-slim-select-sm" th:field="*{composante}" multiple>
-				<option th:each="composante: ${composantes}"
-				        th:if="${composante.cod != null && !composante.cod.isEmpty()}" th:value="${composante.cod}"
-				        th:text="${composante.libelle}"></option>
+				<option th:each="composante: ${codComposantes.entrySet()}"
+				        th:selected="${dossierFilter.composante != null && dossierFilter.composante.contains(composante.key)}"
+						th:value="${composante.key}"
+				        th:text="${composante.value}"></option>
 			</select>
 		</div>
 		<div class="input-group input-group-sm mb-1">

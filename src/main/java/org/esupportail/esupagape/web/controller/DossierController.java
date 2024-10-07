@@ -90,7 +90,7 @@ public class DossierController {
         model.addAttribute("modFrmns", ModFrmn.values());
         model.addAttribute("genders", Gender.values());
         model.addAttribute("classifications", Classification.values());
-        model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("codComposantes", dossierService.getCodComposanteLabels());
         model.addAttribute("niveauEtudes", dossierService.getAllNiveauEtudes());
         model.addAttribute("secteurDisciplinaires", dossierService.getAllSecteurDisciplinaire());
         model.addAttribute("libelleFormations", dossierService.getAllLibelleFormation());
