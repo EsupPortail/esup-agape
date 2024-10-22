@@ -72,13 +72,14 @@ public class AmenagementService {
     private final UtilsService utilsService;
     private final EsupSignatureService esupSignatureService;
     private final MailService mailService;
+    private final LogService logService;
     private final DocumentService documentService;
     private final LibelleAmenagementRepository libelleAmenagementRepository;
     private final UserOthersAffectationsRepository userOthersAffectationsRepository;
     private final PersonLdapRepository personLdapRepository;
     private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
 
-    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
+    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, LogService logService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
         this.applicationProperties = applicationProperties;
         this.ldapProperties = ldapProperties;
         this.amenagementRepository = amenagementRepository;
@@ -89,6 +90,7 @@ public class AmenagementService {
         this.utilsService = utilsService;
         this.esupSignatureService = esupSignatureService;
         this.mailService = mailService;
+        this.logService = logService;
         this.documentService = documentService;
         this.libelleAmenagementRepository = libelleAmenagementRepository;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
@@ -157,16 +159,7 @@ public class AmenagementService {
             amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
         }
         amenagementRepository.save(amenagement);
-        createDossierAmenagement(amenagement, dossier);
-    }
-
-    private DossierAmenagement createDossierAmenagement(Amenagement amenagement, Dossier dossier) {
-        DossierAmenagement dossierAmenagement = new DossierAmenagement();
-        dossierAmenagement.setLastYear(dossier.getYear());
-        dossierAmenagement.setDossier(dossier);
-        dossierAmenagement.setAmenagement(amenagement);
-        dossierAmenagementRepository.save(dossierAmenagement);
-        return dossierAmenagement;
+        dossierService.createDossierAmenagement(amenagement, dossier);
     }
 
     @Transactional
@@ -563,7 +556,7 @@ public class AmenagementService {
             }
         } else {
             currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
-            dossierAmenagement = createDossierAmenagement(amenagement, currentDossier);
+            dossierAmenagement = dossierService.createDossierAmenagement(amenagement, currentDossier);
         }
         dossierAmenagement.setDossier(currentDossier);
         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.PORTE);
@@ -587,7 +580,7 @@ public class AmenagementService {
             }
         } catch (AgapeJpaException e) {
             currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.NON_RECONDUIT);
-            dossierAmenagement = createDossierAmenagement(amenagement, currentDossier);
+            dossierAmenagement = dossierService.createDossierAmenagement(amenagement, currentDossier);
         }
         dossierAmenagement.setDossier(currentDossier);
         amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
@@ -647,6 +640,7 @@ public class AmenagementService {
             if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
                 logger.info("amenagement " + amenagement.getId() + " EXPIRE");
                 dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+                logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
             }
             if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
