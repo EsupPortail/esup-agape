@@ -18,6 +18,7 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
+import org.esupportail.esupagape.repository.DossierAmenagementRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
@@ -36,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,16 +56,20 @@ public class DossierService {
 
     private final DocumentService documentService;
 
+    private final DossierAmenagementRepository dossierAmenagementRepository;
+
     private final EntityManager em;
 
     private final LogService logService;
 
     Map<String, String> codComposanteLabels = new HashMap<>();
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em, LogService logService) {
+
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.dossierAmenagementRepository = dossierAmenagementRepository;
         this.em = em;
         this.logService = logService;
         Collections.reverse(dossierInfosServices);
@@ -584,6 +590,20 @@ public class DossierService {
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
+            Dossier lastYearDossier = dossierRepository.findByIndividuIdAndYear(dossier.getIndividu().getId(), utilsService.getCurrentYear() - 1).orElse(null);
+            if(lastYearDossier != null) {
+                for(DossierAmenagement dossierAmenagement : lastYearDossier.getDossierAmenagements()) {
+                    if(dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)
+                       && dossierAmenagement.getAmenagement().getEndDate().isAfter(LocalDateTime.now())
+                       && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(dossierAmenagement.getAmenagement()))
+                        ) {
+                        DossierAmenagement newDossierAmenagement = createDossierAmenagement(dossierAmenagement.getAmenagement(), dossier);
+                        newDossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        logService.create("SYSTEM", newDossierAmenagement.getId(), StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
+                    }
+                }
+            }
         } else {
             dossier.setNewDossier(true);
         }
@@ -644,6 +664,15 @@ public class DossierService {
         }
         syncStatusDossierAmenagement(dossier.getId());
         return true;
+    }
+
+    public DossierAmenagement createDossierAmenagement(Amenagement amenagement, Dossier dossier) {
+        DossierAmenagement dossierAmenagement = new DossierAmenagement();
+        dossierAmenagement.setLastYear(dossier.getYear());
+        dossierAmenagement.setDossier(dossier);
+        dossierAmenagement.setAmenagement(amenagement);
+        dossierAmenagementRepository.save(dossierAmenagement);
+        return dossierAmenagement;
     }
 
     @PostConstruct
