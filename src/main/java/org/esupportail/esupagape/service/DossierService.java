@@ -590,10 +590,11 @@ public class DossierService {
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
-            Dossier lastYearDossier = dossierRepository.findByIndividuIdAndYear(dossier.getIndividu().getId(), utilsService.getCurrentYear() - 1).orElse(null);
+            Dossier lastYearDossier = dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> d.getYear() < dossier.getYear()).findFirst().orElse(null);
             if(lastYearDossier != null) {
                 for(DossierAmenagement dossierAmenagement : lastYearDossier.getDossierAmenagements()) {
                     if(dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)
+                       && dossierAmenagement.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)
                        && dossierAmenagement.getAmenagement().getEndDate().isAfter(LocalDateTime.now())
                        && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(dossierAmenagement.getAmenagement()))
                         ) {
