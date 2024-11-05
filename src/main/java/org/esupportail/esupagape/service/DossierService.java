@@ -595,7 +595,7 @@ public class DossierService {
                 for(DossierAmenagement dossierAmenagement : lastYearDossier.getDossierAmenagements()) {
                     if(dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)
                        && dossierAmenagement.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)
-                       && dossierAmenagement.getAmenagement().getEndDate().isAfter(LocalDateTime.now())
+                       && dossierAmenagement.getAmenagement().getEndDate() != null && dossierAmenagement.getAmenagement().getEndDate().isAfter(LocalDateTime.now())
                        && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(dossierAmenagement.getAmenagement()))
                         ) {
                         DossierAmenagement newDossierAmenagement = createDossierAmenagement(dossierAmenagement.getAmenagement(), dossier);
