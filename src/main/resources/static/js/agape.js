@@ -389,6 +389,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
             }
         });
 
+        document.querySelectorAll(".agape-slim-select-add").forEach(function (element) {
+            if (element.id !== '') {
+                console.info("enable slimselect on : " + element.id);
+                new SlimSelect({
+                    select: '#' + element.id,
+                    settings: {
+                        showSearch: true,
+                        placeholderText: 'Choisir',
+                    },
+                    events : {
+                        addable: function (value) { return value }
+                    }
+                });
+                //Hack slimselect required
+                element.style.display = "block";
+                element.style.position = "absolute";
+                element.style.marginTop = "15px";
+                element.style.opacity = 0;
+                element.style.zIndex = -1;
+            }
+        });
+
         document.querySelectorAll(".agape-slim-select-sm").forEach(function (element) {
             if (element.id !== '') {
                 console.info("enable slimselect on : " + element.id);

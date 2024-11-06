@@ -1,9 +1,9 @@
 package org.esupportail.esupagape.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
-import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
@@ -18,6 +18,7 @@ import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.DocumentRepository;
+import org.esupportail.esupagape.repository.DossierAmenagementRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
@@ -34,7 +35,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,14 +56,20 @@ public class DossierService {
 
     private final DocumentService documentService;
 
+    private final DossierAmenagementRepository dossierAmenagementRepository;
+
     private final EntityManager em;
 
     private final LogService logService;
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, EntityManager em, LogService logService) {
+    Map<String, String> codComposanteLabels = new HashMap<>();
+
+
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.dossierAmenagementRepository = dossierAmenagementRepository;
         this.em = em;
         this.logService = logService;
         Collections.reverse(dossierInfosServices);
@@ -188,7 +197,7 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm, String eppn) {
         Dossier dossierToUpdate = getById(id);
-        if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
             throw new AgapeYearException();
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
@@ -207,10 +216,6 @@ public class DossierService {
         if (StringUtils.hasText(dossierIndividuForm.getNationalite())) {
             dossierToUpdate.getIndividu().setNationalite(dossierIndividuForm.getNationalite());
         }
-    }
-
-    public List<ComposanteDto> getAllComposantes() {
-        return dossierRepository.findAllComposantes();
     }
 
     public List<String> getAllNiveauEtudes() {
@@ -585,6 +590,21 @@ public class DossierService {
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             dossier.setNewDossier(false);
+            Dossier lastYearDossier = dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> d.getYear() < dossier.getYear()).findFirst().orElse(null);
+            if(lastYearDossier != null) {
+                for(DossierAmenagement dossierAmenagement : lastYearDossier.getDossierAmenagements()) {
+                    if(dossierAmenagement.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)
+                       && dossierAmenagement.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)
+                       && dossierAmenagement.getAmenagement().getEndDate() != null && dossierAmenagement.getAmenagement().getEndDate().isAfter(LocalDateTime.now())
+                       && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(dossierAmenagement.getAmenagement()))
+                        ) {
+                        DossierAmenagement newDossierAmenagement = createDossierAmenagement(dossierAmenagement.getAmenagement(), dossier);
+                        newDossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        logService.create("SYSTEM", newDossierAmenagement.getId(), StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
+                    }
+                }
+            }
         } else {
             dossier.setNewDossier(true);
         }
@@ -647,7 +667,37 @@ public class DossierService {
         return true;
     }
 
-//    @Transactional
+    public DossierAmenagement createDossierAmenagement(Amenagement amenagement, Dossier dossier) {
+        DossierAmenagement dossierAmenagement = new DossierAmenagement();
+        dossierAmenagement.setLastYear(dossier.getYear());
+        dossierAmenagement.setDossier(dossier);
+        dossierAmenagement.setAmenagement(amenagement);
+        dossierAmenagementRepository.save(dossierAmenagement);
+        return dossierAmenagement;
+    }
+
+    @PostConstruct
+    public void getCodComposanteLabelsFromDossierInfosService() {
+        codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
+        for (DossierInfosService dossierInfosService : dossierInfosServices) {
+            try {
+                logger.info("Getting codComposanteLabels from " + dossierInfosService.getClass().getSimpleName());
+                codComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
+            } catch (AgapeException | SQLException e) {
+                logger.warn(e.getMessage());
+            }
+        }
+    }
+
+    public Map<String, String> getCodComposanteLabels() {
+        return codComposanteLabels;
+    }
+
+    public void setCodComposanteLabels(Map<String, String> codComposanteLabels) {
+        this.codComposanteLabels = codComposanteLabels;
+    }
+
+    //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
 //        Dossier dossier = getById(id);
 ////        if (dossier.getYear() != utilsService.getCurrentYear()) {

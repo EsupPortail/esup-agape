@@ -18,7 +18,12 @@
 						</div>
 						<div class="mb-3">
 							<label for="codComposante" class="form-label">Composantes</label>
-							<input type="text" name="codComposante" id="codComposante" class="form-control" placeholder="Code Composante">
+							<select name="codComposante" id="codComposante" class="agape-slim-select-add">
+								<th:block  th:each="codComposanteKey : ${codComposantes.keySet()}">
+									<option th:value="${codComposanteKey}"
+									        th:text="${codComposanteKey} + ' - ' + ${codComposantes.get(codComposanteKey)}"></option>
+								</th:block>
+							</select>
 						</div>
 						<button type="submit" class="btn btn-primary align-self-end">Ajouter</button>
 					</form>

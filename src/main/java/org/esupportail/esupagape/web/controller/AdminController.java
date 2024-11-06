@@ -13,6 +13,9 @@ import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
@@ -59,10 +62,12 @@ public class AdminController {
 
     private final LdapPersonService ldapPersonService;
 
+    private final LogService logService;
+
     public AdminController(
             IndividuService individuService, DossierService dossierService, SyncService syncService,
             AmenagementService amenagementService, UtilsService utilsService, EnumsService enumsService,
-            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService) {
+            CsvImportService csvImportService, SiseService siseService, MailService mailService, @Qualifier("sessionRegistry") SessionRegistry sessionRegistry, UserOthersAffectationsService userOthersAffectationsService, UserOthersAffectationsRepository userOthersAffectationsRepository, LdapPersonService ldapPersonService, LogService logService) {
         this.individuService = individuService;
         this.dossierService = dossierService;
         this.syncService = syncService;
@@ -76,6 +81,7 @@ public class AdminController {
         this.userOthersAffectationsService = userOthersAffectationsService;
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
         this.ldapPersonService = ldapPersonService;
+        this.logService = logService;
     }
 
     @GetMapping
@@ -128,6 +134,13 @@ public class AdminController {
         return "admin/years";
     }
 
+    @GetMapping("/logs")
+    public String logs(Model model, @PageableDefault(sort = "date", direction = Sort.Direction.DESC, size = 15) Pageable pageable) {
+        model.addAttribute("active", "logs");
+        model.addAttribute("logs", logService.getAll(pageable));
+        return "admin/logs";
+    }
+
     @GetMapping("/sessions")
     public String session(Model model) {
         model.addAttribute("active", "sessions");
@@ -156,6 +169,7 @@ public class AdminController {
     public String affectations(Model model) {
         model.addAttribute("active", "affectations");
         model.addAttribute("userOthersAffectations", userOthersAffectationsRepository.findAll());
+        model.addAttribute("codComposantes", dossierService.getCodComposanteLabels());
         return "admin/affectations";
     }
 
@@ -212,9 +226,9 @@ public class AdminController {
     }
 
     @GetMapping("/anonymise-dossiers")
-    public String anonymiseDossiers(RedirectAttributes redirectAttributes) {
+    public String anonymiseDossiers(RedirectAttributes redirectAttributes, PersonLdap personLdap) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "L'anonymisation des dossiers est terminée"));
-        individuService.anonymiseOldDossiers();
+        individuService.anonymiseOldDossiers(personLdap.getEduPersonPrincipalName());
         return "redirect:/admin";
     }
 
@@ -314,7 +328,7 @@ public class AdminController {
 
     @PostMapping(value = "/add-user-others-affectations")
     public String createAffectation(@RequestParam String uid, @RequestParam String[] codComposante, RedirectAttributes redirectAttributes) {
-        if (codComposante != null && codComposante.length > 0) {
+        if (codComposante != null) {
             for (String cod : codComposante) {
                 List<UserOthersAffectations> existingAffectation = userOthersAffectationsRepository.findByUidAndCodComposante(uid, cod);
 

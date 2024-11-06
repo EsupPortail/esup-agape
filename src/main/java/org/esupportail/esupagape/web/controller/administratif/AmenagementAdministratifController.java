@@ -101,7 +101,7 @@ public class AmenagementAdministratifController {
     }
 
     private void setModel(Model model) {
-        model.addAttribute("composantes", dossierService.getAllComposantes());
+        model.addAttribute("codComposantes", dossierService.getCodComposanteLabels());
         model.addAttribute("typeAmenagements" , TypeAmenagement.values());
         model.addAttribute("tempsMajores" , TempsMajore.values());
         model.addAttribute("typeEpreuves" , TypeEpreuve.values());

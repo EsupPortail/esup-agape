@@ -1,6 +1,5 @@
 package org.esupportail.esupagape.repository;
 
-import org.esupportail.esupagape.dtos.ComposanteDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
@@ -41,9 +40,6 @@ public interface DossierRepository extends JpaRepository<Dossier, Long> {
     List<Integer> findYearDistinct();
 
     List<Dossier> findAllByIndividuId(Long id);
-
-    @Query("select distinct d.codComposante as cod, d.composante as libelle from Dossier d order by cod")
-    List<ComposanteDto> findAllComposantes();
 
     @Query("select distinct d.niveauEtudes as niv from Dossier d group by d.niveauEtudes")
     List<String> findAllNiveaux();
