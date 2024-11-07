@@ -197,11 +197,11 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm, String eppn) {
         Dossier dossierToUpdate = getById(id);
-        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT) && StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
             throw new AgapeYearException();
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
-        if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
+        if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT) || !StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
             dossierToUpdate.getIndividu().setName(dossierIndividuForm.getName());
             dossierToUpdate.getIndividu().setFirstName(dossierIndividuForm.getFirstName());
             dossierToUpdate.getIndividu().setDateOfBirth(dossierIndividuForm.getDateOfBirth());
