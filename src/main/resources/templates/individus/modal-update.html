@@ -58,7 +58,7 @@
                             <label class="form-label" for="nationalite">Nationalité</label>
                         </div>
                         <div class="col-12 col-xxl-8">
-                            <select id="nationalite" name="nationalite" class="agape-slim-select-search" th:disabled="${currentDossier.individu.nationalite != null}">
+                            <select id="nationalite" name="nationalite" class="agape-slim-select-search" th:disabled="${currentDossier.individu.nationalite != null && currentDossier.type == T(org.esupportail.esupagape.entity.enums.TypeIndividu).ETUDIANT && currentDossier.individu.numEtu != null}">
                                 <option th:value="${currentDossier.individu.nationalite}" th:text="${#strings.capitalize(#strings.toLowerCase(currentDossier.individu.nationalite))}" th:if="${currentDossier.individu.nationalite != null}" selected></option>
                                 <option value="" th:if="${currentDossier.individu.nationalite == null}" selected></option>
                                 <th:block th:each="locale : ${locales}">
