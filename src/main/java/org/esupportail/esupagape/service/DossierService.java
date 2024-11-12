@@ -197,11 +197,11 @@ public class DossierService {
     @Transactional
     public void updateDossierIndividu(Long id, DossierIndividuForm dossierIndividuForm, String eppn) {
         Dossier dossierToUpdate = getById(id);
-        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
+        if (dossierToUpdate.getYear() != utilsService.getCurrentYear() && dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT) && StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
             throw new AgapeYearException();
         }
         changeStatutDossier(id, dossierIndividuForm.getStatusDossier(), eppn);
-        if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT)) {
+        if(!dossierToUpdate.getType().equals(TypeIndividu.ETUDIANT) || !StringUtils.hasText(dossierToUpdate.getIndividu().getNumEtu())) {
             dossierToUpdate.getIndividu().setName(dossierIndividuForm.getName());
             dossierToUpdate.getIndividu().setFirstName(dossierIndividuForm.getFirstName());
             dossierToUpdate.getIndividu().setDateOfBirth(dossierIndividuForm.getDateOfBirth());
@@ -574,10 +574,8 @@ public class DossierService {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
         }
         if(dossier.getStatusDossier().equals(StatusDossier.NON_RECONDUIT) || dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-            if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE)) {
+            if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE) || dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)) {
                 dossier.setStatusDossier(StatusDossier.RECONDUIT);
-            } else if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)) {
-                dossier.setStatusDossier(StatusDossier.AJOUT_MANUEL);
             }
         }
     }
