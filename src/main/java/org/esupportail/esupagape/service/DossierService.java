@@ -574,10 +574,8 @@ public class DossierService {
             dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
         }
         if(dossier.getStatusDossier().equals(StatusDossier.NON_RECONDUIT) || dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || dossier.getStatusDossier().equals(StatusDossier.AJOUT_MANUEL)) {
-            if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE)) {
+            if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE) || dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)) {
                 dossier.setStatusDossier(StatusDossier.RECONDUIT);
-            } else if(dossier.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE)) {
-                dossier.setStatusDossier(StatusDossier.AJOUT_MANUEL);
             }
         }
     }
