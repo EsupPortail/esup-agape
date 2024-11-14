@@ -28,7 +28,7 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
 
-    @OneToMany(mappedBy = "dossier")
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<DossierAmenagement> dossierAmenagements = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
