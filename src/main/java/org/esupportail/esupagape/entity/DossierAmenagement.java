@@ -17,7 +17,7 @@ public class DossierAmenagement {
 
     private Integer lastYear;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Dossier dossier;
 
     @ManyToOne
