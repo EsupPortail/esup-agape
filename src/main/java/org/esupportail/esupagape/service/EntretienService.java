@@ -5,7 +5,6 @@ import org.esupportail.esupagape.entity.Entretien;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.EntretienRepository;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -23,17 +22,11 @@ public class EntretienService {
 
     private final DossierService dossierService;
 
-    private final DocumentRepository documentRepository;
-
-    private final DocumentService documentService;
-
     private final UtilsService utilsService;
 
-    public EntretienService(EntretienRepository entretienRepository, DossierService dossierService, DocumentRepository documentRepository, DocumentService documentService, UtilsService utilsService) {
+    public EntretienService(EntretienRepository entretienRepository, DossierService dossierService, UtilsService utilsService) {
         this.entretienRepository = entretienRepository;
         this.dossierService = dossierService;
-        this.documentRepository = documentRepository;
-        this.documentService = documentService;
         this.utilsService = utilsService;
     }
 
@@ -46,7 +39,9 @@ public class EntretienService {
         entretien.setDossier(dossier);
         entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
-        dossierService.changeStatutDossier(idDossier, StatusDossier.ACCUEILLI, personLdap.getEduPersonPrincipalName());
+        if(!dossier.getStatusDossier().equals(StatusDossier.SUIVI)) {
+            dossierService.changeStatutDossier(idDossier, StatusDossier.ACCUEILLI, personLdap.getEduPersonPrincipalName());
+        }
     }
 
     public Entretien getById(Long id) throws AgapeJpaException {
