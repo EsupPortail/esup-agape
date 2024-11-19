@@ -26,8 +26,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/dossiers")
@@ -153,6 +156,13 @@ public class DossierController {
     public String update(@PathVariable Long dossierId, @Valid DossierIndividuForm dossierIndividuForm, PersonLdap personLdap) {
         dossierService.updateDossierIndividu(dossierId, dossierIndividuForm, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId;
+    }
+
+    @PutMapping("/{dossierId}/update-classification")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
+    public String updateClassification(@PathVariable Long dossierId, @RequestParam List<Classification> classifications, PersonLdap personLdap, WebRequest request) {
+        dossierService.updateClassification(dossierId, classifications, personLdap.getEduPersonPrincipalName());
+        return "redirect:" + request.getHeader("referer");
     }
 
     @DeleteMapping(value = "/delete-dossier/{dossierId}")

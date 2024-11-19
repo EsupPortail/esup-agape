@@ -52,6 +52,32 @@
 		<div class="agape-tab-content bg-white p-3">
 			<h4>Aménagement du <span th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy')}"></span></h4>
 			<hr>
+			<form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id} + '/update-classification'}" th:method="put">
+				<div class="row mb-1 align-items-baseline">
+					<div class="col-4" style="width: 250px;">
+						<label class="form-label select-label" th:for="classification">Classification du
+							handicap</label>
+					</div>
+					<div class="col-12 col-xxl-8">
+						<select multiple
+								id="classification"
+								name="classifications"
+								size="1"
+								type="text"
+								class="agape-slim-select-search"
+								th:value="${currentDossier.classifications}">
+							<th:block th:each="classification : ${classifications}">
+							<option type="text"
+									th:selected="${currentDossier.classifications.contains(classification)}"
+									th:text="#{'dossier.classification.' +${classification}}"
+									th:value="${classification}">
+							</th:block>
+							</option>
+						</select>
+					</div>
+				</div>
+				<input type="submit" value="Enregistrer" class="btn btn-success">
+			</form>
 			<div class="col-12 text-center" style="height: 90%">
 				<th:block
 						th:unless="${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)}">
