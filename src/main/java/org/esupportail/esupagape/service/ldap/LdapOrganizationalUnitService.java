@@ -20,7 +20,8 @@ public class LdapOrganizationalUnitService {
         if(organizationalUnitLdaps.size() > 0) {
             return organizationalUnitLdaps.get(0);
         } else {
-            throw new AgapeJpaException(supannCodeEntite + " not fount in OU");
+//            throw new AgapeJpaException(supannCodeEntite + " not fount in OU");
+            return null;
         }
     }
 
