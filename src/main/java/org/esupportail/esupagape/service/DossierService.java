@@ -695,6 +695,14 @@ public class DossierService {
         this.codComposanteLabels = codComposanteLabels;
     }
 
+    @Transactional
+    public void updateClassification(Long dossierId, List<Classification> classifications, String eduPersonPrincipalName) {
+        Dossier dossier = getById(dossierId);
+        dossier.getClassifications().clear();
+        dossier.getClassifications().addAll(classifications);
+        logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
+    }
+
     //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
 //        Dossier dossier = getById(id);
