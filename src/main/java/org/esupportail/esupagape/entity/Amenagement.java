@@ -88,10 +88,10 @@ public class Amenagement {
     @Enumerated(EnumType.STRING)
     private SignatureStatus certificatSignatureStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private Document avis;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private Document certificat;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)

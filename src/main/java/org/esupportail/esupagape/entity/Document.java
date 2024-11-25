@@ -44,7 +44,7 @@ public class Document {
 
     private String parentType;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private Dossier dossier;
 
     @Enumerated(EnumType.STRING)
