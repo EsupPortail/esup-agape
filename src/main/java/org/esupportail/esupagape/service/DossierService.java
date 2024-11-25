@@ -17,6 +17,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
+import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.repository.DossierAmenagementRepository;
 import org.esupportail.esupagape.repository.DossierRepository;
@@ -58,6 +59,8 @@ public class DossierService {
 
     private final DossierAmenagementRepository dossierAmenagementRepository;
 
+    private final AmenagementRepository amenagementRepository;
+
     private final EntityManager em;
 
     private final LogService logService;
@@ -65,11 +68,12 @@ public class DossierService {
     Map<String, String> codComposanteLabels = new HashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, AmenagementRepository amenagementRepository, EntityManager em, LogService logService) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
         this.dossierAmenagementRepository = dossierAmenagementRepository;
+        this.amenagementRepository = amenagementRepository;
         this.em = em;
         this.logService = logService;
         Collections.reverse(dossierInfosServices);
@@ -110,9 +114,12 @@ public class DossierService {
         dossier.setStatusDossier(statusDossier);
     }
 
+    @Transactional
     public void deleteDossier(Long id) {
         Optional<Dossier> dossier = dossierRepository.findById(id);
-        dossier.ifPresent(dossierRepository::delete);
+        if(dossier.isPresent()) {
+            dossierRepository.delete(dossier.get());
+        }
     }
 
     public Page<Dossier> getAllByYear(int year, Pageable pageable) {
