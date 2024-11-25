@@ -17,10 +17,10 @@ public class DossierAmenagement {
 
     private Integer lastYear;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Dossier dossier;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Amenagement amenagement;
 
     @Enumerated(EnumType.STRING)
