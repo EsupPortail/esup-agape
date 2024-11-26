@@ -28,7 +28,7 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<DossierAmenagement> dossierAmenagements = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -105,13 +105,13 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Entretien> entretiens = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<AideMaterielle> aidesMaterielles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<AideHumaine> aidesHumaines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
