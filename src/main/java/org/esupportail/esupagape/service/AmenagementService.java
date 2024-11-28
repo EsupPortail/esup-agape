@@ -633,8 +633,9 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void syncAmenagement(Amenagement amenagement) {
+    public void syncAmenagement(Long amenagementId) {
         try {
+            Amenagement amenagement = getById(amenagementId);
             Dossier dossier = amenagement.getDossierByYear(utilsService.getCurrentYear());
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
@@ -673,7 +674,7 @@ public class AmenagementService {
                 dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
-            logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId(), e);
+            logger.error(e.getMessage() + " on sync amenagement " + amenagementId, e);
         }
     }
 
@@ -789,11 +790,10 @@ public class AmenagementService {
         return amenagementRepository.findDossierAmenagementToSync();
     }
 
-    @Transactional
     public void syncAllAmenagments() {
         List<Amenagement> amenagementsToSync = getAmenagementsToSync();
         for(Amenagement amenagement : amenagementsToSync) {
-            syncAmenagement(amenagement);
+            syncAmenagement(amenagement.getId());
         }
     }
 
