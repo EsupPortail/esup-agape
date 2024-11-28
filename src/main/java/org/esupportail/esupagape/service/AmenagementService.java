@@ -349,7 +349,7 @@ public class AmenagementService {
                         dossierAmenagement.getDossier());
                 amenagement.setCertificat(certificat);
                 dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
-                sendAmenagementToIndividu(amenagementId, false);
+                sendAmenagementToIndividu(amenagement, false);
                 sendAlert(amenagement);
             }
         } else {
@@ -666,21 +666,24 @@ public class AmenagementService {
                 }
             }
             if (amenagement.getIndividuSendDate() == null) {
-                sendAmenagementToIndividu(amenagement.getId(), false);
+                sendAmenagementToIndividu(amenagement, false);
                 sendAlert(amenagement);
             }
-
             if(dossier != null) {
                 dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
-            logger.error(e.getMessage() + " on sync amenagement " + amenagementId, e);
+            logger.warn(e.getMessage() + " on sync amenagement " + amenagementId, e);
         }
     }
 
     @Transactional
     public void sendAmenagementToIndividu(long amenagementId, boolean force) throws Exception {
         Amenagement amenagement = getById(amenagementId);
+        sendAmenagementToIndividu(amenagement, force);
+    }
+
+    public void sendAmenagementToIndividu(Amenagement amenagement, boolean force) throws Exception {
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
         String to = dossierAmenagement.getDossier().getIndividu().getEmailEtu();
         if(StringUtils.hasText(applicationProperties.getTestEmail())) to = applicationProperties.getTestEmail();
@@ -694,7 +697,7 @@ public class AmenagementService {
             }
             mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             amenagement.setIndividuSendDate(LocalDateTime.now());
-            logger.info("amenagement " + amenagementId + " sended to " + to);
+            logger.info("amenagement " + amenagement.getId() + " sended to " + to);
         }
     }
 
