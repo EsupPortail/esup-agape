@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -330,7 +331,8 @@ public class Amenagement {
     }
 
     public Dossier getDossierByYear(int year) {
-        return dossierAmenagements.stream().filter(d -> d.getLastYear() == year).findFirst().get().getDossier();
+        Optional<DossierAmenagement> dossierAmenagement = dossierAmenagements.stream().filter(d -> d.getLastYear() == year).findFirst();
+        return dossierAmenagement.map(DossierAmenagement::getDossier).orElse(null);
     }
 
     public DossierAmenagement getLastDossierAmenagement() {

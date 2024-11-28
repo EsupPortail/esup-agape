@@ -635,23 +635,45 @@ public class AmenagementService {
     @Transactional
     public void syncAmenagement(Amenagement amenagement) {
         try {
+            Dossier dossier = amenagement.getDossierByYear(utilsService.getCurrentYear());
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
-            if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isBefore(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-                logger.info("amenagement " + amenagement.getId() + " EXPIRE");
-                dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-                logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
+            if(dossierAmenagement != null) {
+                if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now)) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                    logger.info("amenagement " + amenagement.getId() + " EXPIRE");
+                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+                    logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
+                } else {
+                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                }
+            } else {
+                Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
+                if (lastDossierAmenagement.isPresent() && !lastDossierAmenagement.get().getStatusDossierAmenagement().equals(StatusDossierAmenagement.REFUSE) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isAfter(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                    if (dossier == null) {
+                        Dossier lastDossier = dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier();
+                        dossier = dossierService.create("system", lastDossier.getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
+                        dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logger.info("amenagement " + amenagement.getId() + " reconduit");
+                    } else if (dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(amenagement))) {
+                        dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
+                        logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logger.info("amenagement " + amenagement.getId() + " reconduit");
+                    }
+                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                }
             }
             if (amenagement.getIndividuSendDate() == null) {
                 sendAmenagementToIndividu(amenagement.getId(), false);
                 sendAlert(amenagement);
             }
-            Dossier dossier = amenagement.getDossierByYear(utilsService.getCurrentYear());
+
             if(dossier != null) {
                 dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
-            logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId());
+            logger.error(e.getMessage() + " on sync amenagement " + amenagement.getId(), e);
         }
     }
 
@@ -764,7 +786,7 @@ public class AmenagementService {
 
     @Transactional
     public List<Amenagement> getAmenagementsToSync() {
-        return dossierAmenagementRepository.findDossierAmenagementByLastYear(utilsService.getCurrentYear()).stream().filter(da -> da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)).map(DossierAmenagement::getAmenagement).toList();
+        return amenagementRepository.findDossierAmenagementToSync();
     }
 
     @Transactional

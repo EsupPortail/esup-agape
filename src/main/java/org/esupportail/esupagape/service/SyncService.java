@@ -7,7 +7,6 @@ import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
-import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,18 +33,14 @@ public class SyncService {
 
     private final List<IndividuSourceService> individuSourceServices;
 
-    private final List<DossierInfosService> dossierInfosServices;
-
     private final UtilsService utilsService;
 
-    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, EnqueteService enqueteService, DossierService dossierService, List<IndividuSourceService> individuSourceServices, List<DossierInfosService> dossierInfosServices, UtilsService utilsService) {
+    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, EnqueteService enqueteService, DossierService dossierService, List<IndividuSourceService> individuSourceServices, UtilsService utilsService) {
         this.individuRepository = individuRepository;
         this.dossierRepository = dossierRepository;
         this.enqueteService = enqueteService;
         this.dossierService = dossierService;
         this.individuSourceServices = individuSourceServices;
-        Collections.reverse(dossierInfosServices);
-        this.dossierInfosServices = dossierInfosServices;
         this.utilsService = utilsService;
     }
 
