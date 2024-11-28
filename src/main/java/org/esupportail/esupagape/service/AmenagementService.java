@@ -655,9 +655,11 @@ public class AmenagementService {
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                         logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logger.info("amenagement " + amenagement.getId() + " reconduit");
                     } else if (dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(amenagement))) {
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logger.info("amenagement " + amenagement.getId() + " reconduit");
                     }
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                 }
