@@ -95,7 +95,7 @@ public class DocumentService {
 		}
 	}
 
-
+	@Transactional
 	public byte[] getDocument(Long amenagementId) throws IOException {
 		Amenagement amenagement = amenagementRepository.findById(amenagementId).get();
 		byte[] certificat;
