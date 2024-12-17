@@ -694,7 +694,7 @@ public class AmenagementService {
         if((force || amenagement.getIndividuSendDate() == null) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             byte[] certificat;
             if(amenagement.getCertificat() != null ) {
-                certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+                certificat = documentService.getDocument(amenagement.getId());
             } else {
                 byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
                 certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
