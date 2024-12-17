@@ -25,10 +25,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.AmenagementRepository;
-import org.esupportail.esupagape.repository.DossierAmenagementRepository;
-import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
-import org.esupportail.esupagape.repository.UserOthersAffectationsRepository;
+import org.esupportail.esupagape.repository.*;
 import org.esupportail.esupagape.repository.ldap.OrganizationalUnitLdapRepository;
 import org.esupportail.esupagape.repository.ldap.PersonLdapRepository;
 import org.esupportail.esupagape.service.ldap.OrganizationalUnitLdap;
@@ -78,8 +75,9 @@ public class AmenagementService {
     private final UserOthersAffectationsRepository userOthersAffectationsRepository;
     private final PersonLdapRepository personLdapRepository;
     private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
+    private final DossierRepository dossierRepository;
 
-    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, LogService logService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository) {
+    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, LogService logService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository, DossierRepository dossierRepository) {
         this.applicationProperties = applicationProperties;
         this.ldapProperties = ldapProperties;
         this.amenagementRepository = amenagementRepository;
@@ -96,6 +94,7 @@ public class AmenagementService {
         this.userOthersAffectationsRepository = userOthersAffectationsRepository;
         this.personLdapRepository = personLdapRepository;
         this.organizationalUnitLdapRepository = organizationalUnitLdapRepository;
+        this.dossierRepository = dossierRepository;
     }
 
     public Amenagement getById(Long id) {
@@ -670,6 +669,7 @@ public class AmenagementService {
                 sendAlert(amenagement);
             }
             if(dossier != null) {
+                dossierRepository.save(dossier);
                 dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {
@@ -688,13 +688,8 @@ public class AmenagementService {
         String to = dossierAmenagement.getDossier().getIndividu().getEmailEtu();
         if(StringUtils.hasText(applicationProperties.getTestEmail())) to = applicationProperties.getTestEmail();
         if((force || amenagement.getIndividuSendDate() == null) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-            byte[] certificat;
-            if(amenagement.getCertificat() != null ) {
-                certificat = amenagement.getCertificat().getInputStream().readAllBytes();
-            } else {
-                byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-                certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
-            }
+            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+            byte[] certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
             mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             amenagement.setIndividuSendDate(LocalDateTime.now());
             logger.info("amenagement " + amenagement.getId() + " sended to " + to);
@@ -723,6 +718,7 @@ public class AmenagementService {
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
             try {
                 if(!to.isEmpty()) {
+                    logger.info("Mail d'alerte envoyer, aménagement : " + amenagement.getId() + " to " + to);
                     mailService.sendAlert(to);
                 }
             } catch (Exception e) {
