@@ -349,8 +349,8 @@ public class AmenagementService {
                 amenagement.setCertificat(certificat);
                 dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
                 amenagementRepository.save(amenagement);
-                sendAmenagementToIndividu(amenagement.getId(), false);
                 sendAlert(amenagement);
+                sendAmenagementToIndividu(amenagement.getId(), false);
             }
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -667,8 +667,8 @@ public class AmenagementService {
             }
             if (amenagement.getIndividuSendDate() == null) {
                 amenagementRepository.save(amenagement);
-                sendAmenagementToIndividu(amenagement.getId(), false);
                 sendAlert(amenagement);
+                sendAmenagementToIndividu(amenagement.getId(), false);
             }
             if(dossier != null) {
                 dossierRepository.save(dossier);
@@ -724,7 +724,7 @@ public class AmenagementService {
                 }
             }
         }
-        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+        if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) && amenagement.getIndividuSendDate() == null) {
             try {
                 if(!to.isEmpty()) {
                     logger.info("Mail d'alerte envoyer, aménagement : " + amenagement.getId() + " to " + to);
