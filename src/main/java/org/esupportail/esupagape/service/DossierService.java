@@ -556,10 +556,13 @@ public class DossierService {
         }
         return em.createQuery(cq);
     }
-
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
         Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
+        syncStatusDossierAmenagement(dossier);
+    }
+
+    public void syncStatusDossierAmenagement(Dossier dossier) {
         if(dossier.getDossierAmenagements() == null) return;
         if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
                 && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
