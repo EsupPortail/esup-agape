@@ -348,7 +348,8 @@ public class AmenagementService {
                         dossierAmenagement.getDossier());
                 amenagement.setCertificat(certificat);
                 dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
-                sendAmenagementToIndividu(amenagement, false);
+                amenagementRepository.save(amenagement);
+                sendAmenagementToIndividu(amenagement.getId(), false);
                 sendAlert(amenagement);
             }
         } else {
@@ -665,7 +666,8 @@ public class AmenagementService {
                 }
             }
             if (amenagement.getIndividuSendDate() == null) {
-                sendAmenagementToIndividu(amenagement, false);
+                amenagementRepository.save(amenagement);
+                sendAmenagementToIndividu(amenagement.getId(), false);
                 sendAlert(amenagement);
             }
             if(dossier != null) {
@@ -677,19 +679,26 @@ public class AmenagementService {
         }
     }
 
-    @Transactional
-    public void sendAmenagementToIndividu(long amenagementId, boolean force) throws Exception {
-        Amenagement amenagement = getById(amenagementId);
-        sendAmenagementToIndividu(amenagement, force);
-    }
+//    @Transactional
+//    public void sendAmenagementToIndividu(Long amenagementId, boolean force) throws Exception {
+//        Amenagement amenagement = getById(amenagementId);
+//        sendAmenagementToIndividu(amenagement, force);
+//    }
 
-    public void sendAmenagementToIndividu(Amenagement amenagement, boolean force) throws Exception {
+    @Transactional
+    public void sendAmenagementToIndividu(Long amenagementId, boolean force) throws Exception {
+        Amenagement amenagement = getById(amenagementId);
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
         String to = dossierAmenagement.getDossier().getIndividu().getEmailEtu();
         if(StringUtils.hasText(applicationProperties.getTestEmail())) to = applicationProperties.getTestEmail();
         if((force || amenagement.getIndividuSendDate() == null) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-            byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-            byte[] certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
+            byte[] certificat;
+            if(amenagement.getCertificat() != null ) {
+                certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+            } else {
+                byte[] modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
+                certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
+            }
             mailService.sendCertificat(new ByteArrayInputStream(certificat), to);
             amenagement.setIndividuSendDate(LocalDateTime.now());
             logger.info("amenagement " + amenagement.getId() + " sended to " + to);
