@@ -107,7 +107,7 @@ public class IndividuService {
                     individuRepository.save(checkIndividu);
                     i++;
                 }
-                Dossier dossier = dossierService.create("system", checkIndividu, null, StatusDossier.IMPORTE);
+                Dossier dossier = dossierService.create("system", checkIndividu.getId(), null, StatusDossier.IMPORTE);
                 dossiers.add(dossier);
                 individu.getDossiers().add(dossier);
             }
@@ -147,14 +147,14 @@ public class IndividuService {
             individuToAdd.setNumEtu(null);
         }
         if (foundIndividu != null) {
-            dossierService.create(eppn, foundIndividu, null, StatusDossier.AJOUT_MANUEL);
+            dossierService.create(eppn, foundIndividu.getId(), null, StatusDossier.AJOUT_MANUEL);
         } else {
             if (excludeIndividu != null) {
                 // suppression de l'exclusion si l’insertion est forcée
                 excludeIndividuRepository.delete(excludeIndividu);
             }
             individuRepository.save(individuToAdd);
-            dossierService.create(eppn, individuToAdd, typeIndividu, StatusDossier.AJOUT_MANUEL);
+            dossierService.create(eppn, individuToAdd.getId(), typeIndividu, StatusDossier.AJOUT_MANUEL);
         }
     }
 
@@ -201,7 +201,7 @@ public class IndividuService {
         if (individuTestIsExist != null) {
             List<Dossier> dossiers = individuTestIsExist.getDossiers().stream().filter(dossier -> dossier.getYear().equals(utilsService.getCurrentYear())).toList();
             if (dossiers.isEmpty()) {
-                newDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist, null, StatusDossier.AJOUT_MANUEL);
+                newDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), individuTestIsExist.getId(), null, StatusDossier.AJOUT_MANUEL);
             } else {
                 newDossier = dossiers.get(0);
             }
