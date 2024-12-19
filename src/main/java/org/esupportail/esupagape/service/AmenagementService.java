@@ -640,13 +640,21 @@ public class AmenagementService {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
             if(dossierAmenagement != null) {
-                if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now)) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-                    logger.info("amenagement " + amenagement.getId() + " EXPIRE");
-                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-                    logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
-                } else {
-                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                    logger.info("amenagement " + amenagement.getId() + " valide");
+                if(dossier.getId() == 86023) {
+                    logger.info("dossier 86023");
+                }
+                if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE)) {
+                    if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement())
+                        && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now))
+                        && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                        logger.info("amenagement " + amenagement.getId() + " EXPIRE");
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+                        logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
+                    } else {
+                        dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        logger.info("amenagement " + amenagement.getId() + " valide");
+                    }
                 }
             } else {
                 Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
