@@ -96,6 +96,7 @@ public class Dossier {
     private Boolean hasScholarship;
 
     private Boolean atypie;
+
     @ManyToOne
     private Individu individu;
 
@@ -114,7 +115,7 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<Document> documents = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Document> attachments;
 
     private Boolean newDossier = true;
