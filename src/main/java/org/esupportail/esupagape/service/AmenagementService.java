@@ -649,7 +649,7 @@ public class AmenagementService {
                 }
             } else {
                 Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
-                if (lastDossierAmenagement.isPresent() && !lastDossierAmenagement.get().getStatusDossierAmenagement().equals(StatusDossierAmenagement.REFUSE) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isAfter(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                if (lastDossierAmenagement.isPresent() && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isAfter(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
                     if (dossier == null) {
                         Dossier lastDossier = dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier();
                         dossier = dossierService.create("system", lastDossier.getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
