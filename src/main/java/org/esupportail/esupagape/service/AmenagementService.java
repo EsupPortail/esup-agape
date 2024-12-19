@@ -676,6 +676,8 @@ public class AmenagementService {
                 amenagementRepository.save(amenagement);
                 sendAlert(amenagement);
                 sendAmenagementToIndividu(amenagement.getId(), false);
+                amenagement.setIndividuSendDate(LocalDateTime.now());
+                amenagementRepository.save(amenagement);
             }
             if(dossier != null) {
                 dossierRepository.save(dossier);
