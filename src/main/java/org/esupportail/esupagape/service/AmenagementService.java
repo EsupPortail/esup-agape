@@ -646,6 +646,7 @@ public class AmenagementService {
                     logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
                 } else {
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                    logger.info("amenagement " + amenagement.getId() + " valide");
                 }
             } else {
                 Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
