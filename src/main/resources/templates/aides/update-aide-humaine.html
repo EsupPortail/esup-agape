@@ -425,7 +425,7 @@
                 </div>
             </div>
         </main>
-        <div th:replace="aides/modal-pj-aide-humaine :: pj"></div>
+        <div th:replace="~{aides/modal-pj-aide-humaine :: pj}"></div>
         <script th:if="${returnModPJ}">
             document.getElementById('pj-aide-humaine').classList.toggle("fade");
             new bootstrap.Modal(document.getElementById('pj-aide-humaine')).show();
