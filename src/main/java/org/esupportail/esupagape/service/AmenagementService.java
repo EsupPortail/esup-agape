@@ -640,9 +640,6 @@ public class AmenagementService {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
             if(dossierAmenagement != null) {
-                if(dossier.getId() == 86023) {
-                    logger.info("dossier 86023");
-                }
                 if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE)) {
                     if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement())
                         && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now))
