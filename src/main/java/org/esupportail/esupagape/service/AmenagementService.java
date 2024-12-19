@@ -667,9 +667,10 @@ public class AmenagementService {
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
                         logger.info("amenagement " + amenagement.getId() + " reconduit");
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                     }
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                }
+               }
             }
             if (amenagement.getIndividuSendDate() == null) {
                 amenagementRepository.save(amenagement);
