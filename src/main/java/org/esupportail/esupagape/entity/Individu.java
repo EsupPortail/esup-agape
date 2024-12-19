@@ -71,7 +71,7 @@ public class Individu {
 
     private LocalDate dateAnonymisation;
 
-    @OneToMany(mappedBy = "individu", orphanRemoval = true)
+    @OneToMany(mappedBy = "individu")
     private List<Dossier> dossiers = new ArrayList<>();
 
     public Individu() {
