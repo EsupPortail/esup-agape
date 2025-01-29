@@ -167,6 +167,7 @@ public class DossierService {
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
+        dossierToUpdate.getClassifications().clear();
         dossierToUpdate.getClassifications().addAll(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdphs(dossier.getMdphs());
