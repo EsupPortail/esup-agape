@@ -617,7 +617,7 @@ public class DossierService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return false;
-        if(StatusDossier.RECONDUIT.equals(dossier.getStatusDossier()) && (dossier.getClassifications().isEmpty() || dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.AUTRES_TROUBLES))) {
+        if(StatusDossier.RECONDUIT.equals(dossier.getStatusDossier()) && (dossier.getClassifications().isEmpty() || (dossier.getClassifications().size() == 1 && (dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.AUTRES_TROUBLES))))) {
             try {
                 List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty() && !d.getClassifications().contains(Classification.AUTRES_TROUBLES) && !d.getClassifications().contains(Classification.NON_COMMUNIQUE)).findFirst().orElseThrow().getClassifications());
                 dossier.getClassifications().clear();

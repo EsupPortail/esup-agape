@@ -2,6 +2,7 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -115,8 +116,9 @@ public class SyncService {
         }
         try {
             Dossier dossier = dossierRepository.findByIndividuIdAndYear(id, utilsService.getCurrentYear()).orElse(null);
-            if (dossier != null && individuInfos.getHandicap() != null) {
-                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            if (dossier != null) {
+                if ((dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || (dossier.getClassifications().size()) == 1 && (dossier.getClassifications().contains(Classification.AUTRES_TROUBLES) || dossier.getClassifications().contains(Classification.NON_COMMUNIQUE))) && individuInfos.getHandicap() != null) {
+                    dossier.getClassifications().clear();
                     dossier.getClassifications().add(individuInfos.getHandicap());
                 }
             }
