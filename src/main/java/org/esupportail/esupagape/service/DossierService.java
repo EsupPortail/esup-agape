@@ -17,10 +17,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.AmenagementRepository;
-import org.esupportail.esupagape.repository.DocumentRepository;
-import org.esupportail.esupagape.repository.DossierAmenagementRepository;
-import org.esupportail.esupagape.repository.DossierRepository;
+import org.esupportail.esupagape.repository.*;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -64,11 +61,12 @@ public class DossierService {
     private final EntityManager em;
 
     private final LogService logService;
+    private final IndividuRepository individuRepository;
 
     Map<String, String> codComposanteLabels = new HashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, AmenagementRepository amenagementRepository, EntityManager em, LogService logService) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, AmenagementRepository amenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
@@ -79,16 +77,18 @@ public class DossierService {
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
+        this.individuRepository = individuRepository;
     }
 
     @Transactional
-    public Dossier create(String eppn, Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
-        Optional<Dossier> optDossier = dossierRepository.findByIndividuIdAndYear(individu.getId(), utilsService.getCurrentYear());
+    public Dossier create(String eppn, Long individuId, TypeIndividu typeIndividu, StatusDossier statusDossier) {
+        Optional<Dossier> optDossier = dossierRepository.findByIndividuIdAndYear(individuId, utilsService.getCurrentYear());
         if(optDossier.isPresent()) {
             return optDossier.get();
         }
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
+        Individu individu = individuRepository.findById(individuId).orElseThrow();
         dossier.setIndividu(individu);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
@@ -565,13 +565,13 @@ public class DossierService {
     public void syncStatusDossierAmenagement(Dossier dossier) {
         if(dossier.getDossierAmenagements() == null) return;
         if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
-        ) {
+            && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
+            && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
             if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE))) {
                 dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else {
                 dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+                logger.info("dossier " + dossier.getId() + " statusDossierAmenagement set to NON");
             }
         }
         if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
@@ -617,9 +617,9 @@ public class DossierService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return false;
-        if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && dossier.getClassifications().isEmpty()) {
+        if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && (dossier.getClassifications().isEmpty() || dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.AUTRES_TROUBLES))) {
             try {
-                List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty()).findFirst().orElseThrow().getClassifications());
+                List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty() && !d.getClassifications().contains(Classification.AUTRES_TROUBLES) && !d.getClassifications().contains(Classification.NON_COMMUNIQUE)).findFirst().orElseThrow().getClassifications());
                 dossier.getClassifications().addAll(classifications);
             } catch (Exception e) {
                 logger.debug(e.getMessage());

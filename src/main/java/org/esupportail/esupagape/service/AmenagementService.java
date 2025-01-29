@@ -555,7 +555,7 @@ public class AmenagementService {
                 dossierService.changeStatutDossier(currentDossier.getId(), StatusDossier.RECONDUIT, personLdap.getEduPersonPrincipalName());
             }
         } else {
-            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
+            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu().getId(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
             dossierAmenagement = dossierService.createDossierAmenagement(amenagement, currentDossier);
         }
         dossierAmenagement.setDossier(currentDossier);
@@ -579,7 +579,7 @@ public class AmenagementService {
                 dossierService.changeStatutDossier(currentDossier.getId(), StatusDossier.NON_RECONDUIT, personLdap.getEduPersonPrincipalName());
             }
         } catch (AgapeJpaException e) {
-            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.NON_RECONDUIT);
+            currentDossier = dossierService.create(personLdap.getEduPersonPrincipalName(), dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier().getIndividu().getId(), TypeIndividu.ETUDIANT, StatusDossier.NON_RECONDUIT);
             dossierAmenagement = dossierService.createDossierAmenagement(amenagement, currentDossier);
         }
         dossierAmenagement.setDossier(currentDossier);
@@ -640,19 +640,25 @@ public class AmenagementService {
             LocalDateTime now = LocalDateTime.now().minusDays(1);
             DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
             if(dossierAmenagement != null) {
-                if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement()) && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now)) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
-                    logger.info("amenagement " + amenagement.getId() + " EXPIRE");
-                    dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-                    logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
-                } else {
-                    dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                if(amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE)) {
+                    if (!StatusDossierAmenagement.EXPIRE.equals(dossierAmenagement.getStatusDossierAmenagement())
+                        && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now))
+                        && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                        logger.info("amenagement " + amenagement.getId() + " EXPIRE");
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
+                        logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
+                    } else {
+                        dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
+                        logger.info("amenagement " + amenagement.getId() + " valide");
+                    }
                 }
             } else {
                 Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
                 if (lastDossierAmenagement.isPresent() && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isAfter(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
                     if (dossier == null) {
                         Dossier lastDossier = dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier();
-                        dossier = dossierService.create("system", lastDossier.getIndividu(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
+                        dossier = dossierService.create("system", lastDossier.getIndividu().getId(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                         logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
@@ -661,14 +667,17 @@ public class AmenagementService {
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
                         logger.info("amenagement " + amenagement.getId() + " reconduit");
+                        dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                     }
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                }
+               }
             }
             if (amenagement.getIndividuSendDate() == null) {
                 amenagementRepository.save(amenagement);
                 sendAlert(amenagement);
                 sendAmenagementToIndividu(amenagement.getId(), false);
+                amenagement.setIndividuSendDate(LocalDateTime.now());
+                amenagementRepository.save(amenagement);
             }
             if(dossier != null) {
                 dossierRepository.save(dossier);
