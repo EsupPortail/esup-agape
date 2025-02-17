@@ -45,13 +45,13 @@
                                 <tbody>
                                     <th:block th:each="aideMaterielle : ${aideMaterielles}">
                                         <tr>
-                                            <td th:text="${aideMaterielle.typeAideMaterielle.label}"></td>
+                                            <td th:text="${aideMaterielle?.typeAideMaterielle?.label}"></td>
                                             <td th:text="${#temporals.format(aideMaterielle.endDate, 'dd/MM/yyyy')}"></td>
                                             <td th:text="${aideMaterielle.cost}" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"></td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                                                 <button class="btn btn-info" title="Voir le détail" data-bs-toggle="modal" th:data-bs-target="'#show-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-eye"></i>
                                                 </button>
-                                                <div th:replace="aides/modal-show-aide-materielle :: show"></div>
+                                                <div th:replace="~{aides/modal-show-aide-materielle :: show}"></div>
                                             </td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                                                 <button title="Supprimer l'aide matérielle" th:if="${currentYear == currentDossier.year}" class="btn btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-aide-materielle-' + ${aideMaterielle.id}"><i class="fa-solid fa-trash"></i>
