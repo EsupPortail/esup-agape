@@ -1,11 +1,11 @@
 package org.esupportail.esupagape.entity;
 
+import jakarta.persistence.*;
 import org.esupportail.esupagape.entity.enums.FonctionAidant;
 import org.esupportail.esupagape.entity.enums.StatusAideHumaine;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,20 +27,11 @@ public class AideHumaine {
     @Enumerated(EnumType.STRING)
     private StatusAideHumaine statusAideHumaine = StatusAideHumaine.EN_COURS;
 
-    private String numEtuAidant;
+    @ManyToOne
+    private Aidant aidant = new Aidant();
 
-    @NotNull
-    private String nameAidant;
-
-    @NotNull
-    private String firstNameAidant;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirthAidant;
-
-    private String emailAidant;
-
-    private String phoneAidant;
+    @Transient
+    transient private String numAidant;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime startDate;
@@ -79,53 +70,70 @@ public class AideHumaine {
         this.statusAideHumaine = statusAideHumaine;
     }
 
-    public String getNumEtuAidant() {
-        return numEtuAidant;
+    public Aidant getAidant() {
+        return aidant;
     }
 
-    public void setNumEtuAidant(String numEtuAidant) {
-        this.numEtuAidant = numEtuAidant;
+    public void setAidant(Aidant aidant) {
+        this.aidant = aidant;
     }
+
+    public String getNumAidant() {
+        if(aidant != null && StringUtils.hasText(aidant.getNumEtuAidant())) return aidant.getNumEtuAidant();
+        return numAidant;
+    }
+
+    public void setNumAidant(String numAidant) {
+        this.numAidant = numAidant;
+    }
+
+    public String getNumEtuAidant() {
+        return aidant.getNumEtuAidant();
+    }
+//
+//    public void setNumEtuAidant(String numEtuAidant) {
+//        this.numEtuAidant = numEtuAidant;
+//    }
 
     public String getNameAidant() {
-        return nameAidant;
+        return aidant.getNameAidant();
     }
 
-    public void setNameAidant(String nameAidant) {
-        this.nameAidant = nameAidant;
-    }
+//    public void setNameAidant(String nameAidant) {
+//        this.nameAidant = nameAidant;
+//    }
 
     public String getFirstNameAidant() {
-        return firstNameAidant;
+        return aidant.getFirstNameAidant();
     }
 
-    public void setFirstNameAidant(String firstNameAidant) {
-        this.firstNameAidant = firstNameAidant;
-    }
+//    public void setFirstNameAidant(String firstNameAidant) {
+//        this.firstNameAidant = firstNameAidant;
+//    }
 
     public LocalDate getDateOfBirthAidant() {
-        return dateOfBirthAidant;
+        return aidant.getDateOfBirthAidant();
     }
 
-    public void setDateOfBirthAidant(LocalDate dateOfBirthAidant) {
-        this.dateOfBirthAidant = dateOfBirthAidant;
-    }
+//    public void setDateOfBirthAidant(LocalDate dateOfBirthAidant) {
+//        this.dateOfBirthAidant = dateOfBirthAidant;
+//    }
 
     public String getEmailAidant() {
-        return emailAidant;
+        return aidant.getEmailAidant();
     }
 
-    public void setEmailAidant(String emailAidant) {
-        this.emailAidant = emailAidant;
-    }
+//    public void setEmailAidant(String emailAidant) {
+//        this.emailAidant = emailAidant;
+//    }
 
     public String getPhoneAidant() {
-        return phoneAidant;
+        return aidant.getPhoneAidant();
     }
 
-    public void setPhoneAidant(String phoneAidant) {
-        this.phoneAidant = phoneAidant;
-    }
+//    public void setPhoneAidant(String phoneAidant) {
+//        this.phoneAidant = phoneAidant;
+//    }
 
     public LocalDateTime getStartDate() {
         return startDate;

@@ -1,5 +1,7 @@
 package org.esupportail.esupagape.service;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.esupportail.esupagape.entity.Aidant;
 import org.esupportail.esupagape.entity.AideHumaine;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
@@ -9,9 +11,11 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
+import org.esupportail.esupagape.repository.AidantRepository;
 import org.esupportail.esupagape.repository.AideHumaineRepository;
 import org.esupportail.esupagape.repository.DocumentRepository;
-import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
+import org.esupportail.esupagape.service.ldap.LdapPersonService;
+import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +39,8 @@ public class AideHumaineService {
 
     private final AideHumaineRepository aideHumaineRepository;
 
+    private final AidantRepository aidantRepository;
+
     private final DocumentService documentService;
 
     private final UtilsService utilsService;
@@ -41,14 +48,17 @@ public class AideHumaineService {
     private final DossierService dossierService;
 
     private final SyncService syncService;
+    private final LdapPersonService ldapPersonService;
 
-    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, DocumentService documentService, UtilsService utilsService, DossierService dossierService, SyncService syncService) {
+    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, AidantRepository aidantRepository, DocumentService documentService, UtilsService utilsService, DossierService dossierService, SyncService syncService, LdapPersonService ldapPersonService) {
         this.documentRepository = documentRepository;
         this.aideHumaineRepository = aideHumaineRepository;
+        this.aidantRepository = aidantRepository;
         this.documentService = documentService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
         this.syncService = syncService;
+        this.ldapPersonService = ldapPersonService;
     }
 
     @Transactional
@@ -64,7 +74,7 @@ public class AideHumaineService {
              || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
             dossierService.changeStatutDossier(dossierId, StatusDossier.SUIVI, eppn);
         }
-        recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaine);
+        aideHumaine.setAidant(recupAidantWithNumEtu(aideHumaine.getNumAidant()));
         return aideHumaineRepository.save(aideHumaine);
     }
 
@@ -96,48 +106,45 @@ public class AideHumaineService {
         }
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
         aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());
-        if (StringUtils.hasText(aideHumaine.getNumEtuAidant())) {
-            if (!aideHumaine.getNumEtuAidant().equals(aideHumaineToUpdate.getNumEtuAidant())) {
-                recupAidantWithNumEtu(aideHumaine.getNumEtuAidant(), aideHumaineToUpdate);
+        if (StringUtils.hasText(aideHumaine.getNumAidant())) {
+            if (!aideHumaine.getNumAidant().equals(aideHumaineToUpdate.getNumAidant())) {
+                aideHumaine.setAidant(recupAidantWithNumEtu(aideHumaine.getNumAidant()));
             }
         } else {
-            aideHumaineToUpdate.setNumEtuAidant("");
-            if (StringUtils.hasText(aideHumaine.getNameAidant())) {
-                aideHumaineToUpdate.setNameAidant(aideHumaine.getNameAidant());
-            }
-            if (StringUtils.hasText(aideHumaine.getFirstNameAidant())) {
-                aideHumaineToUpdate.setFirstNameAidant(aideHumaine.getFirstNameAidant());
-            }
-            if (StringUtils.hasText(aideHumaine.getPhoneAidant())) {
-                aideHumaineToUpdate.setPhoneAidant(aideHumaine.getPhoneAidant());
-            }
-            if (StringUtils.hasText(aideHumaine.getEmailAidant())) {
-                aideHumaineToUpdate.setEmailAidant(aideHumaine.getEmailAidant());
-            }
+            throw new AgapeRuntimeException("numéro d'aidant non trouvé");
         }
     }
 
-    private void recupAidantWithNumEtu(String numEtu, AideHumaine aideHumaineToUpdate) {
-        IndividuInfos individuInfos = syncService.getIndividuInfosByNumEtu(numEtu);
-        if (StringUtils.hasText(individuInfos.getName())) {
-            aideHumaineToUpdate.setNameAidant(individuInfos.getName());
+    @Transactional
+    public Aidant recupAidantWithNumEtu(String numEtuAidant) {
+        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEmpId(numEtuAidant);
+        if(!personLdaps.isEmpty()) {
+            PersonLdap personLdap = personLdaps.get(0);
+            Aidant aidant = aidantRepository.findByNumEtuAidant(numEtuAidant);
+            if (aidant == null) {
+                aidant = new Aidant();
+                aidant.setNumEtuAidant(numEtuAidant);
+            }
+            if (StringUtils.hasText(personLdap.getSn())) {
+                aidant.setNameAidant(personLdap.getSn());
+            }
+            if (StringUtils.hasText(personLdap.getGivenName())) {
+                aidant.setFirstNameAidant(personLdap.getGivenName());
+            }
+            if (StringUtils.hasText(personLdap.getMail())) {
+                aidant.setEmailAidant(personLdap.getMail());
+            }
+            if (personLdap.getSchacDateOfBirth() != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                aidant.setDateOfBirthAidant(LocalDate.parse(personLdap.getSchacDateOfBirth(), formatter));
+            }
+            if (StringUtils.hasText(personLdap.getTelephoneNumber())) {
+                aidant.setPhoneAidant(personLdap.getTelephoneNumber());
+            }
+            aidantRepository.save(aidant);
+            return aidant;
         }
-        if (StringUtils.hasText(individuInfos.getFirstName())) {
-            aideHumaineToUpdate.setFirstNameAidant(individuInfos.getFirstName());
-        }
-        if (StringUtils.hasText(individuInfos.getEmailEtu())) {
-            aideHumaineToUpdate.setEmailAidant(individuInfos.getEmailEtu());
-        }
-        if (individuInfos.getDateOfBirth() != null) {
-            aideHumaineToUpdate.setDateOfBirthAidant(individuInfos.getDateOfBirth());
-        }
-        if (StringUtils.hasText(individuInfos.getFixPhone())) {
-            aideHumaineToUpdate.setPhoneAidant(individuInfos.getFixPhone());
-        }
-        if (StringUtils.hasText(individuInfos.getContactPhone())) {
-            aideHumaineToUpdate.setPhoneAidant(individuInfos.getContactPhone());
-        }
-        aideHumaineToUpdate.setNumEtuAidant(numEtu);
+        return null;
     }
 
     @Transactional

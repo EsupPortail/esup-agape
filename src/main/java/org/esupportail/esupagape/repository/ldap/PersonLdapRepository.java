@@ -13,6 +13,7 @@ public interface PersonLdapRepository extends LdapRepository<PersonLdap> {
     List<PersonLdap> findByUid(String uid);
     List<PersonLdap> findByMail(String mail);
     List<PersonLdap> findBySupannEtuId(String numEtu);
+    List<PersonLdap> findBySupannEmpId(String numEtuAidant);
     List<PersonLdap> findBySupannCodeINE(String codeIne);
     List<PersonLdap> findBySnAndGivenNameAndSchacDateOfBirth(String name, String firstName, String dateOfBirth);
     List<PersonLdap> findByDisplayNameStartingWithIgnoreCaseOrCnStartingWithIgnoreCaseOrUidStartingWithOrMailStartingWith(String displayName, String cn, String uid, String mail);
