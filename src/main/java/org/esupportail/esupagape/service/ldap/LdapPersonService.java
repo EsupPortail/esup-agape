@@ -47,6 +47,10 @@ public class LdapPersonService {
         return personLdapRepository.findBySupannEtuId(numEtu);
     }
 
+    public List<PersonLdap> searchBySupannEmpId(String numEtu) {
+        return personLdapRepository.findBySupannEmpId(numEtu);
+    }
+
     public List<PersonLdap> searchBySupannCodeINE(String codeIne) {
         return personLdapRepository.findBySupannCodeINE(codeIne);
 

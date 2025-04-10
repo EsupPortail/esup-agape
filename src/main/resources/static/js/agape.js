@@ -270,20 +270,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 searchText:'Aucun résultat'
             },
             events: {
-                // addable: function (value) {
-                //
-                //     // if (value) {return false}
-                //
-                //
-                //     return value
-                //
-                //
-                //     return {
-                //         text: value,
-                //         value: value.toLowerCase()
-                //     }
-                //
-                // },
                 search: (search, currentData) => {
                     return new Promise((resolve, reject) => {
                         if (search.length < 3) {
@@ -313,7 +299,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                                 resolve(options)
                             })
                             .catch(function(error) {
-                                // Gérez les erreurs ici
                                 console.error('Erreur lors de la requête fetch :', error);
                                 reject(error);
                             });

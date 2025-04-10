@@ -76,11 +76,7 @@ public class AideController {
 
 
     @PostMapping("/create-aide-humaine")
-    public String createAideHumaine(@PathVariable Long dossierId, @Valid AideHumaine aideHumaine, BindingResult bindingResult, PersonLdap personLdap, Model model) {
-        if (bindingResult.hasErrors()) {
-            setModel(model);
-            return "aides/list";
-        }
+    public String createAideHumaine(@PathVariable Long dossierId, AideHumaine aideHumaine, PersonLdap personLdap, Model model) {
         AideHumaine savedHumaine = aideHumaineService.create(aideHumaine, dossierId, personLdap.getEduPersonPrincipalName());
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + savedHumaine.getId() + "/update";
     }

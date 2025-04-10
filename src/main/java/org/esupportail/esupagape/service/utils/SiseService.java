@@ -79,8 +79,8 @@ public class SiseService {
                 throw new AgapeIOException("unable to backup");
             }
         }
-        logger.info("get sise csv from : " + "https://infocentre.pleiade.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;");
-        restTemplate.execute("https://infocentre.pleiade.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;", HttpMethod.GET, null, clientHttpResponse -> {
+        logger.info("get sise csv from : " + "https://bcn.depp.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;");
+        restTemplate.execute("https://bcn.depp.education.fr/bcn/index.php/export/CSV?n=" + type + "&separator=;", HttpMethod.GET, null, clientHttpResponse -> {
             StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(file));
             return file;
         });

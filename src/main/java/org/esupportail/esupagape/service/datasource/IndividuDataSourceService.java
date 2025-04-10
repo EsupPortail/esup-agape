@@ -2,7 +2,6 @@ package org.esupportail.esupagape.service.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.esupportail.esupagape.config.individusource.IndividuSourceProperties;
-import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,7 +14,7 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties(IndividuSourceProperties.class)
 public class IndividuDataSourceService {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndividuSourceService.class);
+    private static final Logger logger = LoggerFactory.getLogger(IndividuDataSourceService.class);
 
     private final IndividuSourceProperties individuSourceProperties;
 
