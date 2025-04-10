@@ -378,13 +378,13 @@ public class IndividuService {
                     for (AideHumaine aideHumaine : aidesHumaines) {
                         if(aideHumaine.getDateOfBirthAidant() != null) {
                             int aidantYearOfBirth = aideHumaine.getDateOfBirthAidant().getYear();
-                            aideHumaine.setDateOfBirthAidant(LocalDate.of(aidantYearOfBirth, Month.FEBRUARY, 1));
+                            aideHumaine.getAidant().setDateOfBirthAidant(LocalDate.of(aidantYearOfBirth, Month.FEBRUARY, 1));
                         }
-                        aideHumaine.setNumEtuAidant("AnonymeAidant" + aideHumaine.getId());
-                        aideHumaine.setNameAidant("AnonymeAidant");
-                        aideHumaine.setFirstNameAidant("AnonymeAidant");
-                        aideHumaine.setEmailAidant("mail.anonyme.aidant@univ-ville.fr");
-                        aideHumaine.setPhoneAidant("0000000000");
+                        aideHumaine.getAidant().setNumEtuAidant("AnonymeAidant" + aideHumaine.getId());
+                        aideHumaine.getAidant().setNameAidant("AnonymeAidant");
+                        aideHumaine.getAidant().setFirstNameAidant("AnonymeAidant");
+                        aideHumaine.getAidant().setEmailAidant("mail.anonyme.aidant@univ-ville.fr");
+                        aideHumaine.getAidant().setPhoneAidant("0000000000");
                     }
                 }
             }
