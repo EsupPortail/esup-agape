@@ -25,6 +25,7 @@ public class DossierFilter {
     private List<StatusDossierAmenagement> statusDossierAmenagement;
     private List<Mdph> mdph;
     private Boolean suiviHandisup;
+    private Boolean desinscrit;
     private Boolean finished;
     private List<TypFrmn> typFrmn;
     private List<ModFrmn> modFrmn;
@@ -119,6 +120,14 @@ public class DossierFilter {
 
     public void setSuiviHandisup(Boolean suiviHandisup) {
         this.suiviHandisup = suiviHandisup;
+    }
+
+    public Boolean getDesinscrit() {
+        return desinscrit;
+    }
+
+    public void setDesinscrit(Boolean desinscrit) {
+        this.desinscrit = desinscrit;
     }
 
     public Boolean getFinished() {

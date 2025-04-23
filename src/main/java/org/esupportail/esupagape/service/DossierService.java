@@ -374,6 +374,13 @@ public class DossierService {
             }
             predicates.add(cb.or(finishedPredicates.toArray(Predicate[]::new)));
         }
+        if(dossierFilter.getDesinscrit() != null) {
+            if(dossierFilter.getDesinscrit()) {
+                predicates.add(cb.or(cb.isTrue(dossierIndividuJoin.get("desinscrit"))));
+            } else {
+                predicates.add(cb.or(cb.isFalse(dossierIndividuJoin.get("desinscrit"))));
+            }
+        }
         List<Predicate> classificationPredicates = new ArrayList<>();
         for (Classification classification : dossierFilter.getClassifications()) {
             Expression<Collection<Classification>> classifications = dossierRoot.get("classifications");
