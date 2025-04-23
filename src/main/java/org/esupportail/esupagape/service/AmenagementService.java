@@ -675,7 +675,13 @@ public class AmenagementService {
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                     }
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-               }
+                }
+                if(lastDossierAmenagement.isPresent()
+                        && lastDossierAmenagement.get().getLastYear() == utilsService.getCurrentYear()
+                        && lastDossierAmenagement.get().getDossier().getStatusDossier().equals(StatusDossier.RECONDUIT)
+                        && BooleanUtils.isTrue(lastDossierAmenagement.get().getDossier().getIndividu().getDesinscrit())) {
+//                    dossierService.deleteDossier(lastDossierAmenagement.get().getDossier().getId());
+                }
             }
             if (amenagement.getIndividuSendDate() == null) {
                 amenagementRepository.save(amenagement);
