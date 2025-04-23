@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -655,7 +656,11 @@ public class AmenagementService {
                 }
             } else {
                 Optional<DossierAmenagement> lastDossierAmenagement = amenagement.getDossierAmenagements().stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear));
-                if (lastDossierAmenagement.isPresent() && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE) && amenagement.getEndDate().isAfter(now) && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
+                if (lastDossierAmenagement.isPresent()
+                        && amenagement.getTypeAmenagement().equals(TypeAmenagement.DATE)
+                        && amenagement.getEndDate().isAfter(now)
+                        && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)
+                        && BooleanUtils.isNotTrue(lastDossierAmenagement.get().getDossier().getIndividu().getDesinscrit())) {
                     if (dossier == null) {
                         Dossier lastDossier = dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement).get(0).getDossier();
                         dossier = dossierService.create("system", lastDossier.getIndividu().getId(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
@@ -807,6 +812,7 @@ public class AmenagementService {
         return amenagementRepository.findDossierAmenagementToSync();
     }
 
+    @Transactional
     public void syncAllAmenagments() {
         List<Amenagement> amenagementsToSync = getAmenagementsToSync();
         for(Amenagement amenagement : amenagementsToSync) {
