@@ -4,6 +4,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.apache.commons.lang3.BooleanUtils;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
@@ -45,35 +47,27 @@ public class DossierService {
     private static final Logger logger = LoggerFactory.getLogger(DossierService.class);
 
     private final UtilsService utilsService;
-
     private final List<DossierInfosService> dossierInfosServices;
-
     private final DossierRepository dossierRepository;
-
     private final DocumentRepository documentRepository;
-
     private final DocumentService documentService;
-
     private final DossierAmenagementRepository dossierAmenagementRepository;
-
-    private final AmenagementRepository amenagementRepository;
-
     private final EntityManager em;
-
     private final LogService logService;
     private final IndividuRepository individuRepository;
+    private final ApplicationProperties applicationProperties;
 
     Map<String, String> codComposanteLabels = new HashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, AmenagementRepository amenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
         this.dossierAmenagementRepository = dossierAmenagementRepository;
-        this.amenagementRepository = amenagementRepository;
         this.em = em;
         this.logService = logService;
+        this.applicationProperties = applicationProperties;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
@@ -566,8 +560,10 @@ public class DossierService {
     }
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
-        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
-        syncStatusDossierAmenagement(dossier);
+        Optional<Dossier> dossier = dossierRepository.findById(dossierId);
+        if(dossier.isPresent()) {
+            syncStatusDossierAmenagement(dossier.get());
+        }
     }
 
     public void syncStatusDossierAmenagement(Dossier dossier) {
@@ -601,7 +597,11 @@ public class DossierService {
     @Transactional
     public boolean syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
-        if (dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
+        if (BooleanUtils.isTrue(dossier.getIndividu().getDesinscrit())) {
+            if(applicationProperties.getCleanDesinscrits() && dossier.getYear().equals(utilsService.getCurrentYear()) && dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
+                logger.info("dossier " + id + " à supprimer, étudiant reconduit non présent " + dossier.getIndividu().getNumEtu());
+                deleteDossier(id);
+            }
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {

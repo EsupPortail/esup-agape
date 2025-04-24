@@ -675,7 +675,7 @@ public class AmenagementService {
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                     }
                     dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-               }
+                }
             }
             if (amenagement.getIndividuSendDate() == null) {
                 amenagementRepository.save(amenagement);
@@ -685,7 +685,6 @@ public class AmenagementService {
                 amenagementRepository.save(amenagement);
             }
             if(dossier != null) {
-                dossierRepository.save(dossier);
                 dossierService.syncStatusDossierAmenagement(dossier.getId());
             }
         } catch (Exception e) {

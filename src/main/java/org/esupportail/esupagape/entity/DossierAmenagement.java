@@ -20,7 +20,7 @@ public class DossierAmenagement {
     @ManyToOne
     private Dossier dossier;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private Amenagement amenagement;
 
     @Enumerated(EnumType.STRING)
