@@ -54,7 +54,7 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 600000)
+    @Scheduled(cron="00 01 01 * * *")
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
             logger.info("Synchro Aménagements");
