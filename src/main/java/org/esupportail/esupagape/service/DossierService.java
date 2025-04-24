@@ -599,8 +599,10 @@ public class DossierService {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
         if (BooleanUtils.isTrue(dossier.getIndividu().getDesinscrit())) {
             if(applicationProperties.getCleanDesinscrits() && dossier.getYear().equals(utilsService.getCurrentYear()) && dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
-                logger.info("dossier " + id + " à supprimer, étudiant reconduit non présent " + dossier.getIndividu().getNumEtu());
-                deleteDossier(id);
+                if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getLastYear().equals(utilsService.getCurrentYear()))) {
+                    logger.info("dossier " + id + " à supprimer, étudiant reconduit non présent " + dossier.getIndividu().getNumEtu());
+                    deleteDossier(id);
+                }
             }
             return false;
         }
