@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.apache.commons.lang3.BooleanUtils;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
@@ -566,8 +567,10 @@ public class DossierService {
     }
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
-        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
-        syncStatusDossierAmenagement(dossier);
+        Optional<Dossier> dossier = dossierRepository.findById(dossierId);
+        if(dossier.isPresent()) {
+            syncStatusDossierAmenagement(dossier.get());
+        }
     }
 
     public void syncStatusDossierAmenagement(Dossier dossier) {
@@ -601,7 +604,11 @@ public class DossierService {
     @Transactional
     public boolean syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
-        if (dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
+        if (BooleanUtils.isTrue(dossier.getIndividu().getDesinscrit())) {
+            if(dossier.getYear().equals(utilsService.getCurrentYear()) && dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
+                logger.info("dossier " + id + " à supprimer, étudiant reconduit non présent " + dossier.getIndividu().getNumEtu());
+                deleteDossier(id);
+            }
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
