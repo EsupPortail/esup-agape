@@ -112,7 +112,7 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<AideHumaine> aidesHumaines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.DETACH)
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
