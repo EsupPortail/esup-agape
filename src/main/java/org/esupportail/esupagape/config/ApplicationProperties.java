@@ -110,6 +110,8 @@ public class ApplicationProperties {
 
     private Boolean enableAtypie = true;
 
+    private Boolean cleanDesinscrits = true;
+
     public String getPath() {
         return path;
     }
@@ -332,5 +334,13 @@ public class ApplicationProperties {
 
     public void setEnableAtypie(Boolean enableAtypie) {
         this.enableAtypie = enableAtypie;
+    }
+
+    public Boolean getCleanDesinscrits() {
+        return cleanDesinscrits;
+    }
+
+    public void setCleanDesinscrits(Boolean cleanDesinscrits) {
+        this.cleanDesinscrits = cleanDesinscrits;
     }
 }
