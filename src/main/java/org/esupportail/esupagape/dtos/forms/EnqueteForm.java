@@ -31,7 +31,6 @@ public class EnqueteForm {
     private CodPfpp codPfpp;
     private String codPfasOn;
     private Set<CodPfas> codPfas = new HashSet<>();
-    private String AHS0;
     private List<String> AHS1 = new ArrayList<>();
     private List<String> AHS2 = new ArrayList<>();
     private String AHS3;
@@ -173,14 +172,6 @@ public class EnqueteForm {
 
     public void setCodPfas(Set<CodPfas> codPfas) {
         this.codPfas = codPfas;
-    }
-
-    public String getAHS0() {
-        return AHS0;
-    }
-
-    public void setAHS0(String AHS0) {
-        this.AHS0 = AHS0;
     }
 
     public List<String> getAHS1() {
