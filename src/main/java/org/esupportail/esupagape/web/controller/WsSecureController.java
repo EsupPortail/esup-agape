@@ -1,15 +1,12 @@
 package org.esupportail.esupagape.web.controller;
 
-import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.esupportail.esupagape.service.EnqueteService;
+import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,20 +21,14 @@ public class WsSecureController {
 
     @GetMapping("/enquete/cod-fmt")
     @ResponseBody
-    public List<SlimSelectData> getCodFmt(@RequestParam String codFil) {
-        if(StringUtils.hasText(codFil)) {
-            return enqueteService.getSlimSelectDtosOfCodFmts(codFil);
-        }
-        return new ArrayList<>();
+    public List<SlimSelectData> getCodFmt() {
+        return enqueteService.getSlimSelectDtosOfCodFmts();
     }
 
     @GetMapping("/enquete/cod-sco")
     @ResponseBody
-    public List<SlimSelectData> getCodSco(@RequestParam String codFmt) {
-        if(StringUtils.hasText(codFmt)) {
-            return enqueteService.getSlimSelectDtosOfCodScos(codFmt);
-        }
-        return new ArrayList<>();
+    public List<SlimSelectData> getCodSco() {
+        return enqueteService.getSlimSelectDtosOfCodScos();
     }
 
 }

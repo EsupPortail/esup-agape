@@ -100,56 +100,40 @@ public class EnqueteService {
             enqueteToUpdate.setCodPfpp(enqueteForm.getCodPfpp());
         }
         enqueteToUpdate.getCodPfas().clear();
-        if (enqueteForm.getCodPfasOn().equals("AS0")) {
-            enqueteToUpdate.getCodPfas().add(CodPfas.AS0);
-        } else {
-            enqueteToUpdate.getCodPfas().add(CodPfas.AS1);
-            enqueteToUpdate.getCodPfas().addAll(enqueteForm.getCodPfas());
-        }
-//        enqueteToUpdate.setCodPfas(enqueteForm.getCodPfas());
-        enqueteToUpdate.getCodMeahF().clear();
-        if (StringUtils.hasText(enqueteForm.getAHS0())) {
-            enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS0()));
-        } else {
-            if (!enqueteForm.getAHS1().isEmpty() || !enqueteForm.getAHS2().isEmpty()) {
-                for (String AHS1 : enqueteForm.getAHS1()) {
-                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
-                    enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
-                }
-                for (String AHS2 : enqueteForm.getAHS2()) {
-                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
-                    enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
-                }
-                if (StringUtils.hasText(enqueteForm.getAHS3())) {
-                    if (enqueteForm.getAHS3().equals("on")) {
-                        enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
-                    } else {
-                        enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS3);
-                    }
-                }
-                if (StringUtils.hasText(enqueteForm.getAHS4())) {
-                    if (enqueteForm.getAHS4().equals("on")) {
-                        enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS4);
-                    } else {
-                        enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS4);
-                    }
-                }
-                if (StringUtils.hasText(enqueteForm.getAHS5())) {
-                    if (enqueteForm.getAHS5().equals("on")) {
-                        enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
-                    } else {
-                        enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS5);
-                    }
-                }
-            } else {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS0);
-            }
-//            if (StringUtils.hasText(enqueteForm.getAHS5())) {
-//                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
-//                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(enqueteForm.getAHS5()));
-//            }
-        }
+        enqueteToUpdate.getCodPfas().addAll(enqueteForm.getCodPfas());
 
+        enqueteToUpdate.getCodMeahF().clear();
+        if (!enqueteForm.getAHS1().isEmpty() || !enqueteForm.getAHS2().isEmpty()) {
+            for (String AHS1 : enqueteForm.getAHS1()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
+            }
+            for (String AHS2 : enqueteForm.getAHS2()) {
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
+                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS3())) {
+                if (enqueteForm.getAHS3().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS3);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS3);
+                }
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS4())) {
+                if (enqueteForm.getAHS4().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS4);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS4);
+                }
+            }
+            if (StringUtils.hasText(enqueteForm.getAHS5())) {
+                if (enqueteForm.getAHS5().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS5);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS5);
+                }
+            }
+        }
         enqueteToUpdate.getCodAmL().clear();
         if (StringUtils.hasText(enqueteForm.getAM0())) {
             enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM0()));
@@ -220,8 +204,7 @@ public class EnqueteService {
                 enquete.setSexe("2");
             }
 
-            if (enquete.getCodMeahF().isEmpty() || enquete.getCodMeahF().contains(CodMeahF.AHS0)) {
-                enquete.getCodMeahF().clear();
+            if (enquete.getCodMeahF().isEmpty()) {
                 if (dossier.getAidesHumaines().stream().anyMatch(ah -> ah.getFonctionAidants().contains(FonctionAidant.PRENEUR_NOTES))) {
                     enquete.getCodMeahF().add(CodMeahF.AHS3);
                 }
@@ -242,19 +225,17 @@ public class EnqueteService {
             Boolean isAmenagementTempsMajore = amenagementService.isAmenagementTempsMajore(id);
             if (isAmenagementTempsMajore != null) {
                 enquete.getCodMeae().add(CodMeae.AE4);
-                enquete.getCodMeae().remove(CodMeae.AE0);
                 if (isAmenagementTempsMajore) {
                     enquete.getCodMeae().add(CodMeae.AE7);
                 }
             }
             if (StringUtils.hasText(enquete.getAutAE())) {
                 enquete.getCodMeae().add(CodMeae.AEO);
-                enquete.getCodMeae().remove(CodMeae.AE0);
             } else {
                 enquete.getCodMeae().remove(CodMeae.AEO);
             }
             if (enquete.getCodMeae().isEmpty()) {
-                enquete.getCodMeae().add(CodMeae.AE0);
+                enquete.getCodMeae().clear();
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
@@ -286,72 +267,33 @@ public class EnqueteService {
                 }
             }
         }
-        clearButKeepExceptions(enquete);
+//        enquete.getCodAmL().clear();
         if (!dossier.getMdphs().isEmpty()) {
             if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
                     dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
-                enquete.getCodAmL().add(CodAmL.AM21);
-            } else {
-                enquete.getCodAmL().add(CodAmL.AM20);
+                enquete.getCodAmL().add(CodAmL.AM2);
             }
 
             if (dossier.getMdphs().contains(Mdph.TRANSPORT_INDIVIDUEL_ADAPTE)) {
-                enquete.getCodAmL().add(CodAmL.AM31);
-            } else {
-                enquete.getCodAmL().add(CodAmL.AM30);
+                enquete.getCodAmL().add(CodAmL.AM3);
             }
+
             if (dossier.getMdphs().contains(Mdph.RQTH)) {
-                enquete.getCodAmL().add(CodAmL.AM41);
-            } else {
-                enquete.getCodAmL().add(CodAmL.AM40);
+                enquete.getCodAmL().add(CodAmL.AM4);
             }
 
             if (dossier.getMdphs().contains(Mdph.AEEH)) {
-                enquete.getCodAmL().add(CodAmL.AM51);
-            } else {
-                enquete.getCodAmL().add(CodAmL.AM50);
+                enquete.getCodAmL().add(CodAmL.AM5);
             }
+
             if (dossier.getMdphs().contains(Mdph.AAH) ||
                     dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
                     dossier.getMdphs().contains(Mdph.CARTE_PRIORITE) ||
                     dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
-                enquete.getCodAmL().add(CodAmL.AM81);
-            } else {
-                enquete.getCodAmL().add(CodAmL.AM80);
+                enquete.getCodAmL().add(CodAmL.AM8);
             }
         }
-        checkAllAmlX(enquete);
         return enquete;
-    }
-
-    private void clearButKeepExceptions(Enquete enquete) {
-        Set<CodAmL> codAmLToKeep = new HashSet<>();
-        codAmLToKeep.add(CodAmL.AM10);
-        codAmLToKeep.add(CodAmL.AM11);
-        codAmLToKeep.add(CodAmL.AM1X);
-        codAmLToKeep.add(CodAmL.AM60);
-        codAmLToKeep.add(CodAmL.AM61);
-        codAmLToKeep.add(CodAmL.AM6X);
-        codAmLToKeep.add(CodAmL.AM70);
-        codAmLToKeep.add(CodAmL.AM71);
-        codAmLToKeep.add(CodAmL.AM7X);
-        enquete.getCodAmL().retainAll(codAmLToKeep);
-    }
-
-    private void checkAllAmlX(Enquete enquete) {
-        Set<CodAmL> codAmLX = new HashSet<>();
-        codAmLX.add(CodAmL.AM1X);
-        codAmLX.add(CodAmL.AM2X);
-        codAmLX.add(CodAmL.AM3X);
-        codAmLX.add(CodAmL.AM4X);
-        codAmLX.add(CodAmL.AM5X);
-        codAmLX.add(CodAmL.AM6X);
-        codAmLX.add(CodAmL.AM7X);
-        codAmLX.add(CodAmL.AM8X);
-        if(codAmLX.containsAll(enquete.getCodAmL())) {
-            enquete.getCodAmL().clear();
-            enquete.getCodAmL().add(CodAmL.AM00);
-        }
     }
 
     public void detachAllByDossiers(long id) {
@@ -382,15 +324,15 @@ public class EnqueteService {
     }
 
     public List<String> getCodFils() {
-        return enqueteEnumFilFmtScoRepository.findDistinctByCodScoIsNull();
+        return enqueteEnumFilFmtScoRepository.findCodFils();
     }
 
-    public List<String> getCodFmtByCodFil(String codFil) {
-        return enqueteEnumFilFmtScoRepository.findDistinctByCodFil(codFil);
+    public List<String> getCodFmts() {
+        return enqueteEnumFilFmtScoRepository.findCodFmts();
     }
 
-    public List<String> getCodScoByCodFmt(String codFmt) {
-        return enqueteEnumFilFmtScoRepository.findDistinctByCodFmt(codFmt);
+    public List<String> getCodScos() {
+        return enqueteEnumFilFmtScoRepository.findCodScos();
     }
 
     public Map<String, String> getAllCodFmt() {
@@ -402,10 +344,10 @@ public class EnqueteService {
         return codFmts;
     }
 
-    public List<SlimSelectData> getSlimSelectDtosOfCodFmts(String codFil) {
-        List<String> codFmts = getCodFmtByCodFil(codFil);
+    public List<SlimSelectData> getSlimSelectDtosOfCodFmts() {
+        List<String> codFmts = getCodFmts();
         List<SlimSelectData> slimSelectDtos = new ArrayList<>();
-        if (codFmts.size() > 0) {
+        if (!codFmts.isEmpty()) {
             slimSelectDtos.add(new SlimSelectData("", ""));
             for (String codFmt : codFmts) {
                 slimSelectDtos.add(new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
@@ -414,10 +356,10 @@ public class EnqueteService {
         return slimSelectDtos;
     }
 
-    public List<SlimSelectData> getSlimSelectDtosOfCodScos(String codFmt) {
-        List<String> codScos = getCodScoByCodFmt(codFmt);
+    public List<SlimSelectData> getSlimSelectDtosOfCodScos() {
+        List<String> codScos = getCodScos();
         List<SlimSelectData> slimSelectDtos = new ArrayList<>();
-        if (codScos.size() > 0) {
+        if (!codScos.isEmpty()) {
             slimSelectDtos.add(new SlimSelectData("", ""));
             for (String codSco : codScos) {
                 SlimSelectData slimSelectDto = new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);

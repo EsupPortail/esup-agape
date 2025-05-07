@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface EnqueteEnumFilFmtScoRepository extends JpaRepository <EnqueteEnumFilFmtSco, Long> {
-    @Query("select distinct upper(codFil) from EnqueteEnumFilFmtSco where codSco is null ")
-    List<String> findDistinctByCodScoIsNull();
-    @Query("select distinct upper(codFmt) from EnqueteEnumFilFmtSco where upper(codFil) = :codFil")
-    List<String> findDistinctByCodFil(String codFil);
-    @Query("select distinct upper(codSco) from EnqueteEnumFilFmtSco where upper(codFmt) = :codFmt")
-    List<String> findDistinctByCodFmt(String codFmt);
+    @Query("select distinct upper(codFil) from EnqueteEnumFilFmtSco where codFil is not null")
+    List<String> findCodFils();
+    @Query("select distinct upper(codFmt) from EnqueteEnumFilFmtSco where codFmt is not null")
+    List<String> findCodFmts();
+    @Query("select distinct upper(codSco) from EnqueteEnumFilFmtSco where codSco is not null")
+    List<String> findCodScos();
 }

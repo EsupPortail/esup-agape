@@ -2,7 +2,6 @@ package org.esupportail.esupagape.entity.enums.enquete;
 
 public enum CodMeae {
 
-    AE0,
     AE1,
     AE2,
     AE3,
@@ -15,5 +14,8 @@ public enum CodMeae {
     AEA,
     AEB,
     AEC,
+    AED,
+    AEE,
+    AEG,
     AEO
 }
