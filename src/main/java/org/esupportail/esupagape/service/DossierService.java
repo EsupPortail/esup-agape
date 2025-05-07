@@ -112,6 +112,7 @@ public class DossierService {
     public void deleteDossier(Long id) {
         Optional<Dossier> dossier = dossierRepository.findById(id);
         if(dossier.isPresent()) {
+//            dossier.get().getDocuments().clear();
             dossierRepository.delete(dossier.get());
         }
     }
