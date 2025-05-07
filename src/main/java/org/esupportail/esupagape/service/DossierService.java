@@ -113,6 +113,7 @@ public class DossierService {
         Optional<Dossier> dossier = dossierRepository.findById(id);
         if(dossier.isPresent()) {
             dossier.get().getDocuments().clear();
+            dossierRepository.save(dossier.get());
             dossierRepository.delete(dossier.get());
         }
     }
