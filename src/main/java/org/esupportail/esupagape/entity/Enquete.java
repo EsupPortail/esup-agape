@@ -41,7 +41,7 @@ public class Enquete {
     private String com;
 
     @Enumerated(EnumType.STRING)
-    private CodPfpp codPfpp = CodPfpp.MH0;
+    private CodPfpp codPfpp;
 
     @ElementCollection(targetClass=CodPfas.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
