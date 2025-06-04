@@ -1,17 +1,8 @@
 package org.esupportail.esupagape.dtos.forms;
 
-import org.esupportail.esupagape.entity.enums.enquete.CodAmL;
-import org.esupportail.esupagape.entity.enums.enquete.CodHd;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeaa;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfas;
-import org.esupportail.esupagape.entity.enums.enquete.CodPfpp;
-import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
-import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class EnqueteForm {
@@ -31,8 +22,8 @@ public class EnqueteForm {
     private CodPfpp codPfpp;
     private String codPfasOn;
     private Set<CodPfas> codPfas = new HashSet<>();
-    private List<String> AHS1 = new ArrayList<>();
-    private List<String> AHS2 = new ArrayList<>();
+    private String AHS1;
+    private String AHS2;
     private String AHS3;
     private String AHS4;
     private String AHS5;
@@ -174,19 +165,19 @@ public class EnqueteForm {
         this.codPfas = codPfas;
     }
 
-    public List<String> getAHS1() {
+    public String getAHS1() {
         return AHS1;
     }
 
-    public void setAHS1(List<String> AHS1) {
+    public void setAHS1(String AHS1) {
         this.AHS1 = AHS1;
     }
 
-    public List<String> getAHS2() {
+    public String getAHS2() {
         return AHS2;
     }
 
-    public void setAHS2(List<String> AHS2) {
+    public void setAHS2(String AHS2) {
         this.AHS2 = AHS2;
     }
 

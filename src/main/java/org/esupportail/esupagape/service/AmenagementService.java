@@ -109,6 +109,14 @@ public class AmenagementService {
         return new PageImpl<>(amenagements, Pageable.unpaged(), amenagements.size());
     }
 
+    public Amenagement getCurrentAmenagement(Long dossierId) {
+        List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
+        if(!amenagements.isEmpty() && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
+            return amenagements.get(0);
+        }
+        return null;
+    }
+
     public Boolean isAmenagementTempsMajore(Long dossierId) {
         Dossier dossier = dossierService.getById(dossierId);
         List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByDossier(dossier);

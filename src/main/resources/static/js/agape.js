@@ -515,7 +515,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 }
             });
-            codFmt.disable();
             let codSco = new SlimSelect({
                 select: '#codSco',
                 settings: {
@@ -525,7 +524,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     searchPlaceholder: 'Rechercher'
                 }
             });
-            codSco.disable();
             codFil.addEventListener("change", function (event) {
                 fetch('/ws-secure/enquete/cod-fmt')
                     .then((response) => response.json())

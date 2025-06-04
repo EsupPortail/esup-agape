@@ -7,6 +7,7 @@ public enum TypeEpreuve {
     PRATIQUE,
     ORAL,
     QUESTIONS,
-    CONTROLE_CONTINU
+    CONTROLE_CONTINU,
+    EDN
 
 }
