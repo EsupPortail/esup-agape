@@ -85,6 +85,13 @@ public class LdapDossierInfosService implements DossierInfosService {
                             dossierInfos.setSecteurDisciplinaire(libelleSecteur);
                         }
                     }
+                    if(StringUtils.hasText(personLdap.getSupannEtuTypeDiplome())) {
+                        String code = personLdap.getSupannEtuTypeDiplome().substring(personLdap.getSupannEtuTypeDiplome().length() - 2);
+                        String libelleTypeDiplome = siseService.getLibelleTypeDiplome(code);
+                        if(StringUtils.hasText(libelleTypeDiplome)) {
+                            dossierInfos.setTypeDiplome(libelleTypeDiplome);
+                        }
+                    }
                     if(personLdap.getSupannEtuCursusAnnee() != null && !personLdap.getSupannEtuCursusAnnee().isEmpty()) {
                         dossierInfos.setNiveauEtudes(personLdap.getSupannEtuCursusAnnee().get(0).substring(personLdap.getSupannEtuCursusAnnee().get(0).lastIndexOf("}") + 1));
                     }

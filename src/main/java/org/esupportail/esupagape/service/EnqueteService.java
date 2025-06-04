@@ -1,6 +1,10 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.csvs.SiseDiplomeCsvDto;
+import org.esupportail.esupagape.dtos.csvs.SiseSecteurDisciplinaireCsvDto;
+import org.esupportail.esupagape.dtos.csvs.SiseTypeDiplomeCsvDto;
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
@@ -11,8 +15,11 @@ import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
+import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -22,19 +29,17 @@ import java.util.*;
 @Service
 public class EnqueteService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EnqueteService.class);
+
+
     private final EnqueteRepository enqueteRepository;
-
     private final EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository;
-
     private final EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository;
-
     private final DossierService dossierService;
-
     private final AmenagementService amenagementService;
-
     private final UtilsService utilsService;
-
     private final LogService logService;
+    private final SiseService siseService;
 
     public EnqueteService(
             EnqueteRepository enqueteRepository,
@@ -42,7 +47,7 @@ public class EnqueteService {
             EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
             DossierService dossierService,
             AmenagementService amenagementService,
-            UtilsService utilsService, LogService logService) {
+            UtilsService utilsService, LogService logService, SiseService siseService) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
@@ -50,6 +55,7 @@ public class EnqueteService {
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.logService = logService;
+        this.siseService = siseService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -104,13 +110,19 @@ public class EnqueteService {
 
         enqueteToUpdate.getCodMeahF().clear();
         if (!enqueteForm.getAHS1().isEmpty() || !enqueteForm.getAHS2().isEmpty()) {
-            for (String AHS1 : enqueteForm.getAHS1()) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
+            if (StringUtils.hasText(enqueteForm.getAHS1())) {
+                if (enqueteForm.getAHS1().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS1);
+                }
             }
-            for (String AHS2 : enqueteForm.getAHS2()) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
+            if (StringUtils.hasText(enqueteForm.getAHS2())) {
+                if (enqueteForm.getAHS2().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS2);
+                }
             }
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
                 if (enqueteForm.getAHS3().equals("on")) {
@@ -168,7 +180,6 @@ public class EnqueteService {
 
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
         enqueteToUpdate.getCodMeaa().clear();
-        enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
         enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
         enqueteToUpdate.setDossier(dossierService.getById(dossierId));
@@ -218,6 +229,23 @@ public class EnqueteService {
             if (dossier.getModeFormation() != null) {
                 enquete.setModFrmn(dossier.getModeFormation());
             }
+            if (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
+                enquete.setCodPfpp(CodPfpp.MH1);
+            } else {
+                enquete.setCodPfpp(CodPfpp.PP0);
+            }
+            Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
+            if(amenagement != null) {
+                if (amenagement.getAmenagementText().contains("Allègement du cursus")) {
+                    enquete.getCodPfas().add(CodPfas.AS2);
+                }
+                if (amenagement.getAmenagementText().contains("Conservation et/ou report des notes")) {
+                    enquete.getCodPfas().add(CodPfas.AS3);
+                }
+                if (amenagement.getAmenagementText().contains("Autorisation d’absences sans production de justificatifs")) {
+                    enquete.getCodPfas().add(CodPfas.AS5);
+                }
+            }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {
                 enquete.setAlternance(true);
@@ -239,10 +267,10 @@ public class EnqueteService {
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
-            if (dossier.getStatusDossier() != null && dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
-                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA1));
-            } else if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
-                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA2));
+            if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
+                enquete.getCodMeaa().add(CodMeaa.AA1);
+            } else {
+                enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
             if (dossier.getClassifications().size() > 2) {
                 enquete.setCodHd(CodHd.PTA);
@@ -267,7 +295,36 @@ public class EnqueteService {
                 }
             }
         }
-//        enquete.getCodAmL().clear();
+        if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
+            try {
+                String codFil = SiseSecteurDisciplinaireCsvDto.getCodFil(siseService.getCodeSecteurDisciplinaire( dossier.getSecteurDisciplinaire()));
+                if(StringUtils.hasText(codFil)) {
+                    enquete.setCodFil(codFil);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
+            }
+        }
+        if(StringUtils.hasText(dossier.getTypeDiplome())) {
+            try {
+                String codFmt = SiseTypeDiplomeCsvDto.getCodFmt(siseService.getCodeTypeDiplome( dossier.getTypeDiplome()));
+                if(StringUtils.hasText(codFmt)) {
+                    enquete.setCodFmt(codFmt);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codFmt not found for " + dossier.getTypeDiplome());
+            }
+        }
+        if(StringUtils.hasText(dossier.getNiveauEtudes())) {
+            try {
+                String codSco = SiseDiplomeCsvDto.getCodSco(dossier.getNiveauEtudes());
+                if(StringUtils.hasText(codSco)) {
+                    enquete.setCodSco(codSco);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codSco not found for " + dossier.getNiveauEtudes());
+            }
+        }
         if (!dossier.getMdphs().isEmpty()) {
             if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
                     dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {

@@ -17,3 +17,22 @@ update enquete_cod_meahf set cod_meahf = 'AHS2' where cod_meahf like 'AHS2%';
 update  enquete set cod_pfpp = null where cod_pfpp = 'MH0';
 
 delete from enquete_cod_pfas where cod_pfas = 'AS0' or cod_pfas = 'AS1';
+
+update enquete set cod_sco = '1' where cod_sco = 'L1';
+update enquete set cod_sco = '2' where cod_sco = 'L2';
+update enquete set cod_sco = '3' where cod_sco = 'L3';
+
+update enquete set cod_sco = '1' where cod_sco = 'iu1';
+update enquete set cod_sco = '2' where cod_sco = 'iu2';
+update enquete set cod_sco = '3' where cod_sco = 'iu3';
+
+update enquete set cod_sco = '1' where cod_sco = '1a';
+update enquete set cod_sco = '2' where cod_sco = '2a';
+update enquete set cod_sco = '3' where cod_sco = '3a';
+update enquete set cod_sco = '4' where cod_sco = '4a';
+update enquete set cod_sco = '6' where cod_sco = '5a';
+update enquete set cod_sco = '6+' where cod_sco = '6a+';
+
+update enquete set cod_sco = '4' where cod_sco = 'M1';
+update enquete set cod_sco = '5' where cod_sco = 'M2';
+
