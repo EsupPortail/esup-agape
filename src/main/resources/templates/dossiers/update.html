@@ -276,6 +276,28 @@
 							</div>
 							<div class="row mb-1 align-items-baseline">
 								<div class="col-4">
+									<label class="form-label" for="niveauEtudes">Type de diplôme</label>
+								</div>
+								<div class="col-8">
+									<div class="input-group">
+										<input disabled
+											   id="typeDiplome"
+											   name="niveauEtudes"
+											   type="text"
+											   class="form-control"
+											   th:value="${currentDossier.typeDiplome}" readonly>
+										<a onclick="toggleInputLock('niveauEtudes');"
+										   th:if="${currentDossier.typeDiplome == ''}"
+										   role="button"
+										   id="typeDiplomeEdit"
+										   class="btn btn-light border-secondary border-opacity-25 d-none">
+											<i class="fa-solid fa-pen"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1 align-items-baseline">
+								<div class="col-4">
 									<label class="form-label" for="secteurDisciplinaire">Secteur disciplinaire</label>
 								</div>
 								<div class="col-8">

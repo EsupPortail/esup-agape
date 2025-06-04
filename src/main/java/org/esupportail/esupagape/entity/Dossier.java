@@ -76,6 +76,8 @@ public class Dossier {
 
     private String secteurDisciplinaire;
 
+    private String typeDiplome;
+
     private String formAddress;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -278,6 +280,14 @@ public class Dossier {
 
     public void setSecteurDisciplinaire(String secteurDisciplinaire) {
         this.secteurDisciplinaire = secteurDisciplinaire;
+    }
+
+    public String getTypeDiplome() {
+        return typeDiplome;
+    }
+
+    public void setTypeDiplome(String typeDiplome) {
+        this.typeDiplome = typeDiplome;
     }
 
     public String getFormAddress() {
