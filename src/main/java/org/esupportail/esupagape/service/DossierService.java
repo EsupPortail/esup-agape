@@ -673,6 +673,9 @@ public class DossierService {
                 if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
                     dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
                 }
+                if (StringUtils.hasText(dossierInfos.getTypeDiplome())) {
+                    dossier.setTypeDiplome(dossierInfos.getTypeDiplome());
+                }
                 if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
                 }

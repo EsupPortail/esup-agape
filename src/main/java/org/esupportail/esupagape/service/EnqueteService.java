@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.dtos.csvs.SiseDiplomeCsvDto;
+import org.esupportail.esupagape.dtos.csvs.SiseSecteurDisciplinaireCsvDto;
+import org.esupportail.esupagape.dtos.csvs.SiseTypeDiplomeCsvDto;
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
@@ -12,8 +15,11 @@ import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
 import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
+import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,19 +29,17 @@ import java.util.*;
 @Service
 public class EnqueteService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EnqueteService.class);
+
+
     private final EnqueteRepository enqueteRepository;
-
     private final EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository;
-
     private final EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository;
-
     private final DossierService dossierService;
-
     private final AmenagementService amenagementService;
-
     private final UtilsService utilsService;
-
     private final LogService logService;
+    private final SiseService siseService;
 
     public EnqueteService(
             EnqueteRepository enqueteRepository,
@@ -43,7 +47,7 @@ public class EnqueteService {
             EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
             DossierService dossierService,
             AmenagementService amenagementService,
-            UtilsService utilsService, LogService logService) {
+            UtilsService utilsService, LogService logService, SiseService siseService) {
         this.enqueteRepository = enqueteRepository;
         this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
         this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
@@ -51,6 +55,7 @@ public class EnqueteService {
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.logService = logService;
+        this.siseService = siseService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -290,7 +295,36 @@ public class EnqueteService {
                 }
             }
         }
-//        enquete.getCodAmL().clear();
+        if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
+            try {
+                String codFil = SiseSecteurDisciplinaireCsvDto.getCodFil(siseService.getCodeSecteurDisciplinaire( dossier.getSecteurDisciplinaire()));
+                if(StringUtils.hasText(codFil)) {
+                    enquete.setCodFil(codFil);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
+            }
+        }
+        if(StringUtils.hasText(dossier.getTypeDiplome())) {
+            try {
+                String codFmt = SiseTypeDiplomeCsvDto.getCodFmt(siseService.getCodeTypeDiplome( dossier.getTypeDiplome()));
+                if(StringUtils.hasText(codFmt)) {
+                    enquete.setCodFmt(codFmt);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codFmt not found for " + dossier.getTypeDiplome());
+            }
+        }
+        if(StringUtils.hasText(dossier.getNiveauEtudes())) {
+            try {
+                String codSco = SiseDiplomeCsvDto.getCodSco(dossier.getNiveauEtudes());
+                if(StringUtils.hasText(codSco)) {
+                    enquete.setCodSco(codSco);
+                }
+            } catch (Exception e) {
+                logger.error("enquete codSco not found for " + dossier.getNiveauEtudes());
+            }
+        }
         if (!dossier.getMdphs().isEmpty()) {
             if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
                     dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
