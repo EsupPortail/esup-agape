@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
@@ -104,13 +105,19 @@ public class EnqueteService {
 
         enqueteToUpdate.getCodMeahF().clear();
         if (!enqueteForm.getAHS1().isEmpty() || !enqueteForm.getAHS2().isEmpty()) {
-            for (String AHS1 : enqueteForm.getAHS1()) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS1));
+            if (StringUtils.hasText(enqueteForm.getAHS1())) {
+                if (enqueteForm.getAHS1().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS1);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS1);
+                }
             }
-            for (String AHS2 : enqueteForm.getAHS2()) {
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
-                enqueteToUpdate.getCodMeahF().add(CodMeahF.valueOf(AHS2));
+            if (StringUtils.hasText(enqueteForm.getAHS2())) {
+                if (enqueteForm.getAHS2().equals("on")) {
+                    enqueteToUpdate.getCodMeahF().add(CodMeahF.AHS2);
+                } else {
+                    enqueteToUpdate.getCodMeahF().remove(CodMeahF.AHS2);
+                }
             }
             if (StringUtils.hasText(enqueteForm.getAHS3())) {
                 if (enqueteForm.getAHS3().equals("on")) {
@@ -168,7 +175,6 @@ public class EnqueteService {
 
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
         enqueteToUpdate.getCodMeaa().clear();
-        enqueteToUpdate.getCodMeaa().add(enqueteForm.getCodMeaaStructure());
         enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
         enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
         enqueteToUpdate.setDossier(dossierService.getById(dossierId));
@@ -218,6 +224,23 @@ public class EnqueteService {
             if (dossier.getModeFormation() != null) {
                 enquete.setModFrmn(dossier.getModeFormation());
             }
+            if (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
+                enquete.setCodPfpp(CodPfpp.MH1);
+            } else {
+                enquete.setCodPfpp(CodPfpp.PP0);
+            }
+            Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
+            if(amenagement != null) {
+                if (amenagement.getAmenagementText().contains("Allègement du cursus")) {
+                    enquete.getCodPfas().add(CodPfas.AS2);
+                }
+                if (amenagement.getAmenagementText().contains("Conservation et/ou report des notes")) {
+                    enquete.getCodPfas().add(CodPfas.AS3);
+                }
+                if (amenagement.getAmenagementText().contains("Autorisation d’absences sans production de justificatifs")) {
+                    enquete.getCodPfas().add(CodPfas.AS5);
+                }
+            }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {
                 enquete.setAlternance(true);
@@ -239,10 +262,10 @@ public class EnqueteService {
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);
-            if (dossier.getStatusDossier() != null && dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
-                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA1));
-            } else if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
-                enquete.setCodMeaa(Collections.singleton(CodMeaa.AA2));
+            if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
+                enquete.getCodMeaa().add(CodMeaa.AA1);
+            } else {
+                enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
             if (dossier.getClassifications().size() > 2) {
                 enquete.setCodHd(CodHd.PTA);
