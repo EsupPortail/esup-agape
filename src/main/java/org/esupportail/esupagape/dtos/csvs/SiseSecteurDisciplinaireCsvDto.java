@@ -15,7 +15,7 @@ public class SiseSecteurDisciplinaireCsvDto {
 
     public static String getCodFil(String secteurDisciplinaireSise) {
         Map<String, String> siseSecteurDisciplinaireToCodFilMap = new HashMap<>();
-        siseSecteurDisciplinaireToCodFilMap.put("71", "par");
+        siseSecteurDisciplinaireToCodFilMap.put("71", "medi");
         siseSecteurDisciplinaireToCodFilMap.put("80", "sci");
         siseSecteurDisciplinaireToCodFilMap.put("01", "sci");
         siseSecteurDisciplinaireToCodFilMap.put("02", "sci");
