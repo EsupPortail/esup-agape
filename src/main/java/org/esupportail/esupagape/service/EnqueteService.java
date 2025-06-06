@@ -181,7 +181,11 @@ public class EnqueteService {
         enqueteToUpdate.setAutAE(enqueteForm.getAutAE());
         enqueteToUpdate.getCodMeaa().clear();
         enqueteToUpdate.getCodMeaa().addAll(enqueteForm.getCodMeaa());
-        enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
+        if(enqueteForm.getCodMeaa().contains(CodMeaa.AAO)) {
+            enqueteToUpdate.setAutAA(enqueteForm.getAutAA());
+        } else {
+            enqueteToUpdate.setAutAA("");
+        }
         enqueteToUpdate.setDossier(dossierService.getById(dossierId));
     }
 
