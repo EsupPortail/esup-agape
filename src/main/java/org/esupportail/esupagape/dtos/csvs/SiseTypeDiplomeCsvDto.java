@@ -23,6 +23,7 @@ public class SiseTypeDiplomeCsvDto {
         siseTypeDiplomeToCodFmtMap.put("FH", "medi");   // DE PHARM -> Formation de santé
         siseTypeDiplomeToCodFmtMap.put("PF", "para");   // DE MASSEUR -> Formation paramédicale
         siseTypeDiplomeToCodFmtMap.put("XF", "Mf");     // MAST ENS -> Master MEEF
+        siseTypeDiplomeToCodFmtMap.put("XD", "Mf");     // MAST ENS -> Master MEEF
         siseTypeDiplomeToCodFmtMap.put("YB", "D");      // DOCT.UNI.G -> Doctorat
         siseTypeDiplomeToCodFmtMap.put("DP", "Lp");     // LIC PRO -> Licence professionnelle
         siseTypeDiplomeToCodFmtMap.put("UF", "X");      // D.UNIV. B5 -> Autres formations
@@ -39,7 +40,7 @@ public class SiseTypeDiplomeCsvDto {
         siseTypeDiplomeToCodFmtMap.put("CV", "Las");    // PASS -> Licence accès santé
         siseTypeDiplomeToCodFmtMap.put("PB", "para");   // C.ORTHOPT -> Formation paramédicale
         siseTypeDiplomeToCodFmtMap.put("PJ", "para");   // INFIR GR.L -> Formation paramédicale
-        siseTypeDiplomeToCodFmtMap.put("1", "DU");      // DU GENERI -> DU
+        siseTypeDiplomeToCodFmtMap.put("01", "DU");      // DU GENERI -> DU
         return siseTypeDiplomeToCodFmtMap.get(typeDiplomeSise);
     }
 }
