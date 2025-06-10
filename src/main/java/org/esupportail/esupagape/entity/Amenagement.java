@@ -336,6 +336,11 @@ public class Amenagement {
     }
 
     public DossierAmenagement getLastDossierAmenagement() {
-        return dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).get();
+        Optional<DossierAmenagement> dossierAmenagement = dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).filter(d -> d.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE));
+        if(dossierAmenagement.isPresent()) {
+            return dossierAmenagement.get();
+        } else {
+            return dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).stream().max(Comparator.comparingLong(DossierAmenagement::getId)).get();
+        }
     }
 }
