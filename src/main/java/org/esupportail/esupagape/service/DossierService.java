@@ -4,6 +4,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.apache.commons.lang3.BooleanUtils;
+import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.dtos.DocumentDto;
 import org.esupportail.esupagape.dtos.DossierIndividuClassDto;
 import org.esupportail.esupagape.dtos.DossierIndividuDto;
@@ -17,9 +19,7 @@ import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.DocumentRepository;
-import org.esupportail.esupagape.repository.DossierAmenagementRepository;
-import org.esupportail.esupagape.repository.DossierRepository;
+import org.esupportail.esupagape.repository.*;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -47,44 +47,42 @@ public class DossierService {
     private static final Logger logger = LoggerFactory.getLogger(DossierService.class);
 
     private final UtilsService utilsService;
-
     private final List<DossierInfosService> dossierInfosServices;
-
     private final DossierRepository dossierRepository;
-
     private final DocumentRepository documentRepository;
-
     private final DocumentService documentService;
-
     private final DossierAmenagementRepository dossierAmenagementRepository;
-
     private final EntityManager em;
-
     private final LogService logService;
+    private final IndividuRepository individuRepository;
+    private final ApplicationProperties applicationProperties;
 
     Map<String, String> codComposanteLabels = new HashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
         this.dossierAmenagementRepository = dossierAmenagementRepository;
         this.em = em;
         this.logService = logService;
+        this.applicationProperties = applicationProperties;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
+        this.individuRepository = individuRepository;
     }
 
     @Transactional
-    public Dossier create(String eppn, Individu individu, TypeIndividu typeIndividu, StatusDossier statusDossier) {
-        Optional<Dossier> optDossier = dossierRepository.findByIndividuIdAndYear(individu.getId(), utilsService.getCurrentYear());
+    public Dossier create(String eppn, Long individuId, TypeIndividu typeIndividu, StatusDossier statusDossier) {
+        Optional<Dossier> optDossier = dossierRepository.findByIndividuIdAndYear(individuId, utilsService.getCurrentYear());
         if(optDossier.isPresent()) {
             return optDossier.get();
         }
         Dossier dossier = new Dossier();
         dossier.setYear(utilsService.getCurrentYear());
+        Individu individu = individuRepository.findById(individuId).orElseThrow();
         dossier.setIndividu(individu);
         if (StringUtils.hasText(individu.getNumEtu())) {
             dossier.setType(TypeIndividu.ETUDIANT);
@@ -110,9 +108,17 @@ public class DossierService {
         dossier.setStatusDossier(statusDossier);
     }
 
+    @Transactional
     public void deleteDossier(Long id) {
         Optional<Dossier> dossier = dossierRepository.findById(id);
-        dossier.ifPresent(dossierRepository::delete);
+        if(dossier.isPresent()) {
+            for(Document document : dossier.get().getDocuments()) {
+                document.setDossier(null);
+            }
+            dossier.get().getDocuments().clear();
+            dossierRepository.save(dossier.get());
+            dossierRepository.delete(dossier.get());
+        }
     }
 
     public Page<Dossier> getAllByYear(int year, Pageable pageable) {
@@ -160,6 +166,7 @@ public class DossierService {
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
+        dossierToUpdate.getClassifications().clear();
         dossierToUpdate.getClassifications().addAll(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdphs(dossier.getMdphs());
@@ -366,6 +373,13 @@ public class DossierService {
             }
             predicates.add(cb.or(finishedPredicates.toArray(Predicate[]::new)));
         }
+        if(dossierFilter.getDesinscrit() != null) {
+            if(dossierFilter.getDesinscrit()) {
+                predicates.add(cb.or(cb.isTrue(dossierIndividuJoin.get("desinscrit"))));
+            } else {
+                predicates.add(cb.or(cb.isFalse(dossierIndividuJoin.get("desinscrit"))));
+            }
+        }
         List<Predicate> classificationPredicates = new ArrayList<>();
         for (Classification classification : dossierFilter.getClassifications()) {
             Expression<Collection<Classification>> classifications = dossierRoot.get("classifications");
@@ -549,19 +563,24 @@ public class DossierService {
         }
         return em.createQuery(cq);
     }
-
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
-        Dossier dossier = dossierRepository.findById(dossierId).orElseThrow();
+        Optional<Dossier> dossier = dossierRepository.findById(dossierId);
+        if(dossier.isPresent()) {
+            syncStatusDossierAmenagement(dossier.get());
+        }
+    }
+
+    public void syncStatusDossierAmenagement(Dossier dossier) {
         if(dossier.getDossierAmenagements() == null) return;
         if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EN_ATTENTE) && da.getAmenagement().getStatusAmenagement().equals(StatusAmenagement.SUPPRIME))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
-                && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))
-        ) {
+            && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.VALIDE))
+            && dossier.getDossierAmenagements().stream().noneMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
             if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.EXPIRE))) {
                 dossier.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
             } else {
                 dossier.setStatusDossierAmenagement(StatusDossierAmenagement.NON);
+                logger.info("dossier " + dossier.getId() + " statusDossierAmenagement set to NON");
             }
         }
         if(dossier.getDossierAmenagements().stream().anyMatch(da -> da.getStatusDossierAmenagement().equals(StatusDossierAmenagement.PORTE))) {
@@ -583,7 +602,13 @@ public class DossierService {
     @Transactional
     public boolean syncDossier(Long id) {
         Dossier dossier = dossierRepository.findById(id).orElseThrow();
-        if (dossier.getIndividu().getDesinscrit() != null && dossier.getIndividu().getDesinscrit()) {
+        if (BooleanUtils.isTrue(dossier.getIndividu().getDesinscrit())) {
+            if(applicationProperties.getCleanDesinscrits() && dossier.getYear().equals(utilsService.getCurrentYear()) && dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
+                if(dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().getTypeAmenagement().equals(TypeAmenagement.CURSUS))) {
+                    logger.info("dossier " + id + " à supprimer, étudiant reconduit non présent " + dossier.getIndividu().getNumEtu());
+                    deleteDossier(id);
+                }
+            }
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
@@ -607,10 +632,12 @@ public class DossierService {
             dossier.setNewDossier(true);
         }
         if (dossier.getStatusDossier().equals(StatusDossier.ANONYMOUS)) return false;
-        if(StatusDossierAmenagement.PORTE.equals(dossier.getStatusDossierAmenagement()) && dossier.getClassifications().isEmpty()) {
+        if(StatusDossier.RECONDUIT.equals(dossier.getStatusDossier()) && (dossier.getClassifications().isEmpty() || (dossier.getClassifications().size() == 1 && (dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.AUTRES_TROUBLES))))) {
             try {
-                List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty()).findFirst().orElseThrow().getClassifications());
+                List<Classification> classifications = new ArrayList<>(dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> !d.getClassifications().isEmpty() && !d.getClassifications().contains(Classification.AUTRES_TROUBLES) && !d.getClassifications().contains(Classification.NON_COMMUNIQUE)).findFirst().orElseThrow().getClassifications());
+                dossier.getClassifications().clear();
                 dossier.getClassifications().addAll(classifications);
+                logger.info("dossier " + dossier.getId() + " classifications set to " + classifications);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
             }
@@ -645,6 +672,9 @@ public class DossierService {
                 }
                 if (StringUtils.hasText(dossierInfos.getSecteurDisciplinaire())) {
                     dossier.setSecteurDisciplinaire(dossierInfos.getSecteurDisciplinaire());
+                }
+                if (StringUtils.hasText(dossierInfos.getTypeDiplome())) {
+                    dossier.setTypeDiplome(dossierInfos.getTypeDiplome());
                 }
                 if (StringUtils.hasText(dossierInfos.getResultatAnn())) {
                     dossier.setResultatTotal(dossierInfos.getResultatAnn());
@@ -693,6 +723,14 @@ public class DossierService {
 
     public void setCodComposanteLabels(Map<String, String> codComposanteLabels) {
         this.codComposanteLabels = codComposanteLabels;
+    }
+
+    @Transactional
+    public void updateClassification(Long dossierId, List<Classification> classifications, String eduPersonPrincipalName) {
+        Dossier dossier = getById(dossierId);
+        dossier.getClassifications().clear();
+        dossier.getClassifications().addAll(classifications);
+        logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
     }
 
     //    @Transactional

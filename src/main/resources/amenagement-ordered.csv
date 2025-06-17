@@ -24,11 +24,11 @@
 24;Assistance pour transcrire ou répéter les instructions orales données lors des épreuves écrites.
 25;Autorisation d’absences sans production de justificatifs. Les modalités de passation des épreuves sont déterminées par l’UFR concernée.
 26;Bouchons d’oreilles ou casque autorisés.
-27;Calculette
+27;Calculette sauf evaluation des compétences logico-mathématiques
 28;Clavier braille.
 29;Codeur(LPC).
-30;Composera dans une salle  en petit effectif.
-31;Composera dans une salle bien éclairée (éclairage artificiel si besoin).
+30;Composera dans une salle en petit effectif.
+31;Composera dans une salle spécifique aux temps additionnels.
 32;Composera seul(e) dans une salle
 33;Composera seul(e) dans une salle avec possibilité de se déplacer
 34;Composera seul(e) dans une salle avec possibilité de se déplacer et d’être stimulé par un assistant.
@@ -44,38 +44,38 @@
 44;Evaluation des TP uniquement théorique
 45;Evaluations sportives en fonction du handicap.
 46;Examen(s) hors sessions après accord équipe pédagogique.
-47;Formulation précise des consignes sans sous entendu ou second degré
-48;Formulation précise et détaillée des consignes adaptée au handicap
-49;Formulation précise et détaillée des consignes, adaptée au handicap
-50;Fournir les diaporamas sur clé USB.
-51;Graphes et tableaux agrandis en A3.
-52;Installation par un secrétaire.
-53;L’étudiant est informé qu’il doit obligatoirement contacter sa scolarité et le référent enseignant de l’UFR.
-54;L’étudiant(e) doit être seul(e) avec l’examinateur pour les oraux.
-55;Les épreuves de compréhension orale ne peuvent se faire sans support écrit.
-56;Logiciel adapté.
-57;Loupe.
-58;Matériel d’écriture braille.
-59;Nécessité d'utiliser l'ordinateur pour la partie rédactionnelle et écriture manuscritre pour la partie avec formules mathématiques ou scientifiques
-60;Nécessité d’utiliser un ordinateur (vidé des données non requises).
-61;Nécessité d’utiliser un ordinateur sauf pour les QCM
-62;Nécessité pour les oraux que l’examinateur se positionne face au candidat et parle à voix haute et articulée.
-63;Ordinateur : examens sur clef USB documents en TXT ou RTF
-64;Ordinateur avec correcteur d’orthographe sauf épreuves évaluant l’orthographe.
-65;Ordinateur avec zoom test et écran à hauteur des yeux.
-66;Pas de bande sonore sans support écrit.
-67;Pas de prise de parole non prévue
-68;Passation des epreuves en distanciel, en visio consultation écrite, avec partage des écrans
-69;Pathologie justifiant d’un téléenseignement. 
-70;Pathologie justifiant du régime terminal.
-71;Pathologie justifiant du report des évaluations sportives.
-72;Place au dernier rang.
-73;Place au premier rang.
-74;Place particulière à l’oral (favorisant la lecture labiale).
-75;Possibilité de se lever et de se déplacer avec compensation de temps.
-76;Prise électrique à proximité.
-77;Remplacement des épreuves écrites par des epreuves orales sauf épreuves evaluant les compétences rédactionnelles
-78;Remplacement des travaux de groupe par des travaux individuels
+47;Formulation simple, précise et détaillée des consignes sans sous entendu ou second degré
+48;Formulation simple, précise et détaillée des consignes
+49;Fournir les diaporamas sur clé USB.
+50;Graphes et tableaux agrandis en A3.
+51;Installation par un secrétaire.
+52;L’étudiant est informé qu’il doit obligatoirement contacter sa scolarité et le référent enseignant de l’UFR.
+53;L’étudiant(e) doit être seul(e) avec l’examinateur pour les oraux.
+54;Les épreuves de compréhension orale ne peuvent se faire sans support écrit.
+55;Logiciel adapté.
+56;Loupe.
+57;Matériel d’écriture braille.
+58;Nécessité d'utiliser l'ordinateur pour la partie rédactionnelle et écriture manuscritre pour la partie avec formules mathématiques ou scientifiques
+59;Nécessité d’utiliser un ordinateur (vidé des données non requises).
+60;Nécessité d’utiliser un ordinateur sauf pour les QCM
+61;Nécessité pour les oraux que l’examinateur se positionne face au candidat et parle à voix haute et articulée.
+62;Ordinateur : examens sur clef USB documents en TXT ou RTF
+63;Ordinateur avec correcteur d’orthographe sauf épreuves évaluant l’orthographe.
+64;Ordinateur avec zoom test et écran à hauteur des yeux.
+65;Pas de bande sonore sans support écrit.
+66;Pas de prise de parole non prévue
+67;Passation des epreuves en distanciel, en visio consultation écrite, avec partage des écrans
+68;Pathologie justifiant d’un téléenseignement. 
+69;Pathologie justifiant du régime terminal.
+70;Pathologie justifiant du report des évaluations sportives.
+71;Place au dernier rang.
+72;Place au premier rang.
+73;Place particulière à l’oral (favorisant la lecture labiale).
+74;Possibilité de se lever et de se déplacer avec compensation de temps.
+75;Prise électrique à proximité.
+76;Remplacement des épreuves écrites par des epreuves orales sauf épreuves evaluant les compétences rédactionnelles
+77;Remplacement des travaux de groupe par des travaux individuels
+78;Remplacement des évaluation des épreuves de langues par des QCM sauf évaluation des compétences rédactionnelles.
 79;Si examen avec vidéo écran à 30 centimètres des yeux.
 80;Suivi personnalisé des « rendus » avec majoration du temps.
 81;Suivi personnalisé du mémoire avec majoration du temps.
@@ -88,10 +88,10 @@
 88;Sujets et textes denses en police Arial 14 et format A4.
 89;Tablette
 90;Télé agrandissement.
-91;Tolérance orthographique
+91;Tolérance orthographique sauf évaluation des compétences orthographiques.
 92;Tout signal sonore pendant les épreuves doit s’accompagner d’un signal visuel
 93;TP histologie doit être placée face à l’enseignant référent.
-94;Transformation  des épreuves orales en épreuves écrites.
-95;Transformation d’une épreuve écrite en épreuve orale.
+94;Transformation des épreuves orales en épreuves écrites.
+95;Transformation des épreuves écrites en épreuves orales sauf évaluation des compétences rédactionnelles.
 96;Utilisation d’un ordinateur avec logiciel antidote sauf épreuves évaluant l’orthographe
 97;Utilisation de feuilles avec lignes.

@@ -109,9 +109,9 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label th:for="numEtuAidant" class="form-label">Numéro d’étudiant</label>
-                                    <input disabled id="numEtuAidant" type="text" class="form-control" th:field="*{numEtuAidant}">
-                                    <p th:if="${#fields.hasErrors('numEtuAidant')}" th:errorclass="error" th:errors="*{numEtuAidant}"></p>
+                                    <label th:for="numEtuAidant" class="form-label">Numéro matricule</label>
+                                    <input readonly id="numAidant" type="text" class="form-control disable" th:field="*{numAidant}">
+                                    <p th:if="${#fields.hasErrors('numAidant')}" th:errorclass="error" th:errors="*{numAidant}"></p>
                                 </div>
                                 <div class="row mb-1 align-items-baseline">
                                     <div class="col-4" style="width: 250px;">
@@ -425,7 +425,7 @@
                 </div>
             </div>
         </main>
-        <div th:replace="aides/modal-pj-aide-humaine :: pj"></div>
+        <div th:replace="~{aides/modal-pj-aide-humaine :: pj}"></div>
         <script th:if="${returnModPJ}">
             document.getElementById('pj-aide-humaine').classList.toggle("fade");
             new bootstrap.Modal(document.getElementById('pj-aide-humaine')).show();

@@ -9,6 +9,7 @@ public class DossierInfos {
     String composante;
     String niveauEtudes;
     String secteurDisciplinaire;
+    String typeDiplome;
     String libelleFormation;
     String libelleFormationPrec;
     String etablissement;
@@ -53,6 +54,14 @@ public class DossierInfos {
 
     public void setSecteurDisciplinaire(String secteurDisciplinaire) {
         this.secteurDisciplinaire = secteurDisciplinaire;
+    }
+
+    public String getTypeDiplome() {
+        return typeDiplome;
+    }
+
+    public void setTypeDiplome(String typeDiplome) {
+        this.typeDiplome = typeDiplome;
     }
 
     public String getLibelleFormation() {

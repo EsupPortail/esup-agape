@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -88,10 +89,10 @@ public class Amenagement {
     @Enumerated(EnumType.STRING)
     private SignatureStatus certificatSignatureStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Document avis;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Document certificat;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
@@ -330,7 +331,8 @@ public class Amenagement {
     }
 
     public Dossier getDossierByYear(int year) {
-        return dossierAmenagements.stream().filter(d -> d.getLastYear() == year).findFirst().get().getDossier();
+        Optional<DossierAmenagement> dossierAmenagement = dossierAmenagements.stream().filter(d -> d.getLastYear() == year).findFirst();
+        return dossierAmenagement.map(DossierAmenagement::getDossier).orElse(null);
     }
 
     public DossierAmenagement getLastDossierAmenagement() {

@@ -1,10 +1,12 @@
 package org.esupportail.esupagape.service;
 
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.BigFile;
 import org.esupportail.esupagape.entity.Document;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.exception.AgapeIOException;
 import org.esupportail.esupagape.exception.AgapeYearException;
+import org.esupportail.esupagape.repository.AmenagementRepository;
 import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
@@ -28,11 +30,14 @@ public class DocumentService {
 
 	private final UtilsService utilsService;
 
-	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService, UtilsService utilsService) {
+	private final AmenagementRepository amenagementRepository;
+
+	public DocumentService(DocumentRepository documentRepository, BigFileService bigFileService, UtilsService utilsService, AmenagementRepository amenagementRepository) {
 		this.documentRepository = documentRepository;
 		this.bigFileService = bigFileService;
 		this.utilsService = utilsService;
-	}
+        this.amenagementRepository = amenagementRepository;
+    }
 
 	@Transactional
 	public Document createDocument(InputStream inputStream, String name, String contentType, Long parentId, String parentType, Dossier dossier) throws AgapeIOException {
@@ -90,4 +95,11 @@ public class DocumentService {
 		}
 	}
 
+	@Transactional
+	public byte[] getDocument(Long amenagementId) throws IOException {
+		Amenagement amenagement = amenagementRepository.findById(amenagementId).get();
+		byte[] certificat;
+		certificat = amenagement.getCertificat().getInputStream().readAllBytes();
+		return certificat;
+	}
 }

@@ -28,7 +28,7 @@ public class Dossier {
     @Enumerated(EnumType.STRING)
     private StatusDossierAmenagement statusDossierAmenagement = StatusDossierAmenagement.NON;
 
-    @OneToMany(mappedBy = "dossier")
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<DossierAmenagement> dossierAmenagements = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -76,6 +76,8 @@ public class Dossier {
 
     private String secteurDisciplinaire;
 
+    private String typeDiplome;
+
     private String formAddress;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -96,6 +98,7 @@ public class Dossier {
     private Boolean hasScholarship;
 
     private Boolean atypie;
+
     @ManyToOne
     private Individu individu;
 
@@ -111,10 +114,10 @@ public class Dossier {
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
     private List<AideHumaine> aidesHumaines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dossier", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.DETACH)
     private List<Document> documents = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Document> attachments;
 
     private Boolean newDossier = true;
@@ -277,6 +280,14 @@ public class Dossier {
 
     public void setSecteurDisciplinaire(String secteurDisciplinaire) {
         this.secteurDisciplinaire = secteurDisciplinaire;
+    }
+
+    public String getTypeDiplome() {
+        return typeDiplome;
+    }
+
+    public void setTypeDiplome(String typeDiplome) {
+        this.typeDiplome = typeDiplome;
     }
 
     public String getFormAddress() {

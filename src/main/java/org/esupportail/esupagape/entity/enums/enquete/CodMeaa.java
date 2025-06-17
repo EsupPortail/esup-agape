@@ -4,6 +4,5 @@ public enum CodMeaa {
 
     AA1,
     AA2,
-    AA3,
     AAO;
 }

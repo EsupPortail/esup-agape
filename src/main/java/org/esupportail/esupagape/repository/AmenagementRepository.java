@@ -136,4 +136,11 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
         select a from Amenagement a where a.certificatSignatureId is not null and a.statusAmenagement = 'VISE_ADMINISTRATION' and a.individuSendDate is null and (a.typeAmenagement = 'CURSUS' or a.endDate >= :date)
         """)
     List<Amenagement> findAmenagementToResend(LocalDateTime date);
+
+    @Query("""
+            select a from Amenagement a
+            where a.statusAmenagement = 'VISE_ADMINISTRATION'
+            and (a.typeAmenagement = 'CURSUS' or a.endDate > CURRENT_TIMESTAMP)
+            """)
+    List<Amenagement> findDossierAmenagementToSync();
 }

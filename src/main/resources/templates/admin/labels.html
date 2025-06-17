@@ -39,8 +39,8 @@
 						</thead>
 						<tbody id="labelTable">
 						<th:block th:each="enumEntityAbstract : ${enumEntityAbstracts}">
-							<tr th:data-type="${enumEntityAbstract.class.simpleName}">
-								<td th:text="${enumEntityAbstract.class.simpleName}"></td>
+							<tr th:data-type="${enumEntityAbstract.class}">
+								<td th:text="${enumEntityAbstract.class}"></td>
 								<td th:text="${enumEntityAbstract.code}"></td>
 								<td th:text="${enumEntityAbstract.label}"></td>
 								<td>
@@ -56,7 +56,7 @@
 													Confirmez la suppression du libellé ?
 													<form th:action="@{/admin/delete-label}" th:method="delete"
 														  class="float-end">
-														<input type="hidden" name="enumEntityType" th:value="${enumEntityAbstract.class.simpleName}">
+														<input type="hidden" name="enumEntityType" th:value="${enumEntityAbstract.class}">
 														<input type="hidden" name="id" th:value="${enumEntityAbstract.id}">
 														<button type="button" class="btn btn-secondary"
 																data-bs-dismiss="modal">

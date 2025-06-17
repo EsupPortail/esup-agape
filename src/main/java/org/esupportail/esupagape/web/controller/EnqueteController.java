@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.web.controller;
 
+import jakarta.validation.Valid;
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
 import org.esupportail.esupagape.entity.Enquete;
 import org.esupportail.esupagape.entity.enums.Gender;
@@ -13,13 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{dossierId}/enquete")
@@ -67,10 +64,8 @@ public class EnqueteController {
         model.addAttribute("codPfpps", CodPfpp.values());
         model.addAttribute("codPfass", CodPfas.values());
         model.addAttribute("codMeahFs", CodMeahF.values());
-        model.addAttribute("libelleCodMeahFs", LibelleCodMeahF.values());
         model.addAttribute("codMeaes", CodMeae.values());
-        model.addAttribute("codMeaaStructures", Arrays.stream(CodMeaa.values()).filter(codMeaa -> codMeaa.equals(CodMeaa.AA1) || codMeaa.equals(CodMeaa.AA2)).collect(Collectors.toList()));
-        model.addAttribute("codMeaas", Arrays.stream(CodMeaa.values()).filter(codMeaa -> !codMeaa.equals(CodMeaa.AA1) && !codMeaa.equals(CodMeaa.AA2)).collect(Collectors.toList()));
+        model.addAttribute("codMeaas", CodMeaa.values());
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());

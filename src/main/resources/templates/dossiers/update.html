@@ -43,6 +43,10 @@
 				   title="Synchroniser l'individu" th:href="'/dossiers/' + ${currentDossier.id} + '/sync'">
 					<i class="fa-solid fa-refresh" style="font-size: 20px;"></i>
 				</a>
+				<button title="Voir les logs" class="btn btn-secondary" data-bs-toggle="modal"
+				        data-bs-target="#logsModal" type="button">
+					<i class="fa-solid fa-clipboard-list"></i>
+				</button>
 				<button title="Anonymiser les données de l'individu"
 				        class="btn btn-danger"
 				        data-bs-toggle="modal"
@@ -264,6 +268,28 @@
 										   th:if="${currentDossier.niveauEtudes == ''}"
 										   role="button"
 										   id="niveauEtudesEdit"
+										   class="btn btn-light border-secondary border-opacity-25 d-none">
+											<i class="fa-solid fa-pen"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="row mb-1 align-items-baseline">
+								<div class="col-4">
+									<label class="form-label" for="niveauEtudes">Type de diplôme</label>
+								</div>
+								<div class="col-8">
+									<div class="input-group">
+										<input disabled
+											   id="typeDiplome"
+											   name="niveauEtudes"
+											   type="text"
+											   class="form-control"
+											   th:value="${currentDossier.typeDiplome}" readonly>
+										<a onclick="toggleInputLock('niveauEtudes');"
+										   th:if="${currentDossier.typeDiplome == ''}"
+										   role="button"
+										   id="typeDiplomeEdit"
 										   class="btn btn-light border-secondary border-opacity-25 d-none">
 											<i class="fa-solid fa-pen"></i>
 										</a>
@@ -559,6 +585,30 @@
 					</button>
 				</div>
 			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="logsModal" aria-hidden="true" aria-labelledby="logsModalLabel" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="logsModalLabel">Journal des évenements</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped">
+					<tr>
+						<th>Date</th>
+						<th>Utilisateur</th>
+						<th>Action</th>
+					</tr>
+					<tr th:each="log : ${logs}">
+						<td th:text="${#temporals.format(log.date, 'dd/MM/yyyy')}"></td>
+						<td th:text="${log.eppn}"></td>
+						<td th:text="${log.finalStatusDossier}"></td>
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

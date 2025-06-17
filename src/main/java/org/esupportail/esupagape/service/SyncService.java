@@ -2,12 +2,12 @@ package org.esupportail.esupagape.service;
 
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.Classification;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.entity.enums.StatusDossier;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.repository.DossierRepository;
 import org.esupportail.esupagape.repository.IndividuRepository;
-import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,18 +34,14 @@ public class SyncService {
 
     private final List<IndividuSourceService> individuSourceServices;
 
-    private final List<DossierInfosService> dossierInfosServices;
-
     private final UtilsService utilsService;
 
-    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, EnqueteService enqueteService, DossierService dossierService, List<IndividuSourceService> individuSourceServices, List<DossierInfosService> dossierInfosServices, UtilsService utilsService) {
+    public SyncService(IndividuRepository individuRepository, DossierRepository dossierRepository, EnqueteService enqueteService, DossierService dossierService, List<IndividuSourceService> individuSourceServices, UtilsService utilsService) {
         this.individuRepository = individuRepository;
         this.dossierRepository = dossierRepository;
         this.enqueteService = enqueteService;
         this.dossierService = dossierService;
         this.individuSourceServices = individuSourceServices;
-        Collections.reverse(dossierInfosServices);
-        this.dossierInfosServices = dossierInfosServices;
         this.utilsService = utilsService;
     }
 
@@ -121,8 +116,9 @@ public class SyncService {
         }
         try {
             Dossier dossier = dossierRepository.findByIndividuIdAndYear(id, utilsService.getCurrentYear()).orElse(null);
-            if (dossier != null && individuInfos.getHandicap() != null) {
-                if (dossier.getStatusDossier().equals(StatusDossier.IMPORTE)) {
+            if (dossier != null) {
+                if ((dossier.getStatusDossier().equals(StatusDossier.IMPORTE) || (dossier.getClassifications().size()) == 1 && (dossier.getClassifications().contains(Classification.AUTRES_TROUBLES) || dossier.getClassifications().contains(Classification.NON_COMMUNIQUE))) && individuInfos.getHandicap() != null) {
+                    dossier.getClassifications().clear();
                     dossier.getClassifications().add(individuInfos.getHandicap());
                 }
             }

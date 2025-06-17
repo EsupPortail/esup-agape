@@ -20,11 +20,8 @@ public class SchedulerService {
     private static final Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
     private final IndividuService individuService;
-
     private final SyncService syncService;
-
     private final AmenagementService amenagementService;
-
     private final ApplicationProperties applicationProperties;
 
     public SchedulerService(IndividuService individuService, SyncService syncService, AmenagementService amenagementService, ApplicationProperties applicationProperties) {
@@ -54,7 +51,7 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(initialDelay = 1, fixedRate = 600000)
+    @Scheduled(cron="00 01 01 * * *")
     public void syncAmenagements() {
         if(applicationProperties.getEnableSchedulerAmenagement()) {
             logger.info("Synchro Aménagements");

@@ -270,20 +270,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 searchText:'Aucun résultat'
             },
             events: {
-                // addable: function (value) {
-                //
-                //     // if (value) {return false}
-                //
-                //
-                //     return value
-                //
-                //
-                //     return {
-                //         text: value,
-                //         value: value.toLowerCase()
-                //     }
-                //
-                // },
                 search: (search, currentData) => {
                     return new Promise((resolve, reject) => {
                         if (search.length < 3) {
@@ -313,7 +299,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                                 resolve(options)
                             })
                             .catch(function(error) {
-                                // Gérez les erreurs ici
                                 console.error('Erreur lors de la requête fetch :', error);
                                 reject(error);
                             });
@@ -515,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 events: {
                     afterChange: (newVal) => {
                         console.log(newVal[0].value);
-                        fetch('/ws-secure/enquete/cod-sco?codFmt=' + newVal[0].value)
+                        fetch('/ws-secure/enquete/cod-sco')
                             .then((response) => response.json())
                             .then(function (data) {
                                 console.log(data);
@@ -530,7 +515,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 }
             });
-            codFmt.disable();
             let codSco = new SlimSelect({
                 select: '#codSco',
                 settings: {
@@ -540,9 +524,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     searchPlaceholder: 'Rechercher'
                 }
             });
-            codSco.disable();
             codFil.addEventListener("change", function (event) {
-                fetch('/ws-secure/enquete/cod-fmt?codFil=' + codFil.value)
+                fetch('/ws-secure/enquete/cod-fmt')
                     .then((response) => response.json())
                     .then(function (data) {
                         codFmt.setData(data);
