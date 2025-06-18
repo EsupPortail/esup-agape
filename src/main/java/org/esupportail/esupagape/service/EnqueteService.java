@@ -249,25 +249,24 @@ public class EnqueteService {
                 if (amenagement.getAmenagementText().contains("Autorisation d’absences sans production de justificatifs")) {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
+                enquete.getCodMeae().clear();
+                enquete.getCodMeae().addAll(amenagement.getCodMeaeList());
             }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {
                 enquete.setAlternance(true);
             }
+
+            //table de correspondance
+
             Boolean isAmenagementTempsMajore = amenagementService.isAmenagementTempsMajore(id);
-            if (isAmenagementTempsMajore != null) {
-                enquete.getCodMeae().add(CodMeae.AE4);
-                if (isAmenagementTempsMajore) {
-                    enquete.getCodMeae().add(CodMeae.AE7);
-                }
+            if (isAmenagementTempsMajore != null && isAmenagementTempsMajore) {
+                enquete.getCodMeae().add(CodMeae.AE7);
             }
             if (StringUtils.hasText(enquete.getAutAE())) {
                 enquete.getCodMeae().add(CodMeae.AEO);
             } else {
                 enquete.getCodMeae().remove(CodMeae.AEO);
-            }
-            if (enquete.getCodMeae().isEmpty()) {
-                enquete.getCodMeae().clear();
             }
             enquete.setHdTmp(false);
             enquete.setCodHd(null);

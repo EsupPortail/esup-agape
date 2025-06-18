@@ -58,6 +58,7 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         this.classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
         this.classificationMap.put("H", Classification.AUTISME);
         this.classificationMap.put("I", Classification.TROUBLES_PSYCHIQUES);
+
     }
 
     @Override
