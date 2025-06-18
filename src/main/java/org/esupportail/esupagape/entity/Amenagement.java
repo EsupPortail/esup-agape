@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Entity
 public class Amenagement {
@@ -382,11 +383,12 @@ public class Amenagement {
 
         List<CodMeae> codMeaes = new ArrayList<>();
         String[] lignes = amenagementText.split("\\r?\\n");
-        for(String line : lignes) {
+        for (String line : lignes) {
             String normalizedLine = normalize(line);
             for (String key : correspondances.keySet()) {
                 String normalizedKey = normalize(key);
-                if (normalizedLine.contains(normalizedKey)) {
+                String pattern = "\\b" + Pattern.quote(normalizedKey) + "\\b";
+                if (normalizedLine.matches(".*" + pattern + ".*")) {
                     codMeaes.add(correspondances.get(key));
                 }
             }
