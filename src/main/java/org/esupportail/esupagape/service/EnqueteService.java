@@ -227,7 +227,7 @@ public class EnqueteService {
                     enquete.getCodMeahF().add(CodMeahF.AHS5);
                 }
             }
-            if (enquete.getTypFrmn() == null) {
+            if (dossier.getTypeFormation() != null) {
                 enquete.setTypFrmn(dossier.getTypeFormation());
             }
             if (dossier.getModeFormation() != null) {
