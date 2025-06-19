@@ -500,21 +500,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 events: {
                     afterChange: (newVal) => {
                         console.log(newVal[0].value);
-                        fetch('/ws-secure/enquete/cod-sco')
-                            .then((response) => response.json())
-                            .then(function (data) {
-                                console.log(data);
-                                if (data.length > 1) {
-                                    codSco.setData(data);
-                                    codSco.enable();
-                                } else {
-                                    codSco.setData([{text: '', value: ''}]);
-                                    codSco.disable();
-                                }
-                            });
                     }
                 }
             });
+            const codFmtDefaultValue = document.querySelector('#codFmt').value.toUpperCase();
+            fetch('/ws-secure/enquete/cod-fmt')
+                .then((response) => response.json())
+                .then(function (data) {
+                    codFmt.setData(data);
+                    codFmt.setSelected(codFmtDefaultValue);
+                    codFmt.enable();
+                });
             let codSco = new SlimSelect({
                 select: '#codSco',
                 settings: {
@@ -524,14 +520,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     searchPlaceholder: 'Rechercher'
                 }
             });
-            codFil.addEventListener("change", function (event) {
-                fetch('/ws-secure/enquete/cod-fmt')
-                    .then((response) => response.json())
-                    .then(function (data) {
-                        codFmt.setData(data);
-                        codFmt.enable();
-                    });
-            });
+            const codScoDefaultValue = document.querySelector('#codSco').value.toUpperCase();
+
+            fetch('/ws-secure/enquete/cod-sco')
+                .then((response) => response.json())
+                .then(function (data) {
+                    console.log(data);
+                    if (data.length > 1) {
+                        codSco.setData(data);
+                        codSco.setSelected(codScoDefaultValue);
+                        codSco.enable();
+                    } else {
+                        codSco.setData([{text: '', value: ''}]);
+                        //codSco.disable();
+                    }
+                });
+
+
 
         }
 
