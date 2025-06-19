@@ -301,7 +301,7 @@ public class EnqueteService {
         if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
             try {
                 String codFil = SiseSecteurDisciplinaireCsvDto.getCodFil(siseService.getCodeSecteurDisciplinaire( dossier.getSecteurDisciplinaire()));
-                if(StringUtils.hasText(codFil) && !StringUtils.hasText(enquete.getCodFil())) {
+                if(StringUtils.hasText(codFil)) {
                     enquete.setCodFil(codFil);
                 }
             } catch (Exception e) {
@@ -311,7 +311,7 @@ public class EnqueteService {
         if(StringUtils.hasText(dossier.getTypeDiplome())) {
             try {
                 String codFmt = SiseTypeDiplomeCsvDto.getCodFmt(siseService.getCodeTypeDiplome( dossier.getTypeDiplome()));
-                if(StringUtils.hasText(codFmt) && !StringUtils.hasText(enquete.getCodFmt())) {
+                if(StringUtils.hasText(codFmt)) {
                     enquete.setCodFmt(codFmt);
                 }
             } catch (Exception e) {
