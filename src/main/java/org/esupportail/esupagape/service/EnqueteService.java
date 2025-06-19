@@ -321,7 +321,7 @@ public class EnqueteService {
         if(StringUtils.hasText(dossier.getNiveauEtudes())) {
             try {
                 String codSco = SiseDiplomeCsvDto.getCodSco(dossier.getNiveauEtudes());
-                if(StringUtils.hasText(codSco)) {
+                if(StringUtils.hasText(codSco) && !StringUtils.hasText(enquete.getCodSco())) {
                     enquete.setCodSco(codSco);
                 }
             } catch (Exception e) {
