@@ -35,9 +35,9 @@ public class SiseTypeDiplomeCsvDto {
         siseTypeDiplomeToCodFmtMap.put("ZH", "X");      // CERT COMPE -> Autres formations
         siseTypeDiplomeToCodFmtMap.put("AC", "CA");     // CAPA DROIT -> Capacité en droit
         siseTypeDiplomeToCodFmtMap.put("ID", "medi");   // DFA SANTE -> Formation de santé
-        siseTypeDiplomeToCodFmtMap.put("PE", "para");   // DE SAGE-FE -> Formation paramédicale
+        siseTypeDiplomeToCodFmtMap.put("PE", "medi");   // DE SAGE-FE -> Formation paramédicale
         siseTypeDiplomeToCodFmtMap.put("PG", "para");   // DE ERGOTH -> Formation paramédicale
-        siseTypeDiplomeToCodFmtMap.put("CV", "Las");    // PASS -> Licence accès santé
+        siseTypeDiplomeToCodFmtMap.put("CV", "medi");    // PASS -> Licence accès santé
         siseTypeDiplomeToCodFmtMap.put("PB", "para");   // C.ORTHOPT -> Formation paramédicale
         siseTypeDiplomeToCodFmtMap.put("PJ", "para");   // INFIR GR.L -> Formation paramédicale
         siseTypeDiplomeToCodFmtMap.put("01", "DU");      // DU GENERI -> DU
