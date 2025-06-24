@@ -44,6 +44,7 @@ public class EnqueteForm {
     private String AM6;
     private String AM7;
     private String AM8;
+    private String AM9;
 
     public Long getId() {
         return id;
@@ -334,4 +335,11 @@ public class EnqueteForm {
         this.AM8 = AM8;
     }
 
+    public String getAM9() {
+        return AM9;
+    }
+
+    public void setAM9(String AM9) {
+        this.AM9 = AM9;
+    }
 }

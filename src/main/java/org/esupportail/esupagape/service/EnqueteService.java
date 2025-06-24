@@ -174,6 +174,9 @@ public class EnqueteService {
             if (StringUtils.hasText(enqueteForm.getAM8())) {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
+            if (StringUtils.hasText(enqueteForm.getAM9())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM9()));
+            }
         }
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
@@ -329,28 +332,39 @@ public class EnqueteService {
             }
         }
         if (!dossier.getMdphs().isEmpty()) {
-            if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
-                    dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
+            if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE)) {
                 enquete.getCodAmL().add(CodAmL.AM2);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM2);
             }
 
             if (dossier.getMdphs().contains(Mdph.TRANSPORT_INDIVIDUEL_ADAPTE)) {
                 enquete.getCodAmL().add(CodAmL.AM3);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM3);
             }
 
             if (dossier.getMdphs().contains(Mdph.RQTH)) {
                 enquete.getCodAmL().add(CodAmL.AM4);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM4);
             }
 
-            if (dossier.getMdphs().contains(Mdph.AEEH)) {
+            if (dossier.getMdphs().contains(Mdph.AAH)) {
                 enquete.getCodAmL().add(CodAmL.AM5);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM5);
             }
-
-            if (dossier.getMdphs().contains(Mdph.AAH) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_PRIORITE) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
+            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
+                dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
                 enquete.getCodAmL().add(CodAmL.AM8);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM8);
+            }
+            if (dossier.getMdphs().contains(Mdph.CARTE_PRIORITE)) {
+                enquete.getCodAmL().add(CodAmL.AM9);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM9);
             }
         }
         return enquete;
