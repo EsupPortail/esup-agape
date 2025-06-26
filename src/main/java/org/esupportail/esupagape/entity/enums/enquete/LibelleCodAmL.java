@@ -9,4 +9,5 @@ public enum LibelleCodAmL {
     AM6,
     AM7,
     AM8,
+    AM9
 }

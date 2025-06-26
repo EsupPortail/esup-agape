@@ -2,8 +2,7 @@ package org.esupportail.esupagape.dtos.csvs;
 
 public class EnqueteExportCsv {
 
-    String nfic;
-    String id;
+    String uai;
     String numetu;
     String an;
     String sexe;
@@ -30,9 +29,8 @@ public class EnqueteExportCsv {
     String finished;
     String link;
 
-    public EnqueteExportCsv(String nfic, String id, String numetu, String an, String sexe, String typFrmn, String modFrmn, String alternance, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
-        this.nfic = nfic;
-        this.id = id;
+    public EnqueteExportCsv(String uai, String numetu, String an, String sexe, String typFrmn, String modFrmn, String alternance, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
+        this.uai = uai;
         this.numetu = numetu;
         this.an = an;
         this.sexe = sexe;
@@ -58,20 +56,12 @@ public class EnqueteExportCsv {
         this.link = link;
     }
 
-    public String getNfic() {
-        return nfic;
+    public String getUai() {
+        return uai;
     }
 
-    public void setNfic(String nfic) {
-        this.nfic = nfic;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setUai(String uai) {
+        this.uai = uai;
     }
 
     public String getNumetu() {
