@@ -4,7 +4,9 @@ import gouv.education.apogee.commun.client.ws.EtudiantMetier.CoordonneesDTO2;
 import gouv.education.apogee.commun.client.ws.EtudiantMetier.InfoAdmEtuDTO4;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.DataType;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.DataMappingService;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
 import org.esupportail.esupagape.service.externalws.apogee.WsApogeeServiceEtudiant;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
@@ -25,9 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Order(3)
@@ -41,24 +41,13 @@ public class ApoIndividuSourceService implements IndividuSourceService {
     private final WsApogeeServiceEtudiant wsApogeeServiceEtudiant;
 
     private final UtilsService utilsService;
+    private final DataMappingService dataMappingService;
 
-    private final Map<String, Classification> classificationMap = new HashMap<>();
-
-    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant, UtilsService utilsService) {
+    public ApoIndividuSourceService(IndividuDataSourceService individuDataSourceService, WsApogeeServiceEtudiant wsApogeeServiceEtudiant, UtilsService utilsService, DataMappingService dataMappingService) {
         this.dataSource = individuDataSourceService.getDataSourceByName("APOGEE");
         this.wsApogeeServiceEtudiant = wsApogeeServiceEtudiant;
         this.utilsService = utilsService;
-
-        this.classificationMap.put("A", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
-        this.classificationMap.put("B", Classification.TROUBLES_DES_FONCTIONS_AUDITIVES);
-        this.classificationMap.put("M", Classification.MOTEUR);
-        this.classificationMap.put("V", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
-        this.classificationMap.put("W", Classification.TROUBLES_DES_FONCTIONS_VISUELLES);
-        this.classificationMap.put("XX", Classification.TROUBLES_VISCERAUX);
-        this.classificationMap.put("G", Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE);
-        this.classificationMap.put("H", Classification.AUTISME);
-        this.classificationMap.put("I", Classification.TROUBLES_PSYCHIQUES);
-
+        this.dataMappingService = dataMappingService;
     }
 
     @Override
@@ -82,8 +71,9 @@ public class ApoIndividuSourceService implements IndividuSourceService {
         InfoAdmEtuDTO4  infoAdmEtuDTO4 = wsApogeeServiceEtudiant.recupererInfosAdmEtu(numEtu);
         if(infoAdmEtuDTO4 != null) {
             if(infoAdmEtuDTO4.getHandicap() != null) {
-                if(infoAdmEtuDTO4.getHandicap().getCodeHandicap() != null && getClassificationMap().containsKey(infoAdmEtuDTO4.getHandicap().getCodeHandicap())) {
-                    individuInfos.setHandicap(getClassificationMap().get(infoAdmEtuDTO4.getHandicap().getCodeHandicap()));
+                if(infoAdmEtuDTO4.getHandicap().getCodeHandicap() != null) {
+                    String classification = dataMappingService.getValue("Dossier", "classification", DataType.apogee, DataType.agape, infoAdmEtuDTO4.getHandicap().getCodeHandicap());
+                    individuInfos.setHandicap(Classification.valueOf(classification));
                 } else if(infoAdmEtuDTO4.getHandicap().getCodeHandicap() == null) {
                     individuInfos.setHandicap(Classification.NON_COMMUNIQUE);
                 } else {
@@ -147,11 +137,6 @@ public class ApoIndividuSourceService implements IndividuSourceService {
             }
         }
         return numEtus;
-    }
-
-    @Override
-    public Map<String, Classification> getClassificationMap() {
-        return this.classificationMap;
     }
 
 }
