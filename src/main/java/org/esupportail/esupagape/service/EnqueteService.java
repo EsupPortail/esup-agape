@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -280,7 +278,7 @@ public class EnqueteService {
                     if (classification.equals(Classification.TEMPORAIRE)) {
                         enquete.setHdTmp(true);
                     } else {
-                        enquete.setCodHd(getClassificationEnqueteMap().get(classification));
+                        enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classification.name())));
                     }
                 }
             } else if (dossier.getClassifications().size() == 2) {
@@ -289,7 +287,7 @@ public class EnqueteService {
                 if (dossier.getClassifications().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 } else {
-                    enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassifications().stream().toList().get(0)));
+                    enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, dossier.getClassifications().stream().toList().get(0).name())));
                 }
             }
         }
@@ -376,23 +374,6 @@ public class EnqueteService {
                 enquete.setDossier(null);
             }
         }
-    }
-
-    public Map<Classification, CodHd> getClassificationEnqueteMap() {
-        Map<Classification, CodHd> classificationMap = new HashMap<>();
-        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_AUDITIVES, CodHd.AUD);
-        classificationMap.put(Classification.MOTEUR, CodHd.MOT);
-        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
-        classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
-        classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
-        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);
-        classificationMap.put(Classification.AUTISME, CodHd.TSA);
-        classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
-        classificationMap.put(Classification.REFUS, CodHd.TND);
-        classificationMap.put(Classification.AUTRES_TROUBLES, CodHd.AUT);
-        classificationMap.put(Classification.TROUBLES_INTELLECTUELS_ET_COGNITIFS, CodHd.COG);
-        classificationMap.put(Classification.TROUBLES_PSYCHIQUES, CodHd.PSY);
-        return classificationMap;
     }
 
     public Enquete findByDossierId(Long dossierId) {
