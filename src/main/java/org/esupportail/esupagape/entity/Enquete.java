@@ -1,8 +1,8 @@
 package org.esupportail.esupagape.entity;
 
+import jakarta.persistence.*;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 
-import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,11 +26,14 @@ public class Enquete {
 
     private Boolean alternance = false;
 
-    private String codSco;
+    @Enumerated(EnumType.STRING)
+    private CodSco codSco;
 
-    private String codFmt;
+    @Enumerated(EnumType.STRING)
+    private CodFmt codFmt;
 
-    private String codFil;
+    @Enumerated(EnumType.STRING)
+    private CodFil codFil;
 
     @Enumerated(EnumType.STRING)
     private CodHd codHd;
@@ -125,27 +128,27 @@ public class Enquete {
         this.alternance = alternance;
     }
 
-    public String getCodSco() {
+    public CodSco getCodSco() {
         return codSco;
     }
 
-    public void setCodSco(String codSco) {
+    public void setCodSco(CodSco codSco) {
         this.codSco = codSco;
     }
 
-    public String getCodFmt() {
+    public CodFmt getCodFmt() {
         return codFmt;
     }
 
-    public void setCodFmt(String codFmt) {
+    public void setCodFmt(CodFmt codFmt) {
         this.codFmt = codFmt;
     }
 
-    public String getCodFil() {
+    public CodFil getCodFil() {
         return codFil;
     }
 
-    public void setCodFil(String codFil) {
+    public void setCodFil(CodFil codFil) {
         this.codFil = codFil;
     }
 

@@ -13,9 +13,9 @@ public class EnqueteForm {
     private TypFrmn typFrmn;
     private ModFrmn modFrmn;
     private Boolean alternance;
-    private String codSco;
-    private String codFmt;
-    private String codFil;
+    private CodSco codSco;
+    private CodFmt codFmt;
+    private CodFil codFil;
     private CodHd codHd;
     private Boolean hdTmp;
     private String com;
@@ -44,6 +44,7 @@ public class EnqueteForm {
     private String AM6;
     private String AM7;
     private String AM8;
+    private String AM9;
 
     public Long getId() {
         return id;
@@ -93,27 +94,27 @@ public class EnqueteForm {
         this.alternance = alternance;
     }
 
-    public String getCodSco() {
+    public CodSco getCodSco() {
         return codSco;
     }
 
-    public void setCodSco(String codSco) {
+    public void setCodSco(CodSco codSco) {
         this.codSco = codSco;
     }
 
-    public String getCodFmt() {
+    public CodFmt getCodFmt() {
         return codFmt;
     }
 
-    public void setCodFmt(String codFmt) {
+    public void setCodFmt(CodFmt codFmt) {
         this.codFmt = codFmt;
     }
 
-    public String getCodFil() {
+    public CodFil getCodFil() {
         return codFil;
     }
 
-    public void setCodFil(String codFil) {
+    public void setCodFil(CodFil codFil) {
         this.codFil = codFil;
     }
 
@@ -334,4 +335,11 @@ public class EnqueteForm {
         this.AM8 = AM8;
     }
 
+    public String getAM9() {
+        return AM9;
+    }
+
+    public void setAM9(String AM9) {
+        this.AM9 = AM9;
+    }
 }

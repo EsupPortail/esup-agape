@@ -8,6 +8,7 @@ public enum CodAmL {
     AM5,
     AM6,
     AM7,
-    AM8
+    AM8,
+    AM9
 }
 

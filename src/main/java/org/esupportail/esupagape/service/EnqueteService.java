@@ -1,30 +1,24 @@
 package org.esupportail.esupagape.service;
 
-import org.esupportail.esupagape.dtos.csvs.SiseDiplomeCsvDto;
-import org.esupportail.esupagape.dtos.csvs.SiseSecteurDisciplinaireCsvDto;
-import org.esupportail.esupagape.dtos.csvs.SiseTypeDiplomeCsvDto;
 import org.esupportail.esupagape.dtos.forms.EnqueteForm;
 import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Enquete;
-import org.esupportail.esupagape.entity.EnqueteEnumFilFmtScoLibelle;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.*;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
-import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoLibelleRepository;
-import org.esupportail.esupagape.repository.EnqueteEnumFilFmtScoRepository;
 import org.esupportail.esupagape.repository.EnqueteRepository;
 import org.esupportail.esupagape.service.utils.SiseService;
 import org.esupportail.esupagape.service.utils.UtilsService;
-import org.esupportail.esupagape.service.utils.slimselect.SlimSelectData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnqueteService {
@@ -33,29 +27,25 @@ public class EnqueteService {
 
 
     private final EnqueteRepository enqueteRepository;
-    private final EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepository;
-    private final EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository;
     private final DossierService dossierService;
     private final AmenagementService amenagementService;
     private final UtilsService utilsService;
     private final LogService logService;
     private final SiseService siseService;
+    private final DataMappingService dataMappingService;
 
     public EnqueteService(
             EnqueteRepository enqueteRepository,
-            EnqueteEnumFilFmtScoRepository enqueteEnumFilFmtScoRepositoryRepository,
-            EnqueteEnumFilFmtScoLibelleRepository enqueteEnumFilFmtScoLibelleRepository,
             DossierService dossierService,
             AmenagementService amenagementService,
-            UtilsService utilsService, LogService logService, SiseService siseService) {
+            UtilsService utilsService, LogService logService, SiseService siseService, DataMappingService dataMappingService) {
         this.enqueteRepository = enqueteRepository;
-        this.enqueteEnumFilFmtScoRepository = enqueteEnumFilFmtScoRepositoryRepository;
-        this.enqueteEnumFilFmtScoLibelleRepository = enqueteEnumFilFmtScoLibelleRepository;
         this.dossierService = dossierService;
         this.amenagementService = amenagementService;
         this.utilsService = utilsService;
         this.logService = logService;
         this.siseService = siseService;
+        this.dataMappingService = dataMappingService;
     }
 
     public Enquete getById(Long id) throws AgapeJpaException {
@@ -174,6 +164,9 @@ public class EnqueteService {
             if (StringUtils.hasText(enqueteForm.getAM8())) {
                 enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM8()));
             }
+            if (StringUtils.hasText(enqueteForm.getAM9())) {
+                enqueteToUpdate.getCodAmL().add(CodAmL.valueOf(enqueteForm.getAM9()));
+            }
         }
         enqueteToUpdate.setAidHNat(enqueteForm.getAidHNat());
         enqueteToUpdate.setCodMeae(enqueteForm.getCodMeae());
@@ -250,7 +243,7 @@ public class EnqueteService {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
                 enquete.getCodMeae().clear();
-                enquete.getCodMeae().addAll(amenagement.getCodMeaeList());
+                enquete.getCodMeae().addAll(amenagementService.getCodMeaeList(amenagement.getAmenagementText()));
             }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {
@@ -285,7 +278,7 @@ public class EnqueteService {
                     if (classification.equals(Classification.TEMPORAIRE)) {
                         enquete.setHdTmp(true);
                     } else {
-                        enquete.setCodHd(getClassificationEnqueteMap().get(classification));
+                        enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classification.name())));
                     }
                 }
             } else if (dossier.getClassifications().size() == 2) {
@@ -294,15 +287,17 @@ public class EnqueteService {
                 if (dossier.getClassifications().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
                     enquete.setHdTmp(true);
                 } else {
-                    enquete.setCodHd(getClassificationEnqueteMap().get(dossier.getClassifications().stream().toList().get(0)));
+                    enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, dossier.getClassifications().stream().toList().get(0).name())));
                 }
             }
         }
         if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
             try {
-                String codFil = SiseSecteurDisciplinaireCsvDto.getCodFil(siseService.getCodeSecteurDisciplinaire( dossier.getSecteurDisciplinaire()));
-                if(StringUtils.hasText(codFil) && !StringUtils.hasText(enquete.getCodFil())) {
-                    enquete.setCodFil(codFil);
+                if(enquete.getCodFil() == null) {
+                    String codFil = dataMappingService.getValue("Dossier", "secteurDisciplinaire", DataType.sise, DataType.enquete, siseService.getCodeSecteurDisciplinaire(dossier.getSecteurDisciplinaire()));
+                    if (StringUtils.hasText(codFil)) {
+                        enquete.setCodFil(CodFil.valueOf(codFil));
+                    }
                 }
             } catch (Exception e) {
                 logger.error("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
@@ -310,9 +305,11 @@ public class EnqueteService {
         }
         if(StringUtils.hasText(dossier.getTypeDiplome())) {
             try {
-                String codFmt = SiseTypeDiplomeCsvDto.getCodFmt(siseService.getCodeTypeDiplome( dossier.getTypeDiplome()));
-                if(StringUtils.hasText(codFmt) && !StringUtils.hasText(enquete.getCodFmt())) {
-                    enquete.setCodFmt(codFmt);
+                if(enquete.getCodFmt() == null) {
+                    String codFmt = dataMappingService.getValue("Dossier", "typeDiplome", DataType.sise, DataType.enquete, siseService.getCodeTypeDiplome(dossier.getTypeDiplome()));
+                    if (StringUtils.hasText(codFmt)) {
+                        enquete.setCodFmt(CodFmt.valueOf(codFmt));
+                    }
                 }
             } catch (Exception e) {
                 logger.error("enquete codFmt not found for " + dossier.getTypeDiplome());
@@ -320,37 +317,50 @@ public class EnqueteService {
         }
         if(StringUtils.hasText(dossier.getNiveauEtudes())) {
             try {
-                String codSco = SiseDiplomeCsvDto.getCodSco(dossier.getNiveauEtudes());
-                if(StringUtils.hasText(codSco) && !StringUtils.hasText(enquete.getCodSco())) {
-                    enquete.setCodSco(codSco);
+                if(enquete.getCodSco() != null) {
+                    String codSco = dataMappingService.getValue("Dossier", "niveauEtudes", DataType.supann, DataType.enquete, dossier.getNiveauEtudes());
+                    if(StringUtils.hasText(codSco)) {
+                        enquete.setCodSco(CodSco.valueOf(codSco));
+                    }
                 }
             } catch (Exception e) {
                 logger.error("enquete codSco not found for " + dossier.getNiveauEtudes());
             }
         }
         if (!dossier.getMdphs().isEmpty()) {
-            if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE) ||
-                    dossier.getMdphs().contains(Mdph.PCH_AIDE_TECHNIQUE)) {
+            if (dossier.getMdphs().contains(Mdph.PCH_AIDE_HUMAINE)) {
                 enquete.getCodAmL().add(CodAmL.AM2);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM2);
             }
 
             if (dossier.getMdphs().contains(Mdph.TRANSPORT_INDIVIDUEL_ADAPTE)) {
                 enquete.getCodAmL().add(CodAmL.AM3);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM3);
             }
 
             if (dossier.getMdphs().contains(Mdph.RQTH)) {
                 enquete.getCodAmL().add(CodAmL.AM4);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM4);
             }
 
-            if (dossier.getMdphs().contains(Mdph.AEEH)) {
+            if (dossier.getMdphs().contains(Mdph.AAH)) {
                 enquete.getCodAmL().add(CodAmL.AM5);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM5);
             }
-
-            if (dossier.getMdphs().contains(Mdph.AAH) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_PRIORITE) ||
-                    dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
+            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
+                dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
                 enquete.getCodAmL().add(CodAmL.AM8);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM8);
+            }
+            if (dossier.getMdphs().contains(Mdph.CARTE_PRIORITE)) {
+                enquete.getCodAmL().add(CodAmL.AM9);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM9);
             }
         }
         return enquete;
@@ -364,71 +374,6 @@ public class EnqueteService {
                 enquete.setDossier(null);
             }
         }
-    }
-
-    public Map<Classification, CodHd> getClassificationEnqueteMap() {
-        Map<Classification, CodHd> classificationMap = new HashMap<>();
-        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_AUDITIVES, CodHd.AUD);
-        classificationMap.put(Classification.MOTEUR, CodHd.MOT);
-        classificationMap.put(Classification.TROUBLES_DES_FONCTIONS_VISUELLES, CodHd.VUE);
-        classificationMap.put(Classification.TROUBLES_VISCERAUX, CodHd.VIS);
-        classificationMap.put(Classification.TROUBLES_VISCERAUX_CANCER, CodHd.VIS0);
-        classificationMap.put(Classification.TROUBLE_DU_LANGAGE_OU_DE_LA_PAROLE, CodHd.LNG);
-        classificationMap.put(Classification.AUTISME, CodHd.TSA);
-        classificationMap.put(Classification.NON_COMMUNIQUE, CodHd.TND);
-        classificationMap.put(Classification.REFUS, CodHd.TND);
-        classificationMap.put(Classification.AUTRES_TROUBLES, CodHd.AUT);
-        classificationMap.put(Classification.TROUBLES_INTELLECTUELS_ET_COGNITIFS, CodHd.COG);
-        classificationMap.put(Classification.TROUBLES_PSYCHIQUES, CodHd.PSY);
-        return classificationMap;
-    }
-
-    public List<String> getCodFils() {
-        return enqueteEnumFilFmtScoRepository.findCodFils();
-    }
-
-    public List<String> getCodFmts() {
-        return enqueteEnumFilFmtScoRepository.findCodFmts();
-    }
-
-    public List<String> getCodScos() {
-        return enqueteEnumFilFmtScoRepository.findCodScos();
-    }
-
-    public Map<String, String> getAllCodFmt() {
-        Map<String, String> codFmts = new HashMap<>();
-        List<EnqueteEnumFilFmtScoLibelle> enqueteEnumFilFmtScoLibelles = enqueteEnumFilFmtScoLibelleRepository.findAll();
-        for (EnqueteEnumFilFmtScoLibelle enqueteEnumFilFmtScoLibelle : enqueteEnumFilFmtScoLibelles) {
-            codFmts.put(enqueteEnumFilFmtScoLibelle.getCod().toLowerCase(), enqueteEnumFilFmtScoLibelle.getLibelle());
-        }
-        return codFmts;
-    }
-
-    public List<SlimSelectData> getSlimSelectDtosOfCodFmts() {
-        List<String> codFmts = getCodFmts();
-        List<SlimSelectData> slimSelectDtos = new ArrayList<>();
-        if (!codFmts.isEmpty()) {
-            slimSelectDtos.add(new SlimSelectData("", ""));
-            for (String codFmt : codFmts) {
-                slimSelectDtos.add(new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("FMT" + codFmt), codFmt));
-            }
-        }
-        return slimSelectDtos;
-    }
-
-    public List<SlimSelectData> getSlimSelectDtosOfCodScos() {
-        List<String> codScos = getCodScos();
-        List<SlimSelectData> slimSelectDtos = new ArrayList<>();
-        if (!codScos.isEmpty()) {
-            slimSelectDtos.add(new SlimSelectData("", ""));
-            for (String codSco : codScos) {
-                SlimSelectData slimSelectDto = new SlimSelectData(enqueteEnumFilFmtScoLibelleRepository.findByCod("SCO" + codSco), codSco);
-                if (slimSelectDto.getValue() != null) {
-                    slimSelectDtos.add(slimSelectDto);
-                }
-            }
-        }
-        return slimSelectDtos;
     }
 
     public Enquete findByDossierId(Long dossierId) {

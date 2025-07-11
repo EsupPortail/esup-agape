@@ -72,9 +72,8 @@ public class ExportService {
         writeObjectListToCsv(exportRepository.findByYearForCSV(year), dossierCompletCsv, writer);
     }
 
-    private final Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
-        put("nfic", "Nfic");
-        put("id", "Id");
+    private final Map<String, String> enqueteCsvPartial = new LinkedHashMap<>() {{
+        put("uai", "Numéro UAI");
         put("numetu", "Numéro étudiant");
         put("an", "Année");
         put("sexe", "Sexe");
@@ -102,6 +101,33 @@ public class ExportService {
         put("link", "Lien");
     }};
 
+    private final Map<String, String> enqueteCsv = new LinkedHashMap<>() {{
+        put("uai", "Numéro UAI");
+        put("numetu", "Numéro étudiant");
+        put("an", "Année");
+        put("sexe", "Sexe");
+        put("typFrmn", "Type formation");
+        put("modFrmn", "Modalité formation");
+        put("alternance", "Alternance");
+        put("codSco", "Année d'études");
+        put("codFmt", "Formation");
+        put("codFil", "Discipline");
+        put("codHd", "Typologie de trouble");
+        put("hdTmp", "Handicap temporaire");
+        put("com", "Commentaire");
+        put("codPfpp", "Plan d'accompagnement");
+        put("codPfas", "Aménagement du cursus de formation");
+        put("codMeahF", "Mesures aides humaines");
+//        put("interpH", "supprimé");
+//        put("codeurH", "supprimé");
+        put("aidHnat", "Autre aide humaine");
+        put("codMeae", "Aménagement des examens");
+        put("autAE", "Autre aménagement des examens");
+        put("codMeaa", "Autres aides");
+        put("autAA", "Autres (à préciser");
+        put("codAmL", "Autres mesures relevant ou non de la compétence de la CDAPH");
+    }};
+
     @Transactional
     public void findEnqueteByYearForCSV(Integer year, Writer writer, boolean partial) throws AgapeException {
         List<EnqueteExportCsv> enqueteExportCsvs = new ArrayList<>();
@@ -113,17 +139,16 @@ public class ExportService {
         int id = 1;
         for(Enquete enquete : enquetes) {
             EnqueteExportCsv enqueteExportCsv = new EnqueteExportCsv(
-                    "1",
                     applicationProperties.getCodeEtab(),
-                    String.valueOf(id + Integer.parseInt(year + "0000")),
+                    String.valueOf(id + Integer.parseInt((year + 1) + "0000")),
                     enquete.getAn(),
                     enquete.getSexe(),
                     enquete.getTypFrmn() != null ? enquete.getTypFrmn().name().toLowerCase() : "",
                     enquete.getModFrmn() != null ? enquete.getModFrmn().name().toLowerCase() : "",
                     (BooleanUtils.isTrue(enquete.getAlternance())) ? "1" : "",
-                    enquete.getCodSco() != null ? enquete.getCodSco().toLowerCase() : "",
-                    enquete.getCodFmt() != null ? enquete.getCodFmt().toLowerCase() : "",
-                    enquete.getCodFil() != null ? enquete.getCodFil().toLowerCase() : "",
+                    enquete.getCodSco() != null ? enquete.getCodSco().getCode().toLowerCase() : "",
+                    enquete.getCodFmt() != null ? enquete.getCodFmt().name().toLowerCase() : "",
+                    enquete.getCodFil() != null ? enquete.getCodFil().name().toLowerCase() : "",
                     enquete.getCodHd() != null ? enquete.getCodHd().name().toLowerCase() : "",
                     (enquete.getHdTmp()) ? "1" : "",
                     enquete.getCom(),
@@ -144,7 +169,11 @@ public class ExportService {
             enqueteExportCsvs.add(enqueteExportCsv);
             id++;
         }
-        writeObjectListToCsv(enqueteExportCsvs, enqueteCsv, writer);
+        if(partial) {
+            writeObjectListToCsv(enqueteExportCsvs, enqueteCsvPartial, writer);
+        } else {
+            writeObjectListToCsv(enqueteExportCsvs, enqueteCsv, writer);
+        }
     }
 
     public <T> void writeObjectListToCsv(List<T> objectList, Map<String, String> fieldsHeaders, Writer writer) {

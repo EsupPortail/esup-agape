@@ -487,59 +487,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             codMeaa.style.zIndex = -1;
         }
 
-        let codFil = document.getElementById("codFil");
-        if (codFil != null) {
-            let codFmt = new SlimSelect({
-                select: '#codFmt',
-                settings: {
-                    showSearch: false,
-                    placeholderText: 'Choisir',
-                    searchText: '',
-                    searchPlaceholder: 'Rechercher'
-                },
-                events: {
-                    afterChange: (newVal) => {
-                        console.log(newVal[0].value);
-                    }
-                }
-            });
-            const codFmtDefaultValue = document.querySelector('#codFmt').value.toUpperCase();
-            fetch('/ws-secure/enquete/cod-fmt')
-                .then((response) => response.json())
-                .then(function (data) {
-                    codFmt.setData(data);
-                    codFmt.setSelected(codFmtDefaultValue);
-                    codFmt.enable();
-                });
-            let codSco = new SlimSelect({
-                select: '#codSco',
-                settings: {
-                    showSearch: false,
-                    placeholderText: 'Choisir',
-                    searchText: '',
-                    searchPlaceholder: 'Rechercher'
-                }
-            });
-            const codScoDefaultValue = document.querySelector('#codSco').value.toUpperCase();
-
-            fetch('/ws-secure/enquete/cod-sco')
-                .then((response) => response.json())
-                .then(function (data) {
-                    console.log(data);
-                    if (data.length > 1) {
-                        codSco.setData(data);
-                        codSco.setSelected(codScoDefaultValue);
-                        codSco.enable();
-                    } else {
-                        codSco.setData([{text: '', value: ''}]);
-                        //codSco.disable();
-                    }
-                });
-
-
-
-        }
-
         let am0On = document.getElementById("AM0On")
         if (am0On != null) {
             am0On.addEventListener("click", function (event) {
