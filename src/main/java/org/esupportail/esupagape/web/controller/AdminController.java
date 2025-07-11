@@ -280,36 +280,6 @@ public class AdminController {
         return "redirect:/dossiers";
     }
 
-    @PostMapping("/import-codes-ministere")
-    public String importCsv(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        if(!file.isEmpty()) {
-            try {
-                csvImportService.importCsv(file);
-                redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des codes du ministère est terminé"));
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des codes du ministère a échoué"));
-            }
-        } else {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
-        }
-        return "redirect:/admin/imports";
-    }
-
-    @PostMapping("/import-libelles-ministere")
-    public String importCsvLibelle(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        if(!file.isEmpty()) {
-            try {
-                csvImportService.importCsvLibelle(file);
-                redirectAttributes.addFlashAttribute("message", new Message("success", "L'import des libellés du ministère est terminé"));
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("message", new Message("warning", "L'import des libellés du ministère a échoué"));
-            }
-        } else {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", "Le fichier csv est vide !"));
-        }
-        return "redirect:/admin/imports";
-    }
-
     @PostMapping("/import-libelles-amenagement")
     public String importLibelleAmenagement(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if(!file.isEmpty()) {

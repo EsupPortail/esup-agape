@@ -3,13 +3,13 @@ package org.esupportail.esupagape.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.esupportail.esupagape.entity.enums.*;
-import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.text.Normalizer;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 public class Amenagement {
@@ -338,69 +338,5 @@ public class Amenagement {
     public DossierAmenagement getLastDossierAmenagement() {
         return dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).get();
     }
-
-    public List<CodMeae> getCodMeaeList() {
-        Map<String, CodMeae> correspondances = new HashMap<>();
-        correspondances.put("compensation de temps", CodMeae.AE8);
-        correspondances.put("Aménagement", CodMeae.AE4);
-        correspondances.put("Amplificateur", CodMeae.AE1);
-        correspondances.put("interprète", CodMeae.AE5);
-        correspondances.put("Assistance", CodMeae.AE3);
-        correspondances.put("Bouchons d’oreilles", CodMeae.AEB);
-        correspondances.put("casque", CodMeae.AEB);
-        correspondances.put("Calculette", CodMeae.AEB);
-        correspondances.put("Clavier", CodMeae.AE1);
-        correspondances.put("Codeur", CodMeae.AE5);
-        correspondances.put("salle", CodMeae.AE6);
-        correspondances.put("table", CodMeae.AE1);
-        correspondances.put("Délocalisation", CodMeae.AEC);
-        correspondances.put("Dispense", CodMeae.AE4);
-        correspondances.put("apporter son propre matériel", CodMeae.AEE);
-        correspondances.put("en fonction du handicap.", CodMeae.AE4);
-        correspondances.put("hors sessions", CodMeae.AE9);
-        correspondances.put("agrandis", CodMeae.AE2);
-        correspondances.put("seul(e) avec l’examinateur", CodMeae.AE4);
-        correspondances.put("Logiciel", CodMeae.AEE);
-        correspondances.put("Loupe", CodMeae.AE1);
-        correspondances.put("braille", CodMeae.AE1);
-        correspondances.put("ordinateur", CodMeae.AED);
-        correspondances.put("documents en TXT ou RTF", CodMeae.AE2);
-        correspondances.put("correcteur d’orthographe", CodMeae.AEE);
-        correspondances.put("zoom test", CodMeae.AEE);
-        correspondances.put("Pas de bande sonore", CodMeae.AE4);
-        correspondances.put("distanciel", CodMeae.AEC);
-        correspondances.put("régime terminal", CodMeae.AE9);
-        correspondances.put("Place", CodMeae.AEA);
-        correspondances.put("Remplacement", CodMeae.AE4);
-        correspondances.put("majoration du temps.", CodMeae.AE7);
-        correspondances.put("interligne", CodMeae.AE2);
-        correspondances.put("Open Dyslexic", CodMeae.AEE);
-        correspondances.put("police", CodMeae.AE2);
-        correspondances.put("Tablette", CodMeae.AED);
-        correspondances.put("Télé agrandissement", CodMeae.AE1);
-        correspondances.put("Tolérance orthographique", CodMeae.AE4);
-        correspondances.put("Transformation des épreuves", CodMeae.AE4);
-
-        List<CodMeae> codMeaes = new ArrayList<>();
-        String[] lignes = amenagementText.split("\\r?\\n");
-        for (String line : lignes) {
-            String normalizedLine = normalize(line);
-            for (String key : correspondances.keySet()) {
-                String normalizedKey = normalize(key);
-                String pattern = "\\b" + Pattern.quote(normalizedKey) + "\\b";
-                if (normalizedLine.matches(".*" + pattern + ".*")) {
-                    codMeaes.add(correspondances.get(key));
-                }
-            }
-        }
-        return codMeaes;
-    }
-
-    private static String normalize(String input) {
-        if (input == null) return "";
-        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        return normalized.replaceAll("\\p{M}", "").trim().toLowerCase();
-    }
-
 
 }

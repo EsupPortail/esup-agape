@@ -59,7 +59,9 @@ public class EnqueteController {
     private void setModel(Model model) {
         model.addAttribute("typFrmns", TypFrmn.values());
         model.addAttribute("modFrmns", ModFrmn.values());
-        model.addAttribute("codFils", enqueteService.getCodFils());
+        model.addAttribute("codFils", CodFil.values());
+        model.addAttribute("codFmts", CodFmt.values());
+        model.addAttribute("codScos", CodSco.values());
         model.addAttribute("codHds", CodHd.values());
         model.addAttribute("codPfpps", CodPfpp.values());
         model.addAttribute("codPfass", CodPfas.values());
@@ -69,7 +71,7 @@ public class EnqueteController {
         model.addAttribute("codamls", CodAmL.values());
         model.addAttribute("libelleCodAmLs", LibelleCodAmL.values());
         model.addAttribute("genders", Gender.values());
-        model.addAttribute("enqueteEnumFilFmtSco", enqueteService.getAllCodFmt());
+        model.addAttribute("enqueteEnumFilFmtSco", CodFmt.values());
     }
 
 }

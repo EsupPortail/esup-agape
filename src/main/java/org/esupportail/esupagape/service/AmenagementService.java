@@ -23,6 +23,7 @@ import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.*;
 import org.esupportail.esupagape.entity.enums.*;
+import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeYearException;
@@ -50,9 +51,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,8 +80,9 @@ public class AmenagementService {
     private final PersonLdapRepository personLdapRepository;
     private final OrganizationalUnitLdapRepository organizationalUnitLdapRepository;
     private final DossierRepository dossierRepository;
+    private final DataMappingService dataMappingService;
 
-    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, LogService logService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository, DossierRepository dossierRepository) {
+    public AmenagementService(ApplicationProperties applicationProperties, LdapProperties ldapProperties, AmenagementRepository amenagementRepository, DossierAmenagementRepository dossierAmenagementRepository, DossierService dossierService, ObjectMapper objectMapper, MessageSource messageSource, UtilsService utilsService, EsupSignatureService esupSignatureService, MailService mailService, LogService logService, DocumentService documentService, LibelleAmenagementRepository libelleAmenagementRepository, UserOthersAffectationsRepository userOthersAffectationsRepository, PersonLdapRepository personLdapRepository, OrganizationalUnitLdapRepository organizationalUnitLdapRepository, DossierRepository dossierRepository, DataMappingService dataMappingService) {
         this.applicationProperties = applicationProperties;
         this.ldapProperties = ldapProperties;
         this.amenagementRepository = amenagementRepository;
@@ -96,6 +100,7 @@ public class AmenagementService {
         this.personLdapRepository = personLdapRepository;
         this.organizationalUnitLdapRepository = organizationalUnitLdapRepository;
         this.dossierRepository = dossierRepository;
+        this.dataMappingService = dataMappingService;
     }
 
     public Amenagement getById(Long id) {
@@ -828,5 +833,27 @@ public class AmenagementService {
         }
     }
 
+    public List<CodMeae> getCodMeaeList(String amenagementText) {
+        List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete, amenagementText);
+        List<CodMeae> codMeaes = new ArrayList<>();
+        String[] lignes = amenagementText.split("\\r?\\n");
+        for (String line : lignes) {
+            String normalizedLine = normalize(line);
+            for (DataMapping dataMapping : dataMappings) {
+                String normalizedKey = normalize(dataMapping.getSourceValue());
+                String pattern = "\\b" + Pattern.quote(normalizedKey) + "\\b";
+                if (normalizedLine.matches(".*" + pattern + ".*")) {
+                    codMeaes.add(CodMeae.valueOf(dataMapping.getDestinationValue()));
+                }
+            }
+        }
+        return codMeaes;
+    }
+
+    private static String normalize(String input) {
+        if (input == null) return "";
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", "").trim().toLowerCase();
+    }
 
 }
