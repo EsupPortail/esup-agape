@@ -487,54 +487,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             codMeaa.style.zIndex = -1;
         }
 
-        let codFil = document.getElementById("codFil");
-        if (codFil != null) {
-            let codFmt = new SlimSelect({
-                select: '#codFmt',
-                settings: {
-                    showSearch: false,
-                    placeholderText: 'Choisir',
-                    searchText: '',
-                    searchPlaceholder: 'Rechercher'
-                },
-                events: {
-                    afterChange: (newVal) => {
-                        console.log(newVal[0].value);
-                        fetch('/ws-secure/enquete/cod-sco')
-                            .then((response) => response.json())
-                            .then(function (data) {
-                                console.log(data);
-                                if (data.length > 1) {
-                                    codSco.setData(data);
-                                    codSco.enable();
-                                } else {
-                                    codSco.setData([{text: '', value: ''}]);
-                                    codSco.disable();
-                                }
-                            });
-                    }
-                }
-            });
-            let codSco = new SlimSelect({
-                select: '#codSco',
-                settings: {
-                    showSearch: false,
-                    placeholderText: 'Choisir',
-                    searchText: '',
-                    searchPlaceholder: 'Rechercher'
-                }
-            });
-            codFil.addEventListener("change", function (event) {
-                fetch('/ws-secure/enquete/cod-fmt')
-                    .then((response) => response.json())
-                    .then(function (data) {
-                        codFmt.setData(data);
-                        codFmt.enable();
-                    });
-            });
-
-        }
-
         let am0On = document.getElementById("AM0On")
         if (am0On != null) {
             am0On.addEventListener("click", function (event) {

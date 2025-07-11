@@ -338,4 +338,5 @@ public class Amenagement {
     public DossierAmenagement getLastDossierAmenagement() {
         return dossierAmenagements.stream().max(Comparator.comparingInt(DossierAmenagement::getLastYear)).get();
     }
+
 }

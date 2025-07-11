@@ -2,9 +2,10 @@ package org.esupportail.esupagape.service.interfaces.importindividu.impl;
 
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.entity.Individu;
-import org.esupportail.esupagape.entity.enums.Classification;
+import org.esupportail.esupagape.entity.enums.DataType;
 import org.esupportail.esupagape.entity.enums.Gender;
 import org.esupportail.esupagape.exception.AgapeException;
+import org.esupportail.esupagape.service.DataMappingService;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuInfos;
 import org.esupportail.esupagape.service.interfaces.importindividu.IndividuSourceService;
 import org.esupportail.esupagape.service.ldap.LdapPersonService;
@@ -18,7 +19,9 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @Order(1)
@@ -27,18 +30,16 @@ public class LdapIndividuSourceService implements IndividuSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(LdapIndividuSourceService.class);
 
-    Map<String, String> genderMap  = new HashMap<>() {{
-        put("MME", "FEMININ");
-        put("M.", "MASCULIN");
-    }};
 
     private final ApplicationProperties applicationProperties;
 
     private final LdapPersonService ldapPersonService;
+    private final DataMappingService dataMappingService;
 
-    public LdapIndividuSourceService(ApplicationProperties applicationProperties, LdapPersonService ldapPersonService) {
+    public LdapIndividuSourceService(ApplicationProperties applicationProperties, LdapPersonService ldapPersonService, DataMappingService dataMappingService) {
         this.applicationProperties = applicationProperties;
         this.ldapPersonService = ldapPersonService;
+        this.dataMappingService = dataMappingService;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuInfos.setCodeIne(personLdaps.get(0).getSupannCodeINE());
             individuInfos.setName(personLdap.getSn());
             individuInfos.setFirstName(personLdap.getGivenName());
-            individuInfos.setGenre(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individuInfos.setGenre(dataMappingService.getValue("Individu", "genre", DataType.ldap, DataType.agape, personLdap.getSupannCivilite().toUpperCase()));
             individuInfos.setEmailEtu(personLdap.getMail());
             individuInfos.setFixPhone(personLdap.getTelephoneNumber());
             individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
@@ -101,8 +102,8 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individu.setCodeIne(personLdaps.get(0).getSupannCodeINE());
             individu.setName(personLdaps.get(0).getSn());
             individu.setFirstName(personLdaps.get(0).getGivenName());
-            individu.setSex(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase()));
-            individu.setGender(Gender.valueOf(genderMap.get(personLdaps.get(0).getSupannCivilite().toUpperCase())));
+            individu.setSex(dataMappingService.getValue("Individu", "genre", DataType.ldap, DataType.agape, personLdaps.get(0).getSupannCivilite().toUpperCase()));
+            individu.setGender(Gender.valueOf(dataMappingService.getValue("Individu", "genre", DataType.ldap, DataType.agape, personLdaps.get(0).getSupannCivilite().toUpperCase())));
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             individu.setDateOfBirth(LocalDate.parse(personLdaps.get(0).getSchacDateOfBirth(), dateTimeFormatter));
             return individu;
@@ -115,8 +116,4 @@ public class LdapIndividuSourceService implements IndividuSourceService {
         return new ArrayList<>();
     }
 
-    @Override
-    public Map<String, Classification> getClassificationMap() {
-        return null;
-    }
 }

@@ -111,8 +111,8 @@
                                     <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${amenagement.typeAmenagement.name() != 'CURSUS'} ? 'Jusqu’à la date de fin : ' + ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
                                     <td>
-                                        <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement}}"
-                                            th:classappend="${amenagement.lastDossierAmenagement.dossier.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>
+                                        <span class="badge" th:text="#{'dossier.statusDossierAmenagement.' + ${amenagement.lastDossierAmenagement.statusDossierAmenagement}}"
+                                            th:classappend="${amenagement.lastDossierAmenagement.statusDossierAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusDossierAmenagement).EXPIRE)} ? 'bg-danger' : 'bg-dark'"></span>
                                     </td>
                                     <td th:text="${#strings.toUpperCase(amenagement.lastDossierAmenagement.dossier.individu.name) + ' ' + amenagement.lastDossierAmenagement.dossier.individu.firstName}"></td>
                                     <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>

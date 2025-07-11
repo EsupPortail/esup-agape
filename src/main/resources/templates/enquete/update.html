@@ -109,32 +109,34 @@
 								<div>
 									<label class="mt-1 form-label" th:for="codFil">Discipline</label>
 									<div>
-										<select id="codFil" name="codFil" class="form-select" size="1">
+										<select id="codFil" name="codFil" class="form-select" size="1" disabled>
 											<option disabled selected hidden value="">Choisir</option>
-											<option th:selected="${enquete.codFil != null && enumCodfil.toLowerCase() == enquete.codFil.toLowerCase()}"
-											        th:each="enumCodfil : ${codFils}"
-											        th:value="${enumCodfil}"
-											        th:text="${enqueteEnumFilFmtSco.get('fil' + enumCodfil.toLowerCase())}"></option>
+											<option th:selected="${enquete.codFil != null && enumCodFil.name().toLowerCase() == enquete.codFil.name().toLowerCase()}"
+											        th:each="enumCodFil : ${codFils}"
+											        th:value="${enumCodFil}"
+													th:text="#{'enquete.codfil.' + ${enumCodFil}}"></option>
 										</select>
 									</div>
 								</div>
 								<div>
 									<label class="mt-1 form-label" th:for="codFmt">Formation</label>
 									<div>
-										<select id="codFmt" name="codFmt" size="1">
-											<option selected th:if="${enquete.codFmt != null}"
-											        th:value="${enquete.codFmt}"
-											        th:text="${enqueteEnumFilFmtSco.get('fmt' + enquete.codFmt.toLowerCase())}"></option>
+										<select id="codFmt" name="codFmt" class="form-select"  size="1" disabled>
+											<option th:selected="${enquete.codFmt != null && enumCodFmt.name().toLowerCase() == enquete.codFmt.name().toLowerCase()}"
+													th:each="enumCodFmt : ${codFmts}"
+													th:value="${enumCodFmt}"
+													th:text="#{'enquete.codfmt.' + ${enumCodFmt}}"></option>
 										</select>
 									</div>
 								</div>
 								<div id="codScoDiv">
 									<label class="mt-1 form-label" th:for="codSco">Année d’études</label>
 									<div>
-										<select id="codSco" name="codSco" size="1">
-											<option selected th:if="${enquete.codSco != null}"
-											        th:value="${enquete.codSco}"
-											        th:text="${enqueteEnumFilFmtSco.get('sco' + enquete.codSco.toLowerCase())}"></option>
+										<select id="codSco" name="codSco" class="form-select"  size="1" disabled>
+											<option th:selected="${enquete.codSco != null && enumCodSco.name().toLowerCase() == enquete.codSco.name().toLowerCase()}"
+													th:each="enumCodSco : ${codScos}"
+													th:value="${enumCodSco.code}"
+											        th:text="#{'enquete.codsco.' + ${enumCodSco.code}}"></option>
 										</select>
 									</div>
 								</div>
