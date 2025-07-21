@@ -4,6 +4,7 @@ update enquete set cod_sco = '_3' where cod_sco = '3';
 update enquete set cod_sco = '_4' where cod_sco = '4';
 update enquete set cod_sco = '_5' where cod_sco = '5';
 update enquete set cod_sco = '_6' where cod_sco = '6+';
+update enquete set cod_sco = '_6' where cod_sco = '6';
 update enquete set cod_sco = '_1' where lower(cod_sco) = lower('1a');
 update enquete set cod_sco = '_2' where lower(cod_sco) = lower('2a');
 update enquete set cod_sco = '_3' where lower(cod_sco) = lower('3a');
@@ -34,11 +35,24 @@ update enquete set cod_fmt = 'MEDI' where lower(cod_fmt) = lower('pha');
 update enquete set cod_fmt = 'MEDI' where lower(cod_fmt) = lower('med');
 update enquete set cod_fmt = 'DA' where lower(cod_fmt) = lower('daa');
 update enquete set cod_fmt = 'DA' where lower(cod_fmt) = lower('dab');
+update enquete set cod_fmt = 'MEDI' where lower(cod_fmt) = lower('pa');
+update enquete set cod_fmt = 'MEDI' where lower(cod_fmt) = lower('mai');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('kin');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('erg');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('orh');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('ort');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('bim');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('mem');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('inf');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('ped');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('psm');
+update enquete set cod_fmt = 'PARA' where lower(cod_fmt) = lower('ane');
+update enquete set cod_fmt = 'NSP' where lower(cod_fmt) = lower('');
 
 update enquete set cod_fil = 'MEDI' where lower(cod_fil) = lower('san');
 update enquete set cod_fil = 'MEDI' where lower(cod_fil) = lower('par');
 
-
 update enquete set cod_fil = upper(cod_fil);
-
 update enquete set cod_fmt = upper(cod_fmt);
+
+select * from enquete where cod_sco != '_1' and cod_sco != '_2' and cod_sco != '_3' and cod_sco != '_4' and cod_sco != '_5' and cod_sco != '_6';
