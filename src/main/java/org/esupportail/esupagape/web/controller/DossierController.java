@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.esupportail.esupagape.dtos.forms.DossierFilter;
 import org.esupportail.esupagape.dtos.forms.DossierIndividuForm;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.Dossier;
 import org.esupportail.esupagape.entity.Individu;
 import org.esupportail.esupagape.entity.enums.*;
@@ -50,8 +51,9 @@ public class DossierController {
 
     private final EnumsService enumsService;
     private final LogRepository logRepository;
+    private final AmenagementService amenagementService;
 
-    public DossierController(DossierService dossierService, IndividuService individuService, SyncService syncService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService, EnumsService enumsService, LogRepository logRepository) {
+    public DossierController(DossierService dossierService, IndividuService individuService, SyncService syncService, UtilsService utilsService, DocumentService documentService, EnqueteService enqueteService, EnumsService enumsService, LogRepository logRepository, AmenagementService amenagementService) {
         this.dossierService = dossierService;
         this.individuService = individuService;
         this.syncService = syncService;
@@ -60,6 +62,7 @@ public class DossierController {
         this.enqueteService = enqueteService;
         this.enumsService = enumsService;
         this.logRepository = logRepository;
+        this.amenagementService = amenagementService;
     }
 
     @GetMapping
@@ -133,6 +136,9 @@ public class DossierController {
     @GetMapping("/{dossierId}/sync")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String sync(@PathVariable Long dossierId, RedirectAttributes redirectAttributes) {
+        for(Amenagement amenagement : dossierService.getAmenagments(dossierId)) {
+            amenagementService.syncAmenagement(amenagement.getId());
+        }
         dossierService.syncDossier(dossierId);
         try {
             syncService.syncIndividu(dossierService.getById(dossierId).getIndividu().getId());
