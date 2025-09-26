@@ -825,14 +825,6 @@ public class AmenagementService {
         return amenagementRepository.findDossierAmenagementToSync();
     }
 
-    @Transactional
-    public void syncAllAmenagments() {
-        List<Amenagement> amenagementsToSync = getAmenagementsToSync();
-        for(Amenagement amenagement : amenagementsToSync) {
-            syncAmenagement(amenagement.getId());
-        }
-    }
-
     public List<CodMeae> getCodMeaeList(String amenagementText) {
         List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete, amenagementText);
         List<CodMeae> codMeaes = new ArrayList<>();
