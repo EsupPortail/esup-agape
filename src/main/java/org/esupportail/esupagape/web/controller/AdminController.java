@@ -1,6 +1,7 @@
 package org.esupportail.esupagape.web.controller;
 
 import jakarta.mail.MessagingException;
+import org.esupportail.esupagape.entity.Amenagement;
 import org.esupportail.esupagape.entity.UserOthersAffectations;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -214,8 +215,10 @@ public class AdminController {
     @GetMapping("/sync-amenagements")
     public String syncAmenagements(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", new Message("success", "La synchro des étudiants est terminée"));
-        amenagementService.syncAllAmenagments();
-        return "redirect:/admin/tasks";
+        List<Amenagement> amenagementsToSync = amenagementService.getAmenagementsToSync();
+        for(Amenagement amenagement : amenagementsToSync) {
+            amenagementService.syncAmenagement(amenagement.getId());
+        }        return "redirect:/admin/tasks";
     }
 
     @GetMapping("/sync-dossiers")
