@@ -733,6 +733,12 @@ public class DossierService {
         logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
     }
 
+    @Transactional
+    public List<Amenagement> getAmenagments(Long dossierId) {
+        Dossier dossier = getById(dossierId);
+        return dossier.getDossierAmenagements().stream().map(dossierAmenagement -> dossierAmenagement.getAmenagement()).toList();
+    }
+
     //    @Transactional
 //    public void anonymiseUnsubscribeDossier(Long id) {
 //        Dossier dossier = getById(id);

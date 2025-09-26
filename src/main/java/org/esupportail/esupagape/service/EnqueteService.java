@@ -300,7 +300,7 @@ public class EnqueteService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
+                logger.debug("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
             }
         }
         if(StringUtils.hasText(dossier.getTypeDiplome())) {
@@ -312,7 +312,7 @@ public class EnqueteService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codFmt not found for " + dossier.getTypeDiplome());
+                logger.debug("enquete codFmt not found for " + dossier.getTypeDiplome());
             }
         }
         if(StringUtils.hasText(dossier.getNiveauEtudes())) {
@@ -324,7 +324,7 @@ public class EnqueteService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codSco not found for " + dossier.getNiveauEtudes());
+                logger.debug("enquete codSco not found for " + dossier.getNiveauEtudes());
             }
         }
         if (!dossier.getMdphs().isEmpty()) {
