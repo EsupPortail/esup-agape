@@ -118,7 +118,7 @@ public class AideController {
     public String updateAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, RedirectAttributes redirectAttributes) {
         try {
             aideHumaineService.save(aideHumaineId, aideHumaine);
-        } catch (AgapeException e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
