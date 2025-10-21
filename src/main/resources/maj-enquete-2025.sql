@@ -36,3 +36,5 @@ update enquete set cod_sco = '6+' where cod_sco = '6a+';
 update enquete set cod_sco = '4' where cod_sco = 'M1';
 update enquete set cod_sco = '5' where cod_sco = 'M2';
 
+update enquete set cod_fmt = 'X' where cod_fmt = 'IEP';
+
