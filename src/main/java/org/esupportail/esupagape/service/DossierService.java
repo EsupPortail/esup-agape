@@ -563,6 +563,7 @@ public class DossierService {
         }
         return em.createQuery(cq);
     }
+
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
         Optional<Dossier> dossier = dossierRepository.findById(dossierId);
