@@ -117,7 +117,7 @@ public class AideHumaineService {
 
     @Transactional
     public Aidant recupAidantWithNumEtu(String numEtuAidant) {
-        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEmpId(numEtuAidant);
+        List<PersonLdap> personLdaps = ldapPersonService.searchBySupannEtuId(numEtuAidant);
         if(!personLdaps.isEmpty()) {
             PersonLdap personLdap = personLdaps.get(0);
             Aidant aidant = aidantRepository.findByNumEtuAidant(numEtuAidant);

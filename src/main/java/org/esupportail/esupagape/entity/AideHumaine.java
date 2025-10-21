@@ -88,7 +88,10 @@ public class AideHumaine {
     }
 
     public String getNumEtuAidant() {
-        return aidant.getNumEtuAidant();
+        if(aidant != null) {
+            return aidant.getNumEtuAidant();
+        }
+        return "";
     }
 //
 //    public void setNumEtuAidant(String numEtuAidant) {
@@ -96,7 +99,9 @@ public class AideHumaine {
 //    }
 
     public String getNameAidant() {
-        return aidant.getNameAidant();
+        if(aidant != null) {
+            return aidant.getNameAidant();
+        }return "";
     }
 
 //    public void setNameAidant(String nameAidant) {
@@ -104,7 +109,10 @@ public class AideHumaine {
 //    }
 
     public String getFirstNameAidant() {
-        return aidant.getFirstNameAidant();
+        if(aidant != null) {
+            return aidant.getFirstNameAidant();
+        }
+        return "";
     }
 
 //    public void setFirstNameAidant(String firstNameAidant) {
@@ -112,7 +120,10 @@ public class AideHumaine {
 //    }
 
     public LocalDate getDateOfBirthAidant() {
-        return aidant.getDateOfBirthAidant();
+        if(aidant != null) {
+            return aidant.getDateOfBirthAidant();
+        }
+        return null;
     }
 
 //    public void setDateOfBirthAidant(LocalDate dateOfBirthAidant) {
@@ -120,7 +131,10 @@ public class AideHumaine {
 //    }
 
     public String getEmailAidant() {
-        return aidant.getEmailAidant();
+        if(aidant != null) {
+            return aidant.getEmailAidant();
+        }
+        return "";
     }
 
 //    public void setEmailAidant(String emailAidant) {
@@ -128,7 +142,10 @@ public class AideHumaine {
 //    }
 
     public String getPhoneAidant() {
-        return aidant.getPhoneAidant();
+        if(aidant != null) {
+            return aidant.getPhoneAidant();
+        }
+        return "";
     }
 
 //    public void setPhoneAidant(String phoneAidant) {
