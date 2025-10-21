@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label th:for="numEtuAidant" class="form-label">Numéro matricule</label>
-                                    <input readonly id="numAidant" type="text" class="form-control disable" th:field="*{numAidant}">
+                                    <input disabled id="numEtuAidant" type="text" class="form-control disable" th:field="*{numAidant}">
                                     <p th:if="${#fields.hasErrors('numAidant')}" th:errorclass="error" th:errors="*{numAidant}"></p>
                                 </div>
                                 <div class="row mb-1 align-items-baseline">

@@ -106,6 +106,7 @@ public class AideHumaineService {
         }
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
         aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());
+        aideHumaineToUpdate.setStartDate(aideHumaine.getStartDate());
         if (StringUtils.hasText(aideHumaine.getNumAidant())) {
             if (!aideHumaine.getNumAidant().equals(aideHumaineToUpdate.getNumAidant())) {
                 aideHumaine.setAidant(recupAidantWithNumEtu(aideHumaine.getNumAidant()));
