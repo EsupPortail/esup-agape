@@ -317,7 +317,7 @@ public class EnqueteService {
         }
         if(StringUtils.hasText(dossier.getNiveauEtudes())) {
             try {
-                if(enquete.getCodSco() != null) {
+                if(enquete.getCodSco() == null) {
                     String codSco = dataMappingService.getValue("Dossier", "niveauEtudes", DataType.supann, DataType.enquete, dossier.getNiveauEtudes());
                     if(StringUtils.hasText(codSco)) {
                         enquete.setCodSco(CodSco.valueOf(codSco));
