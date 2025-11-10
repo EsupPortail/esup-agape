@@ -47,17 +47,15 @@ public class AideHumaineService {
 
     private final DossierService dossierService;
 
-    private final SyncService syncService;
     private final LdapPersonService ldapPersonService;
 
-    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, AidantRepository aidantRepository, DocumentService documentService, UtilsService utilsService, DossierService dossierService, SyncService syncService, LdapPersonService ldapPersonService) {
+    public AideHumaineService(DocumentRepository documentRepository, AideHumaineRepository aideHumaineRepository, AidantRepository aidantRepository, DocumentService documentService, UtilsService utilsService, DossierService dossierService, LdapPersonService ldapPersonService) {
         this.documentRepository = documentRepository;
         this.aideHumaineRepository = aideHumaineRepository;
         this.aidantRepository = aidantRepository;
         this.documentService = documentService;
         this.utilsService = utilsService;
         this.dossierService = dossierService;
-        this.syncService = syncService;
         this.ldapPersonService = ldapPersonService;
     }
 
@@ -106,9 +104,10 @@ public class AideHumaineService {
         }
         aideHumaineToUpdate.setStatusAideHumaine(aideHumaine.getStatusAideHumaine());
         aideHumaineToUpdate.setFonctionAidants(aideHumaine.getFonctionAidants());
+        aideHumaineToUpdate.setStartDate(aideHumaine.getStartDate());
         if (StringUtils.hasText(aideHumaine.getNumAidant())) {
             if (!aideHumaine.getNumAidant().equals(aideHumaineToUpdate.getNumAidant())) {
-                aideHumaine.setAidant(recupAidantWithNumEtu(aideHumaine.getNumAidant()));
+                aideHumaineToUpdate.setAidant(recupAidantWithNumEtu(aideHumaine.getNumAidant()));
             }
         } else {
             throw new AgapeRuntimeException("numéro d'aidant non trouvé");
