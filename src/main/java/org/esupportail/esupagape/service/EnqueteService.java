@@ -300,7 +300,7 @@ public class EnqueteService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
+                logger.debug("enquete codfil not found for " + dossier.getSecteurDisciplinaire());
             }
         }
         if(StringUtils.hasText(dossier.getTypeDiplome())) {
@@ -312,19 +312,19 @@ public class EnqueteService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codFmt not found for " + dossier.getTypeDiplome());
+                logger.debug("enquete codFmt not found for " + dossier.getTypeDiplome());
             }
         }
         if(StringUtils.hasText(dossier.getNiveauEtudes())) {
             try {
-                if(enquete.getCodSco() != null) {
+                if(enquete.getCodSco() == null) {
                     String codSco = dataMappingService.getValue("Dossier", "niveauEtudes", DataType.supann, DataType.enquete, dossier.getNiveauEtudes());
                     if(StringUtils.hasText(codSco)) {
                         enquete.setCodSco(CodSco.valueOf(codSco));
                     }
                 }
             } catch (Exception e) {
-                logger.error("enquete codSco not found for " + dossier.getNiveauEtudes());
+                logger.debug("enquete codSco not found for " + dossier.getNiveauEtudes());
             }
         }
         if (!dossier.getMdphs().isEmpty()) {

@@ -563,6 +563,7 @@ public class DossierService {
         }
         return em.createQuery(cq);
     }
+
     @Transactional
     public void syncStatusDossierAmenagement(Long dossierId) {
         Optional<Dossier> dossier = dossierRepository.findById(dossierId);
@@ -731,6 +732,12 @@ public class DossierService {
         dossier.getClassifications().clear();
         dossier.getClassifications().addAll(classifications);
         logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
+    }
+
+    @Transactional
+    public List<Amenagement> getAmenagments(Long dossierId) {
+        Dossier dossier = getById(dossierId);
+        return dossier.getDossierAmenagements().stream().map(dossierAmenagement -> dossierAmenagement.getAmenagement()).toList();
     }
 
     //    @Transactional
