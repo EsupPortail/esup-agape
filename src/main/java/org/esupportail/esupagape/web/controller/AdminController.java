@@ -92,7 +92,7 @@ public class AdminController {
 
     @GetMapping("/labels")
     public String labels(Model model) {
-        model.addAttribute("active", "tasks");
+        model.addAttribute("active", "labels");
         model.addAttribute("enumEntityAbstracts", enumsService.getAllEnumEntityAbstract());
         model.addAttribute("enumEntityTypes", enumsService.getEnumTypes());
         return "admin/labels";
@@ -102,7 +102,7 @@ public class AdminController {
     public String createLabel(@RequestParam String enumEntityType, @RequestParam String code, @RequestParam String label, RedirectAttributes redirectAttributes) {
         try {
             enumsService.addEnumType(enumEntityType, code, label);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "label ajoutée"));
+            redirectAttributes.addFlashAttribute("message", new Message("success", "Label ajouté"));
         } catch (AgapeJpaException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }
@@ -112,7 +112,7 @@ public class AdminController {
     @DeleteMapping(value = "/delete-label")
     public String deleteLabel(@RequestParam Long id, @RequestParam String enumEntityType, RedirectAttributes redirectAttributes) {
         enumsService.deleteEnumType(enumEntityType, id);
-        redirectAttributes.addFlashAttribute("message", new Message("success", "Année supprimée"));
+        redirectAttributes.addFlashAttribute("message", new Message("success", "Label supprimé"));
         return "redirect:/admin/labels";
     }
 
