@@ -477,6 +477,8 @@ public class AmenagementService {
             }
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
+        String docRef = dossier.getIndividu().getName() + "_" + dossier.getIndividu().getFirstName() + "--DA/" + dossierAmenagement.getId();
+        certificatPdf.setDocReference(docRef);
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
         return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes, withSign);
     }
@@ -495,7 +497,12 @@ public class AmenagementService {
         modelDocument.save(out);
         modelDocument.close();
         savedPdf = out.toByteArray();
+        String actualFieldName = null;
         for(String fieldName : fieldsNames) {
+            actualFieldName = fieldName;
+            if (fieldName.matches(".*_[0-9]+$")) {
+                actualFieldName = fieldName.substring(0, fieldName.lastIndexOf("_"));
+            }
             PDDocument toFillDocument = PDDocument.load(savedPdf);
             PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
             if(pdField != null) {
@@ -505,8 +512,8 @@ public class AmenagementService {
                     }
                 } else {
                     pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
-                    if(datas.containsKey(fieldName)) {
-                        pdField.setValue(datas.get(fieldName));
+                    if(datas.containsKey(actualFieldName)) {
+                        pdField.setValue(datas.get(actualFieldName));
                     }
                 }
                 out = new ByteArrayOutputStream();
