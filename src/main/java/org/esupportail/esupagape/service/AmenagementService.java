@@ -477,6 +477,8 @@ public class AmenagementService {
             }
             certificatPdf.setNomValideur(amenagement.getNomValideur());
         }
+        String docRef = dossier.getIndividu().getName() + "_" + dossier.getIndividu().getFirstName() + "--DA/" + dossierAmenagement.getId();
+        certificatPdf.setDocReference(docRef);
         TypeReference<Map<String, String>> datasTypeReference = new TypeReference<>(){};
         return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes, withSign);
     }
