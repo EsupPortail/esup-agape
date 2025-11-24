@@ -5,6 +5,7 @@ public enum TypeEpreuve {
     AUCUN,
     TOUS,
     PRATIQUE,
+    ECRIT,
     ORAL,
     QUESTIONS,
     CONTROLE_CONTINU,

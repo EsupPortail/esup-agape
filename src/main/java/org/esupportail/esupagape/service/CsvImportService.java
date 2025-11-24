@@ -23,7 +23,6 @@ public class CsvImportService {
         this.libelleAmenagementRepository = libelleAmenagementRepository;
     }
 
-
     public void importCsvLibelleAmenagement(MultipartFile file) throws IOException {
         libelleAmenagementRepository.deleteAllInBatch();
         CSVFormat.Builder csvFormat = CSVFormat.Builder.create(CSVFormat.DEFAULT);
