@@ -31,11 +31,12 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
                    cast(d.composante AS VARCHAR) as composante,
                    cast(d.form_address AS VARCHAR) as formAddress,
                    cast(d.resultat_total AS VARCHAR) as resultatTotal,
-                   cast(d.suivi_handisup AS VARCHAR) as suiviHandisup
+                   cast(d.suivi_handisup AS VARCHAR) as suiviHandisup,
+                   cast((select e.finished from enquete as e where e.dossier_id = d.id) AS VARCHAR) as enqueteOk
             from dossier as d
                      join individu as i on d.individu_id = i.id
             where (:year is null or d.year = :year)
-            order by i.date_of_birth desc
+            order by i.date_of_birth desc   
             """, nativeQuery = true)
     List<DossierCompletCsvDto> findByYearForCSV(Integer year);
 }
