@@ -24,5 +24,7 @@ public interface DossierCompletCsvDto {
     String getComposante();
     String getFormAddress();
     String getResultatTotal();
+    String getSuiviHandisup();
+    String getEnqueteOk();
 
 }
