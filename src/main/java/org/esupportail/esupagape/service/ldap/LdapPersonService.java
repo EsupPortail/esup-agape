@@ -96,7 +96,6 @@ public class LdapPersonService {
                 .or(new LikeFilter("cn", search + "*"))
                 .or(new LikeFilter("supannEtuId", search + "*"))
                 .or(new LikeFilter("supannCodeINE", search + "*")));
-
         LdapQuery query = LdapQueryBuilder.query()
                 .searchScope(SearchScope.ONELEVEL)
                 .base(ldapProperties.getSearchBase())
@@ -104,7 +103,6 @@ public class LdapPersonService {
                 .filter(andFilter);
 
         return personLdapRepository.findAll(query);
-
     }
 
     public List<PersonLdap> findEmployees(String search) {
