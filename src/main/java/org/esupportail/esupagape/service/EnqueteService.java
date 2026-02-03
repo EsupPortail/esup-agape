@@ -271,27 +271,15 @@ public class EnqueteService {
             } else {
                 enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
-            if (dossier.getClassifications().size() > 2) {
+            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
+            if(classifications.size() > 1) {
                 enquete.setCodHd(CodHd.PTA);
-                if (dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
-                    enquete.setHdTmp(true);
-                }
-            } else if (dossier.getClassifications().size() == 2 && dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
-                for (Classification classification : dossier.getClassifications()) {
-                    if (classification.equals(Classification.TEMPORAIRE)) {
-                        enquete.setHdTmp(true);
-                    } else {
-                        enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classification.name())));
-                    }
-                }
-            } else if (dossier.getClassifications().size() == 2) {
-                enquete.setCodHd(CodHd.PTA);
-            } else if (dossier.getClassifications().size() == 1) {
-                if (dossier.getClassifications().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
-                    enquete.setHdTmp(true);
-                } else {
-                    enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, dossier.getClassifications().stream().toList().get(0).name())));
-                }
+            }
+            if(classifications.size() == 1) {
+                enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classifications.get(0).name())));
+            }
+            if(!classifications.isEmpty() && dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
+                enquete.setHdTmp(true);
             }
         }
         if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
