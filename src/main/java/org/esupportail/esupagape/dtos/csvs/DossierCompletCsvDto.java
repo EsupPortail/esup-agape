@@ -11,6 +11,7 @@ public interface DossierCompletCsvDto {
     String getStatusDossier();
     String getStatusDossierAmenagement();
     String getClassifications();
+    String getTemporaire();
     String getPlusieursTroubles();
     String getMdph();
     String getTaux();
