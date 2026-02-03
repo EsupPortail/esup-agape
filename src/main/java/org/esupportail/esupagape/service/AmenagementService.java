@@ -126,11 +126,11 @@ public class AmenagementService {
         Dossier dossier = dossierService.getById(dossierId);
         List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByDossier(dossier);
         if(!dossierAmenagements.isEmpty()) {
-            return dossierAmenagements.stream().anyMatch(dossierAmenagement -> (dossierAmenagement.getAmenagement().getTempsMajore() != null && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.AUCUN)) || StringUtils.hasText(dossierAmenagement.getAmenagement().getAutresTempsMajores()));
+            return dossierAmenagements.stream().anyMatch(dossierAmenagement -> (dossierAmenagement.getAmenagement().getTempsMajore() != null && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.AUCUN) && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.TEMPSCOMP)) || StringUtils.hasText(dossierAmenagement.getAmenagement().getAutresTempsMajores()));
         }
         List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
         if(!amenagements.isEmpty() && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
-            return amenagements.stream().anyMatch(amenagement -> amenagement.getTempsMajore() != null || !amenagement.getTempsMajore().equals(TempsMajore.AUCUN) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
+            return amenagements.stream().anyMatch(amenagement -> amenagement.getTempsMajore() != null || !amenagement.getTempsMajore().equals(TempsMajore.TEMPSCOMP) || !amenagement.getTempsMajore().equals(TempsMajore.AUCUN) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
         }
         return null;
     }

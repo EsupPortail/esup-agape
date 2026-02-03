@@ -256,6 +256,9 @@ public class EnqueteService {
             if (isAmenagementTempsMajore != null && isAmenagementTempsMajore) {
                 enquete.getCodMeae().add(CodMeae.AE7);
             }
+            if(amenagement != null && amenagement.getTempsMajore().equals(TempsMajore.TEMPSCOMP)) {
+                enquete.getCodMeae().add(CodMeae.AE8);
+            }
             if (StringUtils.hasText(enquete.getAutAE())) {
                 enquete.getCodMeae().add(CodMeae.AEO);
             } else {
@@ -351,8 +354,7 @@ public class EnqueteService {
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM5);
             }
-            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
-                dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
+            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE)) {
                 enquete.getCodAmL().add(CodAmL.AM8);
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM8);
