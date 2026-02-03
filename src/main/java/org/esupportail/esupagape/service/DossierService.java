@@ -532,6 +532,15 @@ public class DossierService {
                 predicates.add(cb.isFalse(dossierRoot.get("newDossier")));
             }
         }
+
+        if (dossierFilter.getJamaisSuivi() != null) {
+            if (dossierFilter.getJamaisSuivi()) {
+                predicates.add(cb.isTrue(dossierRoot.get("jamaisSuivi")));
+            } else {
+                predicates.add(cb.isFalse(dossierRoot.get("jamaisSuivi")));
+            }
+        }
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
@@ -613,6 +622,12 @@ public class DossierService {
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
+            for(Dossier otherDossier : dossier.getIndividu().getDossiers()) {
+                if(otherDossier.getStatusDossier().equals(StatusDossier.SUIVI) || otherDossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+                    dossier.setJamaisSuivi(false);
+                    break;
+                }
+            }
             dossier.setNewDossier(false);
             Dossier lastYearDossier = dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> d.getYear() < dossier.getYear()).findFirst().orElse(null);
             if(lastYearDossier != null) {

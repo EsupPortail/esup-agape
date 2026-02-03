@@ -122,6 +122,8 @@ public class Dossier {
 
     private Boolean newDossier = true;
 
+    private Boolean jamaisSuivi = true;
+
     public Long getId() {
         return id;
     }
@@ -434,4 +436,12 @@ public class Dossier {
         this.newDossier = newDossier;
     }
 
+    public Boolean getJamaisSuivi() {
+        if(jamaisSuivi == null) return true;
+        return jamaisSuivi;
+    }
+
+    public void setJamaisSuivi(Boolean jamaisSuivi) {
+        this.jamaisSuivi = jamaisSuivi;
+    }
 }
