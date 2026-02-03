@@ -47,7 +47,7 @@ public class Dossier {
 
     @ElementCollection(targetClass = Mdph.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-//TODO plusieurs possible + synchro avec l'enquete
+
     private Set<Mdph> mdphs = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
