@@ -63,9 +63,30 @@ public class LdapDossierInfosService implements DossierInfosService {
                 try {
                     if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
                         OrganizationalUnitLdap organizationalUnitLdap = ldapOrganizationalUnitService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
-                        dossierInfos.setCodComposante(organizationalUnitLdap.getSupannCodeEntite());
-                        dossierInfos.setComposante(organizationalUnitLdap.getDescription());
-                        dossierInfos.setFormAddress(organizationalUnitLdap.getPostalAddress());
+                        if (organizationalUnitLdap != null) {
+                        
+                            dossierInfos.setCodComposante(
+                                organizationalUnitLdap.getSupannCodeEntite()
+                            );
+                        
+                            dossierInfos.setComposante(
+                                organizationalUnitLdap.getDescription()
+                            );
+                        
+                            dossierInfos.setFormAddress(
+                                organizationalUnitLdap.getPostalAddress()
+                            );
+                        
+                        } else {
+                        
+                            // Fallback : utilisation des données directement depuis la personne LDAP
+                            dossierInfos.setCodComposante(
+                                personLdap.getSupannEntiteAffectation()
+                            );
+                        
+                            dossierInfos.setComposante(null);
+                            dossierInfos.setFormAddress(null);
+                        }
                     }
                     OrganizationalUnitLdap organizationalUnitLdapEtab = ldapOrganizationalUnitService.getEtablissement(personLdap.getSupannEtablissement());
                     if(organizationalUnitLdapEtab != null) {
