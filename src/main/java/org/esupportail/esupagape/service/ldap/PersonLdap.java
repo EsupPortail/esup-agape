@@ -117,7 +117,17 @@ public final class PersonLdap {
 	}
 
 	public String getSchacDateOfBirth() {
-		return schacDateOfBirth;
+	    if (schacDateOfBirth != null && !schacDateOfBirth.isEmpty()) {
+	        return schacDateOfBirth;
+	    }
+		
+	    // Fallback : utilisation de supannOIDCDateDeNaissance
+	    // Conversion du format YYYY-MM-DD → YYYYMMDD
+	    if (supannOIDCDateDeNaissance != null && !supannOIDCDateDeNaissance.isEmpty()) {
+	        return supannOIDCDateDeNaissance.replaceAll("-", "");
+	    }
+	
+	    return null;
 	}
 
 	public void setSchacDateOfBirth(String schacDateOfBirth) {
