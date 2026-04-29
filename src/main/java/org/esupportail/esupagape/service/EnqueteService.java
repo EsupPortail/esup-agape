@@ -233,13 +233,13 @@ public class EnqueteService {
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
             if(amenagement != null) {
-                if (amenagement.getAmenagementText().contains("Allègement du cursus")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Allègement du cursus".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS2);
                 }
-                if (amenagement.getAmenagementText().contains("Conservation et/ou report des notes")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Conservation et/ou report des notes".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS3);
                 }
-                if (amenagement.getAmenagementText().contains("Autorisation d’absences sans production de justificatifs")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
                 enquete.getCodMeae().clear();
