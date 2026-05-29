@@ -27,6 +27,7 @@ public class DossierIndividuClassDto implements DossierIndividuDto {
     private StatusDossier statusDossier;
 
     private StatusDossierAmenagement statusDossierAmenagement;
+
     private Integer year;
 
     private Long individuId;

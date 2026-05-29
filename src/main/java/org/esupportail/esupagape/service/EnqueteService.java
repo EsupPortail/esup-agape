@@ -233,13 +233,13 @@ public class EnqueteService {
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
             if(amenagement != null) {
-                if (amenagement.getAmenagementText().contains("Allègement du cursus")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Allègement du cursus".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS2);
                 }
-                if (amenagement.getAmenagementText().contains("Conservation et/ou report des notes")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Conservation et/ou report des notes".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS3);
                 }
-                if (amenagement.getAmenagementText().contains("Autorisation d’absences sans production de justificatifs")) {
+                if (amenagement.getAmenagementText().toLowerCase().contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
                 enquete.getCodMeae().clear();
@@ -256,6 +256,9 @@ public class EnqueteService {
             if (isAmenagementTempsMajore != null && isAmenagementTempsMajore) {
                 enquete.getCodMeae().add(CodMeae.AE7);
             }
+            if(amenagement != null && amenagement.getTempsMajore().equals(TempsMajore.TEMPSCOMP)) {
+                enquete.getCodMeae().add(CodMeae.AE8);
+            }
             if (StringUtils.hasText(enquete.getAutAE())) {
                 enquete.getCodMeae().add(CodMeae.AEO);
             } else {
@@ -268,27 +271,15 @@ public class EnqueteService {
             } else {
                 enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
-            if (dossier.getClassifications().size() > 2) {
+            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
+            if(classifications.size() > 1) {
                 enquete.setCodHd(CodHd.PTA);
-                if (dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
-                    enquete.setHdTmp(true);
-                }
-            } else if (dossier.getClassifications().size() == 2 && dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
-                for (Classification classification : dossier.getClassifications()) {
-                    if (classification.equals(Classification.TEMPORAIRE)) {
-                        enquete.setHdTmp(true);
-                    } else {
-                        enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classification.name())));
-                    }
-                }
-            } else if (dossier.getClassifications().size() == 2) {
-                enquete.setCodHd(CodHd.PTA);
-            } else if (dossier.getClassifications().size() == 1) {
-                if (dossier.getClassifications().stream().toList().get(0).equals(Classification.TEMPORAIRE)) {
-                    enquete.setHdTmp(true);
-                } else {
-                    enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, dossier.getClassifications().stream().toList().get(0).name())));
-                }
+            }
+            if(classifications.size() == 1) {
+                enquete.setCodHd(CodHd.valueOf(dataMappingService.getValue("Dossier", "classification", DataType.agape, DataType.enquete, classifications.get(0).name())));
+            }
+            if(!classifications.isEmpty() && dossier.getClassifications().contains(Classification.TEMPORAIRE)) {
+                enquete.setHdTmp(true);
             }
         }
         if(StringUtils.hasText(dossier.getSecteurDisciplinaire())) {
@@ -351,8 +342,7 @@ public class EnqueteService {
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM5);
             }
-            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE) ||
-                dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE_PRIORITE)) {
+            if (dossier.getMdphs().contains(Mdph.CARTE_INVALIDITE)) {
                 enquete.getCodAmL().add(CodAmL.AM8);
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM8);

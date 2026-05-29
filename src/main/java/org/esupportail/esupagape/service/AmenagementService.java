@@ -26,6 +26,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.CodMeae;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
+import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.exception.AgapeYearException;
 import org.esupportail.esupagape.repository.*;
 import org.esupportail.esupagape.repository.ldap.OrganizationalUnitLdapRepository;
@@ -126,11 +127,11 @@ public class AmenagementService {
         Dossier dossier = dossierService.getById(dossierId);
         List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByDossier(dossier);
         if(!dossierAmenagements.isEmpty()) {
-            return dossierAmenagements.stream().anyMatch(dossierAmenagement -> (dossierAmenagement.getAmenagement().getTempsMajore() != null && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.AUCUN)) || StringUtils.hasText(dossierAmenagement.getAmenagement().getAutresTempsMajores()));
+            return dossierAmenagements.stream().anyMatch(dossierAmenagement -> (dossierAmenagement.getAmenagement().getTempsMajore() != null && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.AUCUN) && !dossierAmenagement.getAmenagement().getTempsMajore().equals(TempsMajore.TEMPSCOMP)) || StringUtils.hasText(dossierAmenagement.getAmenagement().getAutresTempsMajores()));
         }
         List<Amenagement> amenagements =  amenagementRepository.findByDossierIdAndStatusAmenagement(dossierId, StatusAmenagement.VISE_ADMINISTRATION);
         if(!amenagements.isEmpty() && (amenagements.get(0).getTypeAmenagement().equals(TypeAmenagement.CURSUS) || amenagements.get(0).getEndDate().isAfter(LocalDateTime.now()))) {
-            return amenagements.stream().anyMatch(amenagement -> amenagement.getTempsMajore() != null || !amenagement.getTempsMajore().equals(TempsMajore.AUCUN) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
+            return amenagements.stream().anyMatch(amenagement -> amenagement.getTempsMajore() != null || !amenagement.getTempsMajore().equals(TempsMajore.TEMPSCOMP) || !amenagement.getTempsMajore().equals(TempsMajore.AUCUN) || StringUtils.hasText(amenagement.getAutresTempsMajores()));
         }
         return null;
     }
@@ -218,6 +219,9 @@ public class AmenagementService {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             if(autorisation.equals(Autorisation.OUI)) {
                 if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
+                    if((dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.REFUS)) && dossier.getClassifications().stream().anyMatch(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE))) {
+                        throw new AgapeRuntimeException("NON_COMMUNIQUE ou REFUS impossible avec une autre classification");
+                    }
                     dossier.getClassifications().addAll(selectedClassifications);
                 }
             } else if (autorisation.equals(Autorisation.NON)) {
@@ -826,7 +830,7 @@ public class AmenagementService {
     }
 
     public List<CodMeae> getCodMeaeList(String amenagementText) {
-        List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete, amenagementText);
+        List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete);
         List<CodMeae> codMeaes = new ArrayList<>();
         String[] lignes = amenagementText.split("\\r?\\n");
         for (String line : lignes) {

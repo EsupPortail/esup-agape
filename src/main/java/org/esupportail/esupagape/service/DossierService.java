@@ -15,10 +15,7 @@ import org.esupportail.esupagape.entity.*;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
 import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
-import org.esupportail.esupagape.exception.AgapeException;
-import org.esupportail.esupagape.exception.AgapeIOException;
-import org.esupportail.esupagape.exception.AgapeJpaException;
-import org.esupportail.esupagape.exception.AgapeYearException;
+import org.esupportail.esupagape.exception.*;
 import org.esupportail.esupagape.repository.*;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfos;
 import org.esupportail.esupagape.service.interfaces.dossierinfos.DossierInfosService;
@@ -161,12 +158,15 @@ public class DossierService {
     }
 
     @Transactional
-    public void update(Long id, Dossier dossier, String eppn) {
+    public void update(Long id, Dossier dossier, String eppn) throws AgapeException {
         Dossier dossierToUpdate = getById(id);
         if (dossierToUpdate.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
         }
         dossierToUpdate.getClassifications().clear();
+        if((dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.REFUS)) && dossier.getClassifications().stream().anyMatch(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE))) {
+            throw new AgapeException("NON_COMMUNIQUE ou REFUS impossible avec une autre classification");
+        }
         dossierToUpdate.getClassifications().addAll(dossier.getClassifications());
         dossierToUpdate.setEtat(dossier.getEtat());
         dossierToUpdate.setMdphs(dossier.getMdphs());
@@ -190,6 +190,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
+        logService.create(eppn, id, "update dossier", dossierToUpdate.toString());
 //        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
     }
 
@@ -532,6 +533,15 @@ public class DossierService {
                 predicates.add(cb.isFalse(dossierRoot.get("newDossier")));
             }
         }
+
+        if (dossierFilter.getJamaisSuivi() != null) {
+            if (dossierFilter.getJamaisSuivi()) {
+                predicates.add(cb.isTrue(dossierRoot.get("jamaisSuivi")));
+            } else {
+                predicates.add(cb.isFalse(dossierRoot.get("jamaisSuivi")));
+            }
+        }
+
         Predicate predicate = cb.and(predicates.toArray(Predicate[]::new));
         cq.where(predicate);
 
@@ -613,6 +623,12 @@ public class DossierService {
             return false;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
+            for(Dossier otherDossier : dossier.getIndividu().getDossiers()) {
+                if(otherDossier.getStatusDossier().equals(StatusDossier.SUIVI) || otherDossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+                    dossier.setJamaisSuivi(false);
+                    break;
+                }
+            }
             dossier.setNewDossier(false);
             Dossier lastYearDossier = dossier.getIndividu().getDossiers().stream().sorted(Comparator.comparingInt(Dossier::getYear).reversed()).filter(d -> d.getYear() < dossier.getYear()).findFirst().orElse(null);
             if(lastYearDossier != null) {
@@ -689,6 +705,10 @@ public class DossierService {
                             break;
                         }
                     }
+                }
+                if(dossier.getClassifications().stream().anyMatch(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE))) {
+                    dossier.getClassifications().remove(Classification.NON_COMMUNIQUE);
+                    dossier.getClassifications().remove(Classification.REFUS);
                 }
             }
         }
