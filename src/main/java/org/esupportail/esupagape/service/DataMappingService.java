@@ -27,8 +27,8 @@ public class DataMappingService {
         }
     }
 
-    public List<DataMapping> getValues(String entityName, String attributName, DataType sourceType, DataType destinationType, String sourceValue) {
-        return dataMappingRepository.findByEntityNameAndAttributNameAndSourceTypeAndDestinationTypeAndSourceValueLike(entityName, attributName, sourceType, destinationType, sourceValue);
+    public List<DataMapping> getValues(String entityName, String attributName, DataType sourceType, DataType destinationType) {
+        return dataMappingRepository.findByEntityNameAndAttributNameAndSourceTypeAndDestinationType(entityName, attributName, sourceType, destinationType);
     }
 
 }

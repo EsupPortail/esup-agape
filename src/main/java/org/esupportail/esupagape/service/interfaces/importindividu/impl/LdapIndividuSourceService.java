@@ -64,7 +64,11 @@ public class LdapIndividuSourceService implements IndividuSourceService {
             individuInfos.setEmailEtu(personLdap.getMail());
             individuInfos.setFixPhone(personLdap.getTelephoneNumber());
             individuInfos.setContactPhone(personLdap.getSupannAutreTelephone());
-            individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSchacDateOfBirth(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+            if(personLdap.getSchacDateOfBirth() != null) {
+                individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSchacDateOfBirth(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+            } else if (personLdap.getSupannOIDCDateDeNaissance() != null) {
+                individuInfos.setDateOfBirth(LocalDate.parse(personLdap.getSupannOIDCDateDeNaissance(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            }
             individuInfos.setAffectation(personLdap.getSupannEntiteAffectationPrincipale());
             individuInfos.setYear(personLdap.getSupannEtuAnneeInscription().stream().max(Comparator.comparing(Integer::valueOf)).orElse(null));
             try {

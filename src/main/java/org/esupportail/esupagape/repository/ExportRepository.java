@@ -18,7 +18,8 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
                    cast(d.status_dossier AS VARCHAR) as statusDossier,
                    cast(d.status_dossier_amenagement AS VARCHAR) as statusDossierAmenagement,
                    cast((select string_agg(distinct c.classifications, ',') from dossier_classifications as c where c.dossier_id = d.id) AS VARCHAR) as classifications,
-                   cast((select count(distinct c.classifications) from dossier_classifications as c where c.dossier_id = d.id) AS VARCHAR) as plusieursTroubles,
+                   cast((select distinct c.classifications from dossier_classifications as c where c.dossier_id = d.id and c.classifications = 'TEMPORAIRE') AS VARCHAR) as temporaire,
+                   cast((select count(distinct c.classifications) from dossier_classifications as c where c.dossier_id = d.id and c.classifications != 'TEMPORAIRE') AS VARCHAR) as plusieursTroubles,
                    cast((select string_agg(distinct m.mdphs, ',') from dossier_mdphs as m where m.dossier_id = d.id) AS VARCHAR) as mdph,
                    cast(d.taux AS VARCHAR) as taux,
                    cast((select string_agg(distinct t.type_suivi_handisup, ',') from dossier_type_suivi_handisup as t where t.dossier_id = d.id) AS VARCHAR) as typeSuiviHandisup,
@@ -31,11 +32,12 @@ public interface ExportRepository extends JpaRepository <Dossier, Long> {
                    cast(d.composante AS VARCHAR) as composante,
                    cast(d.form_address AS VARCHAR) as formAddress,
                    cast(d.resultat_total AS VARCHAR) as resultatTotal,
-                   cast(d.suivi_handisup AS VARCHAR) as suiviHandisup
+                   cast(d.suivi_handisup AS VARCHAR) as suiviHandisup,
+                   cast((select e.finished from enquete as e where e.dossier_id = d.id) AS VARCHAR) as enqueteOk
             from dossier as d
                      join individu as i on d.individu_id = i.id
             where (:year is null or d.year = :year)
-            order by i.date_of_birth desc
+            order by i.date_of_birth desc   
             """, nativeQuery = true)
     List<DossierCompletCsvDto> findByYearForCSV(Integer year);
 }

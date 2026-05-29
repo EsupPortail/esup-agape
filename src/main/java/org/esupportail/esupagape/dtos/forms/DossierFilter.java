@@ -17,6 +17,7 @@ public class DossierFilter {
 
     private List<Integer> year;
     private Boolean newDossier;
+    private Boolean jamaisSuivi;
     private List<TypeIndividu> type;
     private List<Gender> gender;
     private List<Integer> yearOfBirth;
@@ -56,6 +57,14 @@ public class DossierFilter {
 
     public void setNewDossier(Boolean newDossier) {
         this.newDossier = newDossier;
+    }
+
+    public Boolean getJamaisSuivi() {
+        return jamaisSuivi;
+    }
+
+    public void setJamaisSuivi(Boolean jamaisSuivi) {
+        this.jamaisSuivi = jamaisSuivi;
     }
 
     public List<TypeIndividu> getType() {

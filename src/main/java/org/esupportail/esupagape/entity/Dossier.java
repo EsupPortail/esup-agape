@@ -47,7 +47,7 @@ public class Dossier {
 
     @ElementCollection(targetClass = Mdph.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-//TODO plusieurs possible + synchro avec l'enquete
+
     private Set<Mdph> mdphs = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -121,6 +121,8 @@ public class Dossier {
     private List<Document> attachments;
 
     private Boolean newDossier = true;
+
+    private Boolean jamaisSuivi = true;
 
     public Long getId() {
         return id;
@@ -434,4 +436,12 @@ public class Dossier {
         this.newDossier = newDossier;
     }
 
+    public Boolean getJamaisSuivi() {
+        if(jamaisSuivi == null) return true;
+        return jamaisSuivi;
+    }
+
+    public void setJamaisSuivi(Boolean jamaisSuivi) {
+        this.jamaisSuivi = jamaisSuivi;
+    }
 }

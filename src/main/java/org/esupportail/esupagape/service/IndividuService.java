@@ -316,8 +316,11 @@ public class IndividuService {
     }
 
     public int computeAge(Individu individu) {
-        Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
-        return agePeriod.getYears();
+        if(individu.getDateOfBirth() != null) {
+            Period agePeriod = Period.between(individu.getDateOfBirth(), LocalDate.now());
+            return agePeriod.getYears();
+        }
+        return 0;
     }
 
     public List<String> getAllFixCP() {
