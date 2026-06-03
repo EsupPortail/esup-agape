@@ -3,14 +3,21 @@ package org.esupportail.esupagape.web.controller;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.esupportail.esupagape.dtos.forms.AmenagementCreateDto;
+import org.esupportail.esupagape.dtos.forms.AmenagementUpdateDto;
+import org.esupportail.esupagape.dtos.forms.LigneAmenagementDto;
 import org.esupportail.esupagape.entity.Amenagement;
+import org.esupportail.esupagape.entity.LigneAmenagement;
+import org.esupportail.esupagape.entity.TypeLigneAmenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
 import org.esupportail.esupagape.service.AmenagementService;
+import org.esupportail.esupagape.service.TypeLigneAmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{dossierId}/amenagements")
@@ -28,11 +38,15 @@ public class AmenagementController {
 
     private final AmenagementService amenagementService;
     private final LibelleAmenagementRepository libelleAmenagementRepository;
+    private final TypeLigneAmenagementService typeLigneAmenagementService;
+    private final UtilsService utilsService;
 
     public AmenagementController(AmenagementService amenagementService,
-                                 LibelleAmenagementRepository libelleAmenagementRepository) {
+                                 LibelleAmenagementRepository libelleAmenagementRepository, TypeLigneAmenagementService typeLigneAmenagementService, UtilsService utilsService) {
         this.amenagementService = amenagementService;
         this.libelleAmenagementRepository = libelleAmenagementRepository;
+        this.typeLigneAmenagementService = typeLigneAmenagementService;
+        this.utilsService = utilsService;
     }
 
     @GetMapping
@@ -45,21 +59,28 @@ public class AmenagementController {
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String create(Model model) {
         setModel(model);
-        model.addAttribute("amenagement", new Amenagement());
-        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
+        List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
+        AmenagementCreateDto dto = new AmenagementCreateDto();
+        types.forEach(t -> {
+            LigneAmenagementDto ligne = new LigneAmenagementDto();
+            ligne.setTypeLigneAmenagementId(t.getId());
+            dto.getLignesAmenagement().add(ligne);
+        });
+        model.addAttribute("amenagement", dto);
+        model.addAttribute("typeLigneAmenagements", types);
         return "amenagements/create";
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
-        amenagement.setId(null);
+    public String createSave(@PathVariable Long dossierId, @Valid AmenagementCreateDto dto, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
-            amenagementService.create(amenagement, dossierId, personLdap);
+            Amenagement amenagement = amenagementService.create(dto, dossierId, personLdap);
+            return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            return "redirect:/dossiers/" + dossierId + "/amenagements/create";
         }
-        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("{amenagementId}/show")
@@ -72,8 +93,39 @@ public class AmenagementController {
     @GetMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
-        model.addAttribute("amenagement", amenagementService.getById(amenagementId));
-        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
+        Amenagement amenagement = amenagementService.getById(amenagementId);
+        List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
+
+        Map<Long, LigneAmenagement> lignesExistantes = amenagement.getLignesAmenagement().stream()
+                .collect(Collectors.toMap(l -> l.getTypeLigneAmenagement().getId(), l -> l));
+
+        AmenagementUpdateDto dto = new AmenagementUpdateDto();
+        dto.setTypeAmenagement(amenagement.getTypeAmenagement());
+        dto.setEndDate(amenagement.getEndDate());
+        dto.setTypeEpreuves(amenagement.getTypeEpreuves());
+        dto.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
+        dto.setTempsMajore(amenagement.getTempsMajore());
+        dto.setAutresTempsMajores(amenagement.getAutresTempsMajores());
+        dto.setAutorisation(amenagement.getAutorisation());
+        dto.setClassification(amenagement.getClassification());
+
+        types.forEach(t -> {
+            LigneAmenagementDto ligneDto = new LigneAmenagementDto();
+            ligneDto.setTypeLigneAmenagementId(t.getId());
+            LigneAmenagement existante = lignesExistantes.get(t.getId());
+            if (existante != null) {
+                ligneDto.setId(existante.getId());
+                ligneDto.setSelected(true);
+                ligneDto.setLibelleLibre(existante.getLibelleLibre());
+                ligneDto.setCommentairePrecision(existante.getCommentairePrecision());
+                ligneDto.setCommentaireValidation(existante.getCommentaireValidation());
+            }
+            dto.getLignesAmenagement().add(ligneDto);
+        });
+
+        model.addAttribute("amenagement", amenagement);
+        model.addAttribute("amenagementDto", dto);
+        model.addAttribute("typeLigneAmenagements", types);
         setModel(model);
         return "amenagements/update";
     }
@@ -85,7 +137,7 @@ public class AmenagementController {
         if(send) {
             try {
                 amenagementService.validationMedecin(amenagementId, personLdap);
-                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été transmis pour validation"));
                 return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
             } catch (AgapeException | AgapeRuntimeException e) {
                 redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));

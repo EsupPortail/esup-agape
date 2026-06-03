@@ -6,10 +6,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Amenagement {
@@ -48,6 +45,10 @@ public class Amenagement {
 
     @Column(columnDefinition = "TEXT")
     private String amenagementText;
+
+    @OneToMany(mappedBy = "amenagement", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderColumn
+    private List<LigneAmenagement> lignesAmenagement = new ArrayList<>();
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -184,6 +185,14 @@ public class Amenagement {
 
     public void setAmenagementText(String amenagement) {
         this.amenagementText = amenagement;
+    }
+
+    public List<LigneAmenagement> getLignesAmenagement() {
+        return lignesAmenagement;
+    }
+
+    public void setLignesAmenagement(List<LigneAmenagement> lignesAmenagement) {
+        this.lignesAmenagement = lignesAmenagement;
     }
 
     public Set<Classification> getClassification() {

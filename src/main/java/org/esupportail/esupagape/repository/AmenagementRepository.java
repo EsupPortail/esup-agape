@@ -43,9 +43,9 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
 
     @Query("select count(a) from Amenagement a join DossierAmenagement da on da.amenagement = a " +
             "where " +
-            "a.statusAmenagement = 'VALIDE_MEDECIN' " +
+            "a.statusAmenagement = :statusAmenagement " +
             "and (:yearFilter is null or da.lastYear = :yearFilter)")
-    Long countToValidate(Integer yearFilter);
+    Long countByStatusAmenagement(StatusAmenagement statusAmenagement, Integer yearFilter);
 
     @Query("""
             select distinct a from Amenagement a

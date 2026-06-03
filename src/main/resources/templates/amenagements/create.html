@@ -101,14 +101,44 @@
                                     </div>
                                 </div>
                                 <div class="row mb-1">
-                                    <div class="col-4" style="width: 250px;">
-                                        <label th:for="amenagement-text" class="form-label">Aménagement</label>
-                                    </div>
-                                    <div class="col-12 col-xxl-8">
-                                        <div class="agape-amenagement-textarea-wrapper">
-                                            <textarea id="amenagement-text" type="text" rows="15" class="form-control agape-amenagement-textarea" th:field="*{amenagementText}"></textarea>
-                                        </div>
-                                        <p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error" th:errors="*{amenagementText}"></p>
+                                    <div class="col-12">
+                                        <table class="table table-sm">
+                                            <thead>
+                                            <tr>
+                                                <th style="width: 40px;"></th>
+                                                <th>Aménagement</th>
+                                                <th style="width: 250px;">Précision</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="ligne, i : ${amenagement.lignesAmenagement}">
+                                                <input type="hidden"
+                                                       th:name="'lignesAmenagement[' + ${i.index} + '].typeLigneAmenagementId'"
+                                                       th:value="${ligne.typeLigneAmenagementId}">
+                                                <td>
+                                                    <input type="checkbox"
+                                                           class="form-check-input"
+                                                           th:name="'lignesAmenagement[' + ${i.index} + '].selected'"
+                                                           th:id="'ligne-' + ${i.index}">
+                                                </td>
+                                                <td>
+                                                    <label th:for="'ligne-' + ${i.index}"
+                                                           th:text="${typeLigneAmenagements[i.index].libelle}"></label>
+                                                    <input th:if="${typeLigneAmenagements[i.index].champLibre}"
+                                                           type="text"
+                                                           class="form-control form-control-sm mt-1"
+                                                           th:name="'lignesAmenagement[' + ${i.index} + '].libelleLibre'"
+                                                           placeholder="Précisez...">
+                                                </td>
+                                                <td>
+                                                    <input type="text"
+                                                           class="form-control form-control-sm"
+                                                           th:name="'lignesAmenagement[' + ${i.index} + '].commentairePrecision'"
+                                                           placeholder="Précision (ex : nom du logiciel)">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

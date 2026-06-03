@@ -9,6 +9,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.service.AmenagementService;
+import org.esupportail.esupagape.service.AmenagementWorkflowService;
 import org.esupportail.esupagape.service.DossierService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
@@ -43,11 +44,14 @@ public class AmenagementAdministratifController {
 
     private final ApplicationProperties applicationProperties;
 
-    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService, ApplicationProperties applicationProperties) {
+    private final AmenagementWorkflowService amenagementWorkflowService;
+
+    public AmenagementAdministratifController(AmenagementService amenagementService, DossierService dossierService, UtilsService utilsService, ApplicationProperties applicationProperties, AmenagementWorkflowService amenagementWorkflowService) {
         this.amenagementService = amenagementService;
         this.dossierService = dossierService;
         this.utilsService = utilsService;
         this.applicationProperties = applicationProperties;
+        this.amenagementWorkflowService = amenagementWorkflowService;
     }
 
     @GetMapping
@@ -63,14 +67,12 @@ public class AmenagementAdministratifController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
-        if(statusAmenagement == null) statusAmenagement = StatusAmenagement.VALIDE_MEDECIN;
-        if(!StringUtils.hasText(codComposante)) codComposante = null;
-        List<StatusAmenagement> statusAmenagements = new ArrayList<>(List.of(StatusAmenagement.values()));
-        statusAmenagements.remove(StatusAmenagement.BROUILLON);
-        statusAmenagements.remove(StatusAmenagement.SUPPRIME);
-        if(!StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
-            statusAmenagements.remove(StatusAmenagement.ENVOYE);
+        List<StatusAmenagement> statusAmenagements = amenagementWorkflowService.getStatusesVisibleForAdministration(StringUtils.hasText(applicationProperties.getEsupSignatureUrl()));
+        if(statusAmenagement == null) statusAmenagement = amenagementWorkflowService.getPendingAdministrationStatus();
+        if(!statusAmenagements.contains(statusAmenagement)) {
+            statusAmenagement = amenagementWorkflowService.getPendingAdministrationStatus();
         }
+        if(!StringUtils.hasText(codComposante)) codComposante = null;
         Page<Amenagement> amenagements;
         if (porte) {
             if (StringUtils.hasText(fullTextSearch)) {
