@@ -26,6 +26,10 @@ public class AmenagementWorkflowService {
         return isReferentValidationEnabled() ? StatusAmenagement.VALIDE_REFERENT : StatusAmenagement.VALIDE_MEDECIN;
     }
 
+    public StatusAmenagement getPendingReferentStatus() {
+        return StatusAmenagement.VALIDE_MEDECIN;
+    }
+
     public boolean isPendingAdministrationValidation(StatusAmenagement statusAmenagement) {
         return statusAmenagement == getPendingAdministrationStatus();
     }

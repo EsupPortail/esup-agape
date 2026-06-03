@@ -93,11 +93,11 @@ public class AmenagementController {
     @GetMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
-        Amenagement amenagement = amenagementService.getById(amenagementId);
+        Amenagement amenagement = amenagementService.getByIdWithLignesAndTypes(amenagementId);
         List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
 
         Map<Long, LigneAmenagement> lignesExistantes = amenagement.getLignesAmenagement().stream()
-                .collect(Collectors.toMap(l -> l.getTypeLigneAmenagement().getId(), l -> l));
+                .collect(Collectors.toMap(l -> l.getTypeLigneAmenagement().getId(), l -> l, (first, second) -> first));
 
         AmenagementUpdateDto dto = new AmenagementUpdateDto();
         dto.setTypeAmenagement(amenagement.getTypeAmenagement());
@@ -112,11 +112,14 @@ public class AmenagementController {
         types.forEach(t -> {
             LigneAmenagementDto ligneDto = new LigneAmenagementDto();
             ligneDto.setTypeLigneAmenagementId(t.getId());
+            ligneDto.setLibelle(t.getLibelle());
+            ligneDto.setChampLibre(t.isChampLibre());
             LigneAmenagement existante = lignesExistantes.get(t.getId());
             if (existante != null) {
                 ligneDto.setId(existante.getId());
                 ligneDto.setSelected(true);
                 ligneDto.setLibelleLibre(existante.getLibelleLibre());
+                ligneDto.setStatut(existante.getStatut());
                 ligneDto.setCommentairePrecision(existante.getCommentairePrecision());
                 ligneDto.setCommentaireValidation(existante.getCommentaireValidation());
             }

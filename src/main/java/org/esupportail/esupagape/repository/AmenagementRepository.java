@@ -14,6 +14,14 @@ import java.util.List;
 
 public interface AmenagementRepository extends JpaRepository<Amenagement, Long> {
 
+    @Query("""
+            select distinct a from Amenagement a
+            left join fetch a.lignesAmenagement la
+            left join fetch la.typeLigneAmenagement
+            where a.id = :id
+            """)
+    java.util.Optional<Amenagement> findByIdWithLignesAndTypes(Long id);
+
     @Query("select da.amenagement from DossierAmenagement da where da.dossier.id = :dossierId and da.amenagement.statusAmenagement = :statusAmenagement order by da.amenagement.administrationDate desc")
     List<Amenagement> findByDossierIdAndStatusAmenagement(Long dossierId, StatusAmenagement statusAmenagement);
 
@@ -110,7 +118,6 @@ public interface AmenagementRepository extends JpaRepository<Amenagement, Long> 
             and (:campus is null or :campus member of da.dossier.campus)
             and (:viewedByUid is null or :viewedByUid member of a.viewByUid)
             and (:notViewedByUid is null or :notViewedByUid not member of a.viewByUid)
-            and a.statusAmenagement = 'VISE_ADMINISTRATION'
             and (a.typeAmenagement = 'CURSUS' or a.typeAmenagement = 'DATE' and a.endDate >= current_date)
             and (:yearFilter is null or da.lastYear = :yearFilter)
             """)

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="d-inline-flex">
+    <div th:replace="~{fragments/side-administratif :: side}"></div>
+    <div class="float-buttons">
+        <a th:href="@{/referent/amenagements/{amenagementId}/get-avis(amenagementId=${amenagement.id})}" target="_blank"
+           class="btn btn-primary" title="Afficher l'avis médical">
+            <i class="fa-solid fa-book-medical" style="font-size: 22px"></i>
+        </a>
+        <button title="Marquer comme lu" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#markAsViewModal" th:unless="${amenagement.viewByUid.contains(personLdap.uid)}">
+            <i class="fa-regular fa-flag"></i>
+        </button>
+        <button title="Marquer comme non lu" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#markAsNotViewModal" th:if="${amenagement.viewByUid.contains(personLdap.uid)}">
+            <span class="fa-stack">
+                <i class="fa-regular fa-flag" style="margin-left: -15px;"></i>
+                <i class="fa-solid fa-slash fa-stack-1x" style="margin-left: -6px; margin-top: -3px;"></i>
+            </span>
+        </button>
+    </div>
+    <div class="agape-content agape-content-side">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/referent/amenagements" class="text-center">Liste des aménagements</a>
+                </li>
+            </ol>
+        </nav>
+        <dl>
+            <dt class="col-sm-2">Formation actuelle</dt>
+            <dd class="col-sm-10" th:text="${currentYear} + '-' + ${currentYear + 1} + ' : ' + ${currentForm}"></dd>
+        </dl>
+        <div class="agape-tab-content bg-white p-3">
+            <div class="alert alert-info" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)}">
+                Cet aménagement a déjà été transmis à l’administration par un référent.
+            </div>
+            <div class="alert alert-warning" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}">
+                Cet aménagement a déjà été validé par l’administration.
+            </div>
+            <form th:method="put"
+                  th:action="@{/referent/amenagements/{amenagementId}/update(amenagementId=${amenagement.id})}"
+                  th:object="${amenagementDto}">
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Type d’aménagement</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input type="text" class="form-control" th:value="${#messages.msg('amenagement.typeAmenagement.' + amenagement.typeAmenagement)}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-1" th:if="${amenagement.endDate != null}">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Date de fin</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input type="text" class="form-control" th:value="${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Types d’épreuves</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <div class="form-control">
+                                    <th:block th:each="typeEpreuve, iter : ${amenagement.typeEpreuves}">
+                                        <span th:text="#{'amenagement.typeEpreuve.' + ${typeEpreuve}}"></span><span th:unless="${iter.last}">, </span>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Temps majoré</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input type="text" class="form-control" th:value="${#messages.msg('amenagement.tempsMajore.' + amenagement.tempsMajore)}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-1" th:if="${amenagement.autresTempsMajores != null && !amenagement.autresTempsMajores.isBlank()}">
+                            <div class="col-4" style="width: 250px;">
+                                <label class="form-label">Autres temps majorés</label>
+                            </div>
+                            <div class="col-12 col-xxl-8">
+                                <input type="text" class="form-control" th:value="${amenagement.autresTempsMajores}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="alert alert-secondary">
+                            Le commentaire de validation est obligatoire pour les lignes au statut "Refusé" ou "Modifié". Les lignes ajoutées par le référent sont validées d’office.
+                        </div>
+                        <table class="table table-sm align-middle">
+                            <thead>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>Aménagement</th>
+                                <th>Précision</th>
+                                <th style="width: 220px;">Décision référent</th>
+                                <th>Commentaire de validation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ligne, i : *{lignesAmenagement}">
+                                <input type="hidden"
+                                       th:name="'lignesAmenagement[' + ${i.index} + '].id'"
+                                       th:value="*{lignesAmenagement[__${i.index}__].id}">
+                                <input type="hidden"
+                                       th:name="'lignesAmenagement[' + ${i.index} + '].typeLigneAmenagementId'"
+                                       th:value="*{lignesAmenagement[__${i.index}__].typeLigneAmenagementId}">
+                                <td>
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           th:name="'lignesAmenagement[' + ${i.index} + '].selected'"
+                                           th:id="'ligne-' + ${i.index}"
+                                           th:checked="*{lignesAmenagement[__${i.index}__].selected}"
+                                           th:disabled="${ligne.id != null || !amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                </td>
+                                <td>
+                                    <label th:for="'ligne-' + ${i.index}" th:text="${ligne.champLibre ? ligne.libelleLibre : ligne.libelle}"></label>
+                                    <small class="text-muted" th:if="${ligne.champLibre}" th:text="${ligne.libelle}"></small>
+                                    <input th:if="${ligne.champLibre && ligne.id == null}"
+                                           type="text"
+                                           class="form-control form-control-sm mt-1"
+                                           th:name="'lignesAmenagement[' + ${i.index} + '].libelleLibre'"
+                                           th:value="*{lignesAmenagement[__${i.index}__].libelleLibre}"
+                                           placeholder="Précisez..."
+                                           th:disabled="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                </td>
+                                <td>
+                                    <span th:if="${ligne.id != null}" th:text="${ligne.commentairePrecision}"></span>
+                                    <input th:if="${ligne.id == null}"
+                                           type="text"
+                                           class="form-control form-control-sm"
+                                           th:name="'lignesAmenagement[' + ${i.index} + '].commentairePrecision'"
+                                           th:value="*{lignesAmenagement[__${i.index}__].commentairePrecision}"
+                                           placeholder="Précision (ex : nom du logiciel)"
+                                           th:disabled="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                </td>
+                                <td>
+                                    <select class="form-select"
+                                            th:name="'lignesAmenagement[' + ${i.index} + '].statut'"
+                                            th:value="*{lignesAmenagement[__${i.index}__].statut}"
+                                            th:if="${ligne.id != null}"
+                                            th:disabled="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                        <option value="" hidden>Choisir</option>
+                                        <option th:each="statut : ${statutsLigneAmenagement}"
+                                                th:value="${statut}"
+                                                th:selected="${statut.equals(ligne.statut)}"
+                                                th:text="#{'ligneAmenagement.statut.' + ${statut}}"></option>
+                                    </select>
+                                    <span th:if="${ligne.id == null}" class="text-muted">Ajoutée et validée d’office</span>
+                                </td>
+                                <td>
+                                    <textarea class="form-control"
+                                              rows="2"
+                                              th:name="'lignesAmenagement[' + ${i.index} + '].commentaireValidation'"
+                                              th:text="*{lignesAmenagement[__${i.index}__].commentaireValidation}"
+                                              th:if="${ligne.id != null}"
+                                              th:disabled="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12">
+                        <div class="float-buttons">
+                            <button type="submit"
+                                    class="btn btn-success"
+                                    title="Transmettre à l'administration"
+                                    th:if="${validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                <i class="fa-solid fa-check me-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<div class="modal fade" id="markAsViewModal" tabindex="-1" aria-labelledby="markAsViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="markAsViewModalLabel">Marquer cet aménagement comme lu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:method="post" th:action="@{'/referent/amenagements/' + ${amenagement.id} + '/viewed'}">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="markAsNotViewModal" tabindex="-1" aria-labelledby="markAsNotViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="markAsNotViewModalLabel">Marquer cet aménagement comme non lu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:method="post" th:action="@{'/referent/amenagements/' + ${amenagement.id} + '/not-viewed'}">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: black}"></footer>
+<div th:replace="~{fragments/flash :: flash}"></div>
+</body>
+</html>

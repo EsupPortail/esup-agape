@@ -1,11 +1,16 @@
 package org.esupportail.esupagape.dtos.forms;
 
+import org.esupportail.esupagape.entity.enums.StatutLigneAmenagement;
+
 public class LigneAmenagementDto {
 
     private Long id;
     private Long typeLigneAmenagementId;
     private boolean selected;
     private String libelleLibre;
+    private String libelle;
+    private boolean champLibre;
+    private StatutLigneAmenagement statut;
     private String commentairePrecision;
     private String commentaireValidation;
 
@@ -39,6 +44,30 @@ public class LigneAmenagementDto {
 
     public void setLibelleLibre(String libelleLibre) {
         this.libelleLibre = libelleLibre;
+    }
+
+    public String getLibelle() {
+        return libelle;
+    }
+
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
+
+    public boolean isChampLibre() {
+        return champLibre;
+    }
+
+    public void setChampLibre(boolean champLibre) {
+        this.champLibre = champLibre;
+    }
+
+    public StatutLigneAmenagement getStatut() {
+        return statut;
+    }
+
+    public void setStatut(StatutLigneAmenagement statut) {
+        this.statut = statut;
     }
 
     public String getCommentairePrecision() {

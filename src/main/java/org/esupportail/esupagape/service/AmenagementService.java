@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
 import org.esupportail.esupagape.config.ApplicationProperties;
 import org.esupportail.esupagape.config.ldap.LdapProperties;
 import org.esupportail.esupagape.dtos.forms.AmenagementCreateDto;
+import org.esupportail.esupagape.dtos.forms.AmenagementUpdateDto;
 import org.esupportail.esupagape.dtos.forms.LigneAmenagementDto;
 import org.esupportail.esupagape.dtos.pdfs.CertificatPdf;
 import org.esupportail.esupagape.entity.*;
@@ -112,6 +113,11 @@ public class AmenagementService {
 
     public Amenagement getById(Long id) {
         return amenagementRepository.findById(id).orElseThrow();
+    }
+
+    @Transactional(readOnly = true)
+    public Amenagement getByIdWithLignesAndTypes(Long id) {
+        return amenagementRepository.findByIdWithLignesAndTypes(id).orElseThrow();
     }
 
     @Transactional
@@ -235,6 +241,54 @@ public class AmenagementService {
         }
     }
 
+    @Transactional
+    public void updateReferentValidation(Long amenagementId, AmenagementUpdateDto dto) throws AgapeException {
+        Amenagement amenagement = getById(amenagementId);
+        DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+        if (dossierAmenagement.getDossier() == null) {
+            throw new AgapeYearException();
+        }
+        if (!amenagementWorkflowService.isPendingReferentValidation(amenagement)) {
+            throw new AgapeException("Impossible de modifier un aménagement qui n'est pas en attente de validation référent");
+        }
+
+        Map<Long, LigneAmenagementDto> dtoById = dto.getLignesAmenagement().stream()
+                .filter(ligne -> ligne.getId() != null)
+                .collect(Collectors.toMap(LigneAmenagementDto::getId, ligne -> ligne));
+        java.util.Set<Long> existingTypeIds = new java.util.HashSet<>();
+
+        for (LigneAmenagement ligneAmenagement : amenagement.getLignesAmenagement()) {
+            existingTypeIds.add(ligneAmenagement.getTypeLigneAmenagement().getId());
+            LigneAmenagementDto ligneDto = dtoById.get(ligneAmenagement.getId());
+            if (ligneDto == null || ligneDto.getStatut() == null) {
+                throw new AgapeException("Le statut de chaque ligne d'aménagement doit être renseigné");
+            }
+            if ((StatutLigneAmenagement.REFUSE.equals(ligneDto.getStatut()) || StatutLigneAmenagement.MODIFIE.equals(ligneDto.getStatut()))
+                    && !StringUtils.hasText(ligneDto.getCommentaireValidation())) {
+                throw new AgapeException("Le commentaire de validation est obligatoire pour les lignes refusées ou modifiées");
+            }
+            ligneAmenagement.setStatut(ligneDto.getStatut());
+            ligneAmenagement.setCommentaireValidation(StringUtils.hasText(ligneDto.getCommentaireValidation()) ? ligneDto.getCommentaireValidation().trim() : null);
+        }
+
+        dto.getLignesAmenagement().stream()
+                .filter(LigneAmenagementDto::isSelected)
+                .filter(ligneDto -> ligneDto.getId() == null)
+                .filter(ligneDto -> !existingTypeIds.contains(ligneDto.getTypeLigneAmenagementId()))
+                .forEach(ligneDto -> {
+                    TypeLigneAmenagement type = typeLigneAmenagementRepository.getReferenceById(ligneDto.getTypeLigneAmenagementId());
+                    LigneAmenagement ligne = new LigneAmenagement();
+                    ligne.setAmenagement(amenagement);
+                    ligne.setTypeLigneAmenagement(type);
+                    ligne.setCommentairePrecision(ligneDto.getCommentairePrecision());
+                    ligne.setStatut(StatutLigneAmenagement.ACCEPTE);
+                    if (type.isChampLibre()) {
+                        ligne.setLibelleLibre(ligneDto.getLibelleLibre());
+                    }
+                    amenagement.getLignesAmenagement().add(ligne);
+                });
+    }
+
     public DossierAmenagement getDossierAmenagementOfCurrentYear(Amenagement amenagement) {
         List<DossierAmenagement> dossierAmenagements = dossierAmenagementRepository.findDossierAmenagementByAmenagement(amenagement);
         return dossierAmenagements.stream().filter(da -> da.getLastYear() == utilsService.getCurrentYear()).findFirst().orElse(null);
@@ -354,6 +408,9 @@ public class AmenagementService {
             throw new AgapeYearException();
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
+            if (amenagement.getLignesAmenagement().stream().anyMatch(ligne -> ligne.getStatut() == null)) {
+                throw new AgapeException("Toutes les lignes d'aménagement doivent être évaluées avant transmission à l'administration");
+            }
             if(StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 sendToCertificatWorkflow(amenagementId);
             }
@@ -524,7 +581,11 @@ public class AmenagementService {
         StringBuilder amenagementsWithNumbers = new StringBuilder();
         int i = 1;
         if (amenagement.getLignesAmenagement() != null && !amenagement.getLignesAmenagement().isEmpty()) {
-            for (LigneAmenagement ligne : amenagement.getLignesAmenagement()) {
+            java.util.stream.Stream<LigneAmenagement> lignesStream = amenagement.getLignesAmenagement().stream();
+            if (typeWorkflow.equals(TypeWorkflow.CERTIFICAT)) {
+                lignesStream = lignesStream.filter(ligne -> ligne.getStatut() == null || ligne.getStatut().equals(StatutLigneAmenagement.ACCEPTE));
+            }
+            for (LigneAmenagement ligne : lignesStream.toList()) {
                 String libelle = ligne.getTypeLigneAmenagement().isChampLibre()
                         ? ligne.getLibelleLibre()
                         : ligne.getTypeLigneAmenagement().getLibelle();
