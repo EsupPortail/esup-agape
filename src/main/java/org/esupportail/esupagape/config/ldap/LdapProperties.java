@@ -41,6 +41,10 @@ public class LdapProperties {
      */
     private String scolariteMemberOfSearch;
     /**
+     * LDAP filtre de recherche des membres du groupe référent.
+     */
+    private String referentMemberOfSearch;
+    /**
      * LDAP filtre pour la création de groupes dynamiques
      */
     private Map<String, String> mappingFiltersGroups = new HashMap<>();
@@ -116,5 +120,13 @@ public class LdapProperties {
 
     public void setScolariteMemberOfSearch(String scolariteMemberOfSearch) {
         this.scolariteMemberOfSearch = scolariteMemberOfSearch;
+    }
+
+    public String getReferentMemberOfSearch() {
+        return referentMemberOfSearch;
+    }
+
+    public void setReferentMemberOfSearch(String referentMemberOfSearch) {
+        this.referentMemberOfSearch = referentMemberOfSearch;
     }
 }

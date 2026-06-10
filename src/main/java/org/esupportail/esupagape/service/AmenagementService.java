@@ -355,6 +355,17 @@ public class AmenagementService {
         return amenagementRepository.countByStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN, utilsService.getCurrentYear());
     }
 
+    public boolean canAccessAmenagement(Long amenagementId, List<String> codComposantes) {
+        if (codComposantes == null || codComposantes.isEmpty()) {
+            return false;
+        }
+        Amenagement amenagement = getById(amenagementId);
+        DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+        return dossierAmenagement != null
+                && dossierAmenagement.getDossier() != null
+                && codComposantes.contains(dossierAmenagement.getDossier().getCodComposante());
+    }
+
     public Long countToPorte() {
         return amenagementRepository.countToPorte(utilsService.getCurrentYear());
     }
@@ -395,6 +406,7 @@ public class AmenagementService {
                 logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
             dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
+            sendReferentAlertIfNeeded(amenagement);
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut brouillon");
         }
@@ -789,7 +801,11 @@ public class AmenagementService {
     public SignatureStatus checkEsupSignatureStatus(Long amenagementId, TypeWorkflow typeWorkflow) {
         Amenagement amenagement = getById(amenagementId);
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+        StatusAmenagement previousStatus = amenagement.getStatusAmenagement();
         SignatureStatus signatureStatus = esupSignatureService.getStatus(dossierAmenagement, typeWorkflow);
+        if (previousStatus != amenagement.getStatusAmenagement()) {
+            sendReferentAlertIfNeeded(amenagement);
+        }
         if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
             esupSignatureService.getLastPdf(dossierAmenagement, typeWorkflow);
             logger.info("aménagement " + amenagementId + " status esup-signature " + typeWorkflow.name() + " : COMPLETED");
@@ -917,24 +933,7 @@ public class AmenagementService {
     }
 
     public void sendAlert(Amenagement amenagement) {
-        List<String> to = new ArrayList<>();
-        if(StringUtils.hasText(applicationProperties.getTestEmail())) {
-            to.add(applicationProperties.getTestEmail());
-        } else {
-            if(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() != null) {
-                DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
-                List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefId(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() + dossierAmenagement.getDossier().getCodComposante());
-                List<String> affectations = organizationalUnitLdaps.stream().map(OrganizationalUnitLdap::getSupannCodeEntite).distinct().toList();
-                List<PersonLdap> personLdaps = personLdapRepository.findByMemberOf(ldapProperties.getScolariteMemberOfSearch());
-                List<UserOthersAffectations> userOthersAffectations = userOthersAffectationsRepository.findByCodComposante(dossierAmenagement.getDossier().getCodComposante());
-                List<String> uids = userOthersAffectations.stream().map(UserOthersAffectations::getUid).toList();
-                for (PersonLdap personLdap : personLdaps) {
-                    if (uids.contains(personLdap.getUid()) || affectations.contains(personLdap.getSupannEntiteAffectationPrincipale())) {
-                        to.add(personLdap.getMail());
-                    }
-                }
-            }
-        }
+        List<String> to = resolveAlertRecipients(amenagement, ldapProperties.getScolariteMemberOfSearch());
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION) && amenagement.getIndividuSendDate() == null) {
             try {
                 if(!to.isEmpty()) {
@@ -945,6 +944,63 @@ public class AmenagementService {
                 logger.warn("Impossible d'envoyer le mail d'alerte, aménagement : " + amenagement.getId(), e);
             }
         }
+    }
+
+    public void sendReferentAlert(Amenagement amenagement) {
+        List<String> to = resolveAlertRecipients(amenagement, ldapProperties.getReferentMemberOfSearch());
+        if (!amenagementWorkflowService.isReferentValidationEnabled()
+                || !amenagement.getStatusAmenagement().equals(StatusAmenagement.VALIDE_MEDECIN)) {
+            return;
+        }
+        try {
+            if(!to.isEmpty()) {
+                logger.info("Mail d'alerte referent envoyer, aménagement : " + amenagement.getId() + " to " + to);
+                mailService.sendReferentAlert(to);
+            }
+        } catch (Exception e) {
+            logger.warn("Impossible d'envoyer le mail d'alerte referent, aménagement : " + amenagement.getId(), e);
+        }
+    }
+
+    private void sendReferentAlertIfNeeded(Amenagement amenagement) {
+        if (amenagementWorkflowService.isPendingReferentValidation(amenagement)) {
+            sendReferentAlert(amenagement);
+        }
+    }
+
+    private List<String> resolveAlertRecipients(Amenagement amenagement, String memberOfSearch) {
+        Set<String> recipients = new LinkedHashSet<>();
+        if (StringUtils.hasText(applicationProperties.getTestEmail())) {
+            recipients.add(applicationProperties.getTestEmail());
+            return new ArrayList<>(recipients);
+        }
+        if (!StringUtils.hasText(ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo())
+                || !StringUtils.hasText(memberOfSearch)) {
+            return new ArrayList<>(recipients);
+        }
+        DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagement);
+        if (dossierAmenagement == null || dossierAmenagement.getDossier() == null) {
+            return new ArrayList<>(recipients);
+        }
+        String codComposante = dossierAmenagement.getDossier().getCodComposante();
+        List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefId(
+                ldapProperties.getAffectationPrincipaleRefIdPrefixFromApo() + codComposante
+        );
+        List<String> affectations = organizationalUnitLdaps.stream()
+                .map(OrganizationalUnitLdap::getSupannCodeEntite)
+                .distinct()
+                .toList();
+        List<String> uids = userOthersAffectationsRepository.findByCodComposante(codComposante).stream()
+                .map(UserOthersAffectations::getUid)
+                .toList();
+        for (PersonLdap personLdap : personLdapRepository.findByMemberOf(memberOfSearch)) {
+            if ((uids.contains(personLdap.getUid())
+                    || affectations.contains(personLdap.getSupannEntiteAffectationPrincipale()))
+                    && StringUtils.hasText(personLdap.getMail())) {
+                recipients.add(personLdap.getMail());
+            }
+        }
+        return new ArrayList<>(recipients);
     }
 
     public void addLibelle(String newLibelle, Integer previousIndex) {

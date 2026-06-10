@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,25 +74,23 @@ public class AmenagementReferentController {
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
-        Map<String, String> codComposantes = dossierService.getCodComposanteLabels();
+        Map<String, String> allCodComposantes = dossierService.getCodComposanteLabels();
+        List<String> authorizedCodComposantes = getAuthorizedCodComposantes(personLdap, allCodComposantes);
+        Map<String, String> codComposantes = allCodComposantes.entrySet().stream()
+                .filter(entry -> authorizedCodComposantes.contains(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (left, right) -> left, LinkedHashMap::new));
         Page<Amenagement> amenagements;
         if (!amenagementWorkflowService.isReferentValidationEnabled()) {
             amenagements = new PageImpl<>(List.of(), pageable, 0);
+        } else if (authorizedCodComposantes.isEmpty()) {
+            amenagements = new PageImpl<>(List.of(), pageable, 0);
         } else {
-            String codComposante = userService.getComposante(personLdap);
             List<String> codComposanteToDisplay = new ArrayList<>();
-            List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList());
-            if(userCodComposantes.contains("ALL_ACCESS")) {
-                userCodComposantes.clear();
-                userCodComposantes.addAll(codComposantes.keySet());
-            }
-            if (codComposante != null) {
-                userCodComposantes.add(codComposante);
-            }
-            if (StringUtils.hasText(composanteFilter)) {
+            if (StringUtils.hasText(composanteFilter) && authorizedCodComposantes.contains(composanteFilter)) {
                 codComposanteToDisplay.add(composanteFilter);
             } else {
-                codComposanteToDisplay.addAll(userCodComposantes);
+                codComposanteToDisplay.addAll(authorizedCodComposantes);
+                composanteFilter = null;
             }
             String viewedByUid = null;
             String notViewedByUid = null;
@@ -126,12 +125,18 @@ public class AmenagementReferentController {
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(@PathVariable Long amenagementId) {
+    public String show(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return redirectUnauthorized(redirectAttributes);
+        }
         return "redirect:/referent/amenagements/" + amenagementId + "/update";
     }
 
     @GetMapping("/{amenagementId}/update")
-    public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
+    public String update(@PathVariable Long amenagementId, Model model, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException, AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return redirectUnauthorized(redirectAttributes);
+        }
         setModel(model);
         Amenagement amenagement = amenagementService.getByIdWithLignesAndTypes(amenagementId);
         DossierAmenagement dossierAmenagement = amenagementService.getDossierAmenagementOfCurrentYear(amenagement);
@@ -186,7 +191,11 @@ public class AmenagementReferentController {
     public String update(@PathVariable Long amenagementId,
                          @ModelAttribute("amenagementDto") AmenagementUpdateDto dto,
                          @RequestParam(defaultValue = "save") String action,
-                         RedirectAttributes redirectAttributes) {
+                         PersonLdap personLdap,
+                         RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return redirectUnauthorized(redirectAttributes);
+        }
         try {
             amenagementService.updateReferentValidation(amenagementId, dto);
             if ("send".equals(action)) {
@@ -202,14 +211,20 @@ public class AmenagementReferentController {
     }
 
     @PostMapping("/{amenagementId}/viewed")
-    public String viewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public String viewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return redirectUnauthorized(redirectAttributes);
+        }
         amenagementService.viewedByUid(amenagementId, personLdap.getUid());
         redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement marqué comme lu"));
         return "redirect:/referent/amenagements/" + amenagementId + "/update";
     }
 
     @PostMapping("/{amenagementId}/not-viewed")
-    public String notViewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public String notViewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return redirectUnauthorized(redirectAttributes);
+        }
         amenagementService.notViewedByUid(amenagementId, personLdap.getUid());
         redirectAttributes.addFlashAttribute("message", new Message("success", "Aménagement marqué comme non lu"));
         return "redirect:/referent/amenagements/" + amenagementId + "/update";
@@ -217,13 +232,40 @@ public class AmenagementReferentController {
 
     @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, PersonLdap personLdap, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        if (!hasAmenagementAccess(amenagementId, personLdap)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"avis_" + amenagementId + ".pdf\"");
         amenagementService.getAvis(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private List<String> getAuthorizedCodComposantes(PersonLdap personLdap, Map<String, String> allCodComposantes) {
+        List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream()
+                .map(UserOthersAffectations::getCodComposante)
+                .toList());
+        if (userCodComposantes.contains("ALL_ACCESS")) {
+            return new ArrayList<>(allCodComposantes.keySet());
+        }
+        String codComposante = userService.getComposante(personLdap);
+        if (codComposante != null && !userCodComposantes.contains(codComposante)) {
+            userCodComposantes.add(codComposante);
+        }
+        return userCodComposantes;
+    }
+
+    private boolean hasAmenagementAccess(Long amenagementId, PersonLdap personLdap) throws AgapeException {
+        List<String> authorizedCodComposantes = getAuthorizedCodComposantes(personLdap, dossierService.getCodComposanteLabels());
+        return amenagementService.canAccessAmenagement(amenagementId, authorizedCodComposantes);
+    }
+
+    private String redirectUnauthorized(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", new Message("danger", "Vous n'avez pas accès à cet aménagement"));
+        return "redirect:/referent/amenagements";
     }
 
     private void setModel(Model model) {
