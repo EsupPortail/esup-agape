@@ -64,6 +64,7 @@ public class AmenagementReferentController {
                        @RequestParam(required = false) String composanteFilter,
                        @RequestParam(required = false) String campusFilter,
                        @RequestParam(required = false) Boolean viewedFilter,
+                       @RequestParam(required = false, defaultValue = "false") Boolean showValidated,
                        @PageableDefault(size = 10,
             sort = "createDate",
             direction = Sort.Direction.DESC) Pageable pageable,
@@ -101,7 +102,9 @@ public class AmenagementReferentController {
                     notViewedByUid = personLdap.getUid();
                 }
             }
-            StatusAmenagement statusAmenagement = amenagementWorkflowService.getPendingReferentStatus();
+            StatusAmenagement statusAmenagement = Boolean.TRUE.equals(showValidated)
+                    ? StatusAmenagement.VALIDE_REFERENT
+                    : amenagementWorkflowService.getPendingReferentStatus();
             if (StringUtils.hasText(fullTextSearch)) {
                 amenagements = amenagementService.getByIndividuNameScol(fullTextSearch, statusAmenagement, codComposanteToDisplay, campusFilter, viewedByUid, notViewedByUid, pageable);
             } else {
@@ -116,6 +119,7 @@ public class AmenagementReferentController {
         model.addAttribute("composanteFilter", composanteFilter);
         model.addAttribute("campusFilter", campusFilter);
         model.addAttribute("viewedFilter", viewedFilter);
+        model.addAttribute("showValidated", showValidated);
         model.addAttribute("fullTextSearch", fullTextSearch);
         setModel(model);
         return "referent/amenagements/list";
@@ -136,8 +140,6 @@ public class AmenagementReferentController {
         }
 
         List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
-        Map<Long, LigneAmenagement> lignesExistantes = amenagement.getLignesAmenagement().stream()
-                .collect(Collectors.toMap(l -> l.getTypeLigneAmenagement().getId(), l -> l, (first, second) -> first));
 
         AmenagementUpdateDto dto = new AmenagementUpdateDto();
         dto.setTypeAmenagement(amenagement.getTypeAmenagement());
@@ -148,20 +150,22 @@ public class AmenagementReferentController {
         dto.setAutresTempsMajores(amenagement.getAutresTempsMajores());
         dto.setAutorisation(amenagement.getAutorisation());
         dto.setClassification(amenagement.getClassification());
-        types.forEach(type -> {
+
+        amenagement.getLignesAmenagement().forEach(ligne -> {
+            TypeLigneAmenagement type = ligne.getTypeLigneAmenagement();
+
             org.esupportail.esupagape.dtos.forms.LigneAmenagementDto ligneDto = new org.esupportail.esupagape.dtos.forms.LigneAmenagementDto();
+            ligneDto.setId(ligne.getId());
+            ligneDto.setSelected(true);
             ligneDto.setTypeLigneAmenagementId(type.getId());
+            ligneDto.setOrdre(type.getOrdre());
             ligneDto.setLibelle(type.getLibelle());
             ligneDto.setChampLibre(type.isChampLibre());
-            LigneAmenagement existante = lignesExistantes.get(type.getId());
-            if (existante != null) {
-                ligneDto.setId(existante.getId());
-                ligneDto.setSelected(true);
-                ligneDto.setLibelleLibre(existante.getLibelleLibre());
-                ligneDto.setStatut(existante.getStatut());
-                ligneDto.setCommentairePrecision(existante.getCommentairePrecision());
-                ligneDto.setCommentaireValidation(existante.getCommentaireValidation());
-            }
+            ligneDto.setLibelleLibre(ligne.getLibelleLibre());
+            ligneDto.setStatut(ligne.getStatut());
+            ligneDto.setCommentairePrecision(ligne.getCommentairePrecision());
+            ligneDto.setCommentaireValidation(ligne.getCommentaireValidation());
+
             dto.getLignesAmenagement().add(ligneDto);
         });
 
@@ -169,6 +173,7 @@ public class AmenagementReferentController {
         List<Dossier> dossiers = dossierService.getAllByIndividu(individu.getId()).stream().sorted(Comparator.comparing(Dossier::getYear).reversed()).collect(Collectors.toList());
         model.addAttribute("amenagement", amenagement);
         model.addAttribute("amenagementDto", dto);
+        model.addAttribute("typeLigneAmenagements", types);
         model.addAttribute("dossiers", dossiers);
         model.addAttribute("lastDossier", dossiers.get(0));
         model.addAttribute("currentForm", dossierService.getInfos(individu, utilsService.getCurrentYear()).getLibelleFormation());
@@ -178,11 +183,18 @@ public class AmenagementReferentController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    public String update(@PathVariable Long amenagementId, @ModelAttribute("amenagementDto") AmenagementUpdateDto dto, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Long amenagementId,
+                         @ModelAttribute("amenagementDto") AmenagementUpdateDto dto,
+                         @RequestParam(defaultValue = "save") String action,
+                         RedirectAttributes redirectAttributes) {
         try {
             amenagementService.updateReferentValidation(amenagementId, dto);
-            amenagementService.validationReferent(amenagementId);
-            redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été transmis à l'administration"));
+            if ("send".equals(action)) {
+                amenagementService.validationReferent(amenagementId);
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été enregistré puis transmis à l'administration"));
+            } else {
+                redirectAttributes.addFlashAttribute("message", new Message("success", "Les modifications du référent ont bien été enregistrées"));
+            }
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
         }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -287,6 +288,8 @@ public class AmenagementService {
                     }
                     amenagement.getLignesAmenagement().add(ligne);
                 });
+
+        amenagementRepository.save(amenagement);
     }
 
     public DossierAmenagement getDossierAmenagementOfCurrentYear(Amenagement amenagement) {
@@ -521,14 +524,19 @@ public class AmenagementService {
         if(amenagement.getCertificat() != null ) {
             certificat = amenagement.getCertificat().getInputStream().readAllBytes();
         } else {
-            byte[] modelBytes;
-            if(StringUtils.hasText(applicationProperties.getModelsPath())) {
-                modelBytes = Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/certificat.pdf").toPath());
-            } else {
-                modelBytes = new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
-            }
-            certificat = generateDocument(amenagement, modelBytes, TypeWorkflow.CERTIFICAT, true);
+            certificat = generateDocument(amenagement, loadCertificatModelBytes(), TypeWorkflow.CERTIFICAT, true);
         }
+        httpServletResponse.getOutputStream().write(certificat);
+    }
+
+    @Transactional
+    public void getCertificatPreview(Long id, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        Amenagement amenagement = getById(id);
+        if (!amenagementWorkflowService.isPendingAdministrationValidation(amenagement)
+                && !amenagement.getStatusAmenagement().equals(StatusAmenagement.REFUSE_ADMINISTRATION)) {
+            throw new AgapeException("L'aperçu du certificat ne peut pas être émis");
+        }
+        byte[] certificat = generateDocument(amenagement, loadCertificatModelBytes(), TypeWorkflow.CERTIFICAT, false);
         httpServletResponse.getOutputStream().write(certificat);
     }
 
@@ -555,6 +563,13 @@ public class AmenagementService {
             avis = generateDocument(amenagement, modelBytes, TypeWorkflow.AVIS, true);
         }
         httpServletResponse.getOutputStream().write(avis);
+    }
+
+    private byte[] loadCertificatModelBytes() throws IOException {
+        if(StringUtils.hasText(applicationProperties.getModelsPath())) {
+            return Files.readAllBytes(new File(applicationProperties.getModelsPath() + "/certificat.pdf").toPath());
+        }
+        return new ClassPathResource("models/certificat.pdf").getInputStream().readAllBytes();
     }
 
     private byte[] generateDocument(Amenagement amenagement, byte[] modelBytes, TypeWorkflow typeWorkflow, boolean withSign) throws IOException {
@@ -590,14 +605,14 @@ public class AmenagementService {
                         ? ligne.getLibelleLibre()
                         : ligne.getTypeLigneAmenagement().getLibelle();
                 if (libelle != null && !libelle.isBlank()) {
-                    amenagementsWithNumbers.append(i).append(" - ").append(libelle).append("\n");
+                    appendAmenagementLine(amenagementsWithNumbers, ligne.getTypeLigneAmenagement().getOrdre(), i, libelle);
                     i++;
                 }
             }
         } else if (amenagement.getAmenagementText() != null && !amenagement.getAmenagementText().isBlank()) {
             for (String line : amenagement.getAmenagementText().split("\n")) {
                 if (!line.isBlank()) {
-                    amenagementsWithNumbers.append(i).append(" - ").append(line).append("\n");
+                    appendAmenagementLine(amenagementsWithNumbers, null, i, line);
                     i++;
                 }
             }
@@ -619,81 +634,106 @@ public class AmenagementService {
         return generatePdf(amenagement, objectMapper.convertValue(certificatPdf, datasTypeReference), modelBytes, withSign);
     }
 
+    private void appendAmenagementLine(StringBuilder amenagementsWithNumbers, Integer ordre, int fallbackNumber, String libelle) {
+        Integer displayNumber = ordre != null ? ordre : fallbackNumber;
+        amenagementsWithNumbers.append(displayNumber).append(" - ").append(libelle).append("\n");
+    }
+
     private byte[] generatePdf(Amenagement amenagement, Map<String, String> datas, byte[] model, boolean withSign) throws IOException {
-        byte[] savedPdf;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PDDocument modelDocument = PDDocument.load(model);
-        PDAcroForm pdAcroForm = modelDocument.getDocumentCatalog().getAcroForm();
-        byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
-        PDFont pdFont = PDTrueTypeFont.load(modelDocument, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
-        PDResources resources = pdAcroForm.getDefaultResources();
-        resources.put(COSName.getPDFName("LiberationSans"), pdFont);
-        pdAcroForm.setDefaultResources(resources);
-        List<String> fieldsNames = pdAcroForm.getFields().stream().map(PDField::getFullyQualifiedName).toList();
-        modelDocument.save(out);
-        modelDocument.close();
-        savedPdf = out.toByteArray();
-        for(String fieldName : fieldsNames) {
-            PDDocument toFillDocument = PDDocument.load(savedPdf);
-            PDField pdField = toFillDocument.getDocumentCatalog().getAcroForm().getField(fieldName);
-            if(pdField != null) {
-                if(pdField instanceof PDSignatureField) {
-                    if(withSign) {
-                        addVisualSignature(amenagement, toFillDocument, pdField.getWidgets().get(0).getRectangle(), fieldName);
+        try (PDDocument document = Loader.loadPDF(model);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            PDAcroForm pdAcroForm = document.getDocumentCatalog().getAcroForm();
+            if (pdAcroForm == null) {
+                throw new IOException("Le modèle PDF ne contient pas d'AcroForm");
+            }
+
+            byte[] ttfBytes = new ClassPathResource("/static/fonts/LiberationSans-Regular.ttf").getInputStream().readAllBytes();
+            PDFont pdFont = PDTrueTypeFont.load(document, new ByteArrayInputStream(ttfBytes), WinAnsiEncoding.INSTANCE);
+            PDResources resources = pdAcroForm.getDefaultResources();
+            if (resources == null) {
+                resources = new PDResources();
+            }
+            resources.put(COSName.getPDFName("LiberationSans"), pdFont);
+            pdAcroForm.setDefaultResources(resources);
+            pdAcroForm.setNeedAppearances(false);
+
+            List<PDField> fields = new ArrayList<>();
+            for (PDField field : pdAcroForm.getFieldTree()) {
+                fields.add(field);
+            }
+
+            for (PDField pdField : fields) {
+                String fieldName = pdField.getFullyQualifiedName();
+                if (pdField instanceof PDSignatureField) {
+                    if (withSign && !pdField.getWidgets().isEmpty()) {
+                        addVisualSignature(amenagement, document, pdField.getWidgets().get(0).getRectangle(), fieldName);
                     }
                 } else {
                     pdField.getCOSObject().setString(COSName.DA, "/LiberationSans 11 Tf 0 g");
-                    if(datas.containsKey(fieldName)) {
+                    if (datas.containsKey(fieldName) && datas.get(fieldName) != null) {
                         pdField.setValue(datas.get(fieldName));
                     }
                 }
-                out = new ByteArrayOutputStream();
-                toFillDocument.save(out);
-                toFillDocument.close();
-                savedPdf = out.toByteArray();
             }
-        }
-        PDDocument finishedDocument = PDDocument.load(savedPdf);
-        List<PDField> fields = finishedDocument.getDocumentCatalog().getAcroForm().getFields();
-        List<PDField> dates = fields.stream().filter(f -> f.getFullyQualifiedName().equals("administrationDate")).toList();
-        List<PDField> cleannedFields = fields.stream().filter(f -> !(f instanceof PDSignatureField) && !f.getFullyQualifiedName().equals("administrationDate")).toList();
-        for(PDField field : cleannedFields) {
-            for(PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
-                if(pdAnnotationWidget.getPage() == null) {
-                    pdAnnotationWidget.setPage(finishedDocument.getPage(0));
-                }
-            }
-            finishedDocument.getDocumentCatalog().getAcroForm().flatten(Collections.singletonList(field), false);
-        }
 
-        if(!dates.isEmpty()) {
-            finishedDocument.getDocumentCatalog().getAcroForm().getFields().add(dates.get(0));
+            pdAcroForm.refreshAppearances();
+
+            List<PDField> dates = fields.stream()
+                    .filter(field -> field.getFullyQualifiedName().equals("administrationDate"))
+                    .toList();
+            List<PDField> cleanedFields = fields.stream()
+                    .filter(field -> !(field instanceof PDSignatureField) && !field.getFullyQualifiedName().equals("administrationDate"))
+                    .toList();
+
+            for (PDField field : cleanedFields) {
+                for (PDAnnotationWidget pdAnnotationWidget : field.getWidgets()) {
+                    if (pdAnnotationWidget.getPage() == null && document.getNumberOfPages() > 0) {
+                        pdAnnotationWidget.setPage(document.getPage(0));
+                    }
+                }
+                pdAcroForm.flatten(Collections.singletonList(field), false);
+            }
+
+            if (!dates.isEmpty() && pdAcroForm.getFields().stream().noneMatch(field -> field.getFullyQualifiedName().equals("administrationDate"))) {
+                pdAcroForm.getFields().add(dates.get(0));
+            }
+
+            document.save(out);
+            return out.toByteArray();
         }
-        out = new ByteArrayOutputStream();
-        finishedDocument.save(out);
-        finishedDocument.close();
-        return out.toByteArray();
     }
 
-    private void addVisualSignature(Amenagement amenagement, PDDocument doc, PDRectangle signRectangle, String fieldName) throws IOException
-    {
-        PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, false);
-        File tmpDir = Files.createTempDirectory("esupagape").toFile();
-        File signImage;
-        if(StringUtils.hasText(applicationProperties.getSignaturesPath())) {
-            signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getUidValideur() + ".jpg");
-        } else {
-            signImage = new File(tmpDir + "/signImage.jpg");
-            ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getUidValideur() + ".jpg");
-            if(!signImgResource.exists()) {
-                signImgResource = new ClassPathResource("/static/images/" + fieldName + ".jpg");
+    private void addVisualSignature(Amenagement amenagement, PDDocument doc, PDRectangle signRectangle, String fieldName) {
+        try {
+            File signImage;
+            if (StringUtils.hasText(applicationProperties.getSignaturesPath())) {
+                signImage = new File(applicationProperties.getSignaturesPath() + "/signature-" + amenagement.getUidValideur() + ".jpg");
+                if (!signImage.exists()) {
+                    logger.warn("Image de signature absente pour l'aménagement {} : {}", amenagement.getId(), signImage.getAbsolutePath());
+                    return;
+                }
+            } else {
+                File tmpDir = Files.createTempDirectory("esupagape").toFile();
+                signImage = new File(tmpDir, "signImage.jpg");
+                ClassPathResource signImgResource = new ClassPathResource("/static/images/signature-" + amenagement.getUidValideur() + ".jpg");
+                if (!signImgResource.exists()) {
+                    signImgResource = new ClassPathResource("/static/images/" + fieldName + ".jpg");
+                }
+                if (!signImgResource.exists()) {
+                    logger.warn("Aucune image de signature trouvée pour l'aménagement {} et le champ {}", amenagement.getId(), fieldName);
+                    return;
+                }
+                FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
             }
-            FileUtils.copyInputStreamToFile(signImgResource.getInputStream(), signImage);
+
+            PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
+            float ratio = img.getHeight() / signRectangle.getHeight();
+            try (PDPageContentStream cs = new PDPageContentStream(doc, doc.getPage(0), PDPageContentStream.AppendMode.APPEND, false)) {
+                cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
+            }
+        } catch (IOException e) {
+            logger.warn("Impossible d'ajouter la signature visuelle pour l'aménagement {}", amenagement.getId(), e);
         }
-        PDImageXObject img = PDImageXObject.createFromFileByExtension(signImage, doc);
-        float ratio = img.getHeight() / signRectangle.getHeight();
-        cs.drawImage(img, signRectangle.getLowerLeftX(), signRectangle.getUpperRightY() - (img.getHeight() / ratio), img.getWidth() / ratio, img.getHeight() / ratio);
-        cs.close();
     }
 
     @Transactional

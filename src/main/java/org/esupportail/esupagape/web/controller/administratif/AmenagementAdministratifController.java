@@ -207,6 +207,17 @@ public class AmenagementAdministratifController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{amenagementId}/get-certificat-preview", produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<Void> getCertificatPreview(@PathVariable("amenagementId") Long amenagementId, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        httpServletResponse.setContentType("application/pdf");
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+        httpServletResponse.setHeader("Content-Disposition", "inline; filename=\"certificat_preview_" + amenagementId + ".pdf\"");
+        amenagementService.getCertificatPreview(amenagementId, httpServletResponse);
+        httpServletResponse.flushBuffer();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
     public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {

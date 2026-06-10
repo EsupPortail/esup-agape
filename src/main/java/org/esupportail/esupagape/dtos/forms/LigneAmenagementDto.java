@@ -6,6 +6,7 @@ public class LigneAmenagementDto {
 
     private Long id;
     private Long typeLigneAmenagementId;
+    private Integer ordre;
     private boolean selected;
     private String libelleLibre;
     private String libelle;
@@ -28,6 +29,14 @@ public class LigneAmenagementDto {
 
     public void setTypeLigneAmenagementId(Long typeLigneAmenagementId) {
         this.typeLigneAmenagementId = typeLigneAmenagementId;
+    }
+
+    public Integer getOrdre() {
+        return ordre;
+    }
+
+    public void setOrdre(Integer ordre) {
+        this.ordre = ordre;
     }
 
     public boolean isSelected() {

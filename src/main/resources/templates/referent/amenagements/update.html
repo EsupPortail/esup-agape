@@ -93,6 +93,25 @@
                         <div class="alert alert-secondary">
                             Le commentaire de validation est obligatoire pour les lignes au statut "Refusé" ou "Modifié". Les lignes ajoutées par le référent sont validées d’office.
                         </div>
+
+                        <div class="mb-2"
+                             th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                            <label class="form-label" for="typeLigneAmenagementSelect">Ajouter un aménagement</label>
+                            <div class="input-group">
+                                <select id="typeLigneAmenagementSelect" class="form-select">
+                                    <option value="" selected disabled>Choisir un aménagement</option>
+                                    <option th:each="type : ${typeLigneAmenagements}"
+                                            th:value="${type.id}"
+                                            th:text="${type.ordre != null ? type.ordre + ' - ' + type.libelle : type.libelle}"
+                                            th:attr="data-libelle=${type.ordre != null ? type.ordre + ' - ' + type.libelle : type.libelle}, data-champ-libre=${type.champLibre}">
+                                    </option>
+                                </select>
+                                <button id="add-ligne-amenagement" type="button" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
                         <table class="table table-sm align-middle">
                             <thead>
                             <tr>
@@ -101,26 +120,31 @@
                                 <th>Précision</th>
                                 <th style="width: 220px;">Décision référent</th>
                                 <th>Commentaire de validation</th>
+                                <th style="width: 60px;"></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="ligne, i : *{lignesAmenagement}">
+                            <tbody id="lignesAmenagementBody">
+                            <tr th:each="ligne, i : *{lignesAmenagement}"
+                                th:attr="data-type-id=*{lignesAmenagement[__${i.index}__].typeLigneAmenagementId}">
                                 <input type="hidden"
                                        th:name="'lignesAmenagement[' + ${i.index} + '].id'"
                                        th:value="*{lignesAmenagement[__${i.index}__].id}">
+                                <input type="hidden"
+                                       th:name="'lignesAmenagement[' + ${i.index} + '].selected'"
+                                       value="true">
                                 <input type="hidden"
                                        th:name="'lignesAmenagement[' + ${i.index} + '].typeLigneAmenagementId'"
                                        th:value="*{lignesAmenagement[__${i.index}__].typeLigneAmenagementId}">
                                 <td>
                                     <input type="checkbox"
                                            class="form-check-input"
-                                           th:name="'lignesAmenagement[' + ${i.index} + '].selected'"
                                            th:id="'ligne-' + ${i.index}"
                                            th:checked="*{lignesAmenagement[__${i.index}__].selected}"
-                                           th:disabled="${ligne.id != null || !amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                           disabled>
                                 </td>
                                 <td>
-                                    <label th:for="'ligne-' + ${i.index}" th:text="${ligne.champLibre ? ligne.libelleLibre : ligne.libelle}"></label>
+                                    <label th:for="'ligne-' + ${i.index}"
+                                           th:text="${(ligne.ordre != null ? ligne.ordre + ' - ' : '') + (ligne.champLibre ? ligne.libelleLibre : ligne.libelle)}"></label>
                                     <small class="text-muted" th:if="${ligne.champLibre}" th:text="${ligne.libelle}"></small>
                                     <input th:if="${ligne.champLibre && ligne.id == null}"
                                            type="text"
@@ -162,6 +186,7 @@
                                               th:if="${ligne.id != null}"
                                               th:disabled="${!amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}"></textarea>
                                 </td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
@@ -169,10 +194,20 @@
                     <div class="col-12">
                         <div class="float-buttons">
                             <button type="submit"
+                                    name="action"
+                                    value="save"
                                     class="btn btn-success"
-                                    title="Transmettre à l'administration"
+                                    title="Enregistrer les modifications du référent"
                                     th:if="${validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
-                                <i class="fa-solid fa-check me-1"></i>
+                                <i class="fa-solid fa-save me-1"></i>
+                            </button>
+                            <button type="submit"
+                                    name="action"
+                                    value="send"
+                                    class="btn btn-success"
+                                    title="Enregistrer puis transmettre à l'administration"
+                                    th:if="${validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
+                                <i class="fa-solid fa-paper-plane me-1"></i>
                             </button>
                         </div>
                     </div>
@@ -215,5 +250,121 @@
 </div>
 <footer th:replace="~{fragments/footer :: black}"></footer>
 <div th:replace="~{fragments/flash :: flash}"></div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('typeLigneAmenagementSelect');
+        const addButton = document.getElementById('add-ligne-amenagement');
+        const tbody = document.getElementById('lignesAmenagementBody');
+
+        if (!select || !addButton || !tbody) {
+            return;
+        }
+
+        function refreshIndexes() {
+            tbody.querySelectorAll('tr').forEach((row, index) => {
+                row.querySelectorAll('[name]').forEach(input => {
+                    input.name = input.name.replace(/lignesAmenagement\[\d+]/, `lignesAmenagement[${index}]`);
+                });
+            });
+        }
+
+        function updateAvailableOptions() {
+            const selectedTypeIds = Array.from(tbody.querySelectorAll('tr'))
+                .map(row => row.dataset.typeId);
+
+            Array.from(select.options).forEach(option => {
+                if (!option.value) {
+                    return;
+                }
+
+                option.disabled = selectedTypeIds.includes(option.value);
+            });
+
+            select.value = '';
+        }
+
+        function escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = value || '';
+            return div.innerHTML;
+        }
+
+        function createLigneAmenagementRow(typeId, libelle, champLibre) {
+            const index = tbody.querySelectorAll('tr').length;
+            const row = document.createElement('tr');
+            row.dataset.typeId = typeId;
+
+            const escapedLibelle = escapeHtml(libelle);
+
+            const libelleLibreInput = champLibre
+                ? `
+                    <input type="text"
+                           class="form-control form-control-sm mt-1"
+                           name="lignesAmenagement[${index}].libelleLibre"
+                           placeholder="Précisez...">
+                `
+                : '';
+
+            row.innerHTML = `
+                <td>
+                    <input type="hidden" name="lignesAmenagement[${index}].selected" value="true">
+                    <input type="hidden" name="lignesAmenagement[${index}].typeLigneAmenagementId" value="${typeId}">
+                    <input type="checkbox" class="form-check-input" checked disabled>
+                </td>
+                <td>
+                    <span>${escapedLibelle}</span>
+                    ${libelleLibreInput}
+                </td>
+                <td>
+                    <input type="text"
+                           class="form-control form-control-sm"
+                           name="lignesAmenagement[${index}].commentairePrecision"
+                           placeholder="Précision (ex : nom du logiciel)">
+                </td>
+                <td>
+                    <span class="text-muted">Ajoutée et validée d’office</span>
+                </td>
+                <td></td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-ligne-amenagement">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            return row;
+        }
+
+        addButton.addEventListener('click', () => {
+            const selectedOption = select.options[select.selectedIndex];
+
+            if (!selectedOption || !selectedOption.value) {
+                return;
+            }
+
+            const typeId = selectedOption.value;
+            const libelle = selectedOption.dataset.libelle;
+            const champLibre = selectedOption.dataset.champLibre === 'true';
+
+            tbody.appendChild(createLigneAmenagementRow(typeId, libelle, champLibre));
+            updateAvailableOptions();
+        });
+
+        tbody.addEventListener('click', event => {
+            const removeButton = event.target.closest('.remove-ligne-amenagement');
+
+            if (!removeButton) {
+                return;
+            }
+
+            removeButton.closest('tr').remove();
+            refreshIndexes();
+            updateAvailableOptions();
+        });
+
+        updateAvailableOptions();
+    });
+</script>
 </body>
 </html>

@@ -61,11 +61,7 @@ public class AmenagementController {
         setModel(model);
         List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
         AmenagementCreateDto dto = new AmenagementCreateDto();
-        types.forEach(t -> {
-            LigneAmenagementDto ligne = new LigneAmenagementDto();
-            ligne.setTypeLigneAmenagementId(t.getId());
-            dto.getLignesAmenagement().add(ligne);
-        });
+
         model.addAttribute("amenagement", dto);
         model.addAttribute("typeLigneAmenagements", types);
         return "amenagements/create";
@@ -96,9 +92,6 @@ public class AmenagementController {
         Amenagement amenagement = amenagementService.getByIdWithLignesAndTypes(amenagementId);
         List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
 
-        Map<Long, LigneAmenagement> lignesExistantes = amenagement.getLignesAmenagement().stream()
-                .collect(Collectors.toMap(l -> l.getTypeLigneAmenagement().getId(), l -> l, (first, second) -> first));
-
         AmenagementUpdateDto dto = new AmenagementUpdateDto();
         dto.setTypeAmenagement(amenagement.getTypeAmenagement());
         dto.setEndDate(amenagement.getEndDate());
@@ -109,20 +102,21 @@ public class AmenagementController {
         dto.setAutorisation(amenagement.getAutorisation());
         dto.setClassification(amenagement.getClassification());
 
-        types.forEach(t -> {
+        amenagement.getLignesAmenagement().forEach(ligne -> {
+            TypeLigneAmenagement type = ligne.getTypeLigneAmenagement();
+
             LigneAmenagementDto ligneDto = new LigneAmenagementDto();
-            ligneDto.setTypeLigneAmenagementId(t.getId());
-            ligneDto.setLibelle(t.getLibelle());
-            ligneDto.setChampLibre(t.isChampLibre());
-            LigneAmenagement existante = lignesExistantes.get(t.getId());
-            if (existante != null) {
-                ligneDto.setId(existante.getId());
-                ligneDto.setSelected(true);
-                ligneDto.setLibelleLibre(existante.getLibelleLibre());
-                ligneDto.setStatut(existante.getStatut());
-                ligneDto.setCommentairePrecision(existante.getCommentairePrecision());
-                ligneDto.setCommentaireValidation(existante.getCommentaireValidation());
-            }
+            ligneDto.setId(ligne.getId());
+            ligneDto.setSelected(true);
+            ligneDto.setTypeLigneAmenagementId(type.getId());
+            ligneDto.setOrdre(type.getOrdre());
+            ligneDto.setLibelle(type.getLibelle());
+            ligneDto.setChampLibre(type.isChampLibre());
+            ligneDto.setLibelleLibre(ligne.getLibelleLibre());
+            ligneDto.setStatut(ligne.getStatut());
+            ligneDto.setCommentairePrecision(ligne.getCommentairePrecision());
+            ligneDto.setCommentaireValidation(ligne.getCommentaireValidation());
+
             dto.getLignesAmenagement().add(ligneDto);
         });
 

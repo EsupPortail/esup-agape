@@ -28,6 +28,11 @@
                     <input class="form-control" style="max-width: 600px" type="text"
                            placeholder="Rechercher par nom, prénom" name="fullTextSearch"
                            th:value="${fullTextSearch}">
+                    <div class="form-check form-switch align-self-center ms-2">
+                        <input class="form-check-input" type="checkbox" id="showValidated" name="showValidated" value="true"
+                               th:checked="${showValidated}">
+                        <label class="form-check-label" for="showValidated">Afficher les aménagements déjà validés</label>
+                    </div>
                     <input class="btn btn-success" type="submit" value="Rechercher">
                     <a class="btn btn-secondary" id="btnClear" th:href="@{/referent/amenagements}">Effacer</a>
                 </div>
@@ -36,12 +41,12 @@
                 <thead class="text-center table-dark">
                 <tr>
                     <th></th>
+                    <th>Numéro d’étudiant</th>
+                    <th>Nom</th>
                     <th>Composante</th>
                     <th>Campus</th>
                     <th><a class="sorted link-light" sd:pagination-sort="createDate">Date create</a></th>
                     <th><a class="sorted link-light" sd:pagination-sort="endDate" style="max-width: 200px;">Date fin</a></th>
-                    <th>Numéro d’étudiant</th>
-                    <th>Nom</th>
                     <th>Temps majoré</th>
                     <th>Nom médecin</th>
                     <th><a class="sorted link-light" sd:pagination-sort="statusAmenagement">Statut</a></th>
@@ -52,12 +57,12 @@
                 <th:block th:each="amenagement : ${amenagements}">
                     <tr style="text-align: left" th:classappend="${amenagement.viewByUid.contains(personLdap.uid) ? '' : 'fw-bold'}">
                         <td><i class="fa fa-flag text-danger" th:unless="${amenagement.viewByUid.contains(personLdap.uid)}"></i></td>
+                        <td th:text="${amenagement.lastDossierAmenagement.dossier.individu.numEtu}"></td>
+                        <td th:text="${#strings.toUpperCase(amenagement.lastDossierAmenagement.dossier.individu.name) + ' ' +  amenagement.lastDossierAmenagement.dossier.individu.firstName}"></td>
                         <td th:text="${amenagement.lastDossierAmenagement.dossier.composante}"></td>
                         <td th:text="${amenagement.lastDossierAmenagement.dossier.campus}"></td>
                         <td th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                         <td style="max-width: 200px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden" th:text="${amenagement.endDate != null} ? ${#temporals.format(amenagement.endDate, 'dd/MM/yyyy')} : #{'amenagement.typeAmenagement.' +${amenagement.typeAmenagement.CURSUS}}"></td>
-                        <td th:text="${amenagement.lastDossierAmenagement.dossier.individu.numEtu}"></td>
-                        <td th:text="${#strings.toUpperCase(amenagement.lastDossierAmenagement.dossier.individu.name) + ' ' +  amenagement.lastDossierAmenagement.dossier.individu.firstName}"></td>
                         <td th:text="#{'amenagement.tempsMajore.' +${amenagement.tempsMajore}}"></td>
                         <td th:text="${amenagement.nomMedecin}"></td>
                         <td th:text="#{'amenagement.statusAmenagement.' +${amenagement.statusAmenagement}}"></td>

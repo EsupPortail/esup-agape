@@ -52,6 +52,17 @@
 		<div class="agape-tab-content bg-white p-3">
 			<h4>Aménagement du <span th:text="${#temporals.format(amenagement.createDate, 'dd/MM/yyyy')}"></span></h4>
 			<hr>
+			<div class="row mb-3">
+				<div class="col-4" style="width: 250px;">
+					<label class="form-label">Statut de l'aménagement</label>
+				</div>
+				<div class="col-12 col-xxl-8">
+					<input type="text"
+					       class="form-control"
+					       th:value="#{'amenagement.statusAmenagement.' + ${amenagement.statusAmenagement}}"
+					       disabled>
+				</div>
+			</div>
 			<form id="form-dossier" class="mb-1" th:action="@{'/dossiers/' + ${currentDossier.id} + '/update-classification'}" th:method="put">
 				<div class="row mb-1 align-items-baseline">
 					<div class="col-4" style="width: 250px;">
