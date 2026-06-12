@@ -620,7 +620,7 @@ public class DossierService {
                     deleteDossier(id);
                 }
             }
-            return false;
+            return true;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             for(Dossier otherDossier : dossier.getIndividu().getDossiers()) {
