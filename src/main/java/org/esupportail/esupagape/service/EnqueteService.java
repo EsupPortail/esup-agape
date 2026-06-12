@@ -265,13 +265,13 @@ public class EnqueteService {
                 enquete.getCodMeae().remove(CodMeae.AEO);
             }
             enquete.setHdTmp(false);
-            enquete.setCodHd(null);
             if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
                 enquete.getCodMeaa().add(CodMeaa.AA1);
             } else {
                 enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
-            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
+            enquete.setCodHd(null);
+            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
             if(classifications.size() > 1) {
                 enquete.setCodHd(CodHd.PTA);
             }
@@ -351,6 +351,11 @@ public class EnqueteService {
                 enquete.getCodAmL().add(CodAmL.AM9);
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM9);
+            }
+            if (dossier.getMdphs().contains(Mdph.EN_COURS_DE_CONSTITUTION)) {
+                enquete.getCodAmL().add(CodAmL.AM10);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM10);
             }
         }
         return enquete;
