@@ -22,7 +22,8 @@ public class DossierInfos {
     String noteAnn;
     String resultatAnn;
     Boolean hasScholarship;
-
+    Boolean typeFormation;
+    Boolean modeFormation;
 
     public String getCodComposante() {
         return codComposante;
@@ -158,5 +159,21 @@ public class DossierInfos {
 
     public void setHasScholarship(Boolean hasScholarship) {
         this.hasScholarship = hasScholarship;
+    }
+
+    public Boolean getTypeFormation() {
+        return typeFormation;
+    }
+
+    public void setTypeFormation(Boolean typeFormation) {
+        this.typeFormation = typeFormation;
+    }
+
+    public Boolean getModeFormation() {
+        return modeFormation;
+    }
+
+    public void setModeFormation(Boolean modeFormation) {
+        this.modeFormation = modeFormation;
     }
 }
