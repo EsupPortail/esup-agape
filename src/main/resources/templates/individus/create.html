@@ -8,7 +8,7 @@
     <h1 class="title-create text-center" th:unless="${bindingResult != null}">Ajout d’un individu</h1>
     <h1 class="title-create text-center" th:if="${bindingResult != null}">Erreur lors de l’ajout d’un individu</h1>
     <p class="title-create text-center" th:if="${bindingResult != null}">Merci de vérifier la bonne saisie des informations</p>
-    <p class="title-create text-center text-danger" th:text="${bindingResult.getAllErrors().get(0).getDefaultMessage()}"></p>
+    <p class="title-create text-center text-danger" th:if="${bindingResult != null}" th:text="${bindingResult.getAllErrors().get(0).getDefaultMessage()}"></p>
     <div class="accordion col-10 mx-auto" id="accordionCreateIndividu">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">

@@ -19,6 +19,8 @@ public class CertificatPdf {
     String nomMedecin;
     String administrationDate;
     String nomValideur;
+    String docReference;
+
 
     public String getName() {
         return name;
@@ -154,5 +156,13 @@ public class CertificatPdf {
 
     public void setNomValideur(String nomValideur) {
         this.nomValideur = nomValideur;
+    }
+
+    public String getDocReference() {
+        return docReference;
+    }
+
+    public void setDocReference(String docReference) {
+        this.docReference = docReference;
     }
 }
