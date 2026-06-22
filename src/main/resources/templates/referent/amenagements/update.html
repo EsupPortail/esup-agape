@@ -39,7 +39,7 @@
             <div class="alert alert-warning" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}">
                 Cet aménagement a déjà été validé par l’administration.
             </div>
-            <form th:method="put"
+            <form id="amenagementForm" th:method="put"
                   th:action="@{/referent/amenagements/{amenagementId}/update(amenagementId=${amenagement.id})}"
                   th:object="${amenagementDto}">
                 <div class="row">
@@ -77,6 +77,7 @@
                                 <label class="form-label">Temps majoré</label>
                             </div>
                             <div class="col-12 col-xxl-8">
+                                <input type="text" class="form-control" name="tempsMajore" th:value="${amenagement.tempsMajore}" hidden>
                                 <input type="text" class="form-control" th:value="${#messages.msg('amenagement.tempsMajore.' + amenagement.tempsMajore)}" disabled>
                             </div>
                         </div>
@@ -193,17 +194,15 @@
                     </div>
                     <div class="col-12">
                         <div class="float-buttons">
-                            <button type="submit"
-                                    name="action"
-                                    value="save"
+                            <button type="button"
+                                    id="save-button"
                                     class="btn btn-success"
                                     title="Enregistrer les modifications du référent"
                                     th:if="${validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
                                 <i class="fa-solid fa-save me-1"></i>
                             </button>
-                            <button type="submit"
-                                    name="action"
-                                    value="send"
+                            <button type="button"
+                                    id="send-button"
                                     class="btn btn-success"
                                     title="Enregistrer puis transmettre à l'administration"
                                     th:if="${validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)}">
@@ -364,6 +363,120 @@
         });
 
         updateAvailableOptions();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('amenagementForm');
+        if (!form) return;
+
+        const saveButton = document.getElementById('save-button');
+        const sendButton = document.getElementById('send-button');
+
+        const submitForm = async (action) => {
+            const url = new URL(form.action);
+            url.searchParams.set('action', action);
+
+            const data = {
+                lignesAmenagement: []
+            };
+
+            // Collecte des données globales du DTO (si présentes et non désactivées)
+            const typeAmenagement = form.querySelector('[name="typeAmenagement"]')?.value;
+            if (typeAmenagement) data.typeAmenagement = typeAmenagement;
+
+            const endDate = form.querySelector('[name="endDate"]')?.value;
+            if (endDate) data.endDate = endDate;
+
+            const tempsMajore = form.querySelector('[name="tempsMajore"]')?.value;
+            if (tempsMajore) data.tempsMajore = tempsMajore;
+
+            const autresTempsMajores = form.querySelector('[name="autresTempsMajores"]')?.value;
+            if (autresTempsMajores) data.autresTempsMajores = autresTempsMajores;
+
+            const autorisation = form.querySelector('[name="autorisation"]')?.value;
+            if (autorisation) data.autorisation = autorisation;
+
+            // Collecte des données des lignes d'aménagement
+            const tbody = document.getElementById('lignesAmenagementBody');
+            tbody.querySelectorAll('tr').forEach((row, index) => {
+                const ligne = {};
+                row.querySelectorAll('[name]').forEach(input => {
+                    const nameParts = input.name.split('.');
+                    const name = nameParts[nameParts.length - 1];
+                    if (input.type === 'checkbox') {
+                        ligne[name] = input.checked;
+                    } else if (input.type === 'hidden' && (input.value === 'true' || input.value === 'false') && name !== 'id' && name !== 'typeLigneAmenagementId') {
+                        ligne[name] = input.value === 'true';
+                    } else if (input.value !== "" || name === "commentaireValidation" || name === "commentairePrecision") {
+                        ligne[name] = input.value;
+                    }
+                });
+                data.lignesAmenagement.push(ligne);
+            });
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.content
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                // Affichage du message (utilise le fragment flash existant ou en crée un nouveau)
+                let flashContainer = document.getElementById('flash-container');
+                if (!flashContainer) {
+                    flashContainer = document.createElement('div');
+                    flashContainer.id = 'flash-container';
+                    flashContainer.className = 'position-fixed top-0 end-0 p-3';
+                    flashContainer.style.zIndex = '1060';
+                    document.body.appendChild(flashContainer);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${result.type === 'danger' ? 'danger' : 'success'} border-0 show`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">${result.text}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+                flashContainer.appendChild(toast);
+                setTimeout(() => {
+                    const bsToast = new bootstrap.Toast(toast);
+                    bsToast.hide();
+                    setTimeout(() => toast.remove(), 500);
+                }, 5000);
+
+                if (response.ok && action === 'send') {
+                    window.location.href = '/referent/amenagements';
+                } else if (response.ok) {
+                    // Optionnel : recharger la partie tableau pour avoir les IDs si c'était des ajouts
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Une erreur est survenue lors de l\'enregistrement.');
+            }
+        };
+
+        if (saveButton) {
+            saveButton.addEventListener('click', () => submitForm('save'));
+        }
+        if (sendButton) {
+            sendButton.addEventListener('click', () => submitForm('send'));
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
     });
 </script>
 </body>

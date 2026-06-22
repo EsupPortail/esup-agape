@@ -15,18 +15,20 @@
 						<thead>
 						<tr>
 							<th>Entity ID</th>
-							<th>Eppn</th>
+							<th>Fonction</th>
+							<th>Utilisateur</th>
 							<th>Date</th>
 							<th>Statut initial</th>
-							<th>Actions</th>
+							<th>Statut final</th>
 						</tr>
 						</thead>
 						<tr th:each="log : ${logs}">
 							<td th:text="${log.dossierId}"></td>
-							<td th:text="${log.eppn}"></td>
-							<td th:text="${log.date}"></td>
-							<td th:text="${log.initialStatusDossier	}"></td>
-							<td th:text="${log.finalStatusDossier}"></td>
+							<td th:text="${log.entityType ?: 'DOSSIER'}"></td>
+							<td th:text="${log.userDisplayName ?: log.eppn}"></td>
+							<td th:text="${#temporals.format(log.date, 'dd/MM/yyyy HH:mm')}"></td>
+							<td th:text="${log.initialStatusDossierLabel}"></td>
+							<td th:text="${log.finalStatusDossierLabel}"></td>
 						</tr>
 					</table>
 					<nav id="pagination" aria-label="pagination">

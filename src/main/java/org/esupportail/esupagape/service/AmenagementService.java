@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -378,6 +379,7 @@ public class AmenagementService {
             throw new AgapeYearException();
         }
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
+            StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
             amenagement.setValideMedecinDate(LocalDateTime.now());
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
             amenagement.setMailMedecin(personLdap.getMail());
@@ -405,6 +407,7 @@ public class AmenagementService {
                 amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
                 logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
+            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
             dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
             sendReferentAlertIfNeeded(amenagement);
         } else {
@@ -413,7 +416,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void validationReferent(Long amenagementId) throws AgapeException {
+    public void validationReferent(Long amenagementId, PersonLdap personLdap) throws AgapeException {
         if (!amenagementWorkflowService.isReferentValidationEnabled()) {
             throw new AgapeException("La validation par les référents n'est pas activée");
         }
@@ -426,10 +429,12 @@ public class AmenagementService {
             if (amenagement.getLignesAmenagement().stream().anyMatch(ligne -> ligne.getStatut() == null)) {
                 throw new AgapeException("Toutes les lignes d'aménagement doivent être évaluées avant transmission à l'administration");
             }
+            StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
             if(StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 sendToCertificatWorkflow(amenagementId);
             }
             amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_REFERENT);
+            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
             logger.info("aménagement : " + amenagementId + " validé par le référent");
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
@@ -482,6 +487,7 @@ public class AmenagementService {
         }
         if(amenagementWorkflowService.isPendingAdministrationValidation(amenagement)) {
             if(!StringUtils.hasText(applicationProperties.getEsupSignatureUrl())) {
+                StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
                 amenagement.setAdministrationDate(LocalDateTime.now());
                 amenagement.setStatusAmenagement(StatusAmenagement.VISE_ADMINISTRATION);
                 amenagement.setNomValideur(personLdap.getDisplayName());
@@ -494,6 +500,7 @@ public class AmenagementService {
                         "application/pdf", amenagement.getId(), Amenagement.class.getSimpleName(),
                         dossierAmenagement.getDossier());
                 amenagement.setCertificat(certificat);
+                logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
                 dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
                 amenagementRepository.save(amenagement);
                 sendAlert(amenagement);
@@ -512,12 +519,34 @@ public class AmenagementService {
             throw new AgapeYearException();
         }
         if(amenagementWorkflowService.isPendingAdministrationValidation(amenagement)) {
+            StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
             amenagement.setAdministrationDate(LocalDateTime.now());
-            amenagement.setStatusAmenagement(StatusAmenagement.REFUSE_ADMINISTRATION);
+            // Débloquer la saisie par le référent en repassant au statut précédent
+            amenagement.setStatusAmenagement(amenagementWorkflowService.isReferentValidationEnabled() ? StatusAmenagement.VALIDE_MEDECIN : StatusAmenagement.BROUILLON);
             amenagement.setNomValideur(personLdap.getDisplayName());
             amenagement.setUidValideur(personLdap.getUid());
             amenagement.setMotifRefus(motif);
+
+            // Historique des refus
+            try {
+                List<Map<String, String>> history;
+                if (StringUtils.hasText(amenagement.getRefusHistory())) {
+                    history = objectMapper.readValue(amenagement.getRefusHistory(), new TypeReference<>() {});
+                } else {
+                    history = new ArrayList<>();
+                }
+                Map<String, String> entry = new HashMap<>();
+                entry.put("date", LocalDateTime.now().toString());
+                entry.put("author", personLdap.getDisplayName());
+                entry.put("motif", motif);
+                history.add(entry);
+                amenagement.setRefusHistory(objectMapper.writeValueAsString(history));
+            } catch (JsonProcessingException e) {
+                logger.error("Error writing refusal history", e);
+            }
+
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.REFUSE);
+            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), StatusAmenagement.REFUSE_ADMINISTRATION.name());
             dossierService.syncStatusDossierAmenagement(dossierAmenagement.getDossier().getId());
             logger.info("amenagement " + id + " refused");
 
@@ -609,15 +638,20 @@ public class AmenagementService {
         int i = 1;
         if (amenagement.getLignesAmenagement() != null && !amenagement.getLignesAmenagement().isEmpty()) {
             java.util.stream.Stream<LigneAmenagement> lignesStream = amenagement.getLignesAmenagement().stream();
-            if (typeWorkflow.equals(TypeWorkflow.CERTIFICAT)) {
-                lignesStream = lignesStream.filter(ligne -> ligne.getStatut() == null || ligne.getStatut().equals(StatutLigneAmenagement.ACCEPTE));
-            }
-            for (LigneAmenagement ligne : lignesStream.toList()) {
+            List<LigneAmenagement> lignes = lignesStream.toList();
+            for (LigneAmenagement ligne : lignes) {
                 String libelle = ligne.getTypeLigneAmenagement().isChampLibre()
                         ? ligne.getLibelleLibre()
                         : ligne.getTypeLigneAmenagement().getLibelle();
                 if (libelle != null && !libelle.isBlank()) {
-                    appendAmenagementLine(amenagementsWithNumbers, ligne.getTypeLigneAmenagement().getOrdre(), i, libelle);
+                    String status = ligne.getStatut() != null ? messageSource.getMessage("amenagement.statutLigneAmenagement." + ligne.getStatut().name(), null, Locale.getDefault()) : "";
+                    String comment = ligne.getCommentaireValidation() != null ? ligne.getCommentaireValidation() : "";
+                    Integer displayNumber = ligne.getTypeLigneAmenagement().getOrdre() != null ? ligne.getTypeLigneAmenagement().getOrdre() : i;
+                    amenagementsWithNumbers.append(displayNumber).append(" - ").append(libelle);
+                    if (StringUtils.hasText(status) || StringUtils.hasText(comment)) {
+                        amenagementsWithNumbers.append(" (").append(status).append(StringUtils.hasText(comment) ? " : " + comment : "").append(")");
+                    }
+                    amenagementsWithNumbers.append("\n");
                     i++;
                 }
             }
@@ -859,8 +893,9 @@ public class AmenagementService {
                         && (amenagement.getEndDate().isBefore(now) || amenagement.getEndDate().equals(now))
                         && amenagement.getStatusAmenagement().equals(StatusAmenagement.VISE_ADMINISTRATION)) {
                         logger.info("amenagement " + amenagement.getId() + " EXPIRE");
+                        StatusDossierAmenagement initialStatus = dossierAmenagement.getStatusDossierAmenagement();
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EXPIRE);
-                        logService.create("SYSTEM", dossierAmenagement.getId(), dossierAmenagement.getStatusDossierAmenagement().name(), StatusDossierAmenagement.EXPIRE.name());
+                        logService.create("SYSTEM", dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), StatusDossierAmenagement.EXPIRE.name());
                     } else {
                         dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
@@ -879,11 +914,11 @@ public class AmenagementService {
                         dossier = dossierService.create("system", lastDossier.getIndividu().getId(), TypeIndividu.ETUDIANT, StatusDossier.RECONDUIT);
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                        logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logService.create("SYSTEM", dossier.getId(), "AMENAGEMENT", "RECONDUCTION", StatusDossierAmenagement.VALIDE.name());
                         logger.info("amenagement " + amenagement.getId() + " reconduit");
                     } else if (dossier.getDossierAmenagements().stream().noneMatch(da -> da.getAmenagement().equals(amenagement))) {
                         dossierAmenagement = dossierService.createDossierAmenagement(amenagement, dossier);
-                        logService.create("SYSTEM", dossierAmenagement.getId(), "reconduction pour date de fin ultérieure", StatusDossierAmenagement.VALIDE.name());
+                        logService.create("SYSTEM", dossier.getId(), "AMENAGEMENT", "RECONDUCTION", StatusDossierAmenagement.VALIDE.name());
                         logger.info("amenagement " + amenagement.getId() + " reconduit");
                         dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                     }

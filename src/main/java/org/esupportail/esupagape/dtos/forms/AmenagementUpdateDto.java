@@ -15,7 +15,6 @@ public class AmenagementUpdateDto {
     private LocalDateTime endDate;
     private Set<TypeEpreuve> typeEpreuves = new HashSet<>();
     private String autresTypeEpreuve;
-    @NotNull
     private TempsMajore tempsMajore;
     private String autresTempsMajores;
     private Autorisation autorisation;

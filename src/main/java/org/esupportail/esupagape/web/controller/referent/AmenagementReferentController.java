@@ -188,26 +188,25 @@ public class AmenagementReferentController {
     }
 
     @PutMapping("/{amenagementId}/update")
-    public String update(@PathVariable Long amenagementId,
-                         @ModelAttribute("amenagementDto") AmenagementUpdateDto dto,
-                         @RequestParam(defaultValue = "save") String action,
-                         PersonLdap personLdap,
-                         RedirectAttributes redirectAttributes) throws AgapeException {
+    @ResponseBody
+    public ResponseEntity<Message> update(@PathVariable Long amenagementId,
+                                         @RequestBody AmenagementUpdateDto dto,
+                                         @RequestParam(defaultValue = "save") String action,
+                                         PersonLdap personLdap) throws AgapeException {
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
-            return redirectUnauthorized(redirectAttributes);
+            return new ResponseEntity<>(new Message("danger", "Vous n'avez pas accès à cet aménagement"), HttpStatus.FORBIDDEN);
         }
         try {
             amenagementService.updateReferentValidation(amenagementId, dto);
             if ("send".equals(action)) {
-                amenagementService.validationReferent(amenagementId);
-                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été enregistré puis transmis à l'administration"));
+                amenagementService.validationReferent(amenagementId, personLdap);
+                return new ResponseEntity<>(new Message("success", "L'aménagement a bien été enregistré puis transmis à l'administration"), HttpStatus.OK);
             } else {
-                redirectAttributes.addFlashAttribute("message", new Message("success", "Les modifications du référent ont bien été enregistrées"));
+                return new ResponseEntity<>(new Message("success", "Les modifications du référent ont bien été enregistrées"), HttpStatus.OK);
             }
         } catch (AgapeException e) {
-            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            return new ResponseEntity<>(new Message("danger", e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return "redirect:/referent/amenagements/" + amenagementId + "/update";
     }
 
     @PostMapping("/{amenagementId}/viewed")

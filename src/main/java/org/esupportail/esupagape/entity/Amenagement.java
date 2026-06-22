@@ -65,6 +65,9 @@ public class Amenagement {
     @Column(columnDefinition = "TEXT")
     private String motifRefus;
 
+    @Column(columnDefinition = "TEXT")
+    private String refusHistory;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createDate = LocalDateTime.now();
 
@@ -241,6 +244,14 @@ public class Amenagement {
 
     public void setMotifRefus(String motifRefus) {
         this.motifRefus = motifRefus;
+    }
+
+    public String getRefusHistory() {
+        return refusHistory;
+    }
+
+    public void setRefusHistory(String refusHistory) {
+        this.refusHistory = refusHistory;
     }
 
     public LocalDateTime getCreateDate() {

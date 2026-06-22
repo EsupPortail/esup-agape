@@ -86,6 +86,25 @@
                             Cet aménagement a été refusé par <span th:text="${amenagement.nomValideur}"></span> pour le motif suivant : <br>
                             <span th:text="${amenagement.motifRefus}"></span>
                         </div>
+                        <div th:if="${amenagement.refusHistory != null}" class="mt-3">
+                            <h5>Historique des refus</h5>
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Auteur</th>
+                                    <th>Motif</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="entry : ${T(org.esupportail.esupagape.service.utils.UtilsService).jsonToList(amenagement.refusHistory)}">
+                                    <td th:text="${#strings.substring(entry.date, 0, 10)} + ' ' + ${#strings.substring(entry.date, 11, 16)}"></td>
+                                    <td th:text="${entry.author}"></td>
+                                    <td th:text="${entry.motif}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <embed th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).REFUSE_ADMINISTRATION)}" th:src="@{/administratif/amenagements/{id}/get-certificat-preview#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
                         <embed th:if="${amenagement.certificat != null || (amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION))}" th:src="@{/administratif/amenagements/{id}/get-certificat#toolbar=0&navpanes=0&scrollbar=0&zoom=100(id=${amenagement.id})}" width="80%" height="1000" aria-expanded="false"/>
                     </th:block>
