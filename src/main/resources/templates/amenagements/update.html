@@ -27,7 +27,7 @@
 			<hr>
 			<form id="amenagement" th:method="put"
 			      th:action="@{/dossiers/{id}/amenagements/{amenagementId}/update(id=${currentDossier.id},amenagementId=${amenagement.id})}"
-			      th:object="${amenagement}">
+			      th:object="${amenagementDto}">
 				<input id="send-input" type="hidden" name="send" value="false">
 				<div id="form-background" class="row">
 					<div class="col-12 col-xl-6">
@@ -110,17 +110,68 @@
 							</div>
 						</div>
 						<div class="row mb-1">
-							<div class="col-4" style="width: 250px;">
-								<label th:for="amenagementText" class="form-label">Aménagement</label>
-							</div>
-							<div class="col-12 col-xxl-8">
-								<div class="agape-amenagement-textarea-wrapper">
-									<textarea id="amenagement-text" type="text" rows="15"
-									          class="form-control agape-amenagement-textarea"
-									          th:field="*{amenagementText}"></textarea>
+							<div class="col-12">
+								<label class="form-label" for="typeLigneAmenagementSelect">Ajouter un aménagement</label>
+								<div class="input-group mb-2">
+									<select id="typeLigneAmenagementSelect" class="form-select">
+										<option value="" selected disabled>Choisir un aménagement</option>
+										<option th:each="type : ${typeLigneAmenagements}"
+										        th:value="${type.id}"
+										        th:text="${type.ordre != null ? type.ordre + ' - ' + type.libelle : type.libelle}"
+										        th:attr="data-libelle=${type.ordre != null ? type.ordre + ' - ' + type.libelle : type.libelle}, data-champ-libre=${type.champLibre}">
+										</option>
+									</select>
+									<button id="add-ligne-amenagement" type="button" class="btn btn-outline-primary">
+										<i class="fa-solid fa-plus"></i>
+									</button>
 								</div>
-								<p th:if="${#fields.hasErrors('amenagementText')}" th:errorclass="error"
-								   th:errors="*{amenagementText}"></p>
+
+								<table class="table table-sm">
+									<thead>
+									<tr>
+										<th>Aménagement</th>
+										<th style="width: 250px;">Précision</th>
+										<th style="width: 60px;"></th>
+									</tr>
+									</thead>
+									<tbody id="lignesAmenagementBody">
+									<tr th:each="ligne, i : *{lignesAmenagement}"
+									    th:attr="data-type-id=*{lignesAmenagement[__${i.index}__].typeLigneAmenagementId}">
+										<td>
+											<input type="hidden"
+											       th:name="'lignesAmenagement[' + ${i.index} + '].id'"
+											       th:value="*{lignesAmenagement[__${i.index}__].id}">
+											<input type="hidden"
+											       th:name="'lignesAmenagement[' + ${i.index} + '].selected'"
+											       value="true">
+											<input type="hidden"
+											       th:name="'lignesAmenagement[' + ${i.index} + '].typeLigneAmenagementId'"
+											       th:value="*{lignesAmenagement[__${i.index}__].typeLigneAmenagementId}">
+
+											<span th:text="${ligne.ordre != null ? ligne.ordre + ' - ' + ligne.libelle : ligne.libelle}"></span>
+
+											<input th:if="*{lignesAmenagement[__${i.index}__].champLibre}"
+											       type="text"
+											       class="form-control form-control-sm mt-1"
+											       th:name="'lignesAmenagement[' + ${i.index} + '].libelleLibre'"
+											       th:value="*{lignesAmenagement[__${i.index}__].libelleLibre}"
+											       placeholder="Précisez...">
+										</td>
+										<td>
+											<input type="text"
+											       class="form-control form-control-sm"
+											       th:name="'lignesAmenagement[' + ${i.index} + '].commentairePrecision'"
+											       th:value="*{lignesAmenagement[__${i.index}__].commentairePrecision}"
+											       placeholder="Précision (ex : nom du logiciel)">
+										</td>
+										<td class="text-end">
+											<button type="button" class="btn btn-sm btn-outline-danger remove-ligne-amenagement">
+												<i class="fa-solid fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -178,7 +229,7 @@
 							        th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON)}">
 								<i class="fa-solid fa-paper-plane"></i>
 							</button>
-							<a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
+							<a th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}"
 							   th:href="@{/dossiers/{id}/amenagements/{amenagementId}/get-avis(id=${currentDossier.id}, amenagementId=${amenagement.id})}"
 							   class="btn btn-primary" title="Télécharger l'avis médical">
 								<i class="fa-solid fa-book-medical" style="font-size: 22px"></i>
@@ -211,16 +262,24 @@
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="validationModalLabel">
                     <span th:if="${esupSignatureAvisWorkflow}">
-                        Signer puis envoyer à l’administration
+                        Signer puis transmettre pour validation
                     </span>
-					<span th:unless="${esupSignatureAvisWorkflow}">
+					<span th:if="${!esupSignatureAvisWorkflow && validationReferentsEnabled}">
+                        Envoyer au référent
+                    </span>
+					<span th:unless="${esupSignatureAvisWorkflow || validationReferentsEnabled}">
                         Envoi à l’administration
                     </span>
 				</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				Merci de confirmer l’envoi de l’aménagement à l’administration
+				<span th:if="${validationReferentsEnabled}">
+					Merci de confirmer l’envoi de l’aménagement au référent.
+				</span>
+				<span th:unless="${validationReferentsEnabled}">
+					Merci de confirmer l’envoi de l’aménagement à l’administration.
+				</span>
 			</div>
 			<div class="modal-footer">
 				<button id="cancel-send-amenagement" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -234,5 +293,103 @@
 
 <footer th:replace="~{fragments/footer :: black}"></footer>
 <div th:replace="~{fragments/flash :: flash}"></div>
+<script th:inline="javascript">
+	document.addEventListener('DOMContentLoaded', () => {
+		const select = document.getElementById('typeLigneAmenagementSelect');
+		const addButton = document.getElementById('add-ligne-amenagement');
+		const tbody = document.getElementById('lignesAmenagementBody');
+
+		function refreshIndexes() {
+			tbody.querySelectorAll('tr').forEach((row, index) => {
+				row.querySelectorAll('[name]').forEach(input => {
+					input.name = input.name.replace(/lignesAmenagement\[\d+]/, `lignesAmenagement[${index}]`);
+				});
+			});
+		}
+
+		function updateAvailableOptions() {
+			const selectedTypeIds = Array.from(tbody.querySelectorAll('tr'))
+					.map(row => row.dataset.typeId);
+
+			Array.from(select.options).forEach(option => {
+				if (!option.value) {
+					return;
+				}
+
+				option.disabled = selectedTypeIds.includes(option.value);
+			});
+
+			select.value = '';
+		}
+
+		function createLigneAmenagementRow(typeId, libelle, champLibre) {
+			const index = tbody.querySelectorAll('tr').length;
+			const row = document.createElement('tr');
+			row.dataset.typeId = typeId;
+
+			const libelleLibreInput = champLibre
+					? `
+					<input type="text"
+					       class="form-control form-control-sm mt-1"
+					       name="lignesAmenagement[${index}].libelleLibre"
+					       placeholder="Précisez...">
+				`
+					: '';
+
+			row.innerHTML = `
+				<td>
+					<input type="hidden" name="lignesAmenagement[${index}].selected" value="true">
+					<input type="hidden" name="lignesAmenagement[${index}].typeLigneAmenagementId" value="${typeId}">
+
+					<span>${libelle}</span>
+
+					${libelleLibreInput}
+				</td>
+				<td>
+					<input type="text"
+					       class="form-control form-control-sm"
+					       name="lignesAmenagement[${index}].commentairePrecision"
+					       placeholder="Précision (ex : nom du logiciel)">
+				</td>
+				<td class="text-end">
+					<button type="button" class="btn btn-sm btn-outline-danger remove-ligne-amenagement">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			`;
+
+			return row;
+		}
+
+		addButton.addEventListener('click', () => {
+			const selectedOption = select.options[select.selectedIndex];
+
+			if (!selectedOption || !selectedOption.value) {
+				return;
+			}
+
+			const typeId = selectedOption.value;
+			const libelle = selectedOption.dataset.libelle;
+			const champLibre = selectedOption.dataset.champLibre === 'true';
+
+			tbody.appendChild(createLigneAmenagementRow(typeId, libelle, champLibre));
+			updateAvailableOptions();
+		});
+
+		tbody.addEventListener('click', event => {
+			const removeButton = event.target.closest('.remove-ligne-amenagement');
+
+			if (!removeButton) {
+				return;
+			}
+
+			removeButton.closest('tr').remove();
+			refreshIndexes();
+			updateAvailableOptions();
+		});
+
+		updateAvailableOptions();
+	});
+</script>
 </body>
 </html>

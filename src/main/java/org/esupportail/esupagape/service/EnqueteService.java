@@ -187,7 +187,7 @@ public class EnqueteService {
         if(dossier.getType().equals(TypeIndividu.ETUDIANT)) {
             Enquete enquete = new Enquete();
             enquete.setDossier(dossier);
-            logService.create(eppn, id, dossier.getStatusDossier().name(), "Création enquête");
+            logService.create(eppn, id, "DOSSIER", dossier.getStatusDossier().name(), dossier.getStatusDossier().name());
             return enqueteRepository.save(enquete);
         }
         return null;

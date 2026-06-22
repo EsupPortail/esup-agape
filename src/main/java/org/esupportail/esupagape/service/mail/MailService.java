@@ -88,6 +88,26 @@ public class MailService {
         logger.info("send alert email for " + to);
     }
 
+    public void sendReferentAlert(List<String> to) throws MessagingException {
+        if (!checkMailSender()) {
+            return;
+        }
+        final Context ctx = new Context(Locale.FRENCH);
+        setTemplate(ctx);
+        MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
+        String htmlContent = templateEngine.process("mail/email-alert-referent.html", ctx);
+        addInLineImages(mimeMessage, htmlContent);
+        mimeMessage.setSubject("Nouvel aménagement à vérifier");
+        mimeMessage.setFrom(new InternetAddress(applicationProperties.getApplicationEmail()));
+        List<InternetAddress> internetAddresses = new ArrayList<>();
+        for (String s : to) {
+            internetAddresses.add(new InternetAddress(s));
+        }
+        mimeMessage.setTo(internetAddresses.toArray(InternetAddress[]::new));
+        send(mimeMessage.getMimeMessage());
+        logger.info("send referent alert email for " + to);
+    }
+
     @Transactional
     public void sendCertificat(InputStream inputStream, String to) throws Exception {
         if (!checkMailSender()) {

@@ -112,6 +112,8 @@ public class ApplicationProperties {
 
     private Boolean cleanDesinscrits = true;
 
+    private Boolean validationReferents = false;
+
     public String getPath() {
         return path;
     }
@@ -342,5 +344,13 @@ public class ApplicationProperties {
 
     public void setCleanDesinscrits(Boolean cleanDesinscrits) {
         this.cleanDesinscrits = cleanDesinscrits;
+    }
+
+    public Boolean getValidationReferents() {
+        return validationReferents;
+    }
+
+    public void setValidationReferents(Boolean validationReferents) {
+        this.validationReferents = validationReferents;
     }
 }
