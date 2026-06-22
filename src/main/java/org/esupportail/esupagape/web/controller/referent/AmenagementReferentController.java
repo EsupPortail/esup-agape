@@ -71,6 +71,9 @@ public class AmenagementReferentController {
             direction = Sort.Direction.DESC) Pageable pageable,
                        PersonLdap personLdap,
                        Model model) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return redirectReferentDisabled(null);
+        }
         if (yearFilter == null) {
             yearFilter = utilsService.getCurrentYear();
         }
@@ -126,6 +129,9 @@ public class AmenagementReferentController {
 
     @GetMapping("/{amenagementId}")
     public String show(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return redirectReferentDisabled(redirectAttributes);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return redirectUnauthorized(redirectAttributes);
         }
@@ -134,6 +140,9 @@ public class AmenagementReferentController {
 
     @GetMapping("/{amenagementId}/update")
     public String update(@PathVariable Long amenagementId, Model model, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeJpaException, AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return redirectReferentDisabled(redirectAttributes);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return redirectUnauthorized(redirectAttributes);
         }
@@ -193,6 +202,9 @@ public class AmenagementReferentController {
                                          @RequestBody AmenagementUpdateDto dto,
                                          @RequestParam(defaultValue = "save") String action,
                                          PersonLdap personLdap) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return new ResponseEntity<>(new Message("danger", "La validation référent est désactivée"), HttpStatus.FORBIDDEN);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return new ResponseEntity<>(new Message("danger", "Vous n'avez pas accès à cet aménagement"), HttpStatus.FORBIDDEN);
         }
@@ -211,6 +223,9 @@ public class AmenagementReferentController {
 
     @PostMapping("/{amenagementId}/viewed")
     public String viewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return redirectReferentDisabled(redirectAttributes);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return redirectUnauthorized(redirectAttributes);
         }
@@ -221,6 +236,9 @@ public class AmenagementReferentController {
 
     @PostMapping("/{amenagementId}/not-viewed")
     public String notViewed(@PathVariable Long amenagementId, PersonLdap personLdap, RedirectAttributes redirectAttributes) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return redirectReferentDisabled(redirectAttributes);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return redirectUnauthorized(redirectAttributes);
         }
@@ -232,6 +250,9 @@ public class AmenagementReferentController {
     @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
     @ResponseBody
     public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, PersonLdap personLdap, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         if (!hasAmenagementAccess(amenagementId, personLdap)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -258,8 +279,18 @@ public class AmenagementReferentController {
     }
 
     private boolean hasAmenagementAccess(Long amenagementId, PersonLdap personLdap) throws AgapeException {
+        if (!amenagementWorkflowService.isReferentValidationEnabled()) {
+            return false;
+        }
         List<String> authorizedCodComposantes = getAuthorizedCodComposantes(personLdap, dossierService.getCodComposanteLabels());
         return amenagementService.canAccessAmenagement(amenagementId, authorizedCodComposantes);
+    }
+
+    private String redirectReferentDisabled(RedirectAttributes redirectAttributes) {
+        if (redirectAttributes != null) {
+            redirectAttributes.addFlashAttribute("message", new Message("warning", "La validation référent est désactivée"));
+        }
+        return "redirect:/dossiers";
     }
 
     private String redirectUnauthorized(RedirectAttributes redirectAttributes) {

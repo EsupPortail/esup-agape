@@ -15,10 +15,10 @@
                 <button title="Ne pas renouveler l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal" th:if="${!dossiers.isEmpty() && isPortable && amenagement.lastDossierAmenagement.dossier.year != currentYear}">
                     <i class="fa-solid fa-times"></i>
                 </button>
-                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${(((validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)) || (!validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)))) && !esupSignaturePresent}">
+                <button title="Valider l'aménagement" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validationModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT) && !esupSignaturePresent}">
                     <i class="fa-solid fa-check"></i>
                 </button>
-                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${(((validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)) || (!validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)))) && !esupSignaturePresent}">
+                <button title="Refuser l'aménagement" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refusModal" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT) && !esupSignaturePresent}">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <button th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VISE_ADMINISTRATION)}" title="Envoyer à l'étudiant" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sendModal">
@@ -153,7 +153,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${(validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)) || (!validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN))}">
+        <div class="modal fade" id="validationModal" tabindex="-1" aria-labelledby="validationModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -172,7 +172,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${(validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)) || (!validationReferentsEnabled && amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN))}">
+        <div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true" th:if="${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_REFERENT)}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

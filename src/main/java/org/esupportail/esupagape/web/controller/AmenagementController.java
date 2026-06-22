@@ -129,7 +129,7 @@ public class AmenagementController {
 
     @PutMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid AmenagementUpdateDto amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
         amenagementService.update(amenagementId, amenagement);
         if(send) {
             try {

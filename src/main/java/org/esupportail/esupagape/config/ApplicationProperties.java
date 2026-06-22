@@ -112,6 +112,9 @@ public class ApplicationProperties {
 
     private Boolean cleanDesinscrits = true;
 
+    /**
+     * Active l'étape et les écrans de validation des aménagements par les référents.
+     */
     private Boolean validationReferents = false;
 
     public String getPath() {
