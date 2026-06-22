@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -81,8 +82,10 @@ public class AmenagementScolariteController {
         if (codComposante != null) {
             userCodComposantes.add(codComposante);
         }
-        if (StringUtils.hasText(composanteFilter)) {
+        if (StringUtils.hasText(composanteFilter) && userCodComposantes.contains(composanteFilter)) {
             codComposanteToDisplay.add(composanteFilter);
+        } else if (StringUtils.hasText(composanteFilter)) {
+            throw new AccessDeniedException("Composante hors périmètre utilisateur");
         } else {
             codComposanteToDisplay.addAll(userCodComposantes);
         }
@@ -137,7 +140,8 @@ public class AmenagementScolariteController {
     }
 
     @GetMapping("/{amenagementId}")
-    public String show(@PathVariable Long amenagementId, Model model) throws AgapeJpaException, AgapeException {
+    public String show(@PathVariable Long amenagementId, PersonLdap personLdap, Model model) throws AgapeJpaException, AgapeException {
+        assertAmenagementAccess(amenagementId, personLdap);
         setModel(model);
         Amenagement amenagement = amenagementService.getById(amenagementId);
         DossierAmenagement dossierAmenagement = amenagementService.getDossierAmenagementOfCurrentYear(amenagement);
@@ -158,7 +162,8 @@ public class AmenagementScolariteController {
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, PersonLdap personLdap, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        assertAmenagementAccess(amenagementId, personLdap);
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         if(type != null && type.equals("download")) {
@@ -169,6 +174,22 @@ public class AmenagementScolariteController {
         amenagementService.getCertificat(amenagementId, httpServletResponse);
         httpServletResponse.flushBuffer();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void assertAmenagementAccess(Long amenagementId, PersonLdap personLdap) throws AgapeException {
+        Map<String, String> codComposantes = dossierService.getCodComposanteLabels();
+        List<String> userCodComposantes = new ArrayList<>(userOthersAffectationsRepository.findByUid(personLdap.getUid()).stream().map(UserOthersAffectations::getCodComposante).toList());
+        if(userCodComposantes.contains("ALL_ACCESS")) {
+            userCodComposantes.clear();
+            userCodComposantes.addAll(codComposantes.keySet());
+        }
+        String codComposante = userService.getComposante(personLdap);
+        if (codComposante != null && !userCodComposantes.contains(codComposante)) {
+            userCodComposantes.add(codComposante);
+        }
+        if(!amenagementService.canAccessAmenagement(amenagementId, userCodComposantes)) {
+            throw new AccessDeniedException("Aménagement hors périmètre utilisateur");
+        }
     }
 
 }

@@ -48,6 +48,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -410,6 +411,14 @@ public class AmenagementService {
         return dossierAmenagement != null
                 && dossierAmenagement.getDossier() != null
                 && codComposantes.contains(dossierAmenagement.getDossier().getCodComposante());
+    }
+
+    public void assertBelongsToDossier(Long amenagementId, Long dossierId) {
+        Amenagement amenagement = getById(amenagementId);
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossierAmenagementRepository.findDossierAmenagementByDossierAndAmenagement(dossier, amenagement).isEmpty()) {
+            throw new AccessDeniedException("Aménagement hors périmètre du dossier");
+        }
     }
 
     public Long countToPorte() {
