@@ -161,6 +161,10 @@ select[disabled] > option {
     min-height: 38px;
 }
 
+.ss-main.agape-slim-select-invalid {
+    border-color: hsl(0, 76%, 50%);
+}
+
 .ss-value-text {
     font-size: 14px !important;
     line-height: 14px !important;
