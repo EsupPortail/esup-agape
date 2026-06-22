@@ -48,6 +48,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -190,6 +191,9 @@ public class AmenagementService {
         } else {
             amenagement.getTypeEpreuves().add(TypeEpreuve.AUCUN);
         }
+        if (Autorisation.OUI.equals(dto.getAutorisation()) && dto.getClassification() != null) {
+            amenagement.getClassification().addAll(dto.getClassification());
+        }
         updateDossierClassification(dossier, dto.getClassification(), dto.getAutorisation());
         dto.getLignesAmenagement().stream()
                 .filter(LigneAmenagementDto::isSelected)
@@ -210,7 +214,7 @@ public class AmenagementService {
     }
 
     @Transactional
-    public void update(Long amenagementId, Amenagement amenagement) throws AgapeJpaException {
+    public void update(Long amenagementId, AmenagementUpdateDto amenagement) throws AgapeJpaException {
         Amenagement amenagementToUpdate = getById(amenagementId);
         DossierAmenagement dossierAmenagement = getDossierAmenagementOfCurrentYear(amenagementToUpdate);
         if(dossierAmenagement.getDossier() == null) {
@@ -218,7 +222,6 @@ public class AmenagementService {
         }
         if (amenagementToUpdate.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             amenagementToUpdate.setTypeAmenagement(amenagement.getTypeAmenagement());
-            amenagementToUpdate.setAmenagementText(amenagement.getAmenagementText());
             amenagementToUpdate.setAutorisation(amenagement.getAutorisation());
             if (!amenagement.getTypeEpreuves().contains(TypeEpreuve.AUCUN)) {
                 amenagementToUpdate.setTypeEpreuves(amenagement.getTypeEpreuves());
@@ -232,15 +235,58 @@ public class AmenagementService {
             amenagementToUpdate.setTempsMajore(amenagement.getTempsMajore());
             amenagementToUpdate.setAutresTempsMajores(amenagement.getAutresTempsMajores());
 
-            Set<Classification> selectedClassifications = amenagement.getClassification();
-            if(amenagement.getAutorisation().equals(Autorisation.OUI)) {
+            Set<Classification> selectedClassifications = amenagement.getClassification() != null
+                    ? amenagement.getClassification()
+                    : new HashSet<>();
+            amenagementToUpdate.getClassification().clear();
+            if(Autorisation.OUI.equals(amenagement.getAutorisation())) {
                 amenagementToUpdate.getClassification().addAll(selectedClassifications);
             } else {
-                amenagementToUpdate.getClassification().clear();
+                selectedClassifications = new HashSet<>();
             }
             updateDossierClassification(dossierAmenagement.getDossier(), selectedClassifications, amenagement.getAutorisation());
+            syncLignesAmenagement(amenagementToUpdate, amenagement.getLignesAmenagement());
             amenagementRepository.save(amenagementToUpdate);
         }
+    }
+
+    private void syncLignesAmenagement(Amenagement amenagement, List<LigneAmenagementDto> lignesAmenagementDto) {
+        if (lignesAmenagementDto == null) {
+            lignesAmenagementDto = List.of();
+        }
+        Map<Long, LigneAmenagementDto> dtoById = lignesAmenagementDto.stream()
+                .filter(LigneAmenagementDto::isSelected)
+                .filter(ligne -> ligne.getId() != null)
+                .collect(Collectors.toMap(LigneAmenagementDto::getId, ligne -> ligne));
+
+        amenagement.getLignesAmenagement().removeIf(ligne -> ligne.getId() != null && !dtoById.containsKey(ligne.getId()));
+
+        amenagement.getLignesAmenagement().forEach(ligne -> {
+            LigneAmenagementDto ligneDto = dtoById.get(ligne.getId());
+            if (ligneDto != null) {
+                ligne.setCommentairePrecision(ligneDto.getCommentairePrecision());
+                if (ligne.getTypeLigneAmenagement().isChampLibre()) {
+                    ligne.setLibelleLibre(ligneDto.getLibelleLibre());
+                } else {
+                    ligne.setLibelleLibre(null);
+                }
+            }
+        });
+
+        lignesAmenagementDto.stream()
+                .filter(LigneAmenagementDto::isSelected)
+                .filter(ligne -> ligne.getId() == null)
+                .forEach(ligneDto -> {
+                    TypeLigneAmenagement type = typeLigneAmenagementRepository.getReferenceById(ligneDto.getTypeLigneAmenagementId());
+                    LigneAmenagement ligne = new LigneAmenagement();
+                    ligne.setAmenagement(amenagement);
+                    ligne.setTypeLigneAmenagement(type);
+                    ligne.setCommentairePrecision(ligneDto.getCommentairePrecision());
+                    if (type.isChampLibre()) {
+                        ligne.setLibelleLibre(ligneDto.getLibelleLibre());
+                    }
+                    amenagement.getLignesAmenagement().add(ligne);
+                });
     }
 
     @Transactional
@@ -300,14 +346,14 @@ public class AmenagementService {
 
     private void updateDossierClassification(Dossier dossier, Set<Classification> selectedClassifications, Autorisation autorisation) {
         if (dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
-            if(autorisation.equals(Autorisation.OUI)) {
+            if(Autorisation.OUI.equals(autorisation)) {
                 if (selectedClassifications != null && !selectedClassifications.isEmpty()) {
                     if((dossier.getClassifications().contains(Classification.NON_COMMUNIQUE) || dossier.getClassifications().contains(Classification.REFUS)) && dossier.getClassifications().stream().anyMatch(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE))) {
                         throw new AgapeRuntimeException("NON_COMMUNIQUE ou REFUS impossible avec une autre classification");
                     }
                     dossier.getClassifications().addAll(selectedClassifications);
                 }
-            } else if (autorisation.equals(Autorisation.NON)) {
+            } else if (Autorisation.NON.equals(autorisation)) {
                 dossier.getClassifications().clear();
                 dossier.getClassifications().add(Classification.REFUS);
             } else {
@@ -367,6 +413,14 @@ public class AmenagementService {
                 && codComposantes.contains(dossierAmenagement.getDossier().getCodComposante());
     }
 
+    public void assertBelongsToDossier(Long amenagementId, Long dossierId) {
+        Amenagement amenagement = getById(amenagementId);
+        Dossier dossier = dossierService.getById(dossierId);
+        if(dossierAmenagementRepository.findDossierAmenagementByDossierAndAmenagement(dossier, amenagement).isEmpty()) {
+            throw new AccessDeniedException("Aménagement hors périmètre du dossier");
+        }
+    }
+
     public Long countToPorte() {
         return amenagementRepository.countToPorte(utilsService.getCurrentYear());
     }
@@ -383,11 +437,14 @@ public class AmenagementService {
             amenagement.setValideMedecinDate(LocalDateTime.now());
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
             amenagement.setMailMedecin(personLdap.getMail());
+            StatusAmenagement validatedStatus = amenagementWorkflowService.isReferentValidationEnabled()
+                    ? StatusAmenagement.VALIDE_MEDECIN
+                    : StatusAmenagement.VALIDE_REFERENT;
             if(!StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId()) && StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 if (!amenagementWorkflowService.isReferentValidationEnabled()) {
                     sendToCertificatWorkflow(id);
                 }
-                amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                amenagement.setStatusAmenagement(validatedStatus);
             } else if(StringUtils.hasText(applicationProperties.getEsupSignatureAvisWorkflowId())) {
                 sendToAvisWorkflow(id);
                 amenagement.setStatusAmenagement(StatusAmenagement.ENVOYE);
@@ -404,7 +461,7 @@ public class AmenagementService {
                 } catch (IOException e) {
                     throw new AgapeException("Impossible de générer l'avis");
                 }
-                amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                amenagement.setStatusAmenagement(validatedStatus);
                 logger.info("aménagement : " + amenagement.getId() + " validé par " + personLdap.getMail());
             }
             logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());

@@ -201,12 +201,13 @@
 								<div class="col-12 col-xxl-8">
 									<select multiple id="classification" th:field="*{classification}" size="1"
 									        type="text" class="agape-slim-select-search"
-									        th:value="${currentDossier.classifications}">
+									        th:value="*{classification}">
 										<option type="text"
-										        th:checked="${currentDossier.classifications.contains(classification)}"
-										        th:each="classification : ${classifications}"
-										        th:text="#{'dossier.classification.' +${classification}}"
-										        th:value="${classification}"></option>
+										        th:each="classificationItem : ${classifications}"
+										        th:unless="${classificationItem == T(org.esupportail.esupagape.entity.enums.Classification).NON_COMMUNIQUE || classificationItem == T(org.esupportail.esupagape.entity.enums.Classification).REFUS}"
+										        th:text="#{'dossier.classification.' +${classificationItem}}"
+										        th:value="${classificationItem}"
+										        th:selected="${amenagementDto.classification.contains(classificationItem)}"></option>
 									</select>
 								</div>
 							</div>

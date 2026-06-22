@@ -80,7 +80,8 @@ public class AmenagementController {
     }
 
     @GetMapping("{amenagementId}/show")
-    public String show(@PathVariable Long amenagementId, Model model) throws MessagingException {
+    public String show(@PathVariable Long dossierId, @PathVariable Long amenagementId, Model model) throws MessagingException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         setModel(model);
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         return "amenagements/show";
@@ -88,7 +89,8 @@ public class AmenagementController {
 
     @GetMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
+    public String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, Model model) throws AgapeJpaException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         Amenagement amenagement = amenagementService.getByIdWithLignesAndTypes(amenagementId);
         List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
 
@@ -129,7 +131,8 @@ public class AmenagementController {
 
     @PutMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid AmenagementUpdateDto amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         amenagementService.update(amenagementId, amenagement);
         if(send) {
             try {
@@ -154,6 +157,7 @@ public class AmenagementController {
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String deleteAmenagement(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
         try {
+            amenagementService.assertBelongsToDossier(amenagementId, dossierId);
             amenagementService.softDeleteAmenagement(amenagementId);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été supprimé"));
         } catch (AgapeException e) {
@@ -177,7 +181,8 @@ public class AmenagementController {
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getCertificat(@PathVariable Long dossierId, @PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         if(type != null && type.equals("download")) {
@@ -192,7 +197,8 @@ public class AmenagementController {
 
     @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, @RequestParam String disposition, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getAvis(@PathVariable Long dossierId, @PathVariable("amenagementId") Long amenagementId, @RequestParam String disposition, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.setHeader("Content-Disposition", disposition + "; filename=\"avis_" + amenagementId + ".pdf\"");

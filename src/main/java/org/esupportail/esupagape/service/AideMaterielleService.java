@@ -9,6 +9,7 @@ import org.esupportail.esupagape.repository.AideMaterielleRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,13 @@ public class AideMaterielleService {
 
     public Page<AideMaterielle> findByDossier(Long dossierId) {
         return aideMaterielleRepository.findByDossierId(dossierId, Pageable.unpaged());
+    }
+
+    public void assertBelongsToDossier(Long aideMaterielleId, Long dossierId) {
+        AideMaterielle aideMaterielle = getById(aideMaterielleId);
+        if(aideMaterielle.getDossier() == null || !aideMaterielle.getDossier().getId().equals(dossierId)) {
+            throw new AccessDeniedException("Aide matérielle hors périmètre du dossier");
+        }
     }
 
     @Transactional

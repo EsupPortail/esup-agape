@@ -10,6 +10,7 @@ application:
     enable-suivi-handisup: true
     path: https://esup-agape.univ-ville.fr
     test-email: example@example.org
+    validation-referents: false
 cas:
     service: http://esup-agape.example.org/login/cas
     url: https://cas.example.org

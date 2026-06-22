@@ -23,7 +23,7 @@ public class AmenagementWorkflowService {
     }
 
     public StatusAmenagement getPendingAdministrationStatus() {
-        return isReferentValidationEnabled() ? StatusAmenagement.VALIDE_REFERENT : StatusAmenagement.VALIDE_MEDECIN;
+        return StatusAmenagement.VALIDE_REFERENT;
     }
 
     public StatusAmenagement getPendingReferentStatus() {
@@ -53,11 +53,7 @@ public class AmenagementWorkflowService {
         if (!esupSignaturePresent) {
             statuses.remove(StatusAmenagement.ENVOYE);
         }
-        if (isReferentValidationEnabled()) {
-            statuses.remove(StatusAmenagement.VALIDE_MEDECIN);
-        } else {
-            statuses.remove(StatusAmenagement.VALIDE_REFERENT);
-        }
+        statuses.remove(StatusAmenagement.VALIDE_MEDECIN);
         return statuses;
     }
 

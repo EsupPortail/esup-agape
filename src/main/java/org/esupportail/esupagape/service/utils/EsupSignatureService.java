@@ -153,7 +153,10 @@ public class EsupSignatureService {
             if (typeWorkflow.equals(TypeWorkflow.AVIS)) {
                 dossierAmenagement.getAmenagement().setAvisSignatureStatus(signatureStatus);
                 if(signatureStatus.equals(SignatureStatus.COMPLETED)) {
-                    dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.VALIDE_MEDECIN);
+                    StatusAmenagement completedStatus = Boolean.TRUE.equals(applicationProperties.getValidationReferents())
+                            ? StatusAmenagement.VALIDE_MEDECIN
+                            : StatusAmenagement.VALIDE_REFERENT;
+                    dossierAmenagement.getAmenagement().setStatusAmenagement(completedStatus);
                     dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
                 } else if(signatureStatus.equals(SignatureStatus.REFUSED)) {
                     dossierAmenagement.getAmenagement().setStatusAmenagement(StatusAmenagement.SUPPRIME);
