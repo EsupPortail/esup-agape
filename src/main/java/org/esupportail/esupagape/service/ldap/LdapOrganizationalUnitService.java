@@ -17,7 +17,7 @@ public class LdapOrganizationalUnitService {
 
     public OrganizationalUnitLdap getOrganizationalUnitLdap(String supannCodeEntite) throws AgapeJpaException {
         List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannCodeEntite(supannCodeEntite);
-        if(organizationalUnitLdaps.size() > 0) {
+        if(!organizationalUnitLdaps.isEmpty()) {
             return organizationalUnitLdaps.get(0);
         } else {
 //            throw new AgapeJpaException(supannCodeEntite + " not fount in OU");
@@ -27,7 +27,7 @@ public class LdapOrganizationalUnitService {
 
     public OrganizationalUnitLdap getEtablissement(String supannEtablissement) {
         List<OrganizationalUnitLdap> organizationalUnitLdaps = organizationalUnitLdapRepository.findBySupannRefIdAndSupannTypeEntite(supannEtablissement, "Etablissement");
-        if(organizationalUnitLdaps.size() > 0) {
+        if(!organizationalUnitLdaps.isEmpty()) {
             return organizationalUnitLdaps.get(0);
         } else {
             return null;

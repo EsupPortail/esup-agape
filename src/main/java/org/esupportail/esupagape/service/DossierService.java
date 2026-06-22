@@ -190,7 +190,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
-        logService.create(eppn, id, "update dossier", dossierToUpdate.toString());
+        logService.create(eppn, id, "DOSSIER", dossierToUpdate.getStatusDossier().name(), dossierToUpdate.getStatusDossier().name());
 //        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
     }
 
@@ -641,7 +641,7 @@ public class DossierService {
                         DossierAmenagement newDossierAmenagement = createDossierAmenagement(dossierAmenagement.getAmenagement(), dossier);
                         newDossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                         dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                        logService.create("SYSTEM", newDossierAmenagement.getId(), StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
+                        logService.create("SYSTEM", dossier.getId(), "AMENAGEMENT", StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
                     }
                 }
             }
@@ -757,7 +757,7 @@ public class DossierService {
         Dossier dossier = getById(dossierId);
         dossier.getClassifications().clear();
         dossier.getClassifications().addAll(classifications);
-        logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
+        logService.create(eduPersonPrincipalName, dossierId, "DOSSIER", dossier.getStatusDossier().name(), dossier.getStatusDossier().name());
     }
 
     @Transactional

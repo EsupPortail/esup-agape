@@ -109,7 +109,7 @@ public class WebSecurityConfig {
             http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(antMatcher("/ws/**")).access(new WebExpressionAuthorizationManager(finalHasIpAddresses)));
         }
         http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE")
+                .requestMatchers("/ws-secure", "/ws-secure/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE", "REFERENT")
                 .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN")
                 .requestMatchers("/individus", "/individus/**").hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN")
                 .requestMatchers("/individus/fusion").hasAnyRole("ADMIN", "MANAGER")
@@ -124,8 +124,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/exports", "/exports/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/statistiques", "/statistiques/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/administratif/amenagements", "/administratif/amenagements/**").hasAnyRole("ADMIN", "ADMINISTRATIF")
+                .requestMatchers("/referent/amenagements", "/referent/amenagements/**").hasAnyRole("ADMIN", "REFERENT")
                 .requestMatchers("/scolarite/amenagements", "/scolarite/amenagements/**").hasAnyRole("ADMIN", "SCOLARITE")
-                .anyRequest().hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE"));
+                .anyRequest().hasAnyRole("ADMIN", "MANAGER", "ESPACE_HANDI", "MEDECIN", "ADMINISTRATIF", "SCOLARITE", "REFERENT"));
         return http.build();
     }
 
