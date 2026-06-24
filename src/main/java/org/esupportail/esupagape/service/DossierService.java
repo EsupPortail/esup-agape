@@ -677,8 +677,11 @@ public class DossierService {
                         dossier.setModeFormation(ModFrmn.D);
                     }
                 }
-                if (StringUtils.hasText(dossierInfos.getTypeFormation())) {
-                    dossier.setTypeFormation(dossierInfos.getTypeFormation().equals("1") || dossierInfos.getTypeFormation().equals("7") ? TypFrmn.I : TypFrmn.C);
+                if (dossierInfos.getTypeFormation() != null) {
+                    dossier.setTypeFormation(dossierInfos.getTypeFormation());
+                }
+                if (dossierInfos.getAlternant() != null) {
+                    dossier.setAlternance(dossierInfos.getAlternant());
                 }
                 if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
                     dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());

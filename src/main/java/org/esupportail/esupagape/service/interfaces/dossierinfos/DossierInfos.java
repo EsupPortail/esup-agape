@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.service.interfaces.dossierinfos;
 
+import org.esupportail.esupagape.entity.enums.enquete.ModFrmn;
+import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,9 @@ public class DossierInfos {
     String noteAnn;
     String resultatAnn;
     Boolean hasScholarship;
-    String typeFormation;
-    String modeFormation;
+    TypFrmn typeFormation;
+    ModFrmn modeFormation;
+    Boolean alternant;
 
     public String getCodComposante() {
         return codComposante;
@@ -161,19 +165,27 @@ public class DossierInfos {
         this.hasScholarship = hasScholarship;
     }
 
-    public String getTypeFormation() {
+    public TypFrmn getTypeFormation() {
         return typeFormation;
     }
 
-    public void setTypeFormation(String typeFormation) {
+    public void setTypeFormation(TypFrmn typeFormation) {
         this.typeFormation = typeFormation;
     }
 
-    public String getModeFormation() {
+    public ModFrmn getModeFormation() {
         return modeFormation;
     }
 
-    public void setModeFormation(String modeFormation) {
+    public void setModeFormation(ModFrmn modeFormation) {
         this.modeFormation = modeFormation;
+    }
+
+    public Boolean getAlternant() {
+        return alternant;
+    }
+
+    public void setAlternant(Boolean alternant) {
+        this.alternant = alternant;
     }
 }
