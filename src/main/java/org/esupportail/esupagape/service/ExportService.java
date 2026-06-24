@@ -59,6 +59,7 @@ public class ExportService {
             put("niveauEtudes", "Niveau d'études");
             put("typeFormation", "Type de formation");
             put("modeFormation", "Modalités de formation");
+            put("alternance", "Formation en alternance");
             put("libelleFormation", "Formation");
             put("libelleFormationPrec", "Formation précédente");
             put("codComposante", "Code composante");

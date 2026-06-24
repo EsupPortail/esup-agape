@@ -228,7 +228,7 @@ public class EnqueteService {
             }
             if (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
                 enquete.setCodPfpp(CodPfpp.MH1);
-            } else {
+            } else if (dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
                 enquete.setCodPfpp(CodPfpp.PP0);
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
