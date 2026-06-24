@@ -31,7 +31,7 @@ public class EntretienService {
     }
 
     @Transactional
-    public void create(Entretien entretien, Long idDossier, PersonLdap personLdap) {
+    public void create(Entretien entretien, Long idDossier, PersonLdap personLdap, boolean forceAccueilli) {
         Dossier dossier = dossierService.getById(idDossier);
         if (dossier.getYear() != utilsService.getCurrentYear()) {
             throw new AgapeYearException();
@@ -39,8 +39,14 @@ public class EntretienService {
         entretien.setDossier(dossier);
         entretien.setInterlocuteur(personLdap.getDisplayName());
         entretienRepository.save(entretien);
-        if(!dossier.getStatusDossier().equals(StatusDossier.SUIVI)) {
+        if(dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE)) {
             dossierService.changeStatutDossier(idDossier, StatusDossier.ACCUEILLI, personLdap.getEduPersonPrincipalName());
+        } else if(!dossier.getStatusDossier().equals(StatusDossier.SUIVI)) {
+            if(forceAccueilli || dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
+                dossierService.changeStatutDossier(idDossier, StatusDossier.ACCUEILLI, personLdap.getEduPersonPrincipalName());
+            } else {
+                dossierService.changeStatutDossier(idDossier, StatusDossier.CONTACTE, personLdap.getEduPersonPrincipalName());
+            }
         }
     }
 
