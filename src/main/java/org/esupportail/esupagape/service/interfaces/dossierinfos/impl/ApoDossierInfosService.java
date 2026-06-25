@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -162,19 +160,13 @@ public class ApoDossierInfosService implements DossierInfosService {
         String sqlRequest =
                 "SELECT composante.cod_cmp, composante.lib_cmp " +
                         "FROM composante";
-        Connection connection = null;
         try {
-            connection = dataSource.getConnection();
-            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) ->
-                    codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp")));
-            connection.close();
+            new JdbcTemplate(dataSource).query(sqlRequest, rs -> {
+                codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
+            });
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new AgapeException(e.getMessage(), e);
-        } finally {
-            if(connection != null) {
-                connection.close();
-            }
         }
         return codComposanteLabelsMap;
     }
