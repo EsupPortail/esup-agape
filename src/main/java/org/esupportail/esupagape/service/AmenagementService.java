@@ -1054,7 +1054,7 @@ public class AmenagementService {
         try {
             if(!to.isEmpty()) {
                 logger.info("Mail d'alerte referent envoyer, aménagement : " + amenagement.getId() + " to " + to);
-                mailService.sendReferentAlert(to);
+                mailService.sendReferentAlert(to, amenagement.getId());
             }
         } catch (Exception e) {
             logger.warn("Impossible d'envoyer le mail d'alerte referent, aménagement : " + amenagement.getId(), e);
