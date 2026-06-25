@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ComposanteCacheRepository extends JpaRepository<ComposanteCache, Long> {
     List<ComposanteCache> findAllByOrderByCodeAsc();
     Optional<ComposanteCache> findByCode(String code);
+    List<ComposanteCache> findByLabelIgnoreCase(String label);
 }
