@@ -723,8 +723,40 @@ public class DossierService {
                 }
             }
         }
+        repairDossierComposanteFromCache(dossier);
         syncStatusDossierAmenagement(dossier.getId());
         return true;
+    }
+
+    private void repairDossierComposanteFromCache(Dossier dossier) {
+        if (StringUtils.hasText(dossier.getCodComposante())) {
+            String code = dossier.getCodComposante().trim();
+            composanteCacheRepository.findByCode(code).ifPresent(composanteCache -> {
+                dossier.setCodComposante(composanteCache.getCode());
+                if (!StringUtils.hasText(dossier.getComposante()) || !composanteCache.getLabel().equals(dossier.getComposante().trim())) {
+                    dossier.setComposante(composanteCache.getLabel());
+                    logger.info("dossier " + dossier.getId() + " composante repaired from cache for code " + composanteCache.getCode());
+                }
+            });
+            return;
+        }
+
+        if (!StringUtils.hasText(dossier.getComposante())) {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: missing code and label");
+            return;
+        }
+
+        List<ComposanteCache> matchingComposantes = composanteCacheRepository.findByLabelIgnoreCase(dossier.getComposante().trim());
+        if (matchingComposantes.size() == 1) {
+            ComposanteCache composanteCache = matchingComposantes.get(0);
+            dossier.setCodComposante(composanteCache.getCode());
+            dossier.setComposante(composanteCache.getLabel());
+            logger.info("dossier " + dossier.getId() + " codComposante repaired from cache with code " + composanteCache.getCode());
+        } else if (matchingComposantes.size() > 1) {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: multiple cache entries for label " + dossier.getComposante());
+        } else {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: no cache entry for label " + dossier.getComposante());
+        }
     }
 
     public DossierAmenagement createDossierAmenagement(Amenagement amenagement, Dossier dossier) {

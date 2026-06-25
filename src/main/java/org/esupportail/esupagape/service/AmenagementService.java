@@ -435,6 +435,7 @@ public class AmenagementService {
         if(amenagement.getStatusAmenagement().equals(StatusAmenagement.BROUILLON)) {
             StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
             amenagement.setValideMedecinDate(LocalDateTime.now());
+            dossierService.repairDossierComposanteFromCache(dossierAmenagement.getDossier());
             dossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.EN_ATTENTE);
             amenagement.setMailMedecin(personLdap.getMail());
             StatusAmenagement validatedStatus = amenagementWorkflowService.isReferentValidationEnabled()
