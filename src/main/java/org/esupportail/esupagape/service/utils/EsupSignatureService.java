@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
@@ -195,7 +196,11 @@ public class EsupSignatureService {
         }
         String urlDeletePdf = String.format("%s/ws/signrequests/soft/%s", applicationProperties.getEsupSignatureUrl(), signId);
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(urlDeletePdf);
+        try {
+            restTemplate.delete(urlDeletePdf);
+        } catch (RestClientException e) {
+            logger.warn("Impossible de supprimer la demande esup-signature {} : {}", signId, e.getMessage());
+        }
     }
 
     public String getRecipientEmails() {

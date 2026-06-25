@@ -486,12 +486,18 @@ public class AmenagementService {
             if (amenagement.getLignesAmenagement().stream().anyMatch(ligne -> ligne.getStatut() == null)) {
                 throw new AgapeException("Toutes les lignes d'aménagement doivent être évaluées avant transmission à l'administration");
             }
+            if (amenagement.getLignesAmenagement().stream()
+                    .map(LigneAmenagement::getStatut)
+                    .noneMatch(statut -> StatutLigneAmenagement.ACCEPTE.equals(statut) || StatutLigneAmenagement.MODIFIE.equals(statut))) {
+                throw new AgapeException("Au moins une ligne d'aménagement doit être acceptée ou modifiée avant transmission à l'administration");
+            }
             StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
+            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_REFERENT);
+            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
+            amenagementRepository.saveAndFlush(amenagement);
             if(StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 sendToCertificatWorkflow(amenagementId);
             }
-            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_REFERENT);
-            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
             logger.info("aménagement : " + amenagementId + " validé par le référent");
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");

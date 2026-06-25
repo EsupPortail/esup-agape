@@ -53,11 +53,12 @@ public class DossierService {
     private final LogService logService;
     private final IndividuRepository individuRepository;
     private final ApplicationProperties applicationProperties;
+    private final ComposanteCacheRepository composanteCacheRepository;
 
-    Map<String, String> codComposanteLabels = new HashMap<>();
+    Map<String, String> codComposanteLabels = new LinkedHashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties, ComposanteCacheRepository composanteCacheRepository) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
@@ -65,6 +66,7 @@ public class DossierService {
         this.em = em;
         this.logService = logService;
         this.applicationProperties = applicationProperties;
+        this.composanteCacheRepository = composanteCacheRepository;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
@@ -736,14 +738,21 @@ public class DossierService {
 
     @PostConstruct
     public void getCodComposanteLabelsFromDossierInfosService() {
+        loadCodComposanteLabelsFromCache();
+        Map<String, String> refreshedCodComposanteLabels = new LinkedHashMap<>();
         codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             try {
                 logger.info("Getting codComposanteLabels from " + dossierInfosService.getClass().getSimpleName());
-                codComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
+                refreshedCodComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
             } catch (AgapeException | SQLException e) {
                 logger.warn(e.getMessage());
             }
+        }
+        refreshedCodComposanteLabels.remove("ALL_ACCESS");
+        if (!refreshedCodComposanteLabels.isEmpty()) {
+            saveCodComposanteLabelsToCache(refreshedCodComposanteLabels);
+            codComposanteLabels.putAll(refreshedCodComposanteLabels);
         }
     }
 
@@ -753,6 +762,22 @@ public class DossierService {
 
     public void setCodComposanteLabels(Map<String, String> codComposanteLabels) {
         this.codComposanteLabels = codComposanteLabels;
+    }
+
+    private void loadCodComposanteLabelsFromCache() {
+        codComposanteLabels.clear();
+        codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
+        composanteCacheRepository.findAllByOrderByCodeAsc()
+                .forEach(composante -> codComposanteLabels.put(composante.getCode(), composante.getLabel()));
+    }
+
+    private void saveCodComposanteLabelsToCache(Map<String, String> labels) {
+        labels.forEach((code, label) -> {
+            ComposanteCache composanteCache = composanteCacheRepository.findByCode(code).orElseGet(ComposanteCache::new);
+            composanteCache.setCode(code);
+            composanteCache.setLabel(label);
+            composanteCacheRepository.save(composanteCache);
+        });
     }
 
     @Transactional
