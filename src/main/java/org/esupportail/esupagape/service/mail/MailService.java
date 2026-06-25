@@ -17,6 +17,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -94,7 +96,7 @@ public class MailService {
         }
         final Context ctx = new Context(Locale.FRENCH);
         setTemplate(ctx);
-        ctx.setVariable("referentAmenagementUrl", applicationProperties.getPath() + "/referent/amenagements/" + amenagementId + "/update");
+        ctx.setVariable("referentAmenagementUrl", getApplicationBaseUrl() + "/referent/amenagements/" + amenagementId + "/update");
         MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
         String htmlContent = templateEngine.process("mail/email-alert-referent.html", ctx);
         addInLineImages(mimeMessage, htmlContent);
@@ -138,13 +140,13 @@ public class MailService {
 
     private void addInLineImages(MimeMessageHelper mimeMessage, String htmlContent) throws MessagingException {
         mimeMessage.setText(htmlContent, true);
-        mimeMessage.addInline("logo", new ClassPathResource("/static/images/logo.png", MailService.class));
         mimeMessage.addInline("logo-univ", new ClassPathResource("/static/images/logo-univ.png", MailService.class));
+        mimeMessage.addInline("logo-eh", new ClassPathResource("/static/images/eh-logo-rouge.png", MailService.class));
     }
 
     private void setTemplate(Context ctx) {
         try {
-            ctx.setVariable("applicationPath", applicationProperties.getPath());
+            ctx.setVariable("applicationPath", getApplicationBaseUrl());
             ctx.setVariable("logo", getBase64Image(new ClassPathResource("/static/images/logo.png", MailService.class).getInputStream(), "logo.png"));
             ctx.setVariable("logoUrn", getBase64Image(new ClassPathResource("/static/images/logo-univ.png", MailService.class).getInputStream(), "logo-univ.png"));
             try (Reader reader = new InputStreamReader(new ClassPathResource("/static/css/bootstrap.min.css", MailService.class).getInputStream(), UTF_8)) {
@@ -156,6 +158,26 @@ public class MailService {
         } catch (IOException e) {
             logger.error("error while setting template", e);
         }
+    }
+
+    private String getApplicationBaseUrl() {
+        try {
+            return trimTrailingSlash(ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+        } catch (IllegalStateException ignored) {
+            // No current HTTP request, for instance when a scheduler sends an email.
+        }
+
+        String applicationPath = applicationProperties.getPath();
+        if (StringUtils.hasText(applicationPath)) {
+            return trimTrailingSlash(applicationPath);
+        }
+
+        logger.warn("application.path is not configured; generated email links will be relative");
+        return "";
+    }
+
+    private String trimTrailingSlash(String value) {
+        return value.replaceFirst("/+$", "");
     }
 
     private boolean checkMailSender() {
