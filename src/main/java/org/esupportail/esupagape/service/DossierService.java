@@ -728,7 +728,7 @@ public class DossierService {
         return true;
     }
 
-    private void repairDossierComposanteFromCache(Dossier dossier) {
+    public void repairDossierComposanteFromCache(Dossier dossier) {
         if (StringUtils.hasText(dossier.getCodComposante())) {
             String code = dossier.getCodComposante().trim();
             composanteCacheRepository.findByCode(code).ifPresent(composanteCache -> {
