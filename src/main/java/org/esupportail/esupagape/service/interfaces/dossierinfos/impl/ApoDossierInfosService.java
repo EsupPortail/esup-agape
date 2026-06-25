@@ -165,12 +165,8 @@ public class ApoDossierInfosService implements DossierInfosService {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
-                codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
-                while (rs.next()) {
-                    codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
-                }
-            });
+            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) ->
+                    codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp")));
             connection.close();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

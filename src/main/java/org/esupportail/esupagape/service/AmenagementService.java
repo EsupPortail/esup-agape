@@ -487,11 +487,12 @@ public class AmenagementService {
                 throw new AgapeException("Toutes les lignes d'aménagement doivent être évaluées avant transmission à l'administration");
             }
             StatusAmenagement initialStatus = amenagement.getStatusAmenagement();
+            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_REFERENT);
+            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
+            amenagementRepository.saveAndFlush(amenagement);
             if(StringUtils.hasText(applicationProperties.getEsupSignatureCertificatsWorkflowId())) {
                 sendToCertificatWorkflow(amenagementId);
             }
-            amenagement.setStatusAmenagement(StatusAmenagement.VALIDE_REFERENT);
-            logService.create(personLdap, dossierAmenagement.getDossier().getId(), "AMENAGEMENT", initialStatus.name(), amenagement.getStatusAmenagement().name());
             logger.info("aménagement : " + amenagementId + " validé par le référent");
         } else {
             throw new AgapeException("Impossible de valider un aménagement qui n'est pas au statut Validé par le médecin");
