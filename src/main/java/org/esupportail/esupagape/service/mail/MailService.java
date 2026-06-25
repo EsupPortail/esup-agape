@@ -88,12 +88,13 @@ public class MailService {
         logger.info("send alert email for " + to);
     }
 
-    public void sendReferentAlert(List<String> to) throws MessagingException {
+    public void sendReferentAlert(List<String> to, Long amenagementId) throws MessagingException {
         if (!checkMailSender()) {
             return;
         }
         final Context ctx = new Context(Locale.FRENCH);
         setTemplate(ctx);
+        ctx.setVariable("referentAmenagementUrl", applicationProperties.getPath() + "/referent/amenagements/" + amenagementId + "/update");
         MimeMessageHelper mimeMessage = new MimeMessageHelper(getMailSender().createMimeMessage(), true, "UTF-8");
         String htmlContent = templateEngine.process("mail/email-alert-referent.html", ctx);
         addInLineImages(mimeMessage, htmlContent);
