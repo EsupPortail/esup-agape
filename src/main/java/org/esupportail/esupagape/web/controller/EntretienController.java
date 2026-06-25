@@ -54,13 +54,13 @@ public class EntretienController {
     }
 
     @PostMapping("/create")
-    public String create(@PathVariable Long dossierId, @Valid Entretien entretien, BindingResult bindingResult, PersonLdap personLdap, Model model) {
+    public String create(@PathVariable Long dossierId, @Valid Entretien entretien, @RequestParam(required = false, defaultValue = "false") Boolean forceAccueilli, BindingResult bindingResult, PersonLdap personLdap, Model model) {
         if (bindingResult.hasErrors()) {
             setModel(model, dossierId);
             model.addAttribute("typeContacts", enumsService.getAllTypeContact());
             return "entretiens/list";
         }
-        entretienService.create(entretien, dossierId, personLdap);
+        entretienService.create(entretien, dossierId, personLdap, forceAccueilli);
         return "redirect:/dossiers/" + dossierId + "/entretiens";
     }
 

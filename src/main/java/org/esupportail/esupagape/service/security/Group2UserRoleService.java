@@ -33,7 +33,7 @@ public class Group2UserRoleService {
 			if (mappingGroupesRoles.containsKey(groupName)) {
 				String role = mappingGroupesRoles.get(groupName);
 				roles.add(role);
-			} else if (groupName.contains(groupPrefixRoleName)) {
+			} else if (groupPrefixRoleName != null && groupName.contains(groupPrefixRoleName)) {
 				roles.add(groupName);
 			}
 		}

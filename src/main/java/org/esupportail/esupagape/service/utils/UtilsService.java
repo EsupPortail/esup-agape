@@ -1,5 +1,8 @@
 package org.esupportail.esupagape.service.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.esupportail.esupagape.entity.Year;
 import org.esupportail.esupagape.exception.AgapeJpaException;
@@ -12,17 +15,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UtilsService {
 
     private final YearRepository yearRepository;
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     public UtilsService(YearRepository yearRepository) {
         this.yearRepository = yearRepository;
+    }
+
+    public static List<Map<String, String>> jsonToList(String json) {
+        if (json == null || json.isBlank()) {
+            return Collections.emptyList();
+        }
+        try {
+            return objectMapper.readValue(json, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            return Collections.emptyList();
+        }
     }
 
     public int getCurrentYear() {

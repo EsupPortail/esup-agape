@@ -53,11 +53,12 @@ public class DossierService {
     private final LogService logService;
     private final IndividuRepository individuRepository;
     private final ApplicationProperties applicationProperties;
+    private final ComposanteCacheRepository composanteCacheRepository;
 
-    Map<String, String> codComposanteLabels = new HashMap<>();
+    Map<String, String> codComposanteLabels = new LinkedHashMap<>();
 
 
-    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties) {
+    public DossierService(UtilsService utilsService, List<DossierInfosService> dossierInfosServices, DossierRepository dossierRepository, DocumentRepository documentRepository, DocumentService documentService, DossierAmenagementRepository dossierAmenagementRepository, EntityManager em, LogService logService, IndividuRepository individuRepository, ApplicationProperties applicationProperties, ComposanteCacheRepository composanteCacheRepository) {
         this.utilsService = utilsService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
@@ -65,6 +66,7 @@ public class DossierService {
         this.em = em;
         this.logService = logService;
         this.applicationProperties = applicationProperties;
+        this.composanteCacheRepository = composanteCacheRepository;
         Collections.reverse(dossierInfosServices);
         this.dossierInfosServices = dossierInfosServices;
         this.dossierRepository = dossierRepository;
@@ -190,7 +192,7 @@ public class DossierService {
         if (StringUtils.hasText(dossier.getFormAddress())) {
             dossierToUpdate.setFormAddress(dossier.getFormAddress());
         }
-        logService.create(eppn, id, "update dossier", dossierToUpdate.toString());
+        logService.create(eppn, id, "DOSSIER", dossierToUpdate.getStatusDossier().name(), dossierToUpdate.getStatusDossier().name());
 //        changeStatutDossier(id, StatusDossier.ACCUEILLI, eppn);
     }
 
@@ -620,7 +622,7 @@ public class DossierService {
                     deleteDossier(id);
                 }
             }
-            return false;
+            return true;
         }
         if (dossier.getIndividu().getDossiers().size() > 1) {
             for(Dossier otherDossier : dossier.getIndividu().getDossiers()) {
@@ -641,7 +643,7 @@ public class DossierService {
                         DossierAmenagement newDossierAmenagement = createDossierAmenagement(dossierAmenagement.getAmenagement(), dossier);
                         newDossierAmenagement.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
                         dossier.setStatusDossierAmenagement(StatusDossierAmenagement.VALIDE);
-                        logService.create("SYSTEM", newDossierAmenagement.getId(), StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
+                        logService.create("SYSTEM", dossier.getId(), "AMENAGEMENT", StatusDossierAmenagement.VALIDE.name(), StatusDossierAmenagement.VALIDE.name());
                     }
                 }
             }
@@ -673,6 +675,15 @@ public class DossierService {
                 }
                 if (StringUtils.hasText(dossierInfos.getLibelleFormation())) {
                     dossier.setLibelleFormation(dossierInfos.getLibelleFormation());
+                    if(dossierInfos.getLibelleFormation().contains("EAD")) {
+                        dossier.setModeFormation(ModFrmn.D);
+                    }
+                }
+                if (dossierInfos.getTypeFormation() != null) {
+                    dossier.setTypeFormation(dossierInfos.getTypeFormation());
+                }
+                if (dossierInfos.getAlternant() != null) {
+                    dossier.setAlternance(dossierInfos.getAlternant());
                 }
                 if (StringUtils.hasText(dossierInfos.getLibelleFormationPrec())) {
                     dossier.setLibelleFormationPrec(dossierInfos.getLibelleFormationPrec());
@@ -712,8 +723,40 @@ public class DossierService {
                 }
             }
         }
+        repairDossierComposanteFromCache(dossier);
         syncStatusDossierAmenagement(dossier.getId());
         return true;
+    }
+
+    public void repairDossierComposanteFromCache(Dossier dossier) {
+        if (StringUtils.hasText(dossier.getCodComposante())) {
+            String code = dossier.getCodComposante().trim();
+            composanteCacheRepository.findByCode(code).ifPresent(composanteCache -> {
+                dossier.setCodComposante(composanteCache.getCode());
+                if (!StringUtils.hasText(dossier.getComposante()) || !composanteCache.getLabel().equals(dossier.getComposante().trim())) {
+                    dossier.setComposante(composanteCache.getLabel());
+                    logger.info("dossier " + dossier.getId() + " composante repaired from cache for code " + composanteCache.getCode());
+                }
+            });
+            return;
+        }
+
+        if (!StringUtils.hasText(dossier.getComposante())) {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: missing code and label");
+            return;
+        }
+
+        List<ComposanteCache> matchingComposantes = composanteCacheRepository.findByLabelIgnoreCase(dossier.getComposante().trim());
+        if (matchingComposantes.size() == 1) {
+            ComposanteCache composanteCache = matchingComposantes.get(0);
+            dossier.setCodComposante(composanteCache.getCode());
+            dossier.setComposante(composanteCache.getLabel());
+            logger.info("dossier " + dossier.getId() + " codComposante repaired from cache with code " + composanteCache.getCode());
+        } else if (matchingComposantes.size() > 1) {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: multiple cache entries for label " + dossier.getComposante());
+        } else {
+            logger.warn("dossier " + dossier.getId() + " composante cannot be repaired: no cache entry for label " + dossier.getComposante());
+        }
     }
 
     public DossierAmenagement createDossierAmenagement(Amenagement amenagement, Dossier dossier) {
@@ -727,14 +770,21 @@ public class DossierService {
 
     @PostConstruct
     public void getCodComposanteLabelsFromDossierInfosService() {
+        loadCodComposanteLabelsFromCache();
+        Map<String, String> refreshedCodComposanteLabels = new LinkedHashMap<>();
         codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
         for (DossierInfosService dossierInfosService : dossierInfosServices) {
             try {
                 logger.info("Getting codComposanteLabels from " + dossierInfosService.getClass().getSimpleName());
-                codComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
+                refreshedCodComposanteLabels.putAll(dossierInfosService.getCodComposanteLabels());
             } catch (AgapeException | SQLException e) {
                 logger.warn(e.getMessage());
             }
+        }
+        refreshedCodComposanteLabels.remove("ALL_ACCESS");
+        if (!refreshedCodComposanteLabels.isEmpty()) {
+            saveCodComposanteLabelsToCache(refreshedCodComposanteLabels);
+            codComposanteLabels.putAll(refreshedCodComposanteLabels);
         }
     }
 
@@ -746,12 +796,28 @@ public class DossierService {
         this.codComposanteLabels = codComposanteLabels;
     }
 
+    private void loadCodComposanteLabelsFromCache() {
+        codComposanteLabels.clear();
+        codComposanteLabels.put("ALL_ACCESS", "Toutes les composantes");
+        composanteCacheRepository.findAllByOrderByCodeAsc()
+                .forEach(composante -> codComposanteLabels.put(composante.getCode(), composante.getLabel()));
+    }
+
+    private void saveCodComposanteLabelsToCache(Map<String, String> labels) {
+        labels.forEach((code, label) -> {
+            ComposanteCache composanteCache = composanteCacheRepository.findByCode(code).orElseGet(ComposanteCache::new);
+            composanteCache.setCode(code);
+            composanteCache.setLabel(label);
+            composanteCacheRepository.save(composanteCache);
+        });
+    }
+
     @Transactional
     public void updateClassification(Long dossierId, List<Classification> classifications, String eduPersonPrincipalName) {
         Dossier dossier = getById(dossierId);
         dossier.getClassifications().clear();
         dossier.getClassifications().addAll(classifications);
-        logService.create(eduPersonPrincipalName, dossierId, "update classification", dossier.getStatusDossier().name());
+        logService.create(eduPersonPrincipalName, dossierId, "DOSSIER", dossier.getStatusDossier().name(), dossier.getStatusDossier().name());
     }
 
     @Transactional

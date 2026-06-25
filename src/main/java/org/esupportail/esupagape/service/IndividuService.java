@@ -336,10 +336,10 @@ public class IndividuService {
         Individu individu = individuRepository.findById(individuId).orElse(null);
         if (individu != null && (individu.getNumEtu() == null || !individu.getNumEtu().startsWith("Anonyme"))) {
             if(StringUtils.hasText(individu.getNumEtu())) {
-                logService.create(eppn, individu.getId(), "", "anonymise : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
+                logService.create(eppn, individu.getId(), "INDIVIDU", "", "ANONYMISE : " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
                 logger.info("anonymise : "  + individu.getId() + " " + new DigestUtils("SHA3-256").digestAsHex(individu.getNumEtu()));
             } else {
-                logService.create(eppn, individu.getId(), "", "anonymise");
+                logService.create(eppn, individu.getId(), "INDIVIDU", "", "ANONYMISE");
                 logger.info("anonymise : " + individu.getId());
             }
             individu.setNumEtu("Anonyme" + individu.getId());
@@ -441,7 +441,7 @@ public class IndividuService {
             individuRepository.save(individu1);
             individuRepository.save(individu2);
             anonymiseIndividu(individu2.getId(), eppn);
-            logService.create(eppn, individu1.getId(), "INDIVIDU", "fusion " + individu1.getId() + " and " + individu2.getId());
+            logService.create(eppn, individu1.getId(), "INDIVIDU", "", "FUSION " + individu1.getId() + " and " + individu2.getId());
         } else {
             throw new AgapeRuntimeException("la date de naissance ne correspond pas");
         }

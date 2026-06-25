@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll(".agape-slim-select-search").forEach(function (element) {
         if (element.id !== '') {
             console.info("enable slimselect search on : " + element.id);
-            new SlimSelect({
+            let slimSelect = new SlimSelect({
                 select: '#' + element.id,
                 settings: {
                     openPosition: 'down',
@@ -250,11 +250,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 }
             });
             //Hack slimselect required
-            element.style.display = "block";
-            element.style.position = "absolute";
-            element.style.marginTop = "15px";
-            element.style.opacity = 0;
-            element.style.zIndex = -1;
+            applySlimSelectRequiredHack(element);
+            enableSlimSelectRequiredValidation(element, slimSelect);
         }
     });
 
@@ -358,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.querySelectorAll(".agape-slim-select").forEach(function (element) {
             if (element.id !== '') {
                 console.info("enable slimselect on : " + element.id);
-                new SlimSelect({
+                let slimSelect = new SlimSelect({
                     select: '#' + element.id,
                     settings: {
                         showSearch: false,
@@ -366,18 +363,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 });
                 //Hack slimselect required
-                element.style.display = "block";
-                element.style.position = "absolute";
-                element.style.marginTop = "15px";
-                element.style.opacity = 0;
-                element.style.zIndex = -1;
+                applySlimSelectRequiredHack(element);
+                enableSlimSelectRequiredValidation(element, slimSelect);
             }
         });
 
         document.querySelectorAll(".agape-slim-select-add").forEach(function (element) {
             if (element.id !== '') {
                 console.info("enable slimselect on : " + element.id);
-                new SlimSelect({
+                let slimSelect = new SlimSelect({
                     select: '#' + element.id,
                     settings: {
                         showSearch: true,
@@ -388,11 +382,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 });
                 //Hack slimselect required
-                element.style.display = "block";
-                element.style.position = "absolute";
-                element.style.marginTop = "15px";
-                element.style.opacity = 0;
-                element.style.zIndex = -1;
+                applySlimSelectRequiredHack(element);
+                enableSlimSelectRequiredValidation(element, slimSelect);
             }
         });
 
@@ -407,11 +398,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 });
                 //Hack slimselect required
-                element.style.display = "block";
-                element.style.position = "absolute";
-                element.style.marginTop = "15px";
-                element.style.opacity = 0;
-                element.style.zIndex = -1;
+                applySlimSelectRequiredHack(element);
+                enableSlimSelectRequiredValidation(element, slimSelect);
                 let slimId = slimSelect.settings.id;
                 let slimSelectDivs = document.querySelectorAll("div[data-id='" + slimId + "']");
                 slimSelectDivs.forEach(function (slimSelectDiv) {
@@ -453,16 +441,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 }
             });
             //Hack slimselect required
-            codMeae.style.display = "block";
-            codMeae.style.position = "absolute";
-            codMeae.style.marginTop = "15px";
-            codMeae.style.opacity = 0;
-            codMeae.style.zIndex = -1;
+            applySlimSelectRequiredHack(codMeae);
+            enableSlimSelectRequiredValidation(codMeae, codMeaeSlim);
         }
 
         let codMeaa = document.getElementById("codMeaa")
         if (codMeaa != null) {
-            new SlimSelect({
+            let codMeaaSlim = new SlimSelect({
                 select: '#codMeaa',
                 settings: {
                     showSearch: false,
@@ -480,11 +465,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 }
             });
             //Hack slimselect required
-            codMeaa.style.display = "block";
-            codMeaa.style.position = "absolute";
-            codMeaa.style.marginTop = "15px";
-            codMeaa.style.opacity = 0;
-            codMeaa.style.zIndex = -1;
+            applySlimSelectRequiredHack(codMeaa);
+            enableSlimSelectRequiredValidation(codMeaa, codMeaaSlim);
         }
 
         let am0On = document.getElementById("AM0On")
@@ -574,6 +556,39 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         function lockForm() {
             location.reload();
+        }
+
+        function applySlimSelectRequiredHack(element) {
+            element.style.display = "block";
+            element.style.position = "absolute";
+            element.style.marginTop = "15px";
+            element.style.opacity = 0;
+            element.style.zIndex = -1;
+        }
+
+        function enableSlimSelectRequiredValidation(element, slimSelect) {
+            let updateInvalidClass = function () {
+                getSlimSelectMainElements(slimSelect).forEach(function (slimSelectMainElement) {
+                    slimSelectMainElement.classList.toggle("agape-slim-select-invalid", element.required && !element.checkValidity());
+                });
+            };
+
+            element.addEventListener("change", updateInvalidClass);
+            element.addEventListener("invalid", updateInvalidClass);
+            updateInvalidClass();
+        }
+
+        function getSlimSelectMainElements(slimSelect) {
+            if (slimSelect == null || slimSelect.settings == null || slimSelect.settings.id == null) {
+                return [];
+            }
+
+            let slimSelectDivs = document.querySelectorAll(".ss-main[data-id='" + slimSelect.settings.id + "']");
+            if (slimSelectDivs.length > 0) {
+                return Array.prototype.slice.call(slimSelectDivs);
+            }
+
+            return Array.prototype.slice.call(document.querySelectorAll("div[data-id='" + slimSelect.settings.id + "']"));
         }
 
         function unlockForm(button) {

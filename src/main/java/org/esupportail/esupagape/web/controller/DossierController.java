@@ -197,8 +197,10 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     @ResponseBody
     public ResponseEntity<Void> getLastFileFromSignRequest(
+            @PathVariable Long dossierId,
             @PathVariable("attachmentId") Long attachmentId,
             HttpServletResponse httpServletResponse) throws AgapeIOException {
+        documentService.assertBelongsToDossier(attachmentId, dossierId);
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
