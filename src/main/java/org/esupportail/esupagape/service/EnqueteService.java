@@ -230,6 +230,8 @@ public class EnqueteService {
                 enquete.setCodPfpp(CodPfpp.MH1);
             } else if (dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
                 enquete.setCodPfpp(CodPfpp.PP0);
+            } else {
+                enquete.setCodPfpp(null);
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
             if(amenagement != null) {
