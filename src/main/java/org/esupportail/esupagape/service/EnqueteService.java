@@ -235,17 +235,19 @@ public class EnqueteService {
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
             if(amenagement != null) {
-                if (amenagement.getAmenagementText().toLowerCase().contains("Allègement du cursus".toLowerCase())) {
+                String amenagementText = amenagement.getAmenagementText();
+                String lowerAmenagementText = StringUtils.hasText(amenagementText) ? amenagementText.toLowerCase() : "";
+                if (lowerAmenagementText.contains("Allègement du cursus".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS2);
                 }
-                if (amenagement.getAmenagementText().toLowerCase().contains("Conservation et/ou report des notes".toLowerCase())) {
+                if (lowerAmenagementText.contains("Conservation et/ou report des notes".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS3);
                 }
-                if (amenagement.getAmenagementText().toLowerCase().contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
+                if (lowerAmenagementText.contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
                 enquete.getCodMeae().clear();
-                enquete.getCodMeae().addAll(amenagementService.getCodMeaeList(amenagement.getAmenagementText()));
+                enquete.getCodMeae().addAll(amenagementService.getCodMeaeList(amenagementText));
             }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {

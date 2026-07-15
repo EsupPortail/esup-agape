@@ -1165,8 +1165,11 @@ public class AmenagementService {
     }
 
     public List<CodMeae> getCodMeaeList(String amenagementText) {
-        List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete);
         List<CodMeae> codMeaes = new ArrayList<>();
+        if (!StringUtils.hasText(amenagementText)) {
+            return codMeaes;
+        }
+        List<DataMapping> dataMappings = dataMappingService.getValues("Amenagement", "amenagementText", DataType.agape, DataType.enquete);
         String[] lignes = amenagementText.split("\\r?\\n");
         for (String line : lignes) {
             String normalizedLine = normalize(line);
