@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Alerte referent</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<table width="90%" border="0" style="width: 90%;" bgcolor="#ffffff">
+    <tr th:replace="~{mail/fragments/header :: header}"></tr>
+    <tr>
+        <td style="width:100%; padding:10px;background-color:#f8f9fa;">
+            <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">Un nouvel aménagement est en attente de vérification pour un étudiant de votre composante.</p>
+            <p style="box-sizing:border-box;margin-top:0;margin-bottom:1rem;">
+                Vous pouvez le consulter ici :
+                <a th:href="${referentAmenagementUrl}" th:text="${referentAmenagementUrl}"></a>
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:100%; background-color:#6c757d; border-top:1px solid rgba(0, 0, 0, 0.125); padding:10px;  -ms-flex-pack:center; justify-content:center; text-align:center; font-size:14px;" bgcolor="#6c757d">
+            <span class="text-white text-center" style="text-align:center; color:#fff" align="center" th:text="#{application.footer}"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

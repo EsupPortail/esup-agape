@@ -589,25 +589,37 @@
     </div>
 </div>
 <div class="modal fade" id="logsModal" aria-hidden="true" aria-labelledby="logsModalLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="logsModalLabel">Journal des évenements</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped">
-                    <tr>
-                        <th>Date</th>
-                        <th>Utilisateur</th>
-                        <th>Action</th>
-                    </tr>
-                    <tr th:each="log : ${logs}">
-                        <td th:text="${#temporals.format(log.date, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${log.eppn}"></td>
-                        <td th:text="${log.finalStatusDossier}"></td>
-                    </tr>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>Dossier</th>
+                            <th>Fonction</th>
+                            <th>Utilisateur</th>
+                            <th>Date</th>
+                            <th>Statut initial</th>
+                            <th>Statut final</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="log : ${logs}">
+                            <td th:text="${log.dossierId}"></td>
+                            <td th:text="${log.entityType ?: 'DOSSIER'}"></td>
+                            <td th:text="${log.userDisplayName ?: log.eppn}"></td>
+                            <td th:text="${#temporals.format(log.date, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${log.initialStatusDossierLabel}"></td>
+                            <td th:text="${log.finalStatusDossierLabel}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -19,6 +19,7 @@ import org.esupportail.esupagape.service.ldap.PersonLdap;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -82,6 +83,13 @@ public class AideHumaineService {
 
     public AideHumaine getById(Long aideHumaineId) {
         return aideHumaineRepository.findById(aideHumaineId).orElseThrow();
+    }
+
+    public void assertBelongsToDossier(Long aideHumaineId, Long dossierId) {
+        AideHumaine aideHumaine = getById(aideHumaineId);
+        if(aideHumaine.getDossier() == null || !aideHumaine.getDossier().getId().equals(dossierId)) {
+            throw new AccessDeniedException("Aide humaine hors périmètre du dossier");
+        }
     }
 
     @Transactional

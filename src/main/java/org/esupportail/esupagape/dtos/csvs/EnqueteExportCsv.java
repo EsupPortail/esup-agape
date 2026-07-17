@@ -17,6 +17,7 @@ public class EnqueteExportCsv {
     String com;
     String codPfpp;
     String codPfas;
+    String autas;
     String codMeahF;
     String interpH;
     String codeurH;
@@ -29,7 +30,7 @@ public class EnqueteExportCsv {
     String finished;
     String link;
 
-    public EnqueteExportCsv(String uai, String numetu, String an, String sexe, String typFrmn, String modFrmn, String alternance, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
+    public EnqueteExportCsv(String uai, String numetu, String an, String sexe, String typFrmn, String modFrmn, String alternance, String codSco, String codFmt, String codFil, String codHd, String hdTmp, String com, String codPfpp, String codPfas, String autas, String codMeahF, String interpH, String codeurH, String aidHNat, String codMeae, String autAE, String codMeaa, String autAA, String codAmL, String finished, String link) {
         this.uai = uai;
         this.numetu = numetu;
         this.an = an;
@@ -45,6 +46,7 @@ public class EnqueteExportCsv {
         this.com = com;
         this.codPfpp = codPfpp;
         this.codPfas = codPfas;
+        this.autas = autas;
         this.codMeahF = codMeahF;
         this.aidHNat = aidHNat;
         this.codMeae = codMeae;

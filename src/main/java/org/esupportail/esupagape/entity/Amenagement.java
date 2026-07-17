@@ -6,10 +6,7 @@ import org.esupportail.esupagape.entity.enums.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Amenagement {
@@ -49,6 +46,10 @@ public class Amenagement {
     @Column(columnDefinition = "TEXT")
     private String amenagementText;
 
+    @OneToMany(mappedBy = "amenagement", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderColumn
+    private List<LigneAmenagement> lignesAmenagement = new ArrayList<>();
+
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classification = new HashSet<>();
@@ -63,6 +64,9 @@ public class Amenagement {
 
     @Column(columnDefinition = "TEXT")
     private String motifRefus;
+
+    @Column(columnDefinition = "TEXT")
+    private String refusHistory;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createDate = LocalDateTime.now();
@@ -186,6 +190,14 @@ public class Amenagement {
         this.amenagementText = amenagement;
     }
 
+    public List<LigneAmenagement> getLignesAmenagement() {
+        return lignesAmenagement;
+    }
+
+    public void setLignesAmenagement(List<LigneAmenagement> lignesAmenagement) {
+        this.lignesAmenagement = lignesAmenagement;
+    }
+
     public Set<Classification> getClassification() {
         return classification;
     }
@@ -232,6 +244,14 @@ public class Amenagement {
 
     public void setMotifRefus(String motifRefus) {
         this.motifRefus = motifRefus;
+    }
+
+    public String getRefusHistory() {
+        return refusHistory;
+    }
+
+    public void setRefusHistory(String refusHistory) {
+        this.refusHistory = refusHistory;
     }
 
     public LocalDateTime getCreateDate() {

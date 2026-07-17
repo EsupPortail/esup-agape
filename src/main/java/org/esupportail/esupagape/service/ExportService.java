@@ -59,6 +59,7 @@ public class ExportService {
             put("niveauEtudes", "Niveau d'études");
             put("typeFormation", "Type de formation");
             put("modeFormation", "Modalités de formation");
+            put("alternance", "Formation en alternance");
             put("libelleFormation", "Formation");
             put("libelleFormationPrec", "Formation précédente");
             put("codComposante", "Code composante");
@@ -93,6 +94,7 @@ public class ExportService {
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
+        put("autas", "Commentaire");
         put("codMeahF", "Mesures aides humaines");
 //        put("interpH", "supprimé");
 //        put("codeurH", "supprimé");
@@ -122,6 +124,7 @@ public class ExportService {
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
+        put("autas", "Commentaire");
         put("codMeahF", "Mesures aides humaines");
 //        put("interpH", "supprimé");
 //        put("codeurH", "supprimé");
@@ -159,6 +162,7 @@ public class ExportService {
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     String.join("" ,enquete.getCodPfas().stream().map(codPfas -> codPfas.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    "",
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     "",
                     "",

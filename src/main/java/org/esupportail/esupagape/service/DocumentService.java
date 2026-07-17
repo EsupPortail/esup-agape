@@ -11,6 +11,7 @@ import org.esupportail.esupagape.repository.DocumentRepository;
 import org.esupportail.esupagape.service.utils.UtilsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +73,13 @@ public class DocumentService {
 
 	public Document getById(Long id) {
 		return documentRepository.findById(id).orElseThrow();
+	}
+
+	public void assertBelongsToDossier(Long documentId, Long dossierId) {
+		Document document = getById(documentId);
+		if(document.getDossier() == null || !document.getDossier().getId().equals(dossierId)) {
+			throw new AccessDeniedException("Document hors périmètre du dossier");
+		}
 	}
 
 	@Transactional

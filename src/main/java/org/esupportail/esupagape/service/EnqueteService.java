@@ -187,7 +187,7 @@ public class EnqueteService {
         if(dossier.getType().equals(TypeIndividu.ETUDIANT)) {
             Enquete enquete = new Enquete();
             enquete.setDossier(dossier);
-            logService.create(eppn, id, dossier.getStatusDossier().name(), "Création enquête");
+            logService.create(eppn, id, "DOSSIER", dossier.getStatusDossier().name(), dossier.getStatusDossier().name());
             return enqueteRepository.save(enquete);
         }
         return null;
@@ -228,22 +228,26 @@ public class EnqueteService {
             }
             if (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT)) {
                 enquete.setCodPfpp(CodPfpp.MH1);
-            } else {
+            } else if (dossier.getStatusDossier().equals(StatusDossier.ACCUEILLI)) {
                 enquete.setCodPfpp(CodPfpp.PP0);
+            } else {
+                enquete.setCodPfpp(null);
             }
             Amenagement amenagement = amenagementService.getCurrentAmenagement(id);
             if(amenagement != null) {
-                if (amenagement.getAmenagementText().toLowerCase().contains("Allègement du cursus".toLowerCase())) {
+                String amenagementText = amenagement.getAmenagementText();
+                String lowerAmenagementText = StringUtils.hasText(amenagementText) ? amenagementText.toLowerCase() : "";
+                if (lowerAmenagementText.contains("Allègement du cursus".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS2);
                 }
-                if (amenagement.getAmenagementText().toLowerCase().contains("Conservation et/ou report des notes".toLowerCase())) {
+                if (lowerAmenagementText.contains("Conservation et/ou report des notes".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS3);
                 }
-                if (amenagement.getAmenagementText().toLowerCase().contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
+                if (lowerAmenagementText.contains("Autorisation d’absences sans production de justificatifs".toLowerCase())) {
                     enquete.getCodPfas().add(CodPfas.AS5);
                 }
                 enquete.getCodMeae().clear();
-                enquete.getCodMeae().addAll(amenagementService.getCodMeaeList(amenagement.getAmenagementText()));
+                enquete.getCodMeae().addAll(amenagementService.getCodMeaeList(amenagementText));
             }
             enquete.setAlternance(false);
             if (dossier.getAlternance() != null && dossier.getAlternance()) {
@@ -265,13 +269,13 @@ public class EnqueteService {
                 enquete.getCodMeae().remove(CodMeae.AEO);
             }
             enquete.setHdTmp(false);
-            enquete.setCodHd(null);
             if (dossier.getStatusDossier() != null && (dossier.getStatusDossier().equals(StatusDossier.SUIVI) || dossier.getStatusDossier().equals(StatusDossier.RECU_PAR_LA_MEDECINE_PREVENTIVE) || dossier.getStatusDossier().equals(StatusDossier.RECONDUIT))) {
                 enquete.getCodMeaa().add(CodMeaa.AA1);
             } else {
                 enquete.getCodMeaa().remove(CodMeaa.AA1);
             }
-            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.NON_COMMUNIQUE) && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
+            enquete.setCodHd(null);
+            List<Classification> classifications = dossier.getClassifications().stream().filter(c -> c != null && !c.equals(Classification.REFUS) && !c.equals(Classification.TEMPORAIRE)).toList();
             if(classifications.size() > 1) {
                 enquete.setCodHd(CodHd.PTA);
             }
@@ -351,6 +355,11 @@ public class EnqueteService {
                 enquete.getCodAmL().add(CodAmL.AM9);
             } else {
                 enquete.getCodAmL().remove(CodAmL.AM9);
+            }
+            if (dossier.getMdphs().contains(Mdph.EN_COURS_DE_CONSTITUTION)) {
+                enquete.getCodAmL().add(CodAmL.AM10);
+            } else {
+                enquete.getCodAmL().remove(CodAmL.AM10);
             }
         }
         return enquete;
