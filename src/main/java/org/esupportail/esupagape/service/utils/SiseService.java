@@ -55,14 +55,15 @@ public class SiseService {
     public void refreshAll() throws FileNotFoundException {
         refreshSiseCsv("N_DIPLOME_SISE");
         refreshDiplomeCache();
+        refreshSiseCsv("N_TYPE_DIPLOME_SISE");
+        refreshTypeDiplomeCache();
         refreshSiseCsv("N_SECTEUR_DISCIPLINAIRE_SISE");
         refreshSecteurDisciplinaireCache();
-
     }
 
     private void refreshDiplomeCache() throws FileNotFoundException {
         File fileDiplome = new File("N_DIPLOME_SISE.csv");
-        List<SiseDiplomeCsvDto> siseDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileDiplome)).withType(SiseDiplomeCsvDto.class).withSeparator(';').build().parse();
+        List<SiseDiplomeCsvDto> siseDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileDiplome)).withType(SiseDiplomeCsvDto.class).withSeparator(';').withIgnoreQuotations(true).build().parse();
         for(SiseDiplomeCsvDto siseDiplomeCsvDto : siseDiplomeCsvDtos) {
             siseDiplomeCache.put(siseDiplomeCsvDto.diplomeSise, siseDiplomeCsvDto.libelle);
         }
@@ -70,7 +71,7 @@ public class SiseService {
 
     private void refreshTypeDiplomeCache() throws FileNotFoundException {
         File fileTypeDiplome = new File("N_TYPE_DIPLOME_SISE.csv");
-        List<SiseTypeDiplomeCsvDto> siseTypeDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileTypeDiplome)).withType(SiseTypeDiplomeCsvDto.class).withSeparator(';').build().parse();
+        List<SiseTypeDiplomeCsvDto> siseTypeDiplomeCsvDtos = new CsvToBeanBuilder(new FileReader(fileTypeDiplome)).withType(SiseTypeDiplomeCsvDto.class).withSeparator(';').withIgnoreQuotations(true).build().parse();
         for(SiseTypeDiplomeCsvDto siseTypeDiplomeCsvDto : siseTypeDiplomeCsvDtos) {
             siseTypeDiplomeCache.put(siseTypeDiplomeCsvDto.typeDiplomeSise, siseTypeDiplomeCsvDto.libelle);
         }
@@ -78,7 +79,7 @@ public class SiseService {
 
     private void refreshSecteurDisciplinaireCache() throws FileNotFoundException {
         File fileSecteurDisciplinaire = new File("N_SECTEUR_DISCIPLINAIRE_SISE.csv");
-        List<SiseSecteurDisciplinaireCsvDto> siseSecteurDisciplinaireCsvDtos = new CsvToBeanBuilder(new FileReader(fileSecteurDisciplinaire)).withType(SiseSecteurDisciplinaireCsvDto.class).withSeparator(';').build().parse();
+        List<SiseSecteurDisciplinaireCsvDto> siseSecteurDisciplinaireCsvDtos = new CsvToBeanBuilder(new FileReader(fileSecteurDisciplinaire)).withType(SiseSecteurDisciplinaireCsvDto.class).withSeparator(';').withIgnoreQuotations(true).build().parse();
         for(SiseSecteurDisciplinaireCsvDto siseSecteurDisciplinaireCsvDto : siseSecteurDisciplinaireCsvDtos) {
             siseSecteurDisciplinaireCache.put(siseSecteurDisciplinaireCsvDto.secteurDisciplinaireSise, siseSecteurDisciplinaireCsvDto.libelle);
         }
