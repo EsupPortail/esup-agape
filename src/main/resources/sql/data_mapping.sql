@@ -175,3 +175,4 @@ INSERT INTO public.data_mapping (id, attribut_name, destination_type, destinatio
 INSERT INTO public.data_mapping (id, attribut_name, destination_type, destination_value, entity_name, libelle, source_type, source_value) VALUES (175, 'typeDiplome', 'enquete', 'PARA', 'Dossier', null, 'sise', 'PA');
 INSERT INTO public.data_mapping (id, attribut_name, destination_type, destination_value, entity_name, libelle, source_type, source_value) VALUES (176, 'typeDiplome', 'enquete', 'PARA', 'Dossier', null, 'sise', 'JC');
 INSERT INTO public.data_mapping (id, attribut_name, destination_type, destination_value, entity_name, libelle, source_type, source_value) VALUES (177, 'typeDiplome', 'enquete', 'PARA', 'Dossier', null, 'sise', 'PD');
+INSERT INTO public.data_mapping (id, attribut_name, destination_type, destination_value, entity_name, libelle, source_type, source_value) VALUES (180, 'typeDiplome', 'enquete', 'X', 'Dossier', null, 'sise', 'NI');
