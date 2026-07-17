@@ -64,26 +64,26 @@ public class LdapDossierInfosService implements DossierInfosService {
                     if(StringUtils.hasText(personLdap.getSupannEntiteAffectationPrincipale())) {
                         OrganizationalUnitLdap organizationalUnitLdap = ldapOrganizationalUnitService.getOrganizationalUnitLdap(personLdap.getSupannEntiteAffectationPrincipale());
                         if (organizationalUnitLdap != null) {
-                        
+
                             dossierInfos.setCodComposante(
-                                organizationalUnitLdap.getSupannCodeEntite()
+                                    organizationalUnitLdap.getSupannCodeEntite()
                             );
-                        
+
                             dossierInfos.setComposante(
-                                organizationalUnitLdap.getDescription()
+                                    organizationalUnitLdap.getDescription()
                             );
-                        
+
                             dossierInfos.setFormAddress(
-                                organizationalUnitLdap.getPostalAddress()
+                                    organizationalUnitLdap.getPostalAddress()
                             );
-                        
+
                         } else {
-                        
+
                             // Fallback : utilisation des données directement depuis la personne LDAP
                             dossierInfos.setCodComposante(
-                                personLdap.getSupannEntiteAffectation()
+                                    personLdap.getSupannEntiteAffectation()
                             );
-                        
+
                             dossierInfos.setComposante(null);
                             dossierInfos.setFormAddress(null);
                         }

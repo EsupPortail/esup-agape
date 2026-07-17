@@ -1,0 +1,69 @@
+application:
+    activate-send-emails: true
+    anonymise-delay: 4
+    code-etab: XXXXXX
+    enable-atypie: true
+    enable-scheduler-amenagement: false
+    enable-scheduler-anonymise: false
+    enable-scheduler-esup-signature: false
+    enable-scheduler-individu: false
+    enable-suivi-handisup: true
+    path: https://esup-agape.univ-ville.fr
+    test-email: example@example.org
+    validation-referents: false
+cas:
+    service: http://esup-agape.example.org/login/cas
+    url: https://cas.example.org
+ldap:
+    group-search-base: ou=groups
+    group-search-filter: member={0}
+    list-search-base: ou=aliases-list
+    list-search-filter: (|(mail={0}*)(cn={0}*))
+    member-search-filter: (&(uid={0})({1}))
+    scolarite-member-of-search: cn=for.agape.scolarite,ou=groups,dc=univ-ville,dc=fr
+    search-base: ou=people
+    user-id-search-filter: (uid={0})
+logging:
+    level:
+        org:
+            apache:
+                pdfbox: error
+security:
+    mapping-groups-roles:
+        <nom: du groupe de équipes dans les scol>=ROLE_SCOLARITE
+server:
+    port: 8080
+    tomcat:
+        max-swallow-size: -1
+        mbeanregistry:
+            enabled: true
+        remoteip:
+            remote-ip-header: X-Forwarded-For
+spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: xxxxxx
+        url: jdbc:postgresql://localhost:5432/esupagape
+        username: xxxxxx
+    jpa:
+        hibernate:
+            ddl-auto: update
+        open-in-view: false
+    ldap:
+        base: dc=xxxxxx,dc=fr
+        password: xxxxxx
+        urls: ldap://ldap.example.org
+        username: xxxxxx
+    mail:
+        host: smtp.example.org
+    mvc:
+        hiddenmethod:
+            filter:
+                enabled: true
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+    thymeleaf:
+        servlet:
+            produce-partial-output-while-processing: false

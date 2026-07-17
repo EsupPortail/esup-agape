@@ -1,5 +1,6 @@
 package org.esupportail.esupagape.service.externalws.apogee;
 
+import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmAnuDTO2;
 import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmEtpDTO3;
 import gouv.education.apogee.commun.client.ws.AdministratifMetier.WebBaseException_Exception;
 import org.esupportail.esupagape.exception.AgapeApogeeException;
@@ -27,6 +28,19 @@ public class WsApogeeServiceAdministratif {
 		logger.debug("recup des données administratives dans apoge : " + codEtu);
 		try {
 			return apogeeAdministratifFactory.getInstanceAdministratif().recupererIAEtapesV3(codEtu, annee, null, null);
+		} catch (Exception e) {
+			if(e instanceof WebBaseException_Exception) {
+				throw new AgapeApogeeException("Erreur lors de la recup des infos administratives : " + codEtu + " error : " + e.getMessage());
+			} else {
+				throw new AgapeException("Erreur lors de la recup des infos administratives : " + codEtu + " error : " + e.getMessage());
+			}
+		}
+	}
+
+	public List<InsAdmAnuDTO2> recupererOther(String codEtu, String annee) throws AgapeException {
+		logger.debug("recup des données administratives dans apoge : " + codEtu);
+		try {
+			return apogeeAdministratifFactory.getInstanceAdministratif().recupererIAAnnuellesV2(codEtu, annee, null);
 		} catch (Exception e) {
 			if(e instanceof WebBaseException_Exception) {
 				throw new AgapeApogeeException("Erreur lors de la recup des infos administratives : " + codEtu + " error : " + e.getMessage());

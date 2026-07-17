@@ -18,6 +18,10 @@ public class Log {
 
     private String eppn;
 
+    private String userDisplayName;
+
+    private String entityType;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime date;
 
@@ -49,6 +53,22 @@ public class Log {
         this.eppn = eppn;
     }
 
+    public String getUserDisplayName() {
+        return userDisplayName;
+    }
+
+    public void setUserDisplayName(String userDisplayName) {
+        this.userDisplayName = userDisplayName;
+    }
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
     public LocalDateTime getDate() {
         return date;
     }
@@ -61,6 +81,10 @@ public class Log {
         return initialStatusDossier;
     }
 
+    public String getInitialStatusDossierLabel() {
+        return cleanStatus(initialStatusDossier);
+    }
+
     public void setInitialStatusDossier(String initialStatusDossier) {
         this.initialStatusDossier = initialStatusDossier;
     }
@@ -69,7 +93,18 @@ public class Log {
         return finalStatusDossier;
     }
 
+    public String getFinalStatusDossierLabel() {
+        return cleanStatus(finalStatusDossier);
+    }
+
     public void setFinalStatusDossier(String finalStatusDossier) {
         this.finalStatusDossier = finalStatusDossier;
+    }
+
+    private String cleanStatus(String status) {
+        if (status != null && status.startsWith("org.esupportail.esupagape.entity.") && status.contains("@")) {
+            return "";
+        }
+        return status;
     }
 }

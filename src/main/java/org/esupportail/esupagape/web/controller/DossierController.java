@@ -151,9 +151,13 @@ public class DossierController {
 
     @PutMapping("/{dossierId}")
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-    public String update(@PathVariable Long dossierId, @Valid Dossier dossier, PersonLdap personLdap) {
-        dossierService.update(dossierId, dossier, personLdap.getEduPersonPrincipalName());
-        enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
+    public String update(@PathVariable Long dossierId, @Valid Dossier dossier, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
+        try {
+            dossierService.update(dossierId, dossier, personLdap.getEduPersonPrincipalName());
+            enqueteService.getAndUpdateByDossierId(dossierId, personLdap.getEduPersonPrincipalName());
+        } catch (AgapeException e) {
+            redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+        }
         return "redirect:/dossiers/" + dossierId;
     }
 
@@ -193,8 +197,10 @@ public class DossierController {
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     @ResponseBody
     public ResponseEntity<Void> getLastFileFromSignRequest(
+            @PathVariable Long dossierId,
             @PathVariable("attachmentId") Long attachmentId,
             HttpServletResponse httpServletResponse) throws AgapeIOException {
+        documentService.assertBelongsToDossier(attachmentId, dossierId);
         documentService.getDocumentHttpResponse(attachmentId, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }

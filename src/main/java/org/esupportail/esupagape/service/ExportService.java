@@ -34,38 +34,44 @@ public class ExportService {
 
     private final EnqueteService enqueteService;
 
+    private final Map<String, String> dossierCompletCsv;
+
     public ExportService(ApplicationProperties applicationProperties, ExportRepository exportRepository,
         EnqueteService enqueteService) {
         this.applicationProperties = applicationProperties;
         this.exportRepository = exportRepository;
         this.enqueteService = enqueteService;
+        dossierCompletCsv = new LinkedHashMap<>() {{
+            put("yearOfBirth", "Année de naissance");
+            put("gender", "Genre");
+            put("fixCP", "Code postal");
+            put("fixCity", "Ville");
+            put("fixCountry", "Pays");
+            put("type", "Type de l'individu");
+            put("statusDossier", "Statut du dossier");
+            put("statusDossierAmenagement", "Statut du Dossier Aménagement");
+            put("classifications", "Classification du handicap");
+            put("temporaire", "Temporaire");
+            put("plusieursTroubles", "Plusieurs troubles");
+            put("mdph", "Dossier MDPH");
+            put("taux", "Taux");
+            put("typeSuiviHandisup", "Type de suivi Handisup");
+            put("niveauEtudes", "Niveau d'études");
+            put("typeFormation", "Type de formation");
+            put("modeFormation", "Modalités de formation");
+            put("alternance", "Formation en alternance");
+            put("libelleFormation", "Formation");
+            put("libelleFormationPrec", "Formation précédente");
+            put("codComposante", "Code composante");
+            put("composante", "Composante");
+            put("formAddress", "Adresse de formation");
+            put("resultatTotal", "Résultat total");
+            if(applicationProperties.getEnableSuiviHandisup()) {
+                put("suiviHandisup", "Suivi Handisup");
+            }
+            put("enqueteOk", "Enquête OK");
+        }};
     }
-
-    private final Map<String, String> dossierCompletCsv = new LinkedHashMap<>() {{
-        put("yearOfBirth", "Année de naissance");
-        put("gender", "Genre");
-        put("fixCP", "Code postal");
-        put("fixCity", "Ville");
-        put("fixCountry", "Pays");
-        put("type", "Type de l'individu");
-        put("statusDossier", "Statut du dossier");
-        put("statusDossierAmenagement", "Statut du Dossier Aménagement");
-        put("classifications", "Classification du handicap");
-        put("plusieursTroubles", "Plusieurs troubles");
-        put("mdph", "Dossier MDPH");
-        put("taux", "Taux");
-        put("typeSuiviHandisup", "Type de suivi Handisup");
-        put("niveauEtudes", "Niveau d'études");
-        put("typeFormation", "Type de formation");
-        put("modeFormation", "Modalités de formation");
-        put("libelleFormation", "Formation");
-        put("libelleFormationPrec", "Formation précédente");
-        put("codComposante", "Code composante");
-        put("composante", "Composante");
-        put("formAddress", "Adresse de formation");
-        put("resultatTotal", "Resultat total");
-
-    }};
 
     @Transactional
     public void getCsvDossier(Integer year, Writer writer) {
@@ -88,6 +94,7 @@ public class ExportService {
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
+        put("autas", "Commentaire");
         put("codMeahF", "Mesures aides humaines");
 //        put("interpH", "supprimé");
 //        put("codeurH", "supprimé");
@@ -117,6 +124,7 @@ public class ExportService {
         put("com", "Commentaire");
         put("codPfpp", "Plan d'accompagnement");
         put("codPfas", "Aménagement du cursus de formation");
+        put("autas", "Commentaire");
         put("codMeahF", "Mesures aides humaines");
 //        put("interpH", "supprimé");
 //        put("codeurH", "supprimé");
@@ -154,6 +162,7 @@ public class ExportService {
                     enquete.getCom(),
                     enquete.getCodPfpp() != null ? enquete.getCodPfpp().name().toLowerCase() : "",
                     String.join("" ,enquete.getCodPfas().stream().map(codPfas -> codPfas.name().toLowerCase()).sorted(String::compareTo).toList()),
+                    "",
                     String.join("" ,enquete.getCodMeahF().stream().map(codMeahF -> codMeahF.name().toLowerCase()).sorted(String::compareTo).toList()),
                     "",
                     "",

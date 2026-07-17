@@ -83,6 +83,7 @@ public class AideController {
 
     @PutMapping("/aides-materielles/{aideMaterielleId}/update")
     public String updateAideMaterielle(@PathVariable Long dossierId, @PathVariable Long aideMaterielleId, @Valid AideMaterielle aideMaterielle, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        aideMaterielleService.assertBelongsToDossier(aideMaterielleId, dossierId);
         aideMaterielleService.save(aideMaterielleId, aideMaterielle);
         redirectAttributes.addFlashAttribute("lastEdit", aideMaterielleId);
         return "redirect:/dossiers/" + dossierId + "/aides";
@@ -90,18 +91,21 @@ public class AideController {
 
     @DeleteMapping("/aides-materielles/{aideMaterielleId}/delete")
     public String deleteAideMaterielle(@PathVariable Long dossierId, @PathVariable Long aideMaterielleId) {
+        aideMaterielleService.assertBelongsToDossier(aideMaterielleId, dossierId);
         aideMaterielleService.delete(aideMaterielleId);
         return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete")
     public String deleteAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId) {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         aideHumaineService.delete(aideHumaineId);
         return "redirect:/dossiers/" + dossierId + "/aides";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/update")
-    public String editAideHumaine(@PathVariable Long aideHumaineId, Model model) {
+    public String editAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, Model model) {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         setModel(model);
         AideHumaine aideHumaine = aideHumaineService.getById(aideHumaineId);
         model.addAttribute("aideHumaine", aideHumaine);
@@ -117,6 +121,7 @@ public class AideController {
     @PutMapping("/aides-humaines/{aideHumaineId}/update")
     public String updateAideHumaine(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @Valid AideHumaine aideHumaine, RedirectAttributes redirectAttributes) {
         try {
+            aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
             aideHumaineService.save(aideHumaineId, aideHumaine);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
@@ -129,6 +134,7 @@ public class AideController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", "Le format des données saisies est mauvais"));
         } else {
+            aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
             periodeAideHumaineService.save(aideHumaineId, month, periodeAideHumaine);
         }
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -137,6 +143,7 @@ public class AideController {
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-periode/{month}")
     public String deletePeriode(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, RedirectAttributes redirectAttributes) {
         try {
+            aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
             periodeAideHumaineService.delete(aideHumaineId, month);
             redirectAttributes.addFlashAttribute("message", new Message("info", "Période supprimée"));
         } catch (NoSuchElementException e) {
@@ -147,44 +154,51 @@ public class AideController {
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-feuille-heures/{month}")
     public String addFeuilleHeures(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles) throws AgapeException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.addFeuilleHeures(aideHumaineId, month, multipartFiles, dossierId);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-feuille-heures/{month}")
     public String deleteFeuilleHeures(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month) {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.deleteFeuilleHeures(aideHumaineId, month);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-feuille-heures/{month}")
     @ResponseBody
-    public ResponseEntity<Void> getFeuilleHeures(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public ResponseEntity<Void> getFeuilleHeures(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.getFeuilleHeuresHttpResponse(aideHumaineId, month, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-planning/{month}")
     public String addPlanning(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, @RequestParam("multipartFiles") MultipartFile[] multipartFiles) throws AgapeException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.addPlanning(aideHumaineId, month, multipartFiles, dossierId);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-planning/{month}")
     public String deletePlanning(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month) {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.deletePlanning(aideHumaineId, month);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
     }
 
     @GetMapping("/aides-humaines/{aideHumaineId}/get-planning/{month}")
     @ResponseBody
-    public ResponseEntity<Void> getPlanning(@PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public ResponseEntity<Void> getPlanning(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Integer month, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         periodeAideHumaineService.getPlanningHttpResponse(aideHumaineId, month, httpServletResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/aides-humaines/{aideHumaineId}/add-document")
     public String addDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam("multipartFiles") MultipartFile[] multipartFiles, @RequestParam TypeDocument typeDocumentAideHumaine, RedirectAttributes redirectAttributes) throws AgapeException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         aideHumaineService.addDocument(aideHumaineId, multipartFiles, typeDocumentAideHumaine);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -192,6 +206,7 @@ public class AideController {
 
     @DeleteMapping("/aides-humaines/{aideHumaineId}/delete-document/{documentId}")
     public String deleteDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @PathVariable Long documentId, RedirectAttributes redirectAttributes) {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         aideHumaineService.deleteDocument(aideHumaineId, documentId);
         redirectAttributes.addFlashAttribute("returnModPJ", true);
         return "redirect:/dossiers/" + dossierId + "/aides/aides-humaines/" + aideHumaineId + "/update";
@@ -199,7 +214,8 @@ public class AideController {
 
     @GetMapping("aides-humaines/{aideHumaineId}/get-document")
     @ResponseBody
-    public ResponseEntity<Void> getDocument(@PathVariable Long aideHumaineId, @RequestParam TypeDocument typeDocumentAideHumaine, HttpServletResponse httpServletResponse) throws AgapeIOException {
+    public ResponseEntity<Void> getDocument(@PathVariable Long dossierId, @PathVariable Long aideHumaineId, @RequestParam TypeDocument typeDocumentAideHumaine, HttpServletResponse httpServletResponse) throws AgapeIOException {
+        aideHumaineService.assertBelongsToDossier(aideHumaineId, dossierId);
         aideHumaineService.getDocumentHttpResponse(aideHumaineId, httpServletResponse, typeDocumentAideHumaine);
         return new ResponseEntity<>(HttpStatus.OK);
     }

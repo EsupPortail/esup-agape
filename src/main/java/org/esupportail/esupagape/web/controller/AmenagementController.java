@@ -3,14 +3,21 @@ package org.esupportail.esupagape.web.controller;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.esupportail.esupagape.dtos.forms.AmenagementCreateDto;
+import org.esupportail.esupagape.dtos.forms.AmenagementUpdateDto;
+import org.esupportail.esupagape.dtos.forms.LigneAmenagementDto;
 import org.esupportail.esupagape.entity.Amenagement;
+import org.esupportail.esupagape.entity.LigneAmenagement;
+import org.esupportail.esupagape.entity.TypeLigneAmenagement;
 import org.esupportail.esupagape.entity.enums.*;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.exception.AgapeJpaException;
 import org.esupportail.esupagape.exception.AgapeRuntimeException;
 import org.esupportail.esupagape.repository.LibelleAmenagementRepository;
 import org.esupportail.esupagape.service.AmenagementService;
+import org.esupportail.esupagape.service.TypeLigneAmenagementService;
 import org.esupportail.esupagape.service.ldap.PersonLdap;
+import org.esupportail.esupagape.service.utils.UtilsService;
 import org.esupportail.esupagape.web.viewentity.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dossiers/{dossierId}/amenagements")
@@ -28,11 +38,15 @@ public class AmenagementController {
 
     private final AmenagementService amenagementService;
     private final LibelleAmenagementRepository libelleAmenagementRepository;
+    private final TypeLigneAmenagementService typeLigneAmenagementService;
+    private final UtilsService utilsService;
 
     public AmenagementController(AmenagementService amenagementService,
-                                 LibelleAmenagementRepository libelleAmenagementRepository) {
+                                 LibelleAmenagementRepository libelleAmenagementRepository, TypeLigneAmenagementService typeLigneAmenagementService, UtilsService utilsService) {
         this.amenagementService = amenagementService;
         this.libelleAmenagementRepository = libelleAmenagementRepository;
+        this.typeLigneAmenagementService = typeLigneAmenagementService;
+        this.utilsService = utilsService;
     }
 
     @GetMapping
@@ -45,25 +59,29 @@ public class AmenagementController {
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String create(Model model) {
         setModel(model);
-        model.addAttribute("amenagement", new Amenagement());
-        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
+        List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
+        AmenagementCreateDto dto = new AmenagementCreateDto();
+
+        model.addAttribute("amenagement", dto);
+        model.addAttribute("typeLigneAmenagements", types);
         return "amenagements/create";
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public String createSave(@PathVariable Long dossierId, @Valid Amenagement amenagement, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
-        amenagement.setId(null);
+    public String createSave(@PathVariable Long dossierId, @Valid AmenagementCreateDto dto, PersonLdap personLdap, RedirectAttributes redirectAttributes) {
         try {
-            amenagementService.create(amenagement, dossierId, personLdap);
+            Amenagement amenagement = amenagementService.create(dto, dossierId, personLdap);
+            return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
         } catch (AgapeException e) {
             redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
+            return "redirect:/dossiers/" + dossierId + "/amenagements/create";
         }
-        return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagement.getId() + "/update";
     }
 
     @GetMapping("{amenagementId}/show")
-    public String show(@PathVariable Long amenagementId, Model model) throws MessagingException {
+    public String show(@PathVariable Long dossierId, @PathVariable Long amenagementId, Model model) throws MessagingException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         setModel(model);
         model.addAttribute("amenagement", amenagementService.getById(amenagementId));
         return "amenagements/show";
@@ -71,21 +89,55 @@ public class AmenagementController {
 
     @GetMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public String update(@PathVariable Long amenagementId, Model model) throws AgapeJpaException {
-        model.addAttribute("amenagement", amenagementService.getById(amenagementId));
-        model.addAttribute("libellesAmenagement", libelleAmenagementRepository.findAll());
+    public String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, Model model) throws AgapeJpaException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
+        Amenagement amenagement = amenagementService.getByIdWithLignesAndTypes(amenagementId);
+        List<TypeLigneAmenagement> types = typeLigneAmenagementService.getActifsByYear(utilsService.getCurrentYear());
+
+        AmenagementUpdateDto dto = new AmenagementUpdateDto();
+        dto.setTypeAmenagement(amenagement.getTypeAmenagement());
+        dto.setEndDate(amenagement.getEndDate());
+        dto.setTypeEpreuves(amenagement.getTypeEpreuves());
+        dto.setAutresTypeEpreuve(amenagement.getAutresTypeEpreuve());
+        dto.setTempsMajore(amenagement.getTempsMajore());
+        dto.setAutresTempsMajores(amenagement.getAutresTempsMajores());
+        dto.setAutorisation(amenagement.getAutorisation());
+        dto.setClassification(amenagement.getClassification());
+
+        amenagement.getLignesAmenagement().forEach(ligne -> {
+            TypeLigneAmenagement type = ligne.getTypeLigneAmenagement();
+
+            LigneAmenagementDto ligneDto = new LigneAmenagementDto();
+            ligneDto.setId(ligne.getId());
+            ligneDto.setSelected(true);
+            ligneDto.setTypeLigneAmenagementId(type.getId());
+            ligneDto.setOrdre(type.getOrdre());
+            ligneDto.setLibelle(type.getLibelle());
+            ligneDto.setChampLibre(type.isChampLibre());
+            ligneDto.setLibelleLibre(ligne.getLibelleLibre());
+            ligneDto.setStatut(ligne.getStatut());
+            ligneDto.setCommentairePrecision(ligne.getCommentairePrecision());
+            ligneDto.setCommentaireValidation(ligne.getCommentaireValidation());
+
+            dto.getLignesAmenagement().add(ligneDto);
+        });
+
+        model.addAttribute("amenagement", amenagement);
+        model.addAttribute("amenagementDto", dto);
+        model.addAttribute("typeLigneAmenagements", types);
         setModel(model);
         return "amenagements/update";
     }
 
     @PutMapping("/{amenagementId}/update")
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
-    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid Amenagement amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+    public  String update(@PathVariable Long dossierId, @PathVariable Long amenagementId, @Valid AmenagementUpdateDto amenagement, PersonLdap personLdap, @RequestParam Boolean send, RedirectAttributes redirectAttributes) throws AgapeJpaException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         amenagementService.update(amenagementId, amenagement);
         if(send) {
             try {
                 amenagementService.validationMedecin(amenagementId, personLdap);
-                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été transmis à l'administration"));
+                redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a bien été transmis pour validation"));
                 return "redirect:/dossiers/" + dossierId + "/amenagements/" + amenagementId + "/show";
             } catch (AgapeException | AgapeRuntimeException e) {
                 redirectAttributes.addFlashAttribute("message", new Message("danger", e.getMessage()));
@@ -105,6 +157,7 @@ public class AmenagementController {
     @PreAuthorize("hasRole('ROLE_MEDECIN') or hasRole('ROLE_ADMIN')")
     public String deleteAmenagement(@PathVariable Long dossierId, @PathVariable Long amenagementId, RedirectAttributes redirectAttributes) {
         try {
+            amenagementService.assertBelongsToDossier(amenagementId, dossierId);
             amenagementService.softDeleteAmenagement(amenagementId);
             redirectAttributes.addFlashAttribute("message", new Message("success", "L'aménagement a été supprimé"));
         } catch (AgapeException e) {
@@ -128,7 +181,8 @@ public class AmenagementController {
 
     @GetMapping(value = "/{amenagementId}/get-certificat", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getCertificat(@PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getCertificat(@PathVariable Long dossierId, @PathVariable("amenagementId") Long amenagementId, @RequestParam(required = false) String type, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         if(type != null && type.equals("download")) {
@@ -143,7 +197,8 @@ public class AmenagementController {
 
     @GetMapping(value = "/{amenagementId}/get-avis", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<Void> getAvis(@PathVariable("amenagementId") Long amenagementId, @RequestParam String disposition, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+    public ResponseEntity<Void> getAvis(@PathVariable Long dossierId, @PathVariable("amenagementId") Long amenagementId, @RequestParam String disposition, HttpServletResponse httpServletResponse) throws IOException, AgapeException {
+        amenagementService.assertBelongsToDossier(amenagementId, dossierId);
         httpServletResponse.setContentType("application/pdf");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.setHeader("Content-Disposition", disposition + "; filename=\"avis_" + amenagementId + ".pdf\"");

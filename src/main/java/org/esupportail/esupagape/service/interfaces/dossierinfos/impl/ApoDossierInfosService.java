@@ -1,9 +1,11 @@
 package org.esupportail.esupagape.service.interfaces.dossierinfos.impl;
 
+import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmAnuDTO2;
 import gouv.education.apogee.commun.client.ws.AdministratifMetier.InsAdmEtpDTO3;
 import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.ContratPedagogiqueResultatElpEprDTO5;
 import gouv.education.apogee.commun.client.ws.PedagogiqueMetier.ResultatElpDTO3;
 import org.esupportail.esupagape.entity.Individu;
+import org.esupportail.esupagape.entity.enums.enquete.TypFrmn;
 import org.esupportail.esupagape.exception.AgapeApogeeException;
 import org.esupportail.esupagape.exception.AgapeException;
 import org.esupportail.esupagape.service.datasource.IndividuDataSourceService;
@@ -17,10 +19,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,6 +48,13 @@ public class ApoDossierInfosService implements DossierInfosService {
 
     public DossierInfos getDossierProperties(Individu individu, Integer annee, boolean getAllSteps, boolean getNotes, DossierInfos dossierInfos) {
         try {
+            List<InsAdmAnuDTO2> insAdmAnuDTO2s = wsApogeeServiceAdministratif.recupererOther(individu.getNumEtu(), annee.toString());
+            if(insAdmAnuDTO2s !=null){
+                for(InsAdmAnuDTO2 insAdmAnuDTO2 : insAdmAnuDTO2s) {
+                    dossierInfos.setAlternant(insAdmAnuDTO2.getStatut().getCode().equals("14") || insAdmAnuDTO2.getStatut().getCode().equals("15"));
+                }
+            }
+
             List<InsAdmEtpDTO3> ieEtapes = wsApogeeServiceAdministratif.recupererIAEtapes(individu.getNumEtu(), annee.toString());
             if(ieEtapes != null) {
                 for (InsAdmEtpDTO3 insAdmEtpDTO : ieEtapes) {
@@ -56,6 +64,7 @@ public class ApoDossierInfosService implements DossierInfosService {
                     dossierInfos.setCodComposante(insAdmEtpDTO.getComposante().getCodComposante());
 //                    dossierInfos.setComposante(insAdmEtpDTO.getComposante().getLibComposante());
                     dossierInfos.setLibelleFormation(insAdmEtpDTO.getEtape().getLibWebVet());
+                    dossierInfos.setTypeFormation(insAdmEtpDTO.getRegimeIns().getCodRgi().equals("1") || insAdmEtpDTO.getRegimeIns().getCodRgi().equals("7") ? TypFrmn.I : TypFrmn.C);
                     if (insAdmEtpDTO.getBourse() != null) {
                         dossierInfos.setHasScholarship("02".equals(insAdmEtpDTO.getBourse().getCodeBourse()));
                     } else {
@@ -151,23 +160,13 @@ public class ApoDossierInfosService implements DossierInfosService {
         String sqlRequest =
                 "SELECT composante.cod_cmp, composante.lib_cmp " +
                         "FROM composante";
-        Connection connection = null;
         try {
-            connection = dataSource.getConnection();
-            new JdbcTemplate(dataSource).query(sqlRequest, (ResultSet rs) -> {
+            new JdbcTemplate(dataSource).query(sqlRequest, rs -> {
                 codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
-                while (rs.next()) {
-                    codComposanteLabelsMap.put(rs.getString("cod_cmp"), rs.getString("lib_cmp"));
-                }
             });
-            connection.close();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new AgapeException(e.getMessage(), e);
-        } finally {
-            if(connection != null) {
-                connection.close();
-            }
         }
         return codComposanteLabelsMap;
     }

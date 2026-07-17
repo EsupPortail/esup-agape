@@ -72,7 +72,7 @@
                                                         title="Modifier" th:href="'/dossiers/' + ${currentDossier.id} + '/amenagements/' + ${amenagement.id} + '/update'"
                                                         class="btn btn-warning"><i class="fa-solid fa-pen"></i>
                                                 </a>
-                                                <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="|${amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).ENVOYE) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN) && currentYear == currentDossier.year}|"
+                                                <a sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MEDECIN')" th:if="|${(amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).BROUILLON) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).ENVOYE) || amenagement.statusAmenagement.equals(T(org.esupportail.esupagape.entity.enums.StatusAmenagement).VALIDE_MEDECIN)) && currentYear == currentDossier.year}|"
                                                         data-bs-toggle="modal"
                                                         title="Supprimer"
                                                         href="#"
